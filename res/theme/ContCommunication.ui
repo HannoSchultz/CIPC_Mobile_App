@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<component type="Container" name="ContCommunication" cloudDestinationProperty="ContCommunication" uiid="ContainerWhite" scrollableY="true" layout="BoxLayout" boxLayoutAxis="Y" >
+  <component type="Container" name="contContent" cloudDestinationProperty="contContent" layout="BoxLayout" boxLayoutAxis="Y" >
+  </component>
+</component>

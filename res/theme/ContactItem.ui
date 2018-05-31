@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<component type="Container" name="ContactItem" cloudDestinationProperty="ContactItem" uiid="Container" layout="BoxLayout" boxLayoutAxis="Y" >
+  <component type="Container" name="Container22" cloudDestinationProperty="Container2" uiid="ContainerWhiteTrans" layout="BoxLayout" boxLayoutAxis="Y" >
+    <component type="Container" name="Container" cloudDestinationProperty="Container" uiid="MultiButtonColor" layout="FlowLayout" flowLayoutFillRows="false" flowLayoutAlign="1" flowLayoutValign="0" >
+      <component type="Button" name="btnIcon" cloudDestinationProperty="Button" uiid="Label" text="" icon="profile1.png" >
+      </component>
+      <component type="Label" name="lblTitle" cloudDestinationProperty="lblTitle" uiid="LabelWhite" text="Jack Dorsey" >
+      </component>
+    </component>
+  </component>
+</component>

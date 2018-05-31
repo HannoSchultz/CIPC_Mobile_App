@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<component type="Form" name="ATester" cloudDestinationProperty="ATester" layout="BoxLayout" boxLayoutAxis="Y" >
+    <component type="MultiButton" name="MultiButton" cloudDestinationProperty="MultiButton" >
+        <custom name="line1" type="java.lang.String" value="Line1" />
+        <custom name="line2" type="java.lang.String" value="Line2" />
+    </component>
+    <component type="Container" name="Container" cloudDestinationProperty="Container" uiid="MultiButton" layout="BoxLayout" boxLayoutAxis="Y" >
+        <component type="Label" name="Label" cloudDestinationProperty="Label" text="Label" >
+        </component>
+        <component type="Label" name="Label1" cloudDestinationProperty="Label1" text="Label" >
+        </component>
+        <component type="InfiniteProgress" name="InfiniteProgress" cloudDestinationProperty="InfiniteProgress" >
+        </component>
+    </component>
+</component>
