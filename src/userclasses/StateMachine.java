@@ -75,7 +75,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TimeZone;
-import services.UserWebServices;
+import za.co.cipc.webservices.UserWebServices;
 import ui.FormProgress;
 
 /**
@@ -1652,8 +1652,8 @@ public class StateMachine extends StateMachineBase {
         String txtCustomerCode = ((TextField) findByName("txtCustomerCode", c)).getText();
         final String password = ((TextField) findByName("txtPassword", c)).getText();
 
-        services.User user = new services.User();
-        user.setParamCustomerCode(txtCustomerCode);
+        za.co.cipc.pojos.User user = new za.co.cipc.pojos.User();
+        user.setAgent_code(txtCustomerCode);
         user.setParamPassword(password);
 
 
@@ -1681,7 +1681,7 @@ public class StateMachine extends StateMachineBase {
 
         UserWebServices userWebServices = new UserWebServices();
 
-        services.User responseUser = userWebServices.get_cust_MOBI(user);
+        za.co.cipc.pojos.User responseUser = userWebServices.get_cust_MOBI(user);
 
         String errorMessage = "";
 
@@ -1692,12 +1692,10 @@ public class StateMachine extends StateMachineBase {
             errorMessage += "Incorrect Customer Code or password. ";
 
         }
-
-        String paramPassword = responseUser.getParamPassword();
-
+        
         String responsePassword = responseUser.getPassword();
-
-        //Dialog.show("Result", responseUser.getResponse() + "a=\'" + paramPassword + "\' b=\'" + responsePassword + "\'", "Close", null);
+        
+       Log.p(password + ":" + responsePassword);
 
         if (password.equals(responsePassword)) {
 
