@@ -143,6 +143,8 @@ public class StateMachine extends StateMachineBase {
         tracker.setAppName(Const.GOOGLE_ANALYTICS_APP_NAME);
         tracker.setAppVersion(Const.GOOGLE_ANALYTICS_APP_VERSION);*/
         String platform = Display.getInstance().getPlatformName();
+  
+               
 
     }
 
@@ -406,7 +408,7 @@ public class StateMachine extends StateMachineBase {
         Tabs tabs = (Tabs) findByName("Tabs", contTasks);
         tabs.setSwipeActivated(false);
 
-        analytics(f, "Name Reservation");
+        //analytics(f, "Name Reservation");
 
 //        Container contContent = (Container) findByName("contContent", contTasks);
 //        contContent.removeAll();
@@ -1980,6 +1982,22 @@ public class StateMachine extends StateMachineBase {
 
     @Override
     protected void beforeRegistration(Form f) {
+        
+        /*
+              
+        
+        UserWebServices u = new UserWebServices();
+        za.co.cipc.pojos.User user = new za.co.cipc.pojos.User();
+        //verify ID number
+        user.setAgent_id_no("7104085085085");
+        //user.setAgent_id_no("9109055178081"); not 
+        //1. empty = invalid ID
+        //2. empty result set = valid ID but not a CIPC customer
+        //3. full details existing customer
+        
+        //register user
+        u.GetCustLoginDetails_ID_NO(user);
+        */
 
         Toolbar bar = analytics(f, "Registration");
 

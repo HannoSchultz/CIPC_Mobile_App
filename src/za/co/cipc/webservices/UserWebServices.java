@@ -1387,7 +1387,7 @@ public class UserWebServices {
                 + "         <!--Optional:-->\n\n"
                 + "         <cipc:sBankID>" + Constants.sBankID + "</cipc:sBankID>\n\n"
                 + "         <!--Optional:-->\n\n"
-                + "         <cipc:sCustID>" + user.getParamCustomerCode()+ "</cipc:sCustID>\n\n"
+                + "         <cipc:sCustID>" + user.getAgent_id_no()+ "</cipc:sCustID>\n\n"
                 + "      </cipc:GetCustLoginDetails_ID_NO>\n\n"
                 + "   </soapenv:Body>\n\n"
                 + "</soapenv:Envelope>";
@@ -1425,9 +1425,9 @@ public class UserWebServices {
         httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
         httpRequest.setPost(true);
 
-        InfiniteProgress prog = new InfiniteProgress();
-        Dialog dlg = prog.showInifiniteBlocking();
-        httpRequest.setDisposeOnCompletion(dlg);
+//        InfiniteProgress prog = new InfiniteProgress();
+//        Dialog dlg = prog.showInifiniteBlocking();
+//        httpRequest.setDisposeOnCompletion(dlg);
 
         NetworkManager.getInstance().addToQueueAndWait(httpRequest);
         String data = new String(httpRequest.getResponseData());
@@ -1437,7 +1437,7 @@ public class UserWebServices {
             Result result = Result.fromContent(data, Result.XML);
             User responseUser = new User();
 
-            Log.p("result: " + result, Log.DEBUG);
+            Log.p("GetCustLoginDetails_ID_NO=" + result, Log.DEBUG);
 
             responseUser.setAgent_code(result.getAsString("//agent_code"));
             responseUser.setAgent_type(result.getAsString("//agent_type"));
@@ -1483,6 +1483,118 @@ public class UserWebServices {
         return null;
 
     }//end login
+    
+     public User GetCustLoginDetails_ID_NO_MOBI(User user) {
+
+        final String SOAP_BODY
+                = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cipc=\"CIPC_WEB_SERVICES\">\n\n"
+                + "   <soapenv:Header/>\n\n"
+                + "   <soapenv:Body>\n"
+                + "      <cipc:GetCustLoginDetails_ID_NO_MOBI>\n\n"
+                + "         <!--Optional:-->\n\n"
+                + "         <cipc:sUserName>" + Constants.sUserName + "</cipc:sUserName>\n\n"
+                + "         <!--Optional:-->\n\n"
+                + "         <cipc:sPassword>" + Constants.sPassword + "</cipc:sPassword>\n\n"
+                + "         <!--Optional:-->\n\n"
+                + "         <cipc:sBankID>" + Constants.sBankID + "</cipc:sBankID>\n\n"
+                + "         <!--Optional:-->\n\n"
+                + "         <cipc:sCustID>" + user.getAgent_id_no()+ "</cipc:sCustID>\n\n"
+                + "      </cipc:GetCustLoginDetails_ID_NO_MOBI>\n\n"
+                + "   </soapenv:Body>\n\n"
+                + "</soapenv:Envelope>";
+
+        ConnectionRequest httpRequest = new ConnectionRequest() {
+            Element h;
+
+            @Override
+            protected void buildRequestBody(OutputStream os) throws IOException {
+                super.buildRequestBody(os);
+                os.write(SOAP_BODY.getBytes("utf-8"));
+
+            }
+
+            protected void postResponse() {
+
+                super.postResponse();
+            }
+
+            protected void readResponse(InputStream input) throws IOException {
+                super.readResponse(input);
+
+            }
+
+            @Override
+            protected void handleException(Exception err) {
+                Log.p("Exception: " + err.toString());
+                Dialog.show("No Internet", "There is no internet connection. Please switch your connection on.", "Okay", null);
+
+            }
+        };
+
+        httpRequest.setUrl("https://testwebservices4.cipc.co.za/customer.asmx?wsdl");
+        httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
+        httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
+        httpRequest.setPost(true);
+
+//        InfiniteProgress prog = new InfiniteProgress();
+//        Dialog dlg = prog.showInifiniteBlocking();
+//        httpRequest.setDisposeOnCompletion(dlg);
+
+        NetworkManager.getInstance().addToQueueAndWait(httpRequest);
+        String data = new String(httpRequest.getResponseData());
+
+        try {
+
+            Result result = Result.fromContent(data, Result.XML);
+            User responseUser = new User();
+
+            Log.p("GetCustLoginDetails_ID_NO=" + result, Log.DEBUG);
+
+            responseUser.setAgent_code(result.getAsString("//agent_code"));
+            responseUser.setAgent_type(result.getAsString("//agent_type"));
+            responseUser.setPassword(result.getAsString("//password"));
+            responseUser.setAgent_name(result.getAsString("//agent_name"));
+            responseUser.setTel_no(result.getAsString("//tel_code"));
+            responseUser.setTel_no(result.getAsString("//tel_no"));
+            responseUser.setFax_code(result.getAsString("//fax_code"));
+            responseUser.setFax_no(result.getAsString("//fax_no"));
+            responseUser.setPhys_addr1(result.getAsString("//phys_addr1"));
+            responseUser.setPhys_addr2(result.getAsString("//phys_addr2"));
+            responseUser.setPhys_addr3(result.getAsString("//phys_addr3"));
+            responseUser.setPhys_addr4(result.getAsString("//phys_addr4"));
+            responseUser.setPhys_code(result.getAsString("//phys_code"));
+            responseUser.setPost_addr1(result.getAsString("//post_addr1"));
+            responseUser.setPost_addr2(result.getAsString("//post_addr2"));
+            responseUser.setPost_addr3(result.getAsString("//post_addr3"));
+            responseUser.setPost_addr4(result.getAsString("//post_addr4"));
+            responseUser.setPost_code(result.getAsString("//post_code"));
+            responseUser.setEmail(result.getAsString("//email"));
+            responseUser.setDocex(result.getAsString("//docex"));
+            responseUser.setCorresp_code(result.getAsString("//corresp_code"));
+            responseUser.setComm_code(result.getAsString("//comm_code"));
+            responseUser.setDeliv_code(result.getAsString("//deliv_code"));
+            responseUser.setModify_date(result.getAsString("//modify_date"));
+            responseUser.setBalance(result.getAsString("//balance"));
+            responseUser.setStatus(result.getAsString("//status"));
+            responseUser.setCurrent_login(result.getAsString("//current_login"));
+            responseUser.setPrevious_login(result.getAsString("//previous_login"));
+            responseUser.setId_type(result.getAsString("//id_type"));
+            responseUser.setAgent_id_no(result.getAsString("//agent_id_no"));
+            responseUser.setRegistration_no(result.getAsString("//registration_no"));
+            responseUser.setCell_no(result.getAsString("//cell_no"));
+            responseUser.setSms(result.getAsString("//sms"));
+            responseUser.setStatus_desc(result.getAsString("//status_desc"));
+
+            return responseUser;
+
+        } catch (IllegalArgumentException e) {
+            Log.p(e.toString());
+        }
+
+        return null;
+
+    }//end login
+
 
     public String ReceiveNewCustData_Reg(User requestUser) {
 
@@ -2269,7 +2381,7 @@ public class UserWebServices {
 
             String receivenewcustdata_regresult = result.getAsString("//receivenewcustdata_regresult");
 
-            Log.p("result: " + result, Log.DEBUG);
+            Log.p("ReceiveNewCustData_Reg_MOBI: " + result, Log.DEBUG);
             Log.p("receivenewcustdata_regresult: " + receivenewcustdata_regresult, Log.DEBUG);
 
             return receivenewcustdata_regresult;
