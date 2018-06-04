@@ -28,6 +28,7 @@ import java.util.Hashtable;
 import java.util.Map;
 import java.util.StringTokenizer;
 import userclasses.Constants;
+import userclasses.EnterpriseDetails;
 import userclasses.NameSearchObject;
 import za.co.cipc.pojos.AuthObject;
 import za.co.cipc.pojos.User;
@@ -116,7 +117,9 @@ public class UserWebServices {
 
     }//end name reservation
 
-    public void GetAREntTranDetails(User user) {
+    public ArrayList<EnterpriseDetails> GetAREntTranDetails(String enterpriseNumber, String agentCode) {
+
+        ArrayList<EnterpriseDetails> arrayList = new ArrayList<EnterpriseDetails>();
 
         final String SOAP_BODY
                 = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cipc=\"CIPC_WEB_SERVICES\">\n"
@@ -128,7 +131,7 @@ public class UserWebServices {
                 + "         <cipc:sBankID>wBAA7LAkWIs=</cipc:sBankID>\n"
                 + "         <cipc:sEntNo>2011/100088/07</cipc:sEntNo>\n"
                 + "         <!--Optional:-->\n"
-                + "         <cipc:sCust_Code>INKE01</cipc:sCust_Code>\n"
+                + "         <cipc:sCust_Code>KD7788</cipc:sCust_Code>\n"
                 + "      </cipc:GetAREntTranDetails>\n"
                 + "   </soapenv:Body>\n"
                 + "</soapenv:Envelope>\n"
@@ -178,21 +181,54 @@ public class UserWebServices {
         try {
 
             Result result = Result.fromContent(data, Result.XML);
-            //Element e = Utility.parseXML(result.getAsString("//anyType"));
-            //Element e = Utility.parseXML(result.getAsString("//User"));
 
-            Log.p("Element e: " + result, Log.DEBUG);
+            Log.p("GetAREntTranDetails=" + result, Log.DEBUG);
 
-//            u = new User();
-//            u.setUserID(e.getChildrenByTagName("userid").toString());
-//            u.setEmailAddress(e.getChildrenByTagName("emailaddress").toString());
-//            u.setDateTimeUpdated(e.getChildrenByTagName("datetimeupdated").toString());
-//            u.setFeedback(e.getChildrenByTagName("feedback").toString());
-//
-//            Log.p("Object: " + u.toString());
+            XMLParser parser = new XMLParser();
+            parser.setCaseSensitive(true);
+            Element element = parser.parse(convertStringtoInputStreamReader(result.getAsString("//newdataset")));
+
+            for (int i = 0; i < element.getNumChildren(); i++) {
+                Element child = element.getChildAt(i);
+                if (child.getTextChildren(null, true).size() == 9) {
+
+                    Log.p("i=" + i + " " + child.getTextChildren(null, true).size(), Log.DEBUG);
+
+                    String ent_no = RSM(((Element) child.getTextChildren(null, true).get(0)).toString());
+                    String ar_year = RSM(((Element) child.getTextChildren(null, true).get(1)).toString());
+                    //String trak_no = RSM(((Element) child.getTextChildren(null, true).get(2)).toString());
+                    String turnover = RSM(((Element) child.getTextChildren(null, true).get(2)).toString());
+                    String amt_paid = RSM(((Element) child.getTextChildren(null, true).get(3)).toString());
+                    //String date_paid = RSM(((Element) child.getTextChildren(null, true).get(5)).toString());
+                    String reg_date = RSM(((Element) child.getTextChildren(null, true).get(4)).toString());
+                    String ar_start_date = RSM(((Element) child.getTextChildren(null, true).get(5)).toString());
+                    String due_date = RSM(((Element) child.getTextChildren(null, true).get(6)).toString());
+                    String ent_type_code = RSM(((Element) child.getTextChildren(null, true).get(7)).toString());
+                    String ar_month = RSM(((Element) child.getTextChildren(null, true).get(8)).toString());
+                    //String  cust_code_old = RSM(((Element) child.getTextChildren(null, true).get(11)).toString());
+
+                    EnterpriseDetails e = new EnterpriseDetails();
+
+                    e.setEnt_no(ent_no);
+                    e.setAr_year(ar_year);
+                    e.setTurnover(turnover);
+                    e.setAmt_paid(amt_paid);
+                    e.setReg_date(reg_date);
+                    e.setAr_start_date(ar_start_date);
+                    e.setDue_date(due_date);
+                    e.setEnt_type_code(ent_type_code);
+                    e.setAr_month(ar_month);
+
+                    arrayList.add(e);
+
+                }
+            }
+
         } catch (IllegalArgumentException e) {
             Log.p(e.toString());
         }
+
+        return arrayList;
 
     }//end name reservation
 
@@ -1846,7 +1882,9 @@ public class UserWebServices {
 
     }//end name reservation
 
-    public void Namereservation_MOBI(String customerCode, String name1, String name2, String name3, String name4) {
+    public String Namereservation_MOBI(String customerCode, String name1, String name2, String name3, String name4) {
+
+        String response = "";
 
         final String SOAP_BODY
                 = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cipc=\"CIPC_WEB_SERVICES\">\n"
@@ -1931,28 +1969,23 @@ public class UserWebServices {
         try {
 
             Result result = Result.fromContent(data, Result.XML);
-            //Element e = Utility.parseXML(result.getAsString("//anyType"));
-            //Element e = Utility.parseXML(result.getAsString("//User"));
+            String namereservation_mobiresult = result.getAsString("//namereservation_mobiresult");
 
-            Log.p("Element e: " + result, Log.DEBUG);
+            response = namereservation_mobiresult;
 
-//            u = new User();
-//            u.setUserID(e.getChildrenByTagName("userid").toString());
-//            u.setEmailAddress(e.getChildrenByTagName("emailaddress").toString());
-//            u.setDateTimeUpdated(e.getChildrenByTagName("datetimeupdated").toString());
-//            u.setFeedback(e.getChildrenByTagName("feedback").toString());
-//
-//            Log.p("Object: " + u.toString());
+            //Log.p("result: " + result, Log.DEBUG);
+            //Log.p("namereservation_mobiresult: " + namereservation_mobiresult, Log.DEBUG);
         } catch (IllegalArgumentException e) {
             Log.p(e.toString());
         }
 
+        return response;
     }//end name reservation
 
     public ArrayList search_name_MOBI(String customerCode, String name1, String name2, String name3, String name4) {
 
         ArrayList arrayList = new ArrayList();
-        
+
         final String SOAP_BODY
                 = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cipc=\"CIPC_WEB_SERVICES\">\n"
                 + "\n"
@@ -2052,9 +2085,8 @@ public class UserWebServices {
                 String elemName = RSM(name.toString());
                 Log.p("elemName=" + elemName, Log.DEBUG);
 
-                StringTokenizer st = new StringTokenizer(
-                        elemName, "|");
-               
+                StringTokenizer st = new StringTokenizer(elemName, "|");
+
                 NameSearchObject n = new NameSearchObject();
                 n.setName(elemName);
 

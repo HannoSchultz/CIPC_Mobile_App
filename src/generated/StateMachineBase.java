@@ -750,6 +750,18 @@ public abstract class StateMachineBase extends UIBuilder {
         return cmp;
     }
 
+    public com.codename1.ui.Label findLblLine1(Component root) {
+        return (com.codename1.ui.Label)findByName("lblLine1", root);
+    }
+
+    public com.codename1.ui.Label findLblLine1() {
+        com.codename1.ui.Label cmp = (com.codename1.ui.Label)findByName("lblLine1", Display.getInstance().getCurrent());
+        if(cmp == null && aboutToShowThisContainer != null) {
+            cmp = (com.codename1.ui.Label)findByName("lblLine1", aboutToShowThisContainer);
+        }
+        return cmp;
+    }
+
     public com.codename1.ui.TextField findTxtEmail1(Component root) {
         return (com.codename1.ui.TextField)findByName("txtEmail1", root);
     }
@@ -758,6 +770,18 @@ public abstract class StateMachineBase extends UIBuilder {
         com.codename1.ui.TextField cmp = (com.codename1.ui.TextField)findByName("txtEmail1", Display.getInstance().getCurrent());
         if(cmp == null && aboutToShowThisContainer != null) {
             cmp = (com.codename1.ui.TextField)findByName("txtEmail1", aboutToShowThisContainer);
+        }
+        return cmp;
+    }
+
+    public com.codename1.ui.TextArea findTxtLine1(Component root) {
+        return (com.codename1.ui.TextArea)findByName("txtLine1", root);
+    }
+
+    public com.codename1.ui.TextArea findTxtLine1() {
+        com.codename1.ui.TextArea cmp = (com.codename1.ui.TextArea)findByName("txtLine1", Display.getInstance().getCurrent());
+        if(cmp == null && aboutToShowThisContainer != null) {
+            cmp = (com.codename1.ui.TextArea)findByName("txtLine1", aboutToShowThisContainer);
         }
         return cmp;
     }
@@ -3125,8 +3149,8 @@ public abstract class StateMachineBase extends UIBuilder {
             }
         }
         if(rootContainerName.equals("ContTasks")) {
-            if("TextArea".equals(c.getName())) {
-                onContTasks_TextAreaAction(c, event);
+            if("txtLine1".equals(c.getName())) {
+                onContTasks_TxtLine1Action(c, event);
                 return;
             }
             if("txtName1".equals(c.getName())) {
@@ -3390,7 +3414,7 @@ public abstract class StateMachineBase extends UIBuilder {
       protected void onContProjects_BtnStep4PayNowAction(Component c, ActionEvent event) {
       }
 
-      protected void onContTasks_TextAreaAction(Component c, ActionEvent event) {
+      protected void onContTasks_TxtLine1Action(Component c, ActionEvent event) {
       }
 
       protected void onContTasks_TxtName1Action(Component c, ActionEvent event) {

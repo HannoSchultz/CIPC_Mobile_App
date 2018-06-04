@@ -109,7 +109,9 @@ public class StateMachine extends StateMachineBase {
             Toolbar.setPermanentSideMenu(true);
         }
 
-        //Log.p("list: " + a, Log.DEBUG);
+        UserWebServices u = new UserWebServices();
+        ArrayList a = u.GetAREntTranDetails("", "");
+        Log.p("a = " + a.toString(), Log.DEBUG);
     }
 
     @Override
@@ -188,6 +190,8 @@ public class StateMachine extends StateMachineBase {
         contentPane.removeAll();
         Container contTasks = (Container) createContainer("/theme", "ContTasks");
 
+        Label lblLine1 = (Label) findByName("lblLine1", contTasks);
+
         TextField txtName1 = (TextField) findByName("txtName1", contTasks);
         TextField txtName2 = (TextField) findByName("txtName2", contTasks);
         TextField txtName3 = (TextField) findByName("txtName3", contTasks);
@@ -222,13 +226,26 @@ public class StateMachine extends StateMachineBase {
                     lblResponse.setUIID("LabelRed");
 
                 }
-                lblResponse.repaint();
             }
+
+            //lblLine1.scrollRectToVisible(BACK_COMMAND_ID, BACK_COMMAND_ID, BACK_COMMAND_ID, BACK_COMMAND_ID, contentPane);
+            contTasks.repaint();
 
         });
 
         btnLodge.addActionListener((ActionListener) (ActionEvent evt) -> {
+            String name1 = txtName1.getText();
+            String name2 = txtName2.getText();
+            String name3 = txtName3.getText();
+            String name4 = txtName4.getText();
+            UserWebServices u = new UserWebServices();
+            String responseCall = u.Namereservation_MOBI(AGENT_CODE, name1, name2, name3, name4);
 
+            if (responseCall != null && responseCall.length() > 0) {
+                Dialog.show("Success", responseCall, "Ok", null);
+            } else {
+                Dialog.show("Error", "Error occurred while processing your request", "Ok", null);
+            }
         });
 
         f.add(contTasks);
@@ -325,6 +342,23 @@ public class StateMachine extends StateMachineBase {
         Tabs tabs = (Tabs) findByName("Tabs", contProjects);
         tabs.setSwipeActivated(false);
 
+        //Step 1
+        TextField txtStep1a = (TextField) findByName("txtStep1a", tabs);
+        TextField txtStep1b = (TextField) findByName("txtStep1b", tabs);
+        TextField txtStep1c = (TextField) findByName("txtStep1c", tabs);
+        Button btnStep1RetrieveDetails = (Button) findByName("btnStep1RetrieveDetails", tabs);
+
+        //Step 2
+        Label lblStep2EnterpriseNumber = (Label) findByName("lblStep2EnterpriseNumber", tabs);
+        
+
+        //Step 3
+        
+        
+        
+        //Step 4
+        
+        
         f.add(contProjects);
         if (formProgress != null) {
             formProgress.removeProgress();
