@@ -69,6 +69,7 @@ import java.util.StringTokenizer;
 import java.util.TimeZone;
 import za.co.cipc.webservices.UserWebServices;
 import ui.FormProgress;
+import za.co.cipc.pojos.User;
 
 /**
  *
@@ -118,9 +119,6 @@ public class StateMachine extends StateMachineBase {
             Toolbar.setPermanentSideMenu(true);
         }
 
-        //UserWebServices u = new UserWebServices();
-        //ArrayList listCalculateArTranData = u.CalculateARTranData(null);
-        //Log.p("listCalculateArTranData = " + ((EnterpriseDetails)listCalculateArTranData.get(0)).getAr_penalty(), Log.DEBUG);
     }
 
     @Override
@@ -178,7 +176,7 @@ public class StateMachine extends StateMachineBase {
         }
     }
 
-    public void fetchProfile(final Form f) {
+    public void showProfile(final Form f) {
         formProgress = new FormProgress(f);
         closeMenu(f, true);
 
@@ -191,7 +189,7 @@ public class StateMachine extends StateMachineBase {
 
     }
 
-    public void fetchTasks(Form f, String taskType) {
+    public void showNameReservation(Form f, String taskType) {
         formProgress = new FormProgress(f);
         closeMenu(f, true);
 
@@ -252,6 +250,7 @@ public class StateMachine extends StateMachineBase {
 
             if (responseCall != null && responseCall.length() > 0) {
                 Dialog.show("Success", responseCall, "Ok", null);
+                showCart(f);
             } else {
                 Dialog.show("Error", "Error occurred while processing your request", "Ok", null);
             }
@@ -265,7 +264,7 @@ public class StateMachine extends StateMachineBase {
 
     }
 
-    public void fetchDashboard(final Form f) {
+    public void showDashboard(final Form f) {
         formProgress = new FormProgress(f);
         closeMenu(f, true);
 
@@ -281,7 +280,7 @@ public class StateMachine extends StateMachineBase {
             @Override
             public void actionPerformed(ActionEvent evt) {
                 formProgress = new FormProgress(f);
-                fetchTasks(f, Const.TASK_TODAY);
+                showNameReservation(f, Const.TASK_TODAY);
             }
         });
 
@@ -290,7 +289,7 @@ public class StateMachine extends StateMachineBase {
             @Override
             public void actionPerformed(ActionEvent evt) {
                 formProgress = new FormProgress(f);
-                fetchProjects(f);
+                showAnnualReturns(f);
             }
         });
 
@@ -299,7 +298,7 @@ public class StateMachine extends StateMachineBase {
             @Override
             public void actionPerformed(ActionEvent evt) {
                 formProgress = new FormProgress(f);
-                fetchCart(f);
+                showCart(f);
             }
         });
 
@@ -339,7 +338,7 @@ public class StateMachine extends StateMachineBase {
         return flow;
     }
 
-    public void fetchProjects(final Form f) {
+    public void showAnnualReturns(final Form f) {
         formProgress = new FormProgress(f);
         closeMenu(f, true);
         analytics(f, "Annual Returns");
@@ -362,6 +361,8 @@ public class StateMachine extends StateMachineBase {
             txtStep1b.setText("100088");
             txtStep1c.setText("07");
         }
+
+        txtStep1a.getParent().repaint();
 
         Button btnStep1RetrieveDetails = (Button) findByName("btnStep1RetrieveDetails", tabs);
 
@@ -437,7 +438,7 @@ public class StateMachine extends StateMachineBase {
         Button btnStep3CalcOutAmount = (Button) findByName("btnStep3CalcOutAmount", tabs);
 
         Container contStep4AnnualReturns = (Container) findByName("contStep4AnnualReturns", tabs);
-        
+
         Label lblTotalDue = (Label) findByName("lblTotalDue", tabs);
 
         btnStep3CalcOutAmount.addActionListener((ActionListener) (ActionEvent evt) -> {
@@ -468,6 +469,13 @@ public class StateMachine extends StateMachineBase {
             UserWebServices u = new UserWebServices();
             listCalculateARTran = u.CalculateARTranData(dataSet);
             contStep4AnnualReturns.removeAll();
+
+            if (listCalculateARTran.isEmpty()) {
+                Log.p("listCalculateARTran=0", Log.DEBUG);
+            } else {
+                Log.p("listCalculateARTran=" + listCalculateARTran.size(), Log.DEBUG);
+            }
+
             for (int i = 0; i < listCalculateARTran.size(); i++) {
 
                 EnterpriseDetails e = listCalculateARTran.get(i);
@@ -485,9 +493,9 @@ public class StateMachine extends StateMachineBase {
                 contStep4AnnualReturns.add(mb);
 
             }
-            
-            if(listCalculateARTran.size() > 0){
-                EnterpriseDetails lastObject = listCalculateARTran.get(listCalculateARTran.size()-1);
+
+            if (listCalculateARTran.size() > 0) {
+                EnterpriseDetails lastObject = listCalculateARTran.get(listCalculateARTran.size() - 1);
                 lblTotalDue.setText("Total Due: R" + lastObject.getAr_total());
                 lblTotalDue.repaint();
             }
@@ -503,6 +511,7 @@ public class StateMachine extends StateMachineBase {
         btnStep4AddToCart.addActionListener((ActionListener) (ActionEvent evt) -> {
 
             Dialog.show("Success", "Annual Return (s) added to shopping cart", "Ok", null);
+            showCart(f);
 
         });
 
@@ -513,19 +522,101 @@ public class StateMachine extends StateMachineBase {
 
     }
 
-    public void fetchCart(final Form f) {
+    public void showCart(final Form f) {
         formProgress = new FormProgress(f);
         closeMenu(f, true);
         analytics(f, "Shopping Cart");
         current = f;
         Container contentPane = f.getContentPane();
         contentPane.removeAll();
-        Container contProjects = (Container) createContainer("/theme", "ContCart");
+        Container cont = (Container) createContainer("/theme", "ContCart");
 
-        Tabs tabs = (Tabs) findByName("Tabs", contProjects);
+        Tabs tabs = (Tabs) findByName("Tabs", cont);
         tabs.setSwipeActivated(false);
 
-        f.add(contProjects);
+        UserWebServices u = new UserWebServices();
+        User user = new User();
+        user.setAgent_code(AGENT_CODE);
+        Map map = u.getCart(user);
+
+        Container contStep1AnnualReturns = (Container) findByName("contStep1AnnualReturns", tabs);
+        contStep1AnnualReturns.removeAll();
+        Container contStep1EServices = (Container) findByName("contStep1EServices", tabs);
+        contStep1EServices.removeAll();
+        Label lblTotal = (Label) findByName("lblTotal", tabs);
+
+        String CustomerCode = map.get("CustomerCode").toString();
+        double AnnualReturnsTotalAmount = Double.parseDouble(map.get("AnnualReturnsTotalAmount").toString());
+        double ItemDataTotalAmount = Double.parseDouble(map.get("ItemDataTotalAmount").toString());
+        double TotalAmount = Double.parseDouble(map.get("TotalAmount").toString());
+        double ItemsCount = Double.parseDouble(map.get("ItemsCount").toString());
+        ArrayList AnnualReturns = (ArrayList) map.get("AnnualReturns");
+        ArrayList CartItems = (ArrayList) map.get("CartItems");
+
+        double eserviceTotal = 0.0;
+        for (Object o : CartItems) {
+
+            Container contItem = new Container(BoxLayout.y());
+            contItem.setUIID("CalendarDay");
+            Map m = (Map) o;
+            String ItemType = m.get("ItemType").toString();
+            String StatusDate = m.get("StatusDate").toString();
+            double ReferenceNumber = Double.parseDouble(m.get("ReferenceNumber").toString());
+            String EnterpriseNumber = m.get("EnterpriseNumber").toString();
+            String FormCode = m.get("FormCode").toString();
+            double TotalAmountItemType = Double.parseDouble(m.get("TotalAmount").toString());
+            eserviceTotal += TotalAmountItemType;
+
+            MultiButton mb = new MultiButton();
+            mb.setUIID("Label");
+            mb.setUIIDLine1("MultiButtonBlack");
+            mb.setUIIDLine2("MultiButtonBlack");
+            mb.setUIIDLine3("MultiButtonBlack");
+            mb.setUIIDLine4("MultiButtonBlack");
+
+            mb.setTextLine1("Reference No: " + ReferenceNumber);
+            mb.setTextLine2("Enterprise No: " + EnterpriseNumber);
+            mb.setTextLine3("Service: " + ItemType);
+            mb.setTextLine3("Item Cost: R" + TotalAmountItemType);
+
+            Container c0 = new Container();
+            Button btnRemove0 = new Button("REMOVE");
+            c0.add(btnRemove0);
+            contItem.add(mb).add(c0);
+            contStep1EServices.add(contItem);
+
+        }
+        ArrayList Items = (ArrayList) map.get("Items");
+
+        lblTotal.setText("Total: R" + eserviceTotal);
+        lblTotal.repaint();
+
+        Button btnCheckout = (Button) findByName("btnCheckout", tabs);
+        btnCheckout.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                tabs.setSelectedIndex(1);
+            }
+        });
+
+        Button btnPayNow = (Button) findByName("btnPayNow", tabs);
+        btnPayNow.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                formProgress = new FormProgress(f);
+                try {
+
+                    Thread.sleep(3000L);
+                } catch (InterruptedException e) {
+                    Log.e(e);
+                }
+                formProgress.removeProgress();
+
+                Dialog.show("Processed", "Payment processed", "Ok", null);
+            }
+        });
+
+        f.add(cont);
         if (formProgress != null) {
             formProgress.removeProgress();
         }
@@ -580,7 +671,7 @@ public class StateMachine extends StateMachineBase {
 
         current = f;
 
-        fetchDashboard(f);
+        showDashboard(f);
 
         Container contSideMenu = (Container) createContainer("/theme", "ContSideMenu");
         contSideMenu.setScrollableX(false);//This fixed the side menu scroll issue
@@ -592,17 +683,17 @@ public class StateMachine extends StateMachineBase {
         btnProfileName.setText("Update Profile");
 
         btnProfilePic.addActionListener((ActionListener) (ActionEvent evt) -> {
-            fetchProfile(f);
+            showProfile(f);
         });
 
         btnProfileName.addActionListener((ActionListener) (ActionEvent evt) -> {
-            fetchProfile(f);
+            showProfile(f);
         });
 
         Button btnDashboard = (Button) findByName("btnDashboard", contSideMenu);
         btnDashboard.addActionListener((ActionListener) (ActionEvent evt) -> {
             closeMenu(f, true);
-            fetchDashboard(f);
+            showDashboard(f);
             closeMenu(f, true);
         });
 

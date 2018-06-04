@@ -26,6 +26,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
 import userclasses.Constants;
@@ -279,29 +280,29 @@ public class UserWebServices {
                 + "            <diffgr:diffgram xmlns:msdata=\"urn:schemas-microsoft-com:xml-msdata\" xmlns:diffgr=\"urn:schemas-microsoft-com:xml-diffgram-v1\">\n"
                 + "               <NewDataSet>\n"
                 
-               // +dataset+"\n"
+                +dataset+"\n"
                 
-                + "                  <Table1 diffgr:id=\"Table11\" msdata:rowOrder=\"0\" diffgr:hasChanges=\"inserted\">\n"
-                + "                     <ent_no>K2012210312</ent_no>\n"
-                + "                     <ar_year>2013</ar_year>\n"
-                + "                     <ar_month>11</ar_month>\n"
-                + "                     <turnover>0</turnover>\n"
-                + "                     <ent_type_code>07</ent_type_code>\n"
-                + "                  </Table1>\n"
-                + "                   <Table1 diffgr:id=\"Table11\" msdata:rowOrder=\"0\" diffgr:hasChanges=\"inserted\">\n"
-                + "                     <ent_no>K2012210312</ent_no>\n"
-                + "                     <ar_year>2014</ar_year>\n"
-                + "                     <ar_month>11</ar_month>\n"
-                + "                     <turnover>100000</turnover>\n"
-                + "                     <ent_type_code>07</ent_type_code>\n"
-                + "                  </Table1>\n"
-                + "                                                 <Table1 diffgr:id=\"Table11\" msdata:rowOrder=\"0\" diffgr:hasChanges=\"inserted\">\n"
-                + "                     <ent_no>K2012210312</ent_no>\n"
-                + "                     <ar_year>2015</ar_year>\n"
-                + "                     <ar_month>11</ar_month>\n"
-                + "                     <turnover>100000000</turnover>\n"
-                + "                     <ent_type_code>07</ent_type_code>\n"
-                + "                  </Table1>                 \n" 
+//                + "                  <Table1 diffgr:id=\"Table11\" msdata:rowOrder=\"0\" diffgr:hasChanges=\"inserted\">\n"
+//                + "                     <ent_no>K2012210312</ent_no>\n"
+//                + "                     <ar_year>2013</ar_year>\n"
+//                + "                     <ar_month>11</ar_month>\n"
+//                + "                     <turnover>0</turnover>\n"
+//                + "                     <ent_type_code>07</ent_type_code>\n"
+//                + "                  </Table1>\n"
+//                + "                   <Table1 diffgr:id=\"Table11\" msdata:rowOrder=\"0\" diffgr:hasChanges=\"inserted\">\n"
+//                + "                     <ent_no>K2012210312</ent_no>\n"
+//                + "                     <ar_year>2014</ar_year>\n"
+//                + "                     <ar_month>11</ar_month>\n"
+//                + "                     <turnover>100000</turnover>\n"
+//                + "                     <ent_type_code>07</ent_type_code>\n"
+//                + "                  </Table1>\n"
+//                + "                                                 <Table1 diffgr:id=\"Table11\" msdata:rowOrder=\"0\" diffgr:hasChanges=\"inserted\">\n"
+//                + "                     <ent_no>K2012210312</ent_no>\n"
+//                + "                     <ar_year>2015</ar_year>\n"
+//                + "                     <ar_month>11</ar_month>\n"
+//                + "                     <turnover>100000000</turnover>\n"
+//                + "                     <ent_type_code>07</ent_type_code>\n"
+//                + "                  </Table1>                 \n" 
                 + "               </NewDataSet>\n"
                 + "            </diffgr:diffgram>\n"
                 + "            <!--You may enter ANY elements at this point-->\n"
@@ -565,15 +566,19 @@ public class UserWebServices {
         return null;
     }
 
-    public String getCart(User user) {
+    public Map getCart(User user) {
+        
+        Map map = null;
 
-        /*Map jsonData = Rest.get("http://apidev.cipc.co.za/v1/payment/cart/" + user.getAgent_code())
-                .acceptJson().getAsJsonMap().getResponseData();
+        AuthObject auth = getToken(user);
+        
+       /* Map jsonData = Rest.get("https://apidev.cipc.co.za/v1/payment/cart/" + user.getAgent_code())
+                .header("Authorization", auth.getToken_type() + " " + auth.getAccess_token()).jsonContent()
+                .getAsJsonMap().getResponseData();
 
         Log.p("getCart=" + jsonData.toString());*/
-        AuthObject auth = getToken(user);
-
-        ConnectionRequest post = new ConnectionRequest();
+       
+       ConnectionRequest post = new ConnectionRequest();
 
         post.setUrl("https://apidev.cipc.co.za/v1/payment/cart/" + user.getAgent_code());
         post.setPost(false);
@@ -584,12 +589,23 @@ public class UserWebServices {
         byte[] responseData = post.getResponseData();
         if (responseData != null) {
             String data = new String(responseData);
+            try{
+                JSONParser parser = new JSONParser();
+                 map = parser.parseJSON(convertStringtoInputStreamReader(data));
+                 
+                 
+                 
+             
+            }
+            catch(IOException e){
+                Log.e(e);
+            }
 
             //JSONParser
-            Log.p("getCart=" + data);
+           
         }
 
-        return null;
+        return map;
     }
 
     public String getEnterpriseDetails(User user) {
