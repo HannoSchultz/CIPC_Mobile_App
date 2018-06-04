@@ -25,6 +25,14 @@ public class EnterpriseDetails {
     private String ent_type_code;
     private String ar_month;
     private String cust_code_old;
+    private String ar_amount;
+    private String ar_total;
+    private String reference_no;
+    private String ar_penalty;
+    
+    private String ent_status_descr;
+    private String ent_type_descr;
+    private String ent_name;
 
     public String getEnt_no() {
         return ent_no;
@@ -122,11 +130,61 @@ public class EnterpriseDetails {
         this.cust_code_old = cust_code_old;
     }
 
-    @Override
-    public String toString() {
-        return "EnterpriseDetails{" + "ent_no=" + ent_no + ", ar_year=" + ar_year + ", trak_no=" + trak_no + ", turnover=" + turnover + ", amt_paid=" + amt_paid + ", date_paid=" + date_paid + ", reg_date=" + reg_date + ", ar_start_date=" + ar_start_date + ", due_date=" + due_date + ", ent_type_code=" + ent_type_code + ", ar_month=" + ar_month + ", cust_code_old=" + cust_code_old + '}';
+    public String getEnt_status_descr() {
+        return ent_status_descr;
     }
-    
-    
+
+    public void setEnt_status_descr(String ent_status_descr) {
+        this.ent_status_descr = ent_status_descr;
+    }
+
+    public String getEnt_type_descr() {
+        return ent_type_descr;
+    }
+
+    public void setEnt_type_descr(String ent_type_descr) {
+        this.ent_type_descr = ent_type_descr;
+    }
+
+    public String getEnt_name() {
+        return ent_name;
+    }
+
+    public void setEnt_name(String ent_name) {
+        this.ent_name = ent_name;
+    }
+
+    public String getAr_amount() {
+        return ar_amount;
+    }
+
+    public void setAr_amount(String ar_amount) {
+        this.ar_amount = ar_amount;
+    }
+
+    public String getAr_total() {
+        return ar_total;
+    }
+
+    public void setAr_total(String ar_total) {
+        this.ar_total = ar_total;
+    }
+
+    public String getReference_no() {
+        return reference_no;
+    }
+
+    public void setReference_no(String reference_no) {
+        this.reference_no = reference_no;
+    }
+
+    public String getAr_penalty() {
+        return ar_penalty;
+    }
+
+    public void setAr_penalty(String ar_penalty) {
+        this.ar_penalty = ar_penalty;
+    }
+
 
 }

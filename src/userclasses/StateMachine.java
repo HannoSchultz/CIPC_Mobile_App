@@ -76,6 +76,13 @@ import ui.FormProgress;
  */
 public class StateMachine extends StateMachineBase {
 
+    String ENT_NUMBER;
+    ArrayList annualReturnsEntDetails;
+
+    ArrayList<EnterpriseDetails> listEnterpriseDetails;
+    ArrayList<TextArea> listTextEnterpriseDetails;
+    ArrayList<EnterpriseDetails> listCalculateARTran;
+
     //private com.pmovil.nativega.Tracker tracker;
     private String[] arrDevices;
     private String action = "";
@@ -97,6 +104,8 @@ public class StateMachine extends StateMachineBase {
 
     private static String AGENT_CODE = "";
 
+    EnterpriseDetails enterpriseDetails;
+
     public StateMachine(String resFile) {
         super(resFile);
         // do not modify, write code in initVars and initialize class members there,
@@ -109,9 +118,9 @@ public class StateMachine extends StateMachineBase {
             Toolbar.setPermanentSideMenu(true);
         }
 
-        UserWebServices u = new UserWebServices();
-        ArrayList a = u.GetAREntTranDetails("", "");
-        Log.p("a = " + a.toString(), Log.DEBUG);
+        //UserWebServices u = new UserWebServices();
+        //ArrayList listCalculateArTranData = u.CalculateARTranData(null);
+        //Log.p("listCalculateArTranData = " + ((EnterpriseDetails)listCalculateArTranData.get(0)).getAr_penalty(), Log.DEBUG);
     }
 
     @Override
@@ -338,6 +347,7 @@ public class StateMachine extends StateMachineBase {
         Container contentPane = f.getContentPane();
         contentPane.removeAll();
         Container contProjects = (Container) createContainer("/theme", "ContProjects");
+        Container contStep2 = (Container) findByName("contStep2", contProjects);
 
         Tabs tabs = (Tabs) findByName("Tabs", contProjects);
         tabs.setSwipeActivated(false);
@@ -346,19 +356,156 @@ public class StateMachine extends StateMachineBase {
         TextField txtStep1a = (TextField) findByName("txtStep1a", tabs);
         TextField txtStep1b = (TextField) findByName("txtStep1b", tabs);
         TextField txtStep1c = (TextField) findByName("txtStep1c", tabs);
+
+        if (Display.getInstance().isSimulator()) {//2011100088 & K2013064531 & 2014 004548 07
+            txtStep1a.setText("2011");
+            txtStep1b.setText("100088");
+            txtStep1c.setText("07");
+        }
+
         Button btnStep1RetrieveDetails = (Button) findByName("btnStep1RetrieveDetails", tabs);
 
         //Step 2
-        Label lblStep2EnterpriseNumber = (Label) findByName("lblStep2EnterpriseNumber", tabs);
-        
+        Label lblStep2EnterpriseNumber = (Label) findByName("lblStep2EnterpriseNumber", contStep2);
+        Label lblStep2EnterpriseName = (Label) findByName("lblStep2EnterpriseName", contStep2);
+        Label lblStep2EnterpriseType = (Label) findByName("lblStep2EnterpriseType", contStep2);
+        Label lblStep2EnterpriseStatus = (Label) findByName("lblStep2EnterpriseStatus", contStep2);
+        Label lblStep2RegistrationDate = (Label) findByName("lblStep2RegistrationDate", contStep2);
 
-        //Step 3
+        btnStep1RetrieveDetails.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+
+                ENT_NUMBER = txtStep1a.getText() + "/" + txtStep1b.getText()
+                        + "/" + txtStep1c.getText();
+                //ENT_NUMBER  = "K2013064531";
+
+                UserWebServices u = new UserWebServices();
+                enterpriseDetails = u.soap_GetEnterpriseDetails(ENT_NUMBER); //"K2013064531");//2014 / 016320 /  07
+
+                if (enterpriseDetails != null) {
+                    lblStep2EnterpriseNumber.setText(enterpriseDetails.getEnt_no());
+                    lblStep2EnterpriseName.setText(enterpriseDetails.getEnt_name());
+                    lblStep2EnterpriseType.setText(enterpriseDetails.getEnt_type_descr());
+                    lblStep2EnterpriseStatus.setText(enterpriseDetails.getEnt_status_descr());
+                    lblStep2RegistrationDate.setText(enterpriseDetails.getReg_date());
+
+                    tabs.setSelectedIndex(1);
+
+                } else {
+                    Dialog.show("Error", "Could not obtain enterprise details.", "Ok", null);
+                }
+
+            }
+        });
+
+        Button btnStep2Confirm = (Button) findByName("btnStep2Confirm", tabs);
+
+        //Step 3//Please enter Annual Turnover for the current filing year, 2018:
+        Container contStep3Turnovers = (Container) findByName("contStep3Turnovers", tabs);
+        contStep3Turnovers.removeAll();
+
+        btnStep2Confirm.addActionListener((ActionListener) (ActionEvent evt) -> {
+
+            UserWebServices u = new UserWebServices();
+            listEnterpriseDetails = u.GetAREntTranDetails(ENT_NUMBER, AGENT_CODE);
+
+            if (listEnterpriseDetails.size() > 0) {
+
+                listTextEnterpriseDetails = new ArrayList<>();//store turnover textfields
+                for (EnterpriseDetails ent : listEnterpriseDetails) {
+                    Container cont0 = new Container(BoxLayout.y());
+                    cont0.setUIID("CalendarDay");
+                    TextArea txt0a = new TextArea();
+                    txt0a.setText("Please enter Annual Turnover for " + ent.getAr_year());
+                    txt0a.setEnabled(false);
+                    txt0a.setEditable(false);
+                    TextArea txt0b = new TextArea();
+                    txt0b.setHint("Amount in rands");
+                    txt0b.setConstraint(TextArea.DECIMAL);
+                    listTextEnterpriseDetails.add(txt0b);
+                    cont0.add(txt0a).add(txt0b);
+                    contStep3Turnovers.add(cont0);
+                }
+                contStep3Turnovers.repaint();
+
+            }
+
+            tabs.setSelectedIndex(2);
+        });
+
+        Button btnStep3CalcOutAmount = (Button) findByName("btnStep3CalcOutAmount", tabs);
+
+        Container contStep4AnnualReturns = (Container) findByName("contStep4AnnualReturns", tabs);
         
-        
-        
+        Label lblTotalDue = (Label) findByName("lblTotalDue", tabs);
+
+        btnStep3CalcOutAmount.addActionListener((ActionListener) (ActionEvent evt) -> {
+
+            String table1LineStart = "<Table1 diffgr:id=\"Table11\" msdata:rowOrder=\"0\" diffgr:hasChanges=\"inserted\">\n";
+
+            String table11Body = "";
+
+            for (int i = 0; i < listEnterpriseDetails.size(); i++) {
+
+                EnterpriseDetails entDetails = listEnterpriseDetails.get(i);
+                TextArea txtTurnover = listTextEnterpriseDetails.get(i);
+
+                table11Body += "<ent_no>" + entDetails.getEnt_no() + "</ent_no>\n"
+                        + "                     <ar_year>" + entDetails.getAr_year() + "</ar_year>\n"
+                        + "                     <ar_month>" + entDetails.getAr_month() + "</ar_month>\n"
+                        + "                     <turnover>" + txtTurnover.getText() + "</turnover>\n"
+                        + "                     <ent_type_code>" + entDetails.getEnt_type_code() + "</ent_type_code>\n";
+
+            }
+
+            String table1LineEnd = "</Table1>\n";
+
+            String dataSet = table1LineStart + table11Body + table1LineEnd;
+
+            Log.p("dataset=" + dataSet, Log.DEBUG);
+
+            UserWebServices u = new UserWebServices();
+            listCalculateARTran = u.CalculateARTranData(dataSet);
+            contStep4AnnualReturns.removeAll();
+            for (int i = 0; i < listCalculateARTran.size(); i++) {
+
+                EnterpriseDetails e = listCalculateARTran.get(i);
+                MultiButton mb = new MultiButton();
+                mb.setUIID("CalendarDay");
+                mb.setUIIDLine1("MultiButtonBlack");
+                mb.setUIIDLine2("MultiButtonBlack");
+                mb.setUIIDLine3("MultiButtonBlack");
+                mb.setUIIDLine4("MultiButtonBlack");
+                mb.setTextLine1("Enterprise No: " + e.getEnt_no());
+                mb.setTextLine2("Reference No: " + e.getReference_no());
+                mb.setTextLine3("AR Year: " + e.getAr_year() + ", Turnover: R" + e.getTurnover());
+                mb.setTextLine4("AR Amount: R" + e.getAr_amount() + ", Penalty: R" + e.getAr_penalty());
+
+                contStep4AnnualReturns.add(mb);
+
+            }
+            
+            if(listCalculateARTran.size() > 0){
+                EnterpriseDetails lastObject = listCalculateARTran.get(listCalculateARTran.size()-1);
+                lblTotalDue.setText("Total Due: R" + lastObject.getAr_total());
+                lblTotalDue.repaint();
+            }
+
+            contStep4AnnualReturns.repaint();
+
+            tabs.setSelectedIndex(3);
+
+        });
+
         //Step 4
-        
-        
+        Button btnStep4AddToCart = (Button) findByName("btnStep4AddToCart", tabs);
+        btnStep4AddToCart.addActionListener((ActionListener) (ActionEvent evt) -> {
+
+            Dialog.show("Success", "Annual Return (s) added to shopping cart", "Ok", null);
+
+        });
+
         f.add(contProjects);
         if (formProgress != null) {
             formProgress.removeProgress();
