@@ -1,6 +1,5 @@
 package userclasses;
 
-
 import com.codename1.capture.Capture;
 import com.codename1.charts.ChartComponent;
 import com.codename1.charts.models.CategorySeries;
@@ -78,7 +77,6 @@ import ui.FormProgress;
 public class StateMachine extends StateMachineBase {
 
     //private com.pmovil.nativega.Tracker tracker;
-
     private String[] arrDevices;
     private String action = "";
     private Form current;
@@ -108,7 +106,6 @@ public class StateMachine extends StateMachineBase {
         if (Display.getInstance().isTablet()) {
             Toolbar.setPermanentSideMenu(true);
         }
-
 
     }
 
@@ -141,7 +138,6 @@ public class StateMachine extends StateMachineBase {
             f.setToolbar(toolbar);
         }
 
-      
         if (toolbar.getTitleComponent() instanceof Label) {
 
             Label title = (Label) toolbar.getTitleComponent();
@@ -190,14 +186,13 @@ public class StateMachine extends StateMachineBase {
         Container contTasks = (Container) createContainer("/theme", "ContTasks");
 
         f.add(contTasks);
-        
+
         if (formProgress != null) {
             formProgress.removeProgress();
         }
 
     }
 
-    
     public void fetchDashboard(final Form f) {
         formProgress = new FormProgress(f);
         closeMenu(f, true);
@@ -227,11 +222,23 @@ public class StateMachine extends StateMachineBase {
             }
         });
 
+        MultiButton mbCart = (MultiButton) findByName("mbCart", cont);
+        mbCart.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                formProgress = new FormProgress(f);
+                fetchCart(f);
+            }
+        });
+
         mbTasks.setTextLine1("Name Reservations");
         mbTasks.setTextLine2("One Name Reservation pending");
 
         mbCurrency.setTextLine1("Annual Returns");
         mbCurrency.setTextLine2("Three Annual Returns due");
+        
+        mbCart.setTextLine1("Shopping Cart");
+        mbCart.setTextLine2("Pay Now for CIPC Services");
 
         f.add(cont);
         if (formProgress != null) {
@@ -241,7 +248,6 @@ public class StateMachine extends StateMachineBase {
 
     }
 
-    
     public static SwipeableContainer createRankWidget(String line1, String line2, ActionListener action) {
         MultiButton button = new MultiButton(line1);
         button.addActionListener(action);
@@ -279,8 +285,26 @@ public class StateMachine extends StateMachineBase {
         }
 
     }
+    
+        public void fetchCart(final Form f) {
+        formProgress = new FormProgress(f);
+        closeMenu(f, true);
+        analytics(f, "Shopping Cart");
+        current = f;
+        Container contentPane = f.getContentPane();
+        contentPane.removeAll();
+        Container contProjects = (Container) createContainer("/theme", "ContCart");
 
-   
+        Tabs tabs = (Tabs) findByName("Tabs", contProjects);
+        tabs.setSwipeActivated(false);
+
+        f.add(contProjects);
+        if (formProgress != null) {
+            formProgress.removeProgress();
+        }
+
+    }
+
     protected DefaultRenderer buildCategoryRenderer(int[] colors) {
         Font smallFont = Font.createSystemFont(Font.FACE_SYSTEM, Font.SIZE_SMALL, Font.STYLE_BOLD);
         Font medFont = Font.createSystemFont(Font.FACE_SYSTEM, Font.SIZE_MEDIUM, Font.STYLE_BOLD);
@@ -296,7 +320,6 @@ public class StateMachine extends StateMachineBase {
         return renderer;
     }
 
-    
     public void addBack(Form f, Form prev) {
         Toolbar toolbar = f.getToolbar();
         Command back = new Command("Back") {
@@ -310,8 +333,6 @@ public class StateMachine extends StateMachineBase {
         toolbar.setBackCommand(back);
     }
 
-   
-   
     public void changeFloatingButtonStyle(FloatingActionButton floatingButton) {
 
         floatingButton.getSelectedStyle().setBgColor(Const.FLOATING_BUTTON_PRESSED);
@@ -325,7 +346,6 @@ public class StateMachine extends StateMachineBase {
 
     }
 
-   
     @Override
     protected void beforeMain(Form f) {
 
@@ -371,7 +391,6 @@ public class StateMachine extends StateMachineBase {
 
     }
 
-
     public String trimEmail(String email) {
         if (email != null) {
             email = email.toLowerCase().trim();
@@ -393,7 +412,6 @@ public class StateMachine extends StateMachineBase {
         user.setAgent_code(txtCustomerCode);
         user.setParamPassword(password);
 
-
         formProgress = new FormProgress(f);
 
         UserWebServices userWebServices = new UserWebServices();
@@ -409,10 +427,10 @@ public class StateMachine extends StateMachineBase {
             errorMessage += "Incorrect Customer Code or password. ";
 
         }
-        
+
         String responsePassword = responseUser.getPassword();
-        
-       Log.p(password + ":" + responsePassword);
+
+        Log.p(password + ":" + responsePassword);
 
         if (password.equals(responsePassword)) {
 
@@ -424,11 +442,19 @@ public class StateMachine extends StateMachineBase {
         formProgress.removeProgress();
 
         if (errorMessage != null && errorMessage.length() > 0) {
-           // Utility.showDialog("Error", errorMessage);
+            showDialog(errorMessage);
             return true;//block
         } else {
             return false;
         }
+
+    }
+    
+     public  void showDialog(String message) {
+        ToastBar.Status status = ToastBar.getInstance().createStatus();
+        status.setMessage(message);
+        status.setExpires(5000);
+        status.show();
 
     }
 
@@ -480,10 +506,6 @@ public class StateMachine extends StateMachineBase {
         }
     }
 
-   
-
-   
-
     public void isTableInputForm(Form f) {
     }
 
@@ -504,8 +526,6 @@ public class StateMachine extends StateMachineBase {
 
     @Override
     protected void beforeRegistration(Form f) {
-        
-        
 
         Toolbar bar = analytics(f, "Registration");
 
@@ -565,10 +585,9 @@ public class StateMachine extends StateMachineBase {
         bar.setBackCommand(back);
     }
 
-   
     @Override
     protected void beforeSplash(Form f) {
-      
+
     }
 
     @Override
