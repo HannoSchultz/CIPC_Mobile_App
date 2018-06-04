@@ -23,8 +23,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.Map;
+import java.util.StringTokenizer;
 import userclasses.Constants;
+import userclasses.NameSearchObject;
 import za.co.cipc.pojos.AuthObject;
 import za.co.cipc.pojos.User;
 
@@ -465,7 +469,7 @@ public class UserWebServices {
                 // parse response data
             }
         };
-         AuthObject auth = getToken(user);
+        AuthObject auth = getToken(user);
 
         post.addRequestHeader("Authorization", auth.getToken_type() + " " + auth.getAccess_token());
         post.setUrl(END_POINT);
@@ -652,13 +656,13 @@ public class UserWebServices {
                 + "\n"
                 + "      <cipc:get_cust_MOBI>\n"
                 + "\n"
-                + "         <cipc:sUserName>"+Constants.sUserName+"</cipc:sUserName>\n"
+                + "         <cipc:sUserName>" + Constants.sUserName + "</cipc:sUserName>\n"
                 + "\n"
-                + "         <cipc:sPassword>"+Constants.sPassword+"</cipc:sPassword>\n"
+                + "         <cipc:sPassword>" + Constants.sPassword + "</cipc:sPassword>\n"
                 + "\n"
-                + "         <cipc:sBankID>"+Constants.sBankID+"</cipc:sBankID>\n"
+                + "         <cipc:sBankID>" + Constants.sBankID + "</cipc:sBankID>\n"
                 + "\n"
-                + "         <cipc:scustcode>"+user.getAgent_code()+"</cipc:scustcode>\n"
+                + "         <cipc:scustcode>" + user.getAgent_code() + "</cipc:scustcode>\n"
                 + "\n"
                 + "      </cipc:get_cust_MOBI>\n"
                 + "\n"
@@ -702,9 +706,8 @@ public class UserWebServices {
 //        InfiniteProgress prog = new InfiniteProgress();
 //        Dialog dlg = prog.showInifiniteBlocking();
 //        httpRequest.setDisposeOnCompletion(dlg);
-
         NetworkManager.getInstance().addToQueueAndWait(httpRequest);
-        String data = new String(httpRequest.getResponseData());
+        String data = new String(httpRequest.getResponseData());//TODO do null check
 
         try {
 
@@ -715,7 +718,6 @@ public class UserWebServices {
 
             responseUser.setAgent_code(user.getAgent_code());
             responseUser.setPassword(result.getAsString("//get_cust_mobiresult"));
-           
 
             return responseUser;
 
@@ -1387,7 +1389,7 @@ public class UserWebServices {
                 + "         <!--Optional:-->\n\n"
                 + "         <cipc:sBankID>" + Constants.sBankID + "</cipc:sBankID>\n\n"
                 + "         <!--Optional:-->\n\n"
-                + "         <cipc:sCustID>" + user.getAgent_id_no()+ "</cipc:sCustID>\n\n"
+                + "         <cipc:sCustID>" + user.getAgent_id_no() + "</cipc:sCustID>\n\n"
                 + "      </cipc:GetCustLoginDetails_ID_NO>\n\n"
                 + "   </soapenv:Body>\n\n"
                 + "</soapenv:Envelope>";
@@ -1428,7 +1430,6 @@ public class UserWebServices {
 //        InfiniteProgress prog = new InfiniteProgress();
 //        Dialog dlg = prog.showInifiniteBlocking();
 //        httpRequest.setDisposeOnCompletion(dlg);
-
         NetworkManager.getInstance().addToQueueAndWait(httpRequest);
         String data = new String(httpRequest.getResponseData());
 
@@ -1483,8 +1484,8 @@ public class UserWebServices {
         return null;
 
     }//end login
-    
-     public User GetCustLoginDetails_ID_NO_MOBI(User user) {
+
+    public User GetCustLoginDetails_ID_NO_MOBI(User user) {
 
         final String SOAP_BODY
                 = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cipc=\"CIPC_WEB_SERVICES\">\n\n"
@@ -1498,7 +1499,7 @@ public class UserWebServices {
                 + "         <!--Optional:-->\n\n"
                 + "         <cipc:sBankID>" + Constants.sBankID + "</cipc:sBankID>\n\n"
                 + "         <!--Optional:-->\n\n"
-                + "         <cipc:sCustID>" + user.getAgent_id_no()+ "</cipc:sCustID>\n\n"
+                + "         <cipc:sCustID>" + user.getAgent_id_no() + "</cipc:sCustID>\n\n"
                 + "      </cipc:GetCustLoginDetails_ID_NO_MOBI>\n\n"
                 + "   </soapenv:Body>\n\n"
                 + "</soapenv:Envelope>";
@@ -1539,7 +1540,6 @@ public class UserWebServices {
 //        InfiniteProgress prog = new InfiniteProgress();
 //        Dialog dlg = prog.showInifiniteBlocking();
 //        httpRequest.setDisposeOnCompletion(dlg);
-
         NetworkManager.getInstance().addToQueueAndWait(httpRequest);
         String data = new String(httpRequest.getResponseData());
 
@@ -1594,7 +1594,6 @@ public class UserWebServices {
         return null;
 
     }//end login
-
 
     public String ReceiveNewCustData_Reg(User requestUser) {
 
@@ -1847,7 +1846,7 @@ public class UserWebServices {
 
     }//end name reservation
 
-    public void Namereservation_MOBI(User user) {
+    public void Namereservation_MOBI(String customerCode, String name1, String name2, String name3, String name4) {
 
         final String SOAP_BODY
                 = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cipc=\"CIPC_WEB_SERVICES\">\n"
@@ -1864,23 +1863,23 @@ public class UserWebServices {
                 + "\n"
                 + "         <cipc:sBankID>WViQlFqcunA=</cipc:sBankID>\n"
                 + "\n"
-                + "         <cipc:S_name1>blessing1</cipc:S_name1>\n"
+                + "         <cipc:S_name1>" + name1 + "</cipc:S_name1>\n"
                 + "\n"
                 + "         <!--Optional:-->\n"
                 + "\n"
-                + "         <cipc:S_name2>blessing2</cipc:S_name2>\n"
+                + "         <cipc:S_name2>" + name2 + "</cipc:S_name2>\n"
                 + "\n"
                 + "         <!--Optional:-->\n"
                 + "\n"
-                + "         <cipc:S_name3>blessing3</cipc:S_name3>\n"
+                + "         <cipc:S_name3>" + name3 + "</cipc:S_name3>\n"
                 + "\n"
                 + "         <!--Optional:-->\n"
                 + "\n"
-                + "         <cipc:S_name4>blessing4</cipc:S_name4>\n"
+                + "         <cipc:S_name4>" + name4 + "</cipc:S_name4>\n"
                 + "\n"
                 + "         <!--Optional:-->\n"
                 + "\n"
-                + "         <cipc:sCust_Code>INKE01</cipc:sCust_Code>\n"
+                + "         <cipc:sCust_Code>" + customerCode + "</cipc:sCust_Code>\n"
                 + "\n"
                 + "      </cipc:Namereservation_MOBI>\n"
                 + "\n"
@@ -1950,8 +1949,10 @@ public class UserWebServices {
 
     }//end name reservation
 
-    public void search_name_MOBI(User user) {
+    public ArrayList search_name_MOBI(String customerCode, String name1, String name2, String name3, String name4) {
 
+        ArrayList arrayList = new ArrayList();
+        
         final String SOAP_BODY
                 = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cipc=\"CIPC_WEB_SERVICES\">\n"
                 + "\n"
@@ -1967,23 +1968,23 @@ public class UserWebServices {
                 + "\n"
                 + "          <cipc:sBankID>wBAA7LAkWIs=</cipc:sBankID>\n"
                 + "\n"
-                + "         <cipc:sCust_Code>INKE01</cipc:sCust_Code>\n"
+                + "         <cipc:sCust_Code>" + customerCode + "</cipc:sCust_Code>\n"
                 + "\n"
                 + "         <!--Optional:-->\n"
                 + "\n"
-                + "         <cipc:S_name1>ABSA</cipc:S_name1>\n"
+                + "         <cipc:S_name1>" + name1 + "</cipc:S_name1>\n"
                 + "\n"
                 + "         <!--Optional:-->\n"
                 + "\n"
-                + "         <cipc:S_name2>NEDBANK</cipc:S_name2>\n"
+                + "         <cipc:S_name2>" + name2 + "</cipc:S_name2>\n"
                 + "\n"
                 + "         <!--Optional:-->\n"
                 + "\n"
-                + "         <cipc:S_name3>Blessing Mobile Shop</cipc:S_name3>\n"
+                + "         <cipc:S_name3>" + name3 + "</cipc:S_name3>\n"
                 + "\n"
                 + "         <!--Optional:-->\n"
                 + "\n"
-                + "         <cipc:S_name4>CAR</cipc:S_name4>\n"
+                + "         <cipc:S_name4>" + name4 + "</cipc:S_name4>\n"
                 + "\n"
                 + "      </cipc:search_name_MOBI>\n"
                 + "\n"
@@ -2034,24 +2035,55 @@ public class UserWebServices {
 
         try {
 
-            Result result = Result.fromContent(data, Result.XML);
-            //Element e = Utility.parseXML(result.getAsString("//anyType"));
-            //Element e = Utility.parseXML(result.getAsString("//User"));
+            Result result = Result.fromContent(data.toLowerCase(), Result.XML);
 
             Log.p("Element e: " + result, Log.DEBUG);
 
-//            u = new User();
-//            u.setUserID(e.getChildrenByTagName("userid").toString());
-//            u.setEmailAddress(e.getChildrenByTagName("emailaddress").toString());
-//            u.setDateTimeUpdated(e.getChildrenByTagName("datetimeupdated").toString());
-//            u.setFeedback(e.getChildrenByTagName("feedback").toString());
-//
-//            Log.p("Object: " + u.toString());
+            XMLParser parser = new XMLParser();
+            parser.setCaseSensitive(true);
+            Element element = parser.parse(convertStringtoInputStreamReader(result.getAsString("//dataset")));
+
+            for (int i = 0; i < element.getNumChildren(); i++) {
+
+                Element child = element.getChildAt(i);
+
+                Log.p("chiled=" + child, Log.DEBUG);
+                Element name = (Element) child.getTextChildren(null, true).get(0);
+                String elemName = RSM(name.toString());
+                Log.p("elemName=" + elemName, Log.DEBUG);
+
+                StringTokenizer st = new StringTokenizer(
+                        elemName, "|");
+               
+                NameSearchObject n = new NameSearchObject();
+                n.setName(elemName);
+
+                if (st != null && st.countTokens() > 1) {
+                    n.setIsValid(false);
+                } else {
+                    n.setIsValid(true);
+                }
+                arrayList.add(n);
+            }
+
         } catch (IllegalArgumentException e) {
             Log.p(e.toString());
         }
 
+        return arrayList;
     }//end search_name_MOBI
+
+    private String RSM(String name) {
+        name = name.trim();
+        name = name.substring(1);
+        name = name.substring(0, name.length() - 1);
+
+        name = name.trim();
+        name = name.substring(1);
+        name = name.substring(0, name.length() - 1);
+
+        return name;
+    }
 
     public String GetInternalRefNo(User user) {
 

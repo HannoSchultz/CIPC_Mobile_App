@@ -162,6 +162,18 @@ public abstract class StateMachineBase extends UIBuilder {
         return cmp;
     }
 
+    public com.codename1.ui.Label findLblName1Response(Component root) {
+        return (com.codename1.ui.Label)findByName("lblName1Response", root);
+    }
+
+    public com.codename1.ui.Label findLblName1Response() {
+        com.codename1.ui.Label cmp = (com.codename1.ui.Label)findByName("lblName1Response", Display.getInstance().getCurrent());
+        if(cmp == null && aboutToShowThisContainer != null) {
+            cmp = (com.codename1.ui.Label)findByName("lblName1Response", aboutToShowThisContainer);
+        }
+        return cmp;
+    }
+
     public com.codename1.ui.TextArea findTxtStep3Address(Component root) {
         return (com.codename1.ui.TextArea)findByName("txtStep3Address", root);
     }
@@ -758,6 +770,18 @@ public abstract class StateMachineBase extends UIBuilder {
         com.codename1.ui.Label cmp = (com.codename1.ui.Label)findByName("lblStep2RegistrationDate", Display.getInstance().getCurrent());
         if(cmp == null && aboutToShowThisContainer != null) {
             cmp = (com.codename1.ui.Label)findByName("lblStep2RegistrationDate", aboutToShowThisContainer);
+        }
+        return cmp;
+    }
+
+    public com.codename1.ui.Label findLblName4Response(Component root) {
+        return (com.codename1.ui.Label)findByName("lblName4Response", root);
+    }
+
+    public com.codename1.ui.Label findLblName4Response() {
+        com.codename1.ui.Label cmp = (com.codename1.ui.Label)findByName("lblName4Response", Display.getInstance().getCurrent());
+        if(cmp == null && aboutToShowThisContainer != null) {
+            cmp = (com.codename1.ui.Label)findByName("lblName4Response", aboutToShowThisContainer);
         }
         return cmp;
     }
@@ -1374,6 +1398,18 @@ public abstract class StateMachineBase extends UIBuilder {
         return cmp;
     }
 
+    public com.codename1.ui.Label findLblName3Response(Component root) {
+        return (com.codename1.ui.Label)findByName("lblName3Response", root);
+    }
+
+    public com.codename1.ui.Label findLblName3Response() {
+        com.codename1.ui.Label cmp = (com.codename1.ui.Label)findByName("lblName3Response", Display.getInstance().getCurrent());
+        if(cmp == null && aboutToShowThisContainer != null) {
+            cmp = (com.codename1.ui.Label)findByName("lblName3Response", aboutToShowThisContainer);
+        }
+        return cmp;
+    }
+
     public com.codename1.ui.TextField findTxtStep1a4(Component root) {
         return (com.codename1.ui.TextField)findByName("txtStep1a4", root);
     }
@@ -1550,6 +1586,18 @@ public abstract class StateMachineBase extends UIBuilder {
         com.codename1.ui.Container cmp = (com.codename1.ui.Container)findByName("ContSideMenu", Display.getInstance().getCurrent());
         if(cmp == null && aboutToShowThisContainer != null) {
             cmp = (com.codename1.ui.Container)findByName("ContSideMenu", aboutToShowThisContainer);
+        }
+        return cmp;
+    }
+
+    public com.codename1.ui.Label findLblName2Response(Component root) {
+        return (com.codename1.ui.Label)findByName("lblName2Response", root);
+    }
+
+    public com.codename1.ui.Label findLblName2Response() {
+        com.codename1.ui.Label cmp = (com.codename1.ui.Label)findByName("lblName2Response", Display.getInstance().getCurrent());
+        if(cmp == null && aboutToShowThisContainer != null) {
+            cmp = (com.codename1.ui.Label)findByName("lblName2Response", aboutToShowThisContainer);
         }
         return cmp;
     }

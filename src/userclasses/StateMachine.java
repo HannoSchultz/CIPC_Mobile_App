@@ -95,6 +95,8 @@ public class StateMachine extends StateMachineBase {
     private static FormProgress formProgress;
     private String message = "";
 
+    private static String AGENT_CODE = "";
+
     public StateMachine(String resFile) {
         super(resFile);
         // do not modify, write code in initVars and initialize class members there,
@@ -107,6 +109,7 @@ public class StateMachine extends StateMachineBase {
             Toolbar.setPermanentSideMenu(true);
         }
 
+        //Log.p("list: " + a, Log.DEBUG);
     }
 
     @Override
@@ -185,6 +188,49 @@ public class StateMachine extends StateMachineBase {
         contentPane.removeAll();
         Container contTasks = (Container) createContainer("/theme", "ContTasks");
 
+        TextField txtName1 = (TextField) findByName("txtName1", contTasks);
+        TextField txtName2 = (TextField) findByName("txtName2", contTasks);
+        TextField txtName3 = (TextField) findByName("txtName3", contTasks);
+        TextField txtName4 = (TextField) findByName("txtName4", contTasks);
+
+        Label lblName1Response = (Label) findByName("lblName1Response", contTasks);
+        Label lblName2Response = (Label) findByName("lblName2Response", contTasks);
+        Label lblName3Response = (Label) findByName("lblName3Response", contTasks);
+        Label lblName4Response = (Label) findByName("lblName4Response", contTasks);
+
+        Button btnVerify = (Button) findByName("btnVerify", contTasks);
+        Button btnLodge = (Button) findByName("btnLodge", contTasks);
+
+        btnVerify.addActionListener((ActionListener) (ActionEvent evt) -> {
+            String name1 = txtName1.getText();
+            String name2 = txtName2.getText();
+            String name3 = txtName3.getText();
+            String name4 = txtName4.getText();
+
+            UserWebServices u = new UserWebServices();
+            ArrayList<NameSearchObject> arrayList = u.search_name_MOBI(AGENT_CODE, name1, name2, name3, name4);
+
+            for (int i = 0; i < arrayList.size(); i++) {
+                int count = i + 1;
+                Label lblResponse = (Label) findByName("lblName" + count + "Response", contTasks);
+                NameSearchObject n = arrayList.get(i);
+                if (n.isIsValid()) {
+                    lblResponse.setText("Is available");
+                    lblResponse.setUIID("LabelGreen");
+                } else {
+                    lblResponse.setText("Is not available");
+                    lblResponse.setUIID("LabelRed");
+
+                }
+                lblResponse.repaint();
+            }
+
+        });
+
+        btnLodge.addActionListener((ActionListener) (ActionEvent evt) -> {
+
+        });
+
         f.add(contTasks);
 
         if (formProgress != null) {
@@ -236,7 +282,7 @@ public class StateMachine extends StateMachineBase {
 
         mbCurrency.setTextLine1("Annual Returns");
         mbCurrency.setTextLine2("Three Annual Returns due");
-        
+
         mbCart.setTextLine1("Shopping Cart");
         mbCart.setTextLine2("Pay Now for CIPC Services");
 
@@ -285,8 +331,8 @@ public class StateMachine extends StateMachineBase {
         }
 
     }
-    
-        public void fetchCart(final Form f) {
+
+    public void fetchCart(final Form f) {
         formProgress = new FormProgress(f);
         closeMenu(f, true);
         analytics(f, "Shopping Cart");
@@ -433,7 +479,7 @@ public class StateMachine extends StateMachineBase {
         Log.p(password + ":" + responsePassword);
 
         if (password.equals(responsePassword)) {
-
+            AGENT_CODE = txtCustomerCode;
             return false;
         } else {
             errorMessage += "Invalid Customer Code or Password. ";
@@ -449,8 +495,8 @@ public class StateMachine extends StateMachineBase {
         }
 
     }
-    
-     public  void showDialog(String message) {
+
+    public void showDialog(String message) {
         ToastBar.Status status = ToastBar.getInstance().createStatus();
         status.setMessage(message);
         status.setExpires(5000);
