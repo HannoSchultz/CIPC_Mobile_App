@@ -73,7 +73,7 @@ public abstract class StateMachineBase extends UIBuilder {
     }
 
     protected String getFirstFormName() {
-        return "Main";
+        return "Registration";
     }
 
     public Container createWidget(Resources res, String resPath, boolean loadTheme) {
@@ -97,7 +97,7 @@ public abstract class StateMachineBase extends UIBuilder {
             }
             initTheme(res);
         }
-        return createContainer(resPath, "Main");
+        return createContainer(resPath, "Registration");
     }
 
     protected void initTheme(Resources res) {

@@ -126,9 +126,9 @@ public class UserWebServices {
     public ArrayList<EnterpriseDetails> GetAREntTranDetails(String enterpriseNumber, String agentCode) {
 
         ArrayList<EnterpriseDetails> arrayList = new ArrayList<EnterpriseDetails>();
-        
-        if(Display.getInstance().isSimulator()
-                && enterpriseNumber == null && agentCode == null){
+
+        if (Display.getInstance().isSimulator()
+                && enterpriseNumber == null && agentCode == null) {
             enterpriseNumber = "2011/100088/07";
             agentCode = "KD7788";
         }
@@ -141,9 +141,9 @@ public class UserWebServices {
                 + "<cipc:sUserName>wBAA7LAkWIs=</cipc:sUserName>\n"
                 + "         <cipc:sPassword>nhXSFLH3xKlrDYYKEWHlVw==</cipc:sPassword>\n"
                 + "         <cipc:sBankID>wBAA7LAkWIs=</cipc:sBankID>\n"
-                + "         <cipc:sEntNo>"+enterpriseNumber+"</cipc:sEntNo>\n"
+                + "         <cipc:sEntNo>" + enterpriseNumber + "</cipc:sEntNo>\n"
                 + "         <!--Optional:-->\n"
-                + "         <cipc:sCust_Code>"+agentCode+"</cipc:sCust_Code>\n"
+                + "         <cipc:sCust_Code>" + agentCode + "</cipc:sCust_Code>\n"
                 + "      </cipc:GetAREntTranDetails>\n"
                 + "   </soapenv:Body>\n"
                 + "</soapenv:Envelope>\n"
@@ -245,7 +245,7 @@ public class UserWebServices {
     }//end name reservation
 
     public ArrayList<EnterpriseDetails> CalculateARTranData(String dataset) {
-        
+
         ArrayList<EnterpriseDetails> enterpriseDetailses = new ArrayList<>();
 
         final String SOAP_BODY
@@ -279,30 +279,28 @@ public class UserWebServices {
                 + "            </xs:schema>\n"
                 + "            <diffgr:diffgram xmlns:msdata=\"urn:schemas-microsoft-com:xml-msdata\" xmlns:diffgr=\"urn:schemas-microsoft-com:xml-diffgram-v1\">\n"
                 + "               <NewDataSet>\n"
-                
-                +dataset+"\n"
-                
-//                + "                  <Table1 diffgr:id=\"Table11\" msdata:rowOrder=\"0\" diffgr:hasChanges=\"inserted\">\n"
-//                + "                     <ent_no>K2012210312</ent_no>\n"
-//                + "                     <ar_year>2013</ar_year>\n"
-//                + "                     <ar_month>11</ar_month>\n"
-//                + "                     <turnover>0</turnover>\n"
-//                + "                     <ent_type_code>07</ent_type_code>\n"
-//                + "                  </Table1>\n"
-//                + "                   <Table1 diffgr:id=\"Table11\" msdata:rowOrder=\"0\" diffgr:hasChanges=\"inserted\">\n"
-//                + "                     <ent_no>K2012210312</ent_no>\n"
-//                + "                     <ar_year>2014</ar_year>\n"
-//                + "                     <ar_month>11</ar_month>\n"
-//                + "                     <turnover>100000</turnover>\n"
-//                + "                     <ent_type_code>07</ent_type_code>\n"
-//                + "                  </Table1>\n"
-//                + "                                                 <Table1 diffgr:id=\"Table11\" msdata:rowOrder=\"0\" diffgr:hasChanges=\"inserted\">\n"
-//                + "                     <ent_no>K2012210312</ent_no>\n"
-//                + "                     <ar_year>2015</ar_year>\n"
-//                + "                     <ar_month>11</ar_month>\n"
-//                + "                     <turnover>100000000</turnover>\n"
-//                + "                     <ent_type_code>07</ent_type_code>\n"
-//                + "                  </Table1>                 \n" 
+                + dataset + "\n"
+                //                + "                  <Table1 diffgr:id=\"Table11\" msdata:rowOrder=\"0\" diffgr:hasChanges=\"inserted\">\n"
+                //                + "                     <ent_no>K2012210312</ent_no>\n"
+                //                + "                     <ar_year>2013</ar_year>\n"
+                //                + "                     <ar_month>11</ar_month>\n"
+                //                + "                     <turnover>0</turnover>\n"
+                //                + "                     <ent_type_code>07</ent_type_code>\n"
+                //                + "                  </Table1>\n"
+                //                + "                   <Table1 diffgr:id=\"Table11\" msdata:rowOrder=\"0\" diffgr:hasChanges=\"inserted\">\n"
+                //                + "                     <ent_no>K2012210312</ent_no>\n"
+                //                + "                     <ar_year>2014</ar_year>\n"
+                //                + "                     <ar_month>11</ar_month>\n"
+                //                + "                     <turnover>100000</turnover>\n"
+                //                + "                     <ent_type_code>07</ent_type_code>\n"
+                //                + "                  </Table1>\n"
+                //                + "                                                 <Table1 diffgr:id=\"Table11\" msdata:rowOrder=\"0\" diffgr:hasChanges=\"inserted\">\n"
+                //                + "                     <ent_no>K2012210312</ent_no>\n"
+                //                + "                     <ar_year>2015</ar_year>\n"
+                //                + "                     <ar_month>11</ar_month>\n"
+                //                + "                     <turnover>100000000</turnover>\n"
+                //                + "                     <ent_type_code>07</ent_type_code>\n"
+                //                + "                  </Table1>                 \n" 
                 + "               </NewDataSet>\n"
                 + "            </diffgr:diffgram>\n"
                 + "            <!--You may enter ANY elements at this point-->\n"
@@ -368,40 +366,39 @@ public class UserWebServices {
 
             for (int i = 0; i < element.getNumChildren(); i++) {
                 Element child = element.getChildAt(i);
-               // if (child.getTextChildren(null, true).size() == 9) {
+                // if (child.getTextChildren(null, true).size() == 9) {
 
-                    Log.p("i=" + i + " " + child.getTextChildren(null, true).size(), Log.DEBUG);
+                Log.p("i=" + i + " " + child.getTextChildren(null, true).size(), Log.DEBUG);
 
-                    String ent_no = RSM(((Element) child.getTextChildren(null, true).get(0)).toString());
-                    String ar_year = RSM(((Element) child.getTextChildren(null, true).get(1)).toString());
-                    String ent_type_code = RSM(((Element) child.getTextChildren(null, true).get(2)).toString());
-                    String turnover = RSM(((Element) child.getTextChildren(null, true).get(3)).toString());
-                    String ar_amount = RSM(((Element) child.getTextChildren(null, true).get(4)).toString());
-                    String ar_total = RSM(((Element) child.getTextChildren(null, true).get(5)).toString());
-                    String reference_no = RSM(((Element) child.getTextChildren(null, true).get(6)).toString());
-                    String ar_penalty = RSM(((Element) child.getTextChildren(null, true).get(7)).toString());
-                    
-                    EnterpriseDetails e = new EnterpriseDetails();
+                String ent_no = RSM(((Element) child.getTextChildren(null, true).get(0)).toString());
+                String ar_year = RSM(((Element) child.getTextChildren(null, true).get(1)).toString());
+                String ent_type_code = RSM(((Element) child.getTextChildren(null, true).get(2)).toString());
+                String turnover = RSM(((Element) child.getTextChildren(null, true).get(3)).toString());
+                String ar_amount = RSM(((Element) child.getTextChildren(null, true).get(4)).toString());
+                String ar_total = RSM(((Element) child.getTextChildren(null, true).get(5)).toString());
+                String reference_no = RSM(((Element) child.getTextChildren(null, true).get(6)).toString());
+                String ar_penalty = RSM(((Element) child.getTextChildren(null, true).get(7)).toString());
 
-                    e.setEnt_no(ent_no);
-                    e.setAr_year(ar_year);
-                    e.setEnt_type_code(ent_type_code);
-                    e.setTurnover(turnover);
-                    e.setAr_amount(ar_amount);
-                    e.setAr_total(ar_total);
-                    e.setReference_no(reference_no);
-                    e.setAr_penalty(ar_penalty);
+                EnterpriseDetails e = new EnterpriseDetails();
 
-                    enterpriseDetailses.add(e);
+                e.setEnt_no(ent_no);
+                e.setAr_year(ar_year);
+                e.setEnt_type_code(ent_type_code);
+                e.setTurnover(turnover);
+                e.setAr_amount(ar_amount);
+                e.setAr_total(ar_total);
+                e.setReference_no(reference_no);
+                e.setAr_penalty(ar_penalty);
+
+                enterpriseDetailses.add(e);
 
                 //}
             }
-            
-            
+
         } catch (IllegalArgumentException e) {
             Log.p(e.toString());
         }
-        
+
         return enterpriseDetailses;
 
     }//end name reservation
@@ -493,7 +490,7 @@ public class UserWebServices {
                 + "                \"Status\":0,\n"
                 + "                \"StatusDate\":\"2018-04-23T13:04:28.873\",\n"
                 + "                \"CustomerCode\":\"" + user.getAgent_code() + "\",\n"
-                + "                \"ItemType\":4,\n"
+                + "                \"ItemType\":1,\n"
                 + "                \"ItemData\":\"{\\\"ReferenceNumber\\\":533549914,\\\"FormCode\\\":\\\"CK2B\\\",\\\"EnterpriseNumber\\\":\\\"B1988003406\\\",\\\"EnterpriseType\\\":\\\"23\\\",\\\"EnterpriseStatus\\\":\\\"28\\\",\\\"EmailAddress\\\":\\\"jbruton@cipc.co.za\\\",\\\"TelephoneCode\\\":\\\"012\\\",\\\"TelephoneNumber\\\":\\\"1234567\\\",\\\"CellphoneNumber\\\":\\\"\\\",\\\"WebsiteAddress\\\":\\\"\\\",\\\"BusinessDescription\\\":\\\"CARD PAYMENT\\\",\\\"PrincipalPlaceOfBusiness\\\":\\\"\\\",\\\"EnterpriseNameChanged\\\":0,\\\"FinancialYearEndChanged\\\":0,\\\"RegisteredOfficeChanged\\\":0,\\\"LocationOfRecordsChanged\\\":0,\\\"DirectorsChanged\\\":0,\\\"CompanySecretaryChanged\\\":0,\\\"AuditorsChanged\\\":0,\\\"TotalAmount\\\":2250.00,\\\"YearData\\\":[{\\\"ReferenceNumber\\\":533549914,\\\"EnterpriseNumber\\\":\\\"B1988003406\\\",\\\"Year\\\":2009,\\\"Turnover\\\":0.0,\\\"Amount\\\":100.00,\\\"PenaltyFee\\\":150.00,\\\"TotalAmount\\\":250.00,\\\"Status\\\":null,\\\"StatusDate\\\":\\\"0001-01-01T00:00:00\\\"},{\\\"ReferenceNumber\\\":533549914,\\\"EnterpriseNumber\\\":\\\"B1988003406\\\",\\\"Year\\\":2010,\\\"Turnover\\\":0.0,\\\"Amount\\\":100.00,\\\"PenaltyFee\\\":150.00,\\\"TotalAmount\\\":250.00,\\\"Status\\\":null,\\\"StatusDate\\\":\\\"0001-01-01T00:00:00\\\"},{\\\"ReferenceNumber\\\":533549914,\\\"EnterpriseNumber\\\":\\\"B1988003406\\\",\\\"Year\\\":2011,\\\"Turnover\\\":0.0,\\\"Amount\\\":100.00,\\\"PenaltyFee\\\":150.00,\\\"TotalAmount\\\":250.00,\\\"Status\\\":null,\\\"StatusDate\\\":\\\"0001-01-01T00:00:00\\\"},{\\\"ReferenceNumber\\\":533549914,\\\"EnterpriseNumber\\\":\\\"B1988003406\\\",\\\"Year\\\":2012,\\\"Turnover\\\":0.0,\\\"Amount\\\":100.00,\\\"PenaltyFee\\\":150.00,\\\"TotalAmount\\\":250.00,\\\"Status\\\":null,\\\"StatusDate\\\":\\\"0001-01-01T00:00:00\\\"},{\\\"ReferenceNumber\\\":533549914,\\\"EnterpriseNumber\\\":\\\"B1988003406\\\",\\\"Year\\\":2013,\\\"Turnover\\\":0.0,\\\"Amount\\\":100.00,\\\"PenaltyFee\\\":150.00,\\\"TotalAmount\\\":250.00,\\\"Status\\\":null,\\\"StatusDate\\\":\\\"0001-01-01T00:00:00\\\"},{\\\"ReferenceNumber\\\":533549914,\\\"EnterpriseNumber\\\":\\\"B1988003406\\\",\\\"Year\\\":2014,\\\"Turnover\\\":0.0,\\\"Amount\\\":100.00,\\\"PenaltyFee\\\":150.00,\\\"TotalAmount\\\":250.00,\\\"Status\\\":null,\\\"StatusDate\\\":\\\"0001-01-01T00:00:00\\\"},{\\\"ReferenceNumber\\\":533549914,\\\"EnterpriseNumber\\\":\\\"B1988003406\\\",\\\"Year\\\":2015,\\\"Turnover\\\":0.0,\\\"Amount\\\":100.00,\\\"PenaltyFee\\\":150.00,\\\"TotalAmount\\\":250.00,\\\"Status\\\":null,\\\"StatusDate\\\":\\\"0001-01-01T00:00:00\\\"},{\\\"ReferenceNumber\\\":533549914,\\\"EnterpriseNumber\\\":\\\"B1988003406\\\",\\\"Year\\\":2016,\\\"Turnover\\\":0.0,\\\"Amount\\\":100.00,\\\"PenaltyFee\\\":150.00,\\\"TotalAmount\\\":250.00,\\\"Status\\\":null,\\\"StatusDate\\\":\\\"0001-01-01T00:00:00\\\"},{\\\"ReferenceNumber\\\":533549914,\\\"EnterpriseNumber\\\":\\\"B1988003406\\\",\\\"Year\\\":2017,\\\"Turnover\\\":0.0,\\\"Amount\\\":100.00,\\\"PenaltyFee\\\":150.00,\\\"TotalAmount\\\":250.00,\\\"Status\\\":null,\\\"StatusDate\\\":\\\"0001-01-01T00:00:00\\\"}],\\\"ItemsCount\\\":9}\",\n"
                 + "                \"Amount\":50.0\n"
                 + "}";
@@ -567,18 +564,17 @@ public class UserWebServices {
     }
 
     public Map getCart(User user) {
-        
+
         Map map = null;
 
         AuthObject auth = getToken(user);
-        
-       /* Map jsonData = Rest.get("https://apidev.cipc.co.za/v1/payment/cart/" + user.getAgent_code())
+
+        /* Map jsonData = Rest.get("https://apidev.cipc.co.za/v1/payment/cart/" + user.getAgent_code())
                 .header("Authorization", auth.getToken_type() + " " + auth.getAccess_token()).jsonContent()
                 .getAsJsonMap().getResponseData();
 
         Log.p("getCart=" + jsonData.toString());*/
-       
-       ConnectionRequest post = new ConnectionRequest();
+        ConnectionRequest post = new ConnectionRequest();
 
         post.setUrl("https://apidev.cipc.co.za/v1/payment/cart/" + user.getAgent_code());
         post.setPost(false);
@@ -589,20 +585,15 @@ public class UserWebServices {
         byte[] responseData = post.getResponseData();
         if (responseData != null) {
             String data = new String(responseData);
-            try{
+            try {
                 JSONParser parser = new JSONParser();
-                 map = parser.parseJSON(convertStringtoInputStreamReader(data));
-                 
-                 
-                 
-             
-            }
-            catch(IOException e){
+                map = parser.parseJSON(convertStringtoInputStreamReader(data));
+
+            } catch (IOException e) {
                 Log.e(e);
             }
 
             //JSONParser
-           
         }
 
         return map;
@@ -759,7 +750,7 @@ public class UserWebServices {
                 + "\n"
                 + "         <cipc:sBankID>" + Constants.sBankID + "</cipc:sBankID>\n"
                 + "\n"
-                + "         <cipc:scustcode>" + user.getAgent_code() + "</cipc:scustcode>\n"
+                + "         <cipc:scustcode>" + user.getAgent_code().toUpperCase() + "</cipc:scustcode>\n"
                 + "\n"
                 + "      </cipc:get_cust_MOBI>\n"
                 + "\n"
@@ -1990,6 +1981,24 @@ public class UserWebServices {
             Element h;
 
             @Override
+            protected void handleErrorResponseCode(int code, String message) {
+                super.handleErrorResponseCode(code, message); //To change body of generated methods, choose Tools | Templates.
+                if (500 == code) {
+                    Dialog.show("Error", "Duplicate Name Reservation Error.", "Ok", null);
+                }
+            }
+
+            @Override
+            protected void handleIOException(IOException err) {
+                //    super.handleIOException(err); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            protected void handleRuntimeException(RuntimeException err) {
+                //super.handleRuntimeException(err); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
             protected void buildRequestBody(OutputStream os) throws IOException {
                 super.buildRequestBody(os);
                 os.write(SOAP_BODY.getBytes("utf-8"));
@@ -2018,6 +2027,7 @@ public class UserWebServices {
         httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
         httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
         httpRequest.setPost(true);
+        httpRequest.setFailSilently(true);
 
         InfiniteProgress prog = new InfiniteProgress();
         Dialog dlg = prog.showInifiniteBlocking();
@@ -2168,15 +2178,13 @@ public class UserWebServices {
 
     private String RSM(String name) {
 
-            name = name.trim();
-            name = name.substring(1);
-            name = name.substring(0, name.length() - 1);
-        
+        name = name.trim();
+        name = name.substring(1);
+        name = name.substring(0, name.length() - 1);
 
-            name = name.trim();
-            name = name.substring(1);
-            name = name.substring(0, name.length() - 1);
-        
+        name = name.trim();
+        name = name.substring(1);
+        name = name.substring(0, name.length() - 1);
 
         return name;
     }

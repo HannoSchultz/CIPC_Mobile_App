@@ -17,6 +17,7 @@ import com.codename1.components.SpanLabel;
 import com.codename1.components.ToastBar;
 import com.codename1.io.ConnectionRequest;
 import com.codename1.io.Log;
+import com.codename1.io.NetworkEvent;
 import com.codename1.io.NetworkManager;
 import com.codename1.io.Util;
 import com.codename1.io.services.TwitterRESTService;
@@ -114,10 +115,27 @@ public class StateMachine extends StateMachineBase {
     }
 
     protected void initVars(Resources res) {
+        
+        NetworkManager.getInstance().addErrorListener(new ActionListener<NetworkEvent>() {
+            @Override
+            public void actionPerformed(NetworkEvent evt) {
+                //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+        });
 
         if (Display.getInstance().isTablet()) {
             Toolbar.setPermanentSideMenu(true);
         }
+
+        if (Display.getInstance().isSimulator()) {
+            AGENT_CODE = "KD7788";
+            //UserWebServices u = new UserWebServices();
+            //String responseCall = u.Namereservation_MOBI(AGENT_CODE, "name1", "name2", "name3", "name4");
+            //Log.p("responseCall=" + responseCall, Log.DEBUG);
+        }
+        
+        
+        
 
     }
 
@@ -132,7 +150,7 @@ public class StateMachine extends StateMachineBase {
             Log.setLevel(Log.DEBUG);
             Log.p("issimulator", Log.DEBUG);
 
-            return "Login";
+            return "Registration";
 
         } else {
             Log.setLevel(Log.REPORTING_PRODUCTION);//To disable debug information
@@ -226,7 +244,7 @@ public class StateMachine extends StateMachineBase {
                 Label lblResponse = (Label) findByName("lblName" + count + "Response", contTasks);
                 NameSearchObject n = arrayList.get(i);
                 if (n.isIsValid()) {
-                    lblResponse.setText("Is available");
+                    lblResponse.setText("Might be available");
                     lblResponse.setUIID("LabelGreen");
                 } else {
                     lblResponse.setText("Is not available");
@@ -303,10 +321,10 @@ public class StateMachine extends StateMachineBase {
         });
 
         mbTasks.setTextLine1("Name Reservations");
-        mbTasks.setTextLine2("One Name Reservation pending");
+        mbTasks.setTextLine2("Lodge Name(s)");
 
         mbCurrency.setTextLine1("Annual Returns");
-        mbCurrency.setTextLine2("Three Annual Returns due");
+        mbCurrency.setTextLine2("Submit Enterprise Returns");
 
         mbCart.setTextLine1("Shopping Cart");
         mbCart.setTextLine2("Pay Now for CIPC Services");
@@ -790,39 +808,6 @@ public class StateMachine extends StateMachineBase {
         });
     }
 
-    public void addComment() {
-
-        Container contContent = (Container) findByName("Comment", contCommunicationc);
-        TextField txtComment = (TextField) findByName("txtTaskComment", contContent);
-
-        String comment = txtComment.getText();
-
-        int user_id = 2;
-        int task_id = 1;
-
-        String url = "http://localhost/TaskManagementApp/taskmanagementservices.php";
-        ConnectionRequest cr = new ConnectionRequest(url);
-        cr.addArgument("actionType", "communications");
-        cr.addArgument("user_id", Integer.toString(user_id));
-        cr.addArgument("task_id", Integer.toString(task_id));
-        cr.addArgument("com_message", comment);
-        cr.setPost(true);
-
-        System.out.println("Print:" + comment);
-
-        NetworkManager.getInstance().addToQueueAndWait(cr);
-        if (cr.getResponseData() != null) {
-            String data = new String(cr.getResponseData());
-            Dialog.show("Ok", data, "Ok", null);
-
-            Result result = Result.fromContent(data, Result.JSON);
-            String status = result.getAsString("/status");
-            String msg = result.getAsString("/msg");
-            if (msg.startsWith("Comm")) {
-                Dialog.show("Results", status, "Ok", null);
-            }
-        }
-    }
 
     public void isTableInputForm(Form f) {
     }
@@ -851,6 +836,57 @@ public class StateMachine extends StateMachineBase {
 
         Tabs tabs = (Tabs) findByName("Tabs", f);
         tabs.setSwipeActivated(false);
+        tabs.hideTabs();
+        
+        Button btn1 = new Button("1");
+        Button btn2 = new Button("2");
+        Button btn3 = new Button("3");
+        Button btn4 = new Button("4");
+        
+           btn1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                tabs.setSelectedIndex(0);
+            }
+        });
+           
+              btn2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                tabs.setSelectedIndex(1);
+            }
+        });
+              
+                 btn3.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                tabs.setSelectedIndex(2);
+            }
+        });
+        
+        btn4.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                tabs.setSelectedIndex(3);
+            }
+        });
+        
+        Container contTop = new Container();
+        contTop.setLayout(new GridLayout(1,4));
+        contTop.add(btn1).add(btn2).add(btn3).add(btn4);
+        
+        f.add(BorderLayout.NORTH, contTop);
+        
+        
+        tabs.addSelectionListener(new SelectionListener() {
+            @Override
+            public void selectionChanged(int oldSelected, int newSelected) {
+                
+            }
+        });
+        
+        //tabs.
+        
 
         Picker pickerCountry = (Picker) findByName("pickerStep2Country", f);
         pickerCountry.setType(Display.PICKER_TYPE_STRINGS);
