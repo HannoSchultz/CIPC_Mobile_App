@@ -214,6 +214,7 @@ public class UserWebServices {
                 enterpriseDetails.setReg_date(result.getAsString("//reg_date"));
                 enterpriseDetails.setEnt_type_descr(result.getAsString("//ent_type_descr"));
                 enterpriseDetails.setEnt_status_descr(result.getAsString("//ent_status_descr"));
+                 enterpriseDetails.setEnt_status_code(result.getAsString("//ent_status_code"));
             }
 
         } catch (IllegalArgumentException e) {

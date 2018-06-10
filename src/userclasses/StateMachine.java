@@ -392,21 +392,23 @@ public class StateMachine extends StateMachineBase {
             @Override
             public void dataChanged(int type, int index) {
                 String text = txtStep1c.getText();
-                if(text.length() == 2 && list.contains(text) == false){
+                if (text.length() == 2 && list.contains(text) == false) {
                     showDialog(text + " is an invalid Enterprise Type.");
                 }
             }
         });
 
         if (Display.getInstance().isSimulator()) {//2011100088 & K2013064531 & 2014 004548 07
+            //Not allowed: 1999/028585/07
             txtStep1a.setText("2011");
             txtStep1b.setText("100088");
-            txtStep1c.setText("");
+            txtStep1c.setText("07");
         }
 
         txtStep1a.getParent().repaint();
 
         Button btnStep1RetrieveDetails = (Button) findByName("btnStep1RetrieveDetails", tabs);
+        Button btnStep2Confirm = (Button) findByName("btnStep2Confirm", tabs);
 
         //Step 2
         Label lblStep2EnterpriseNumber = (Label) findByName("lblStep2EnterpriseNumber", contStep2);
@@ -435,14 +437,28 @@ public class StateMachine extends StateMachineBase {
 
                     tabs.setSelectedIndex(1);
 
+                    //Step 2
+                    Log.p("code=" + enterpriseDetails.getEnt_status_code(), Log.DEBUG);
+                    
+                    if (enterpriseDetails.getEnt_status_code().equals("03")
+                            || enterpriseDetails.getEnt_status_code().equals("38")) {
+
+                        btnStep2Confirm.setVisible(true);
+                        btnStep2Confirm.repaint();
+
+                    } else {
+                        showDialog("Invalid Enterprise Status \"" + enterpriseDetails.getEnt_status_descr() + "\". Not allowed to file Annual Returns.");
+
+                        btnStep2Confirm.setVisible(false);
+                        btnStep2Confirm.repaint();
+                    }
+
                 } else {
                     Dialog.show("Error", "Could not obtain enterprise details. Please ensure that your Enterprise number is valid", "Ok", null);
                 }
 
             }
         });
-
-        Button btnStep2Confirm = (Button) findByName("btnStep2Confirm", tabs);
 
         //Step 3//Please enter Annual Turnover for the current filing year, 2018:
         Container contStep3Turnovers = (Container) findByName("contStep3Turnovers", tabs);

@@ -29,10 +29,14 @@ public class EnterpriseDetails {
     private String ar_total;
     private String reference_no;
     private String ar_penalty;
-    
+
     private String ent_status_descr;
+    private String ent_status_code;
+
     private String ent_type_descr;
     private String ent_name;
+
+    private boolean isAllowed;
 
     public String getEnt_no() {
         return ent_no;
@@ -186,5 +190,20 @@ public class EnterpriseDetails {
         this.ar_penalty = ar_penalty;
     }
 
+    public String getEnt_status_code() {
+        return ent_status_code;
+    }
+
+    public void setEnt_status_code(String ent_status_code) {
+        this.ent_status_code = ent_status_code;
+    }
+
+    public boolean isIsAllowed() {
+        return isAllowed;
+    }
+
+    public void setIsAllowed(boolean isAllowed) {
+        this.isAllowed = isAllowed;
+    }
 
 }
