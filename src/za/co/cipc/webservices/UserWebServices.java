@@ -97,23 +97,28 @@ public class UserWebServices {
         httpRequest.setDisposeOnCompletion(dlg);
 
         NetworkManager.getInstance().addToQueueAndWait(httpRequest);
+        //TODO null
         String data = new String(httpRequest.getResponseData());
-        Log.p("soap_GetEnterpriseDetails" + data, Log.DEBUG);
+        
 
         try {
 
             Result result = Result.fromContent(data, Result.XML);
-            Element e = Utility.parseXML(result.getAsString("//table"));//dataset
+            Log.p("soap_GetEnterpriseDetails" + result, Log.DEBUG);
+            
+            if(result.getAsString("//table") != null ){
+                Element e = Utility.parseXML(result.getAsString("//table"));//dataset
 
-            Log.p("Element e: " + e, Log.DEBUG);
+                Log.p("Element e: " + e, Log.DEBUG);
 
-            enterpriseDetails = new EnterpriseDetails();
+                enterpriseDetails = new EnterpriseDetails();
 
-            enterpriseDetails.setEnt_no(result.getAsString("//ent_no"));
-            enterpriseDetails.setEnt_name(result.getAsString("//ent_name"));
-            enterpriseDetails.setReg_date(result.getAsString("//reg_date"));
-            enterpriseDetails.setEnt_type_descr(result.getAsString("//ent_type_descr"));
-            enterpriseDetails.setEnt_status_descr(result.getAsString("//ent_status_descr"));
+                enterpriseDetails.setEnt_no(result.getAsString("//ent_no"));
+                enterpriseDetails.setEnt_name(result.getAsString("//ent_name"));
+                enterpriseDetails.setReg_date(result.getAsString("//reg_date"));
+                enterpriseDetails.setEnt_type_descr(result.getAsString("//ent_type_descr"));
+                enterpriseDetails.setEnt_status_descr(result.getAsString("//ent_status_descr"));
+            }
 
         } catch (IllegalArgumentException e) {
             Log.p(e.toString());
@@ -1984,7 +1989,7 @@ public class UserWebServices {
             protected void handleErrorResponseCode(int code, String message) {
                 super.handleErrorResponseCode(code, message); //To change body of generated methods, choose Tools | Templates.
                 if (500 == code) {
-                    Dialog.show("Error", "Duplicate Name Reservation Error.", "Ok", null);
+                    Dialog.show("Error", "Duplicate Name Reservation Error. Please try different names.", "Ok", null);
                 }
             }
 
@@ -2043,6 +2048,9 @@ public class UserWebServices {
             String namereservation_mobiresult = result.getAsString("//namereservation_mobiresult");
 
             response = namereservation_mobiresult;
+            if(response != null){
+               response =  response.trim();
+            }
 
             //Log.p("result: " + result, Log.DEBUG);
             //Log.p("namereservation_mobiresult: " + namereservation_mobiresult, Log.DEBUG);
@@ -2133,7 +2141,7 @@ public class UserWebServices {
         Dialog dlg = prog.showInifiniteBlocking();
         httpRequest.setDisposeOnCompletion(dlg);
 
-        httpRequest.setTimeout(0);
+        httpRequest.setTimeout(100000);//milli seconds
         NetworkManager.getInstance().addToQueueAndWait(httpRequest);
         String data = new String(httpRequest.getResponseData());
         Log.p("Data d: " + data, Log.DEBUG);

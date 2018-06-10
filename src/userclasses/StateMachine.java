@@ -273,11 +273,17 @@ public class StateMachine extends StateMachineBase {
             UserWebServices u = new UserWebServices();
             String responseCall = u.Namereservation_MOBI(AGENT_CODE, name1, name2, name3, name4);
 
-            if (responseCall != null && responseCall.length() > 0) {
+            if (responseCall != null && responseCall.length() > 0 
+                    && responseCall.indexOf("already filed") == -1) {
                 Dialog.show("Success", responseCall, "Ok", null);
                 showCart(f);
-            } else {
-                Dialog.show("Error", "Error occurred while processing your request", "Ok", null);
+            }
+            else if (responseCall != null && responseCall.length() > 0 
+                    && responseCall.indexOf("already filed") != -1){
+                Dialog.show("Error", responseCall, "Ok", null);//TODO scroll to top
+            }
+            else {
+                Dialog.show("Error", "Error occurred while processing your request. Please try again later or contact CIPC.", "Ok", null);
             }
         });
 
@@ -419,7 +425,7 @@ public class StateMachine extends StateMachineBase {
                     tabs.setSelectedIndex(1);
 
                 } else {
-                    Dialog.show("Error", "Could not obtain enterprise details.", "Ok", null);
+                    Dialog.show("Error", "Could not obtain enterprise details. Please ensure that your Enterprise number is valid", "Ok", null);
                 }
 
             }
@@ -468,31 +474,27 @@ public class StateMachine extends StateMachineBase {
 
         btnStep3CalcOutAmount.addActionListener((ActionListener) (ActionEvent evt) -> {
 
-            String table1LineStart = "<Table1 diffgr:id=\"Table11\" msdata:rowOrder=\"0\" diffgr:hasChanges=\"inserted\">\n";
+            String dataset = "";
 
-            String table11Body = "";
 
             for (int i = 0; i < listEnterpriseDetails.size(); i++) {
 
                 EnterpriseDetails entDetails = listEnterpriseDetails.get(i);
                 TextArea txtTurnover = listTextEnterpriseDetails.get(i);
 
-                table11Body += "<ent_no>" + entDetails.getEnt_no() + "</ent_no>\n"
+                dataset += "<Table1 diffgr:id=\"Table11\" msdata:rowOrder=\"0\" diffgr:hasChanges=\"inserted\">\n"
+                        + "<ent_no>" + entDetails.getEnt_no() + "</ent_no>\n"
                         + "                     <ar_year>" + entDetails.getAr_year() + "</ar_year>\n"
                         + "                     <ar_month>" + entDetails.getAr_month() + "</ar_month>\n"
                         + "                     <turnover>" + txtTurnover.getText() + "</turnover>\n"
-                        + "                     <ent_type_code>" + entDetails.getEnt_type_code() + "</ent_type_code>\n";
+                        + "                     <ent_type_code>" + entDetails.getEnt_type_code() + "</ent_type_code>\n</Table1>\n";
 
             }
 
-            String table1LineEnd = "</Table1>\n";
-
-            String dataSet = table1LineStart + table11Body + table1LineEnd;
-
-            Log.p("dataset=" + dataSet, Log.DEBUG);
+            Log.p("dataset=" + dataset, Log.DEBUG);
 
             UserWebServices u = new UserWebServices();
-            listCalculateARTran = u.CalculateARTranData(dataSet);
+            listCalculateARTran = u.CalculateARTranData(dataset);
             contStep4AnnualReturns.removeAll();
 
             if (listCalculateARTran.isEmpty()) {
