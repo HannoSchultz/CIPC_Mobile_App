@@ -78,6 +78,16 @@ import za.co.cipc.pojos.User;
  */
 public class StateMachine extends StateMachineBase {
 
+    boolean isRegStep1Passed = false;
+    boolean isRegStep2Passed = false;
+    boolean isRegStep3Passed = false;
+
+    boolean isARStep1Passed = false;
+    boolean isARStep2Passed = false;
+    boolean isARStep3Passed = false;
+
+    boolean isCartStep1Passed = false;
+
     String ENT_NUMBER;
     ArrayList annualReturnsEntDetails;
 
@@ -115,7 +125,7 @@ public class StateMachine extends StateMachineBase {
     }
 
     protected void initVars(Resources res) {
-        
+
         NetworkManager.getInstance().addErrorListener(new ActionListener<NetworkEvent>() {
             @Override
             public void actionPerformed(NetworkEvent evt) {
@@ -133,9 +143,6 @@ public class StateMachine extends StateMachineBase {
             //String responseCall = u.Namereservation_MOBI(AGENT_CODE, "name1", "name2", "name3", "name4");
             //Log.p("responseCall=" + responseCall, Log.DEBUG);
         }
-        
-        
-        
 
     }
 
@@ -150,7 +157,7 @@ public class StateMachine extends StateMachineBase {
             Log.setLevel(Log.DEBUG);
             Log.p("issimulator", Log.DEBUG);
 
-            return "Registration";
+            return "Login";
 
         } else {
             Log.setLevel(Log.REPORTING_PRODUCTION);//To disable debug information
@@ -808,7 +815,6 @@ public class StateMachine extends StateMachineBase {
         });
     }
 
-
     public void isTableInputForm(Form f) {
     }
 
@@ -837,57 +843,94 @@ public class StateMachine extends StateMachineBase {
         Tabs tabs = (Tabs) findByName("Tabs", f);
         tabs.setSwipeActivated(false);
         tabs.hideTabs();
+
+        Button btnStep1Continue = (Button) findByName("btnStep1Continue", tabs);
+        Button btnStep2Continue = (Button) findByName("btnStep2Continue", tabs);
+        Button btnStep3Next = (Button) findByName("btnStep3Next", tabs);
+        Button btnStep4Register = (Button) findByName("btnStep4Register", tabs);
         
+        //initialy false
+        btnStep2Continue.setEnabled(false);
+        btnStep3Next.setEnabled(false);
+        btnStep4Register.setEnabled(false);
+
+        btnStep1Continue.addActionListener((ActionListener) (ActionEvent evt) -> {
+            isARStep1Passed = true;
+            btnStep2Continue.setEnabled(true);
+            tabs.setSelectedIndex(1);
+        });
+        
+        btnStep2Continue.addActionListener((ActionListener) (ActionEvent evt) -> {
+            isARStep2Passed = true;
+            btnStep3Next.setEnabled(true);
+            tabs.setSelectedIndex(2);
+        });
+        
+        btnStep3Next.addActionListener((ActionListener) (ActionEvent evt) -> {
+            isARStep3Passed = true;
+            btnStep4Register.setEnabled(true);
+            tabs.setSelectedIndex(3);
+        });
+        
+        btnStep4Register.addActionListener((ActionListener) (ActionEvent evt) -> {
+        
+        });
+
         Button btn1 = new Button("1");
         Button btn2 = new Button("2");
         Button btn3 = new Button("3");
         Button btn4 = new Button("4");
-        
-           btn1.addActionListener(new ActionListener() {
+
+        btn1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
                 tabs.setSelectedIndex(0);
             }
         });
-           
-              btn2.addActionListener(new ActionListener() {
+
+        btn2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
-                tabs.setSelectedIndex(1);
+                if (isRegStep1Passed == true) {
+                    tabs.setSelectedIndex(1);
+                }
             }
         });
-              
-                 btn3.addActionListener(new ActionListener() {
+
+        btn3.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
-                tabs.setSelectedIndex(2);
+                if (isRegStep1Passed == true && isRegStep2Passed == true) {
+                    tabs.setSelectedIndex(2);
+                }
             }
         });
-        
+
         btn4.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
-                tabs.setSelectedIndex(3);
+                if (isRegStep1Passed == true && isRegStep2Passed == true
+                        && isRegStep3Passed == true) {
+                    tabs.setSelectedIndex(3);
+                }
             }
         });
-        
+
         Container contTop = new Container();
-        contTop.setLayout(new GridLayout(1,4));
+        contTop.setUIID("LabelWhite");
+        contTop.setLayout(new GridLayout(1, 4));
         contTop.add(btn1).add(btn2).add(btn3).add(btn4);
-        
+
         f.add(BorderLayout.NORTH, contTop);
-        
-        
+
         tabs.addSelectionListener(new SelectionListener() {
             @Override
             public void selectionChanged(int oldSelected, int newSelected) {
-                
+
             }
         });
-        
-        //tabs.
-        
 
+        //tabs.
         Picker pickerCountry = (Picker) findByName("pickerStep2Country", f);
         pickerCountry.setType(Display.PICKER_TYPE_STRINGS);
         pickerCountry.setStrings("Select Country", "Brazil", "South Africa", "Zimbabwe");

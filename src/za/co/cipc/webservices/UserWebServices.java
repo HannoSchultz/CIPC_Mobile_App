@@ -2133,6 +2133,7 @@ public class UserWebServices {
         Dialog dlg = prog.showInifiniteBlocking();
         httpRequest.setDisposeOnCompletion(dlg);
 
+        httpRequest.setTimeout(0);
         NetworkManager.getInstance().addToQueueAndWait(httpRequest);
         String data = new String(httpRequest.getResponseData());
         Log.p("Data d: " + data, Log.DEBUG);
