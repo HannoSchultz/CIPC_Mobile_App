@@ -41,6 +41,103 @@ import za.co.cipc.pojos.User;
  */
 public class UserWebServices {
 
+    public ArrayList Get_AR_ent_type_mobi(String dataset) {
+
+        ArrayList list = new ArrayList<>();
+
+        final String SOAP_BODY = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cipc=\"CIPC_WEB_SERVICES\">\n"
+                + "\n"
+                + "   <soapenv:Header/>\n"
+                + "\n"
+                + "   <soapenv:Body>\n"
+                + "\n"
+                + "      <cipc:Get_AR_ent_type_mobi>\n"
+                + "\n"
+                + "         <!--Optional:-->\n"
+                + "\n"
+                + "          <cipc:sUserName>wBAA7LAkWIs=</cipc:sUserName>\n"
+                + "\n"
+                + "         <cipc:sPassword>nhXSFLH3xKlrDYYKEWHlVw==</cipc:sPassword>\n"
+                + "\n"
+                + "         <cipc:sBankID>wBAA7LAkWIs=</cipc:sBankID>\n"
+                + "\n"
+                + "         <cipc:Sent_Type></cipc:Sent_Type>\n"
+                + "\n"
+                + "      </cipc:Get_AR_ent_type_mobi>\n"
+                + "\n"
+                + "   </soapenv:Body>\n"
+                + "\n"
+                + "</soapenv:Envelope>";
+
+        ConnectionRequest httpRequest = new ConnectionRequest() {
+            Element h;
+
+            @Override
+            protected void buildRequestBody(OutputStream os) throws IOException {
+                super.buildRequestBody(os);
+                os.write(SOAP_BODY.getBytes("utf-8"));
+
+            }
+
+            protected void postResponse() {
+
+                super.postResponse();
+            }
+
+            protected void readResponse(InputStream input) throws IOException {
+                super.readResponse(input);
+
+            }
+
+            @Override
+            protected void handleException(Exception err) {
+                Log.p("Exception: " + err.toString());
+                Dialog.show("No Internet", "There is no internet connection. Please switch your connection on.", "Okay", null);
+
+            }
+        };
+
+        httpRequest.setUrl("https://testwebservices4.cipc.co.za/enterprise.asmx");
+        httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
+        httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
+        httpRequest.setPost(true);
+
+//        InfiniteProgress prog = new InfiniteProgress();
+//        Dialog dlg = prog.showInifiniteBlocking();
+//        httpRequest.setDisposeOnCompletion(dlg);
+
+        NetworkManager.getInstance().addToQueueAndWait(httpRequest);
+        String data = new String(httpRequest.getResponseData());
+        Log.p("CalculateARTranData=" + data, Log.DEBUG);
+
+        try {
+
+            Result result = Result.fromContent(data, Result.XML);
+
+            Log.p("Element e: " + result, Log.DEBUG);
+
+            XMLParser parser = new XMLParser();
+            parser.setCaseSensitive(true);
+            Element element = parser.parse(convertStringtoInputStreamReader(result.getAsString("//DataSet")));
+
+            for (int i = 0; i < element.getNumChildren(); i++) {
+                
+                Element child = element.getChildAt(i);
+
+                String ent_type_code = RSM(((Element) child.getTextChildren(null, true).get(0)).toString());
+                Log.p("ent_type_code = " + ent_type_code, Log.DEBUG);
+                list.add(ent_type_code);
+
+            }
+
+        } catch (IllegalArgumentException e) {
+            Log.p(e.toString());
+        }
+
+        return list;
+
+    }//end Get_AR_ent_type_mobi
+
     //AR
     public EnterpriseDetails soap_GetEnterpriseDetails(String entNumber) {
 
@@ -99,14 +196,13 @@ public class UserWebServices {
         NetworkManager.getInstance().addToQueueAndWait(httpRequest);
         //TODO null
         String data = new String(httpRequest.getResponseData());
-        
 
         try {
 
             Result result = Result.fromContent(data, Result.XML);
             Log.p("soap_GetEnterpriseDetails" + result, Log.DEBUG);
-            
-            if(result.getAsString("//table") != null ){
+
+            if (result.getAsString("//table") != null) {
                 Element e = Utility.parseXML(result.getAsString("//table"));//dataset
 
                 Log.p("Element e: " + e, Log.DEBUG);
@@ -2048,8 +2144,8 @@ public class UserWebServices {
             String namereservation_mobiresult = result.getAsString("//namereservation_mobiresult");
 
             response = namereservation_mobiresult;
-            if(response != null){
-               response =  response.trim();
+            if (response != null) {
+                response = response.trim();
             }
 
             //Log.p("result: " + result, Log.DEBUG);

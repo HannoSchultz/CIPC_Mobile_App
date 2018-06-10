@@ -72,21 +72,22 @@ import za.co.cipc.webservices.UserWebServices;
 import ui.FormProgress;
 import za.co.cipc.pojos.User;
 //TESTING UPLOAD
+
 /**
  *
  * @author Your name here
  */
 public class StateMachine extends StateMachineBase {
 
-    boolean isRegStep1Passed = false;
-    boolean isRegStep2Passed = false;
-    boolean isRegStep3Passed = false;
+    static boolean isRegStep1Passed = false;
+    static boolean isRegStep2Passed = false;
+    static boolean isRegStep3Passed = false;
 
-    boolean isARStep1Passed = false;
-    boolean isARStep2Passed = false;
-    boolean isARStep3Passed = false;
+    static boolean isARStep1Passed = false;
+    static boolean isARStep2Passed = false;
+    static boolean isARStep3Passed = false;
 
-    boolean isCartStep1Passed = false;
+    static boolean isCartStep1Passed = false;
 
     String ENT_NUMBER;
     ArrayList annualReturnsEntDetails;
@@ -139,9 +140,7 @@ public class StateMachine extends StateMachineBase {
 
         if (Display.getInstance().isSimulator()) {
             AGENT_CODE = "KD7788";
-            //UserWebServices u = new UserWebServices();
-            //String responseCall = u.Namereservation_MOBI(AGENT_CODE, "name1", "name2", "name3", "name4");
-            //Log.p("responseCall=" + responseCall, Log.DEBUG);
+
         }
 
     }
@@ -273,16 +272,14 @@ public class StateMachine extends StateMachineBase {
             UserWebServices u = new UserWebServices();
             String responseCall = u.Namereservation_MOBI(AGENT_CODE, name1, name2, name3, name4);
 
-            if (responseCall != null && responseCall.length() > 0 
+            if (responseCall != null && responseCall.length() > 0
                     && responseCall.indexOf("already filed") == -1) {
                 Dialog.show("Success", responseCall, "Ok", null);
                 showCart(f);
-            }
-            else if (responseCall != null && responseCall.length() > 0 
-                    && responseCall.indexOf("already filed") != -1){
+            } else if (responseCall != null && responseCall.length() > 0
+                    && responseCall.indexOf("already filed") != -1) {
                 Dialog.show("Error", responseCall, "Ok", null);//TODO scroll to top
-            }
-            else {
+            } else {
                 Dialog.show("Error", "Error occurred while processing your request. Please try again later or contact CIPC.", "Ok", null);
             }
         });
@@ -370,6 +367,10 @@ public class StateMachine extends StateMachineBase {
     }
 
     public void showAnnualReturns(final Form f) {
+
+        UserWebServices u = new UserWebServices();
+        final ArrayList list = u.Get_AR_ent_type_mobi(null);
+
         formProgress = new FormProgress(f);
         closeMenu(f, true);
         analytics(f, "Annual Returns");
@@ -387,10 +388,20 @@ public class StateMachine extends StateMachineBase {
         TextField txtStep1b = (TextField) findByName("txtStep1b", tabs);
         TextField txtStep1c = (TextField) findByName("txtStep1c", tabs);
 
+        txtStep1c.addDataChangedListener(new DataChangedListener() {
+            @Override
+            public void dataChanged(int type, int index) {
+                String text = txtStep1c.getText();
+                if(text.length() == 2 && list.contains(text) == false){
+                    showDialog(text + " is an invalid Enterprise Type.");
+                }
+            }
+        });
+
         if (Display.getInstance().isSimulator()) {//2011100088 & K2013064531 & 2014 004548 07
             txtStep1a.setText("2011");
             txtStep1b.setText("100088");
-            txtStep1c.setText("07");
+            txtStep1c.setText("");
         }
 
         txtStep1a.getParent().repaint();
@@ -439,7 +450,6 @@ public class StateMachine extends StateMachineBase {
 
         btnStep2Confirm.addActionListener((ActionListener) (ActionEvent evt) -> {
 
-            UserWebServices u = new UserWebServices();
             listEnterpriseDetails = u.GetAREntTranDetails(ENT_NUMBER, AGENT_CODE);
 
             if (listEnterpriseDetails.size() > 0) {
@@ -476,7 +486,6 @@ public class StateMachine extends StateMachineBase {
 
             String dataset = "";
 
-
             for (int i = 0; i < listEnterpriseDetails.size(); i++) {
 
                 EnterpriseDetails entDetails = listEnterpriseDetails.get(i);
@@ -493,7 +502,6 @@ public class StateMachine extends StateMachineBase {
 
             Log.p("dataset=" + dataset, Log.DEBUG);
 
-            UserWebServices u = new UserWebServices();
             listCalculateARTran = u.CalculateARTranData(dataset);
             contStep4AnnualReturns.removeAll();
 
@@ -850,7 +858,7 @@ public class StateMachine extends StateMachineBase {
         Button btnStep2Continue = (Button) findByName("btnStep2Continue", tabs);
         Button btnStep3Next = (Button) findByName("btnStep3Next", tabs);
         Button btnStep4Register = (Button) findByName("btnStep4Register", tabs);
-        
+
         //initialy false
         btnStep2Continue.setEnabled(false);
         btnStep3Next.setEnabled(false);
@@ -861,21 +869,21 @@ public class StateMachine extends StateMachineBase {
             btnStep2Continue.setEnabled(true);
             tabs.setSelectedIndex(1);
         });
-        
+
         btnStep2Continue.addActionListener((ActionListener) (ActionEvent evt) -> {
             isARStep2Passed = true;
             btnStep3Next.setEnabled(true);
             tabs.setSelectedIndex(2);
         });
-        
+
         btnStep3Next.addActionListener((ActionListener) (ActionEvent evt) -> {
             isARStep3Passed = true;
             btnStep4Register.setEnabled(true);
             tabs.setSelectedIndex(3);
         });
-        
+
         btnStep4Register.addActionListener((ActionListener) (ActionEvent evt) -> {
-        
+
         });
 
         Button btn1 = new Button("1");
@@ -886,6 +894,7 @@ public class StateMachine extends StateMachineBase {
         btn1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
+                Log.p("clicked btn1", Log.DEBUG);
                 tabs.setSelectedIndex(0);
             }
         });
@@ -893,6 +902,8 @@ public class StateMachine extends StateMachineBase {
         btn2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
+                Log.p("clicked btn2, isRegStep1Passed=" + isRegStep1Passed
+                        + ", isRegStep2Passed=" + isRegStep2Passed, Log.DEBUG);
                 if (isRegStep1Passed == true) {
                     tabs.setSelectedIndex(1);
                 }
@@ -902,6 +913,7 @@ public class StateMachine extends StateMachineBase {
         btn3.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
+                Log.p("clicked btn3", Log.DEBUG);
                 if (isRegStep1Passed == true && isRegStep2Passed == true) {
                     tabs.setSelectedIndex(2);
                 }
@@ -911,6 +923,7 @@ public class StateMachine extends StateMachineBase {
         btn4.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
+                Log.p("clicked btn4", Log.DEBUG);
                 if (isRegStep1Passed == true && isRegStep2Passed == true
                         && isRegStep3Passed == true) {
                     tabs.setSelectedIndex(3);
