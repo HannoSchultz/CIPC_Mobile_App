@@ -141,6 +141,21 @@ public class StateMachine extends StateMachineBase {
         if (Display.getInstance().isSimulator()) {
             AGENT_CODE = "KD7788";
 
+            UserWebServices u = new UserWebServices();
+
+            User tmpUser = new User();
+
+            //Step 1: check id if registered with CIPC. if exists show user customer code
+            tmpUser.setAgent_id_no("9001215598086");
+            u.ReceiveNewCustData_Reg_MOBI(tmpUser);
+
+            //Step 2: if not exist. create user.
+            //tmpUser.setAgent_id_no("7104085085085");
+            //u.ReceiveNewCustData_Reg_MOBI(tmpUser);
+
+            //Step 3 forgot password
+            //u.forget_password_MOBI(null);
+            
         }
 
     }
@@ -157,6 +172,7 @@ public class StateMachine extends StateMachineBase {
             Log.p("issimulator", Log.DEBUG);
 
             return "Login";
+            //return "Registration";
 
         } else {
             Log.setLevel(Log.REPORTING_PRODUCTION);//To disable debug information
@@ -439,7 +455,7 @@ public class StateMachine extends StateMachineBase {
 
                     //Step 2
                     Log.p("code=" + enterpriseDetails.getEnt_status_code(), Log.DEBUG);
-                    
+
                     if (enterpriseDetails.getEnt_status_code().equals("03")
                             || enterpriseDetails.getEnt_status_code().equals("38")) {
 
@@ -881,19 +897,19 @@ public class StateMachine extends StateMachineBase {
         btnStep4Register.setEnabled(false);
 
         btnStep1Continue.addActionListener((ActionListener) (ActionEvent evt) -> {
-            isARStep1Passed = true;
+            isRegStep1Passed = true;
             btnStep2Continue.setEnabled(true);
             tabs.setSelectedIndex(1);
         });
 
         btnStep2Continue.addActionListener((ActionListener) (ActionEvent evt) -> {
-            isARStep2Passed = true;
+            isRegStep2Passed = true;
             btnStep3Next.setEnabled(true);
             tabs.setSelectedIndex(2);
         });
 
         btnStep3Next.addActionListener((ActionListener) (ActionEvent evt) -> {
-            isARStep3Passed = true;
+            isRegStep3Passed = true;
             btnStep4Register.setEnabled(true);
             tabs.setSelectedIndex(3);
         });
@@ -910,7 +926,7 @@ public class StateMachine extends StateMachineBase {
         btn1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
-                Log.p("clicked btn1", Log.DEBUG);
+                //Log.p("clicked btn1", Log.DEBUG);
                 tabs.setSelectedIndex(0);
             }
         });
@@ -918,8 +934,8 @@ public class StateMachine extends StateMachineBase {
         btn2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
-                Log.p("clicked btn2, isRegStep1Passed=" + isRegStep1Passed
-                        + ", isRegStep2Passed=" + isRegStep2Passed, Log.DEBUG);
+                //Log.p("clicked btn2, isRegStep1Passed=" + isRegStep1Passed
+                     //   + ", isRegStep2Passed=" + isRegStep2Passed, Log.DEBUG);
                 if (isRegStep1Passed == true) {
                     tabs.setSelectedIndex(1);
                 }
@@ -929,7 +945,7 @@ public class StateMachine extends StateMachineBase {
         btn3.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
-                Log.p("clicked btn3", Log.DEBUG);
+                //Log.p("clicked btn3", Log.DEBUG);
                 if (isRegStep1Passed == true && isRegStep2Passed == true) {
                     tabs.setSelectedIndex(2);
                 }
@@ -939,7 +955,7 @@ public class StateMachine extends StateMachineBase {
         btn4.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
-                Log.p("clicked btn4", Log.DEBUG);
+                //Log.p("clicked btn4", Log.DEBUG);
                 if (isRegStep1Passed == true && isRegStep2Passed == true
                         && isRegStep3Passed == true) {
                     tabs.setSelectedIndex(3);

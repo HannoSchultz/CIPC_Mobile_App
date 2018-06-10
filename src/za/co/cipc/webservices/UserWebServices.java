@@ -936,7 +936,7 @@ public class UserWebServices {
                 + "\n"
                 + "          <cipc:sBankID>wBAA7LAkWIs=</cipc:sBankID>\n"
                 + "\n"
-                + "         <cipc:sCust_Code>INKE01</cipc:sCust_Code>\n"
+                + "         <cipc:sCust_Code>KD7788</cipc:sCust_Code>\n"
                 + "\n"
                 + "      </cipc:forget_password_MOBI>\n"
                 + "\n"
@@ -989,7 +989,7 @@ public class UserWebServices {
             Result result = Result.fromContent(data, Result.XML);
             User responseUser = new User();
 
-            Log.p("result: " + result, Log.DEBUG);
+            Log.p("forget_password_MOBI: " + result, Log.DEBUG);
 
             responseUser.setAgent_code(result.getAsString("//agent_code"));
             responseUser.setAgent_type(result.getAsString("//agent_type"));
@@ -1231,7 +1231,7 @@ public class UserWebServices {
             Result result = Result.fromContent(data, Result.XML);
             User responseUser = new User();
 
-            Log.p("result: " + result, Log.DEBUG);
+            Log.p("Get_Cust_code_id_MOBI: " + result, Log.DEBUG);
 
             responseUser.setAgent_code(result.getAsString("//agent_code"));
             responseUser.setAgent_type(result.getAsString("//agent_type"));
@@ -2505,9 +2505,9 @@ public class UserWebServices {
                 + "\n"
                 + "                     <reference_no></reference_no>\n"
                 + "\n"
-                + "                     <id_no>7104085085085</id_no>\n"
+                + "                     <id_no>9001215598086</id_no>\n"
                 + "\n"
-                + "                     <cust_name>Hanno Schultz</cust_name>\n"
+                + "                     <cust_name>Blessing Mahlalela</cust_name>\n"
                 + "\n"
                 + "                     <agent_code></agent_code>\n"
                 + "\n"
@@ -2624,7 +2624,7 @@ public class UserWebServices {
             String receivenewcustdata_regresult = result.getAsString("//receivenewcustdata_regresult");
 
             Log.p("ReceiveNewCustData_Reg_MOBI: " + result, Log.DEBUG);
-            Log.p("receivenewcustdata_regresult: " + receivenewcustdata_regresult, Log.DEBUG);
+            //Log.p("receivenewcustdata_regresult: " + receivenewcustdata_regresult, Log.DEBUG);
 
             return receivenewcustdata_regresult;
 
