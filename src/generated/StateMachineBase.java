@@ -750,18 +750,6 @@ public abstract class StateMachineBase extends UIBuilder {
         return cmp;
     }
 
-    public com.codename1.ui.TextField findTxtEmail1(Component root) {
-        return (com.codename1.ui.TextField)findByName("txtEmail1", root);
-    }
-
-    public com.codename1.ui.TextField findTxtEmail1() {
-        com.codename1.ui.TextField cmp = (com.codename1.ui.TextField)findByName("txtEmail1", Display.getInstance().getCurrent());
-        if(cmp == null && aboutToShowThisContainer != null) {
-            cmp = (com.codename1.ui.TextField)findByName("txtEmail1", aboutToShowThisContainer);
-        }
-        return cmp;
-    }
-
     public com.codename1.ui.TextArea findTxtLine1(Component root) {
         return (com.codename1.ui.TextArea)findByName("txtLine1", root);
     }
@@ -1831,8 +1819,8 @@ public abstract class StateMachineBase extends UIBuilder {
     }
 
     public static final int COMMAND_ContProfileUpdate = 4;
+    public static final int COMMAND_ForgotPasswordRequest = 13;
     public static final int COMMAND_LoginRegisterAsAUser = 12;
-    public static final int COMMAND_ForgotPasswordResetPassword = 13;
     public static final int COMMAND_LoginLogin = 5;
     public static final int COMMAND_LoginForgotLoginDetails = 14;
     public static final int COMMAND_ContDashBoardCommand19 = 19;
@@ -1841,11 +1829,11 @@ public abstract class StateMachineBase extends UIBuilder {
         return false;
     }
 
-    protected boolean onLoginRegisterAsAUser() {
+    protected boolean onForgotPasswordRequest() {
         return false;
     }
 
-    protected boolean onForgotPasswordResetPassword() {
+    protected boolean onLoginRegisterAsAUser() {
         return false;
     }
 
@@ -1870,15 +1858,15 @@ public abstract class StateMachineBase extends UIBuilder {
                 }
                 break;
 
-            case COMMAND_LoginRegisterAsAUser:
-                if(onLoginRegisterAsAUser()) {
+            case COMMAND_ForgotPasswordRequest:
+                if(onForgotPasswordRequest()) {
                     ev.consume();
                     return;
                 }
                 break;
 
-            case COMMAND_ForgotPasswordResetPassword:
-                if(onForgotPasswordResetPassword()) {
+            case COMMAND_LoginRegisterAsAUser:
+                if(onLoginRegisterAsAUser()) {
                     ev.consume();
                     return;
                 }
@@ -3069,12 +3057,8 @@ public abstract class StateMachineBase extends UIBuilder {
             }
         }
         if(rootContainerName.equals("ForgotPassword")) {
-            if("txtEmail".equals(c.getName())) {
-                onForgotPassword_TxtEmailAction(c, event);
-                return;
-            }
-            if("txtEmail1".equals(c.getName())) {
-                onForgotPassword_TxtEmail1Action(c, event);
+            if("txtCustomerCode".equals(c.getName())) {
+                onForgotPassword_TxtCustomerCodeAction(c, event);
                 return;
             }
             if("btnRecoverPassword".equals(c.getName())) {
@@ -3338,10 +3322,7 @@ public abstract class StateMachineBase extends UIBuilder {
       protected void onLogin_BtnForgotPasswordAction(Component c, ActionEvent event) {
       }
 
-      protected void onForgotPassword_TxtEmailAction(Component c, ActionEvent event) {
-      }
-
-      protected void onForgotPassword_TxtEmail1Action(Component c, ActionEvent event) {
+      protected void onForgotPassword_TxtCustomerCodeAction(Component c, ActionEvent event) {
       }
 
       protected void onForgotPassword_BtnRecoverPasswordAction(Component c, ActionEvent event) {

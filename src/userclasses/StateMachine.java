@@ -141,7 +141,6 @@ public class StateMachine extends StateMachineBase {
         if (Display.getInstance().isSimulator()) {
             AGENT_CODE = "KD7788";
 
-//            UserWebServices u = new UserWebServices();
 //
 //            User tmpUser = new User();
 //
@@ -190,8 +189,8 @@ public class StateMachine extends StateMachineBase {
             Log.setLevel(Log.DEBUG);
             Log.p("issimulator", Log.DEBUG);
 
-            //return "Login";
-            return "Registration";
+            return "Login";
+            //return "Registration";
 
         } else {
             Log.setLevel(Log.REPORTING_PRODUCTION);//To disable debug information
@@ -1127,15 +1126,13 @@ public class StateMachine extends StateMachineBase {
 
                 //u.get_countries(tmpUser);
                 String result = u.ReceiveNewCustData_Reg_MOBI(tmpUser);
-                
-                if(result.indexOf("exists") > -1){//error
+
+                if (result.indexOf("exists") > -1) {//error
                     Dialog.show("Error", result, "Ok", null);
-                }
-                else{
+                } else {
                     Dialog.show("Success", result, "Ok", null);
                 }
-                
-                
+
             } else {
                 Dialog.show("Error", msg, "Ok", null);
             }
@@ -1271,5 +1268,35 @@ public class StateMachine extends StateMachineBase {
     @Override
     protected void postLogin(Form f) {
 
+    }
+
+    @Override
+    protected void onForgotPassword_BtnRecoverPasswordAction(Component c, ActionEvent event) {
+
+     
+
+    }
+
+    @Override
+    protected boolean onForgotPasswordRequest() {
+           String customerCode = findTxtCustomerCode().getText();
+
+        String msg = "";
+
+        if (customerCode.length() == 0) {
+            msg += "Enter Customer Code. ";
+
+        }
+
+        if (msg.length() == 0) {
+            UserWebServices u = new UserWebServices();
+            String res1 = u.forget_password_MOBI(customerCode);
+            Log.p("res1 len=" + res1.length(), Log.DEBUG);
+            Dialog.show("Success", res1, "Ok", null);
+        } else {
+            Dialog.show("Error", msg, "Ok", null);
+            return true;
+        }
+        return false;
     }
 }
