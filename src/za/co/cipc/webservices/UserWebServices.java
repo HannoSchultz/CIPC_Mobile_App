@@ -1115,7 +1115,7 @@ public class UserWebServices {
 
             Result result = Result.fromContent(data, Result.XML);
 
-            Log.p("get_countries: " + result, Log.DEBUG);
+            //Log.p("get_countries: " + result, Log.DEBUG);
 
             XMLParser parser = new XMLParser();
             parser.setCaseSensitive(true);
@@ -1128,7 +1128,7 @@ public class UserWebServices {
                 String country = RSM(((Element) child.getTextChildren(null, true).get(0)).toString());
                 String countr_code = RSM(((Element) child.getTextChildren(null, true).get(1)).toString());
 
-                Log.p("country=" + country + ", countr_code=" + countr_code, Log.DEBUG);
+                //Log.p("country=" + country + ", countr_code=" + countr_code, Log.DEBUG);
                 Country c = new Country();
                 c.setCountr_code(countr_code);
                 c.setCountry(country);
@@ -2496,9 +2496,9 @@ public class UserWebServices {
                 + "\n"
                 + "                     <reference_no></reference_no>\n"
                 + "\n"
-                + "                     <id_no>9001215598086</id_no>\n"
+                + "                     <id_no>"+requestUser.getAgent_id_no()+"</id_no>\n"
                 + "\n"
-                + "                     <cust_name>Blessing Mahlalela</cust_name>\n"
+                + "                     <cust_name>"+requestUser.getFirst_name() + " "+ requestUser.getLast_name()+"</cust_name>\n"
                 + "\n"
                 + "                     <agent_code></agent_code>\n"
                 + "\n"
@@ -2510,37 +2510,37 @@ public class UserWebServices {
                 + "\n"
                 + "                     <tel_code/>\n"
                 + "\n"
-                + "                     <tel_no/>\n"
+                + "                     <tel_no>"+requestUser.getTel_no()+"</tel_no>\n"
                 + "\n"
                 + "                     <fax_code/>\n"
                 + "\n"
-                + "                     <fax_no/>\n"
+                + "                     <fax_no>"+requestUser.getFax_no()+"</fax_no>\n"
                 + "\n"
-                + "                     <cell_no>0782567791</cell_no>\n"
+                + "                     <cell_no>"+requestUser.getCell_no()+"</cell_no>\n"
                 + "\n"
-                + "                     <email_address>hsz@mweb.co.za</email_address>\n"
+                + "                     <email_address>"+requestUser.getEmail()+"</email_address>\n"
                 + "\n"
                 + "                     <docex/>\n"
                 + "\n"
-                + "                     <phys_add1>STREET</phys_add1>\n"
+                + "                     <phys_add1>"+requestUser.getPhys_addr1()+"</phys_add1>\n"
                 + "\n"
-                + "                     <phys_add2>SUBURB</phys_add2>\n"
+                + "                     <phys_add2>"+requestUser.getPhys_addr2()+"</phys_add2>\n"
                 + "\n"
-                + "                     <phys_add3>CITY</phys_add3>\n"
+                + "                     <phys_add3>"+requestUser.getPhys_addr3()+"</phys_add3>\n"
                 + "\n"
                 + "                     <phys_add4>GAUTENG</phys_add4>\n"
                 + "\n"
-                + "                     <phys_code>1313</phys_code>\n"
+                + "                     <phys_code>"+requestUser.getPhys_code()+"</phys_code>\n"
                 + "\n"
-                + "                     <postal_add1>STREET</postal_add1>\n"
+                + "                     <postal_add1>"+requestUser.getPost_addr1()+"</postal_add1>\n"
                 + "\n"
-                + "                     <postal_add2>SUBURB</postal_add2>\n"
+                + "                     <postal_add2>"+requestUser.getPost_addr2()+"</postal_add2>\n"
                 + "\n"
-                + "                     <postal_add3>CITY</postal_add3>\n"
+                + "                     <postal_add3>"+requestUser.getPost_addr3()+"</postal_add3>\n"
                 + "\n"
                 + "                     <postal_add4>GAUTENG</postal_add4>\n"
                 + "\n"
-                + "                     <postal_code>1313</postal_code>\n"
+                + "                     <postal_code>"+requestUser.getPost_code()+"</postal_code>\n"
                 + "\n"
                 + "                     <comm_code>1</comm_code>\n"
                 + "\n"
@@ -2612,7 +2612,7 @@ public class UserWebServices {
 
             Result result = Result.fromContent(data, Result.XML);
 
-            String receivenewcustdata_regresult = result.getAsString("//receivenewcustdata_regresult");
+            String receivenewcustdata_regresult = result.getAsString("//receivenewcustdata_reg_mobiresult");
 
             Log.p("ReceiveNewCustData_Reg_MOBI: " + result, Log.DEBUG);
             //Log.p("receivenewcustdata_regresult: " + receivenewcustdata_regresult, Log.DEBUG);

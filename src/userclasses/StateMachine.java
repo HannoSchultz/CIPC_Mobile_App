@@ -141,15 +141,35 @@ public class StateMachine extends StateMachineBase {
         if (Display.getInstance().isSimulator()) {
             AGENT_CODE = "KD7788";
 
-            UserWebServices u = new UserWebServices();
-
-            User tmpUser = new User();
-
-            //Step 1: check id if registered with CIPC. if exists show user customer code
-            tmpUser.setAgent_id_no("9001215598086");
-            //u.get_countries(tmpUser);
-            // u.ReceiveNewCustData_Reg_MOBI(tmpUser);
-
+//            UserWebServices u = new UserWebServices();
+//
+//            User tmpUser = new User();
+//
+//            //Step 1: check id if registered with CIPC. if exists show user customer code
+//            tmpUser.setAgent_id_no("9001215598086");
+//
+//            //step2
+//            tmpUser.setFirst_name("Blessing");
+//            tmpUser.setLast_name("Mahlalela");
+//            tmpUser.setCell_no("07635908094");
+//            tmpUser.setEmail("blessing@mfactory.mobi");
+//            tmpUser.setTel_code("");
+//            tmpUser.setTel_no("");
+//            tmpUser.setFax_code("");
+//            tmpUser.setFax_no("");
+//
+//            //step 3
+//            tmpUser.setPhys_addr1("Hotel Street");//Street
+//            tmpUser.setPhys_addr2("Pretoria");//City
+//            tmpUser.setPhys_addr3("Gauteng");//Province
+//            tmpUser.setPost_code("0001");
+//
+//            //step 4
+//            tmpUser.setPassword("Password01");
+//
+//            //u.get_countries(tmpUser);
+//            String response = u.ReceiveNewCustData_Reg_MOBI(tmpUser);
+//            Log.p("response =" + response);
             //Step 2: if not exist. create user.
             //tmpUser.setAgent_id_no("7104085085085");
             //u.ReceiveNewCustData_Reg_MOBI(tmpUser);
@@ -915,6 +935,8 @@ public class StateMachine extends StateMachineBase {
                 "Eastern Cape", "Free State", "Gauteng", "Kwazulu Natal", "Limpopo",
                 "Mpumlanga", "North West", "Northern Cape", "Western Cape");
 
+        TextField txtStep2FirstName = (TextField) findByName("txtStep2FirstName", tabs);
+        TextField txtStep2LastName = (TextField) findByName("txtStep2LastName", tabs);
         Picker pickerStep2Country = (Picker) findByName("pickerStep2Country", tabs);
         TextField txtStep2CellPhone = (TextField) findByName("txtStep2CellPhone", tabs);
         TextField txtStep2Email = (TextField) findByName("txtStep2Email", tabs);
@@ -965,6 +987,8 @@ public class StateMachine extends StateMachineBase {
             txtStep1IDNumber.setText("9001215598086");
             //Step 2
             pickerStep2Country.setSelectedStringIndex(1);
+            txtStep2FirstName.setText("Blessing");
+            txtStep2LastName.setText("Mahlalela");
             txtStep2CellPhone.setText("0763598094");
             txtStep2Email.setText("blessing@mfactory.mobi");
             txtStep2EmailRetype.setText("blessing@mfactory.mobi");
@@ -990,6 +1014,14 @@ public class StateMachine extends StateMachineBase {
                 msg += "Please Select a country. ";
             }
 
+            if (txtStep2FirstName.getText().length() == 0) {
+                msg += "Please enter First Name. ";
+            }
+
+            if (txtStep2LastName.getText().length() == 0) {
+                msg += "Please enter Last Name. ";
+            }
+
             if (txtStep2CellPhone.getText().length() == 0) {
                 msg += "Please enter Cell Phone Number. ";
             }
@@ -999,6 +1031,12 @@ public class StateMachine extends StateMachineBase {
 
             if (txtStep2EmailRetype.getText().length() == 0) {
                 msg += "Please Retytpe Email. ";
+            }
+
+            if (txtStep2Email.getText()
+                    .indexOf(txtStep2EmailRetype.getText()) < 0) {
+                msg += "Emails are not the same.";
+
             }
 
             if (msg.length() == 0) {
@@ -1045,27 +1083,59 @@ public class StateMachine extends StateMachineBase {
 
         btnStep4Register.addActionListener((ActionListener) (ActionEvent evt) -> {
             String msg = "";
-            
-            String p1 = txtStep4Password.getText();
-            String p2 = txtStep4PasswordRetype.getText();
-            
+
+            String password = txtStep4Password.getText();
+            String passwordRetype = txtStep4PasswordRetype.getText();
+
             if (txtStep4Password.getText().length() == 0) {
                 msg += "Please enter Password. ";
             }
             if (txtStep4PasswordRetype.getText().length() == 0) {
                 msg += "Please retype Password. ";
             }
-            if( p1.indexOf(p2) < 0){
+            if (password.indexOf(passwordRetype) < 0) {
                 msg += "Passwords are not the same.";
-                Log.p("Not p1=" + p1 + " , p2=" + p2, Log.DEBUG);
-                
+
             }
-                else{
-                Log.p("Same p1=" + p1 + " , p2=" + p2, Log.DEBUG);
-            }
-         
+
             if (msg.length() == 0) {
-                Log.p("Success", Log.DEBUG);
+                Log.p("Success Registration", Log.DEBUG);
+
+                User tmpUser = new User();
+
+                //Step 1: check id if registered with CIPC. if exists show user customer code
+                tmpUser.setAgent_id_no(txtStep1IDNumber.getText());
+
+                //step2
+                tmpUser.setFirst_name(txtStep2FirstName.getText());
+                tmpUser.setLast_name(txtStep2LastName.getText());
+                tmpUser.setCell_no(txtStep2CellPhone.getText());
+                tmpUser.setEmail(txtStep2Email.getText());
+                tmpUser.setTel_code("");
+                tmpUser.setTel_no(txtStep2FaxNumber.getText());
+                tmpUser.setFax_code("");
+                tmpUser.setFax_no(txtStep2FaxNumber.getText());
+
+                //step 3
+                tmpUser.setPhys_addr1(txtStep3Address.getText());//Street
+                tmpUser.setPhys_addr2(txtStep3City.getText());//City
+                tmpUser.setPhys_addr3(pickerProvince.getSelectedString());//Province
+                tmpUser.setPost_code(txtStep3PostalCode.getText());
+
+                //step 4
+                tmpUser.setPassword(txtStep4Password.getText());
+
+                //u.get_countries(tmpUser);
+                String result = u.ReceiveNewCustData_Reg_MOBI(tmpUser);
+                
+                if(result.indexOf("exists") > -1){//error
+                    Dialog.show("Error", result, "Ok", null);
+                }
+                else{
+                    Dialog.show("Success", result, "Ok", null);
+                }
+                
+                
             } else {
                 Dialog.show("Error", msg, "Ok", null);
             }
