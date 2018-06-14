@@ -33,6 +33,7 @@ import userclasses.Constants;
 import userclasses.EnterpriseDetails;
 import userclasses.NameSearchObject;
 import za.co.cipc.pojos.AuthObject;
+import za.co.cipc.pojos.Country;
 import za.co.cipc.pojos.User;
 
 /**
@@ -105,7 +106,6 @@ public class UserWebServices {
 //        InfiniteProgress prog = new InfiniteProgress();
 //        Dialog dlg = prog.showInifiniteBlocking();
 //        httpRequest.setDisposeOnCompletion(dlg);
-
         NetworkManager.getInstance().addToQueueAndWait(httpRequest);
         String data = new String(httpRequest.getResponseData());
         Log.p("CalculateARTranData=" + data, Log.DEBUG);
@@ -121,7 +121,7 @@ public class UserWebServices {
             Element element = parser.parse(convertStringtoInputStreamReader(result.getAsString("//DataSet")));
 
             for (int i = 0; i < element.getNumChildren(); i++) {
-                
+
                 Element child = element.getChildAt(i);
 
                 String ent_type_code = RSM(((Element) child.getTextChildren(null, true).get(0)).toString());
@@ -214,7 +214,7 @@ public class UserWebServices {
                 enterpriseDetails.setReg_date(result.getAsString("//reg_date"));
                 enterpriseDetails.setEnt_type_descr(result.getAsString("//ent_type_descr"));
                 enterpriseDetails.setEnt_status_descr(result.getAsString("//ent_status_descr"));
-                 enterpriseDetails.setEnt_status_code(result.getAsString("//ent_status_code"));
+                enterpriseDetails.setEnt_status_code(result.getAsString("//ent_status_code"));
             }
 
         } catch (IllegalArgumentException e) {
@@ -1036,7 +1036,9 @@ public class UserWebServices {
 
     }//end forget_password_MOBI
 
-    public User get_countries(User user) {
+    public String[] get_countries(User user) {
+
+        ArrayList<Country> list = new ArrayList<Country>();
 
         final String SOAP_BODY
                 = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cipc=\"CIPC_WEB_SERVICES\">\n"
@@ -1061,7 +1063,7 @@ public class UserWebServices {
                 + "\n"
                 + "         <!--Optional:-->\n"
                 + "\n"
-                + "         <cipc:sCust_Code>INKE01</cipc:sCust_Code>\n"
+                + "         <cipc:sCust_Code>KD7788</cipc:sCust_Code>\n"
                 + "\n"
                 + "      </cipc:get_countries>\n"
                 + "\n"
@@ -1112,46 +1114,35 @@ public class UserWebServices {
         try {
 
             Result result = Result.fromContent(data, Result.XML);
-            User responseUser = new User();
 
-            Log.p("result: " + result, Log.DEBUG);
+            Log.p("get_countries: " + result, Log.DEBUG);
 
-            responseUser.setAgent_code(result.getAsString("//agent_code"));
-            responseUser.setAgent_type(result.getAsString("//agent_type"));
-            responseUser.setPassword(result.getAsString("//password"));
-            responseUser.setAgent_name(result.getAsString("//agent_name"));
-            responseUser.setTel_no(result.getAsString("//tel_code"));
-            responseUser.setTel_no(result.getAsString("//tel_no"));
-            responseUser.setFax_code(result.getAsString("//fax_code"));
-            responseUser.setFax_no(result.getAsString("//fax_no"));
-            responseUser.setPhys_addr1(result.getAsString("//phys_addr1"));
-            responseUser.setPhys_addr2(result.getAsString("//phys_addr2"));
-            responseUser.setPhys_addr3(result.getAsString("//phys_addr3"));
-            responseUser.setPhys_addr4(result.getAsString("//phys_addr4"));
-            responseUser.setPhys_code(result.getAsString("//phys_code"));
-            responseUser.setPost_addr1(result.getAsString("//post_addr1"));
-            responseUser.setPost_addr2(result.getAsString("//post_addr2"));
-            responseUser.setPost_addr3(result.getAsString("//post_addr3"));
-            responseUser.setPost_addr4(result.getAsString("//post_addr4"));
-            responseUser.setPost_code(result.getAsString("//post_code"));
-            responseUser.setEmail(result.getAsString("//email"));
-            responseUser.setDocex(result.getAsString("//docex"));
-            responseUser.setCorresp_code(result.getAsString("//corresp_code"));
-            responseUser.setComm_code(result.getAsString("//comm_code"));
-            responseUser.setDeliv_code(result.getAsString("//deliv_code"));
-            responseUser.setModify_date(result.getAsString("//modify_date"));
-            responseUser.setBalance(result.getAsString("//balance"));
-            responseUser.setStatus(result.getAsString("//status"));
-            responseUser.setCurrent_login(result.getAsString("//current_login"));
-            responseUser.setPrevious_login(result.getAsString("//previous_login"));
-            responseUser.setId_type(result.getAsString("//id_type"));
-            responseUser.setAgent_id_no(result.getAsString("//agent_id_no"));
-            responseUser.setRegistration_no(result.getAsString("//registration_no"));
-            responseUser.setCell_no(result.getAsString("//cell_no"));
-            responseUser.setSms(result.getAsString("//sms"));
-            responseUser.setStatus_desc(result.getAsString("//status_desc"));
+            XMLParser parser = new XMLParser();
+            parser.setCaseSensitive(true);
+            Element element = parser.parse(convertStringtoInputStreamReader(result.getAsString("//dataset")));
 
-            return responseUser;
+            for (int i = 0; i < element.getNumChildren(); i++) {
+                Element child = element.getChildAt(i);
+                // if (child.getTextChildren(null, true).size() == 9) {
+
+                String country = RSM(((Element) child.getTextChildren(null, true).get(0)).toString());
+                String countr_code = RSM(((Element) child.getTextChildren(null, true).get(1)).toString());
+
+                Log.p("country=" + country + ", countr_code=" + countr_code, Log.DEBUG);
+                Country c = new Country();
+                c.setCountr_code(countr_code);
+                c.setCountry(country);
+                list.add(c);
+
+            }
+            
+            String countriesArray[] = new String[list.size()+1];
+            countriesArray[0] = "Select Country";
+            for(int i = 0; i < list.size(); i++){
+                countriesArray[i+1] = list.get(i).getCountry();
+            }
+
+            return countriesArray;
 
         } catch (IllegalArgumentException e) {
             Log.p(e.toString());

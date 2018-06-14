@@ -882,18 +882,6 @@ public abstract class StateMachineBase extends UIBuilder {
         return cmp;
     }
 
-    public com.codename1.ui.TextField findTxtStep4CustomerCode(Component root) {
-        return (com.codename1.ui.TextField)findByName("txtStep4CustomerCode", root);
-    }
-
-    public com.codename1.ui.TextField findTxtStep4CustomerCode() {
-        com.codename1.ui.TextField cmp = (com.codename1.ui.TextField)findByName("txtStep4CustomerCode", Display.getInstance().getCurrent());
-        if(cmp == null && aboutToShowThisContainer != null) {
-            cmp = (com.codename1.ui.TextField)findByName("txtStep4CustomerCode", aboutToShowThisContainer);
-        }
-        return cmp;
-    }
-
     public com.codename1.ui.Button findBtnStep1RetrieveDetails(Component root) {
         return (com.codename1.ui.Button)findByName("btnStep1RetrieveDetails", root);
     }
@@ -2971,10 +2959,6 @@ public abstract class StateMachineBase extends UIBuilder {
                 onRegistration_BtnStep3NextAction(c, event);
                 return;
             }
-            if("txtStep4CustomerCode".equals(c.getName())) {
-                onRegistration_TxtStep4CustomerCodeAction(c, event);
-                return;
-            }
             if("btnStep4ViewPasswordRules".equals(c.getName())) {
                 onRegistration_BtnStep4ViewPasswordRulesAction(c, event);
                 return;
@@ -3257,9 +3241,6 @@ public abstract class StateMachineBase extends UIBuilder {
       }
 
       protected void onRegistration_BtnStep3NextAction(Component c, ActionEvent event) {
-      }
-
-      protected void onRegistration_TxtStep4CustomerCodeAction(Component c, ActionEvent event) {
       }
 
       protected void onRegistration_BtnStep4ViewPasswordRulesAction(Component c, ActionEvent event) {

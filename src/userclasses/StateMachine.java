@@ -147,15 +147,14 @@ public class StateMachine extends StateMachineBase {
 
             //Step 1: check id if registered with CIPC. if exists show user customer code
             tmpUser.setAgent_id_no("9001215598086");
-            u.ReceiveNewCustData_Reg_MOBI(tmpUser);
+            //u.get_countries(tmpUser);
+            // u.ReceiveNewCustData_Reg_MOBI(tmpUser);
 
             //Step 2: if not exist. create user.
             //tmpUser.setAgent_id_no("7104085085085");
             //u.ReceiveNewCustData_Reg_MOBI(tmpUser);
-
             //Step 3 forgot password
             //u.forget_password_MOBI(null);
-            
         }
 
     }
@@ -171,8 +170,8 @@ public class StateMachine extends StateMachineBase {
             Log.setLevel(Log.DEBUG);
             Log.p("issimulator", Log.DEBUG);
 
-            return "Login";
-            //return "Registration";
+            //return "Login";
+            return "Registration";
 
         } else {
             Log.setLevel(Log.REPORTING_PRODUCTION);//To disable debug information
@@ -875,12 +874,27 @@ public class StateMachine extends StateMachineBase {
 
     }
 
+    public void checkRegButtonPressed() {
+
+        String msg = "";
+
+        if (isRegStep1Passed == false) {
+            msg = "Please complete step 1 first and press Continue.";
+        } else if (isRegStep2Passed == false) {
+            msg = "Please complete step 2 first and press Continue.";
+        } else if (isRegStep3Passed == false) {
+            msg = "Please complete step 3 first and press Next.";
+        }
+
+        Dialog.show("Error", msg, "Ok", null);
+
+    }
+
     @Override
     protected void beforeRegistration(Form f) {
 
-        Toolbar bar = analytics(f, "Registration");
-
-        isTableInputForm(f);
+        UserWebServices u = new UserWebServices();
+        String strCoutries[] = u.get_countries(null);
 
         Tabs tabs = (Tabs) findByName("Tabs", f);
         tabs.setSwipeActivated(false);
@@ -891,31 +905,185 @@ public class StateMachine extends StateMachineBase {
         Button btnStep3Next = (Button) findByName("btnStep3Next", tabs);
         Button btnStep4Register = (Button) findByName("btnStep4Register", tabs);
 
+        Picker pickerCountry = (Picker) findByName("pickerStep2Country", f);
+        pickerCountry.setType(Display.PICKER_TYPE_STRINGS);
+        pickerCountry.setStrings(strCoutries);
+
+        Picker pickerProvince = (Picker) findByName("pickerStep3Province", f);
+        pickerProvince.setType(Display.PICKER_TYPE_STRINGS);
+        pickerProvince.setStrings("Select Province",
+                "Eastern Cape", "Free State", "Gauteng", "Kwazulu Natal", "Limpopo",
+                "Mpumlanga", "North West", "Northern Cape", "Western Cape");
+
+        Picker pickerStep2Country = (Picker) findByName("pickerStep2Country", tabs);
+        TextField txtStep2CellPhone = (TextField) findByName("txtStep2CellPhone", tabs);
+        TextField txtStep2Email = (TextField) findByName("txtStep2Email", tabs);
+        TextField txtStep2EmailRetype = (TextField) findByName("txtStep2EmailRetype", tabs);
+        TextField txtStep2TelephoneNumber = (TextField) findByName("txtStep2TelephoneNumber", tabs);
+        TextField txtStep2FaxNumber = (TextField) findByName("txtStep2FaxNumber", tabs);
+
+        TextArea txtStep3Address = (TextArea) findByName("txtStep3Address", tabs);
+        Picker pickerStep3Province = (Picker) findByName("pickerStep3Province", tabs);
+        TextField txtStep3City = (TextField) findByName("txtStep3City", tabs);
+        TextField txtStep3PostalCode = (TextField) findByName("txtStep3PostalCode", tabs);
+        RadioButton rdYes = (RadioButton) findByName("rdYes", tabs);
+        RadioButton rdNo = (RadioButton) findByName("rdNo", tabs);
+
+        Button btnStep4ViewPasswordRules = (Button) findByName("btnStep4ViewPasswordRules", tabs);
+        TextField txtStep4Password = (TextField) findByName("txtStep4Password", tabs);
+        TextField txtStep4PasswordRetype = (TextField) findByName("txtStep4PasswordRetype", tabs);
+
+        Toolbar bar = analytics(f, "Registration");
+
+        isTableInputForm(f);
+
         //initialy false
         btnStep2Continue.setEnabled(false);
         btnStep3Next.setEnabled(false);
         btnStep4Register.setEnabled(false);
 
+        TextField txtStep1IDNumber = (TextField) findByName("txtStep1IDNumber", tabs);
+
         btnStep1Continue.addActionListener((ActionListener) (ActionEvent evt) -> {
-            isRegStep1Passed = true;
-            btnStep2Continue.setEnabled(true);
-            tabs.setSelectedIndex(1);
+            String msg = "";
+            if (txtStep1IDNumber.getText().length() != 13) {
+                msg += "Please enter 13 character ID Number. ";
+            }
+
+            if (msg.length() == 0) {
+                isRegStep1Passed = true;
+                btnStep2Continue.setEnabled(true);
+                tabs.setSelectedIndex(1);
+            } else {
+                Dialog.show("Error", msg, "Ok", null);
+            }
+
         });
 
+        if (Display.getInstance().isSimulator()) {
+            //Step 1
+            txtStep1IDNumber.setText("9001215598086");
+            //Step 2
+            pickerStep2Country.setSelectedStringIndex(1);
+            txtStep2CellPhone.setText("0763598094");
+            txtStep2Email.setText("blessing@mfactory.mobi");
+            txtStep2EmailRetype.setText("blessing@mfactory.mobi");
+            //Step 3
+            pickerStep3Province.setSelectedStringIndex(1);
+            txtStep3Address.setText("Address will go here");
+            txtStep3City.setText("Pretoria");
+            txtStep3PostalCode.setText("0001");
+            //Step 4
+            txtStep4Password.setText("Password12");
+            txtStep4PasswordRetype.setText("Password12");
+
+        }
+
         btnStep2Continue.addActionListener((ActionListener) (ActionEvent evt) -> {
-            isRegStep2Passed = true;
-            btnStep3Next.setEnabled(true);
-            tabs.setSelectedIndex(2);
+
+            Log.p("pickerStep2Country=" + pickerStep2Country.getSelectedString(), Log.DEBUG);
+
+            String msg = "";
+            if (pickerStep2Country.getSelectedString() == null
+                    || pickerStep2Country.getSelectedStringIndex() == 0
+                    || pickerStep2Country.getSelectedString().equals("Select Country")) {
+                msg += "Please Select a country. ";
+            }
+
+            if (txtStep2CellPhone.getText().length() == 0) {
+                msg += "Please enter Cell Phone Number. ";
+            }
+            if (txtStep2Email.getText().length() == 0) {
+                msg += "Please Enter Email. ";
+            }
+
+            if (txtStep2EmailRetype.getText().length() == 0) {
+                msg += "Please Retytpe Email. ";
+            }
+
+            if (msg.length() == 0) {
+                isRegStep2Passed = true;
+                btnStep3Next.setEnabled(true);
+                tabs.setSelectedIndex(2);
+            } else {
+                Dialog.show("Error", msg, "Ok", null);
+            }
+
         });
 
         btnStep3Next.addActionListener((ActionListener) (ActionEvent evt) -> {
-            isRegStep3Passed = true;
-            btnStep4Register.setEnabled(true);
-            tabs.setSelectedIndex(3);
+
+            Log.p("pickerStep3Province=" + pickerStep3Province.getSelectedString(), Log.DEBUG);
+
+            String msg = "";
+            if (pickerStep3Province.getSelectedString() == null
+                    || pickerStep3Province.getSelectedStringIndex() == 0
+                    || pickerStep3Province.getSelectedString().equals("Select Province")) {
+                msg += "Please Select a Province. ";
+            }
+
+            if (txtStep3Address.getText().length() == 0) {
+                msg += "Please enter Address. ";
+            }
+            if (txtStep3City.getText().length() == 0) {
+                msg += "Please Enter City. ";
+            }
+
+            if (txtStep3PostalCode.getText().length() == 0) {
+                msg += "Please Postal Code. ";
+            }
+
+            if (msg.length() == 0) {
+                isRegStep3Passed = true;
+                btnStep4Register.setEnabled(true);
+                tabs.setSelectedIndex(3);
+            } else {
+                Dialog.show("Error", msg, "Ok", null);
+            }
+
         });
 
         btnStep4Register.addActionListener((ActionListener) (ActionEvent evt) -> {
+            String msg = "";
+            
+            String p1 = txtStep4Password.getText();
+            String p2 = txtStep4PasswordRetype.getText();
+            
+            if (txtStep4Password.getText().length() == 0) {
+                msg += "Please enter Password. ";
+            }
+            if (txtStep4PasswordRetype.getText().length() == 0) {
+                msg += "Please retype Password. ";
+            }
+            if( p1.indexOf(p2) < 0){
+                msg += "Passwords are not the same.";
+                Log.p("Not p1=" + p1 + " , p2=" + p2, Log.DEBUG);
+                
+            }
+                else{
+                Log.p("Same p1=" + p1 + " , p2=" + p2, Log.DEBUG);
+            }
+         
+            if (msg.length() == 0) {
+                Log.p("Success", Log.DEBUG);
+            } else {
+                Dialog.show("Error", msg, "Ok", null);
+            }
 
+        });
+
+        btnStep4ViewPasswordRules.addActionListener((ActionListener) (ActionEvent evt) -> {
+
+            String text = "It must be a minimum of 8 characters.\n"
+                    + "At least 1 UPPERCASE letter.\n"
+                    + "At least 1 lowercase letter\n"
+                    + "At least I number\n"
+                    + "Special characters are optional\n"
+                    + "Only these characters are allowed:@,$,=,!,#,%";
+
+            Dialog.show("Password Rules", text, "Ok", null);
+
+            //last validation and actual submission
         });
 
         Button btn1 = new Button("1");
@@ -935,9 +1103,11 @@ public class StateMachine extends StateMachineBase {
             @Override
             public void actionPerformed(ActionEvent evt) {
                 //Log.p("clicked btn2, isRegStep1Passed=" + isRegStep1Passed
-                     //   + ", isRegStep2Passed=" + isRegStep2Passed, Log.DEBUG);
+                //   + ", isRegStep2Passed=" + isRegStep2Passed, Log.DEBUG);
                 if (isRegStep1Passed == true) {
                     tabs.setSelectedIndex(1);
+                } else {
+                    checkRegButtonPressed();
                 }
             }
         });
@@ -948,6 +1118,8 @@ public class StateMachine extends StateMachineBase {
                 //Log.p("clicked btn3", Log.DEBUG);
                 if (isRegStep1Passed == true && isRegStep2Passed == true) {
                     tabs.setSelectedIndex(2);
+                } else {
+                    checkRegButtonPressed();
                 }
             }
         });
@@ -959,6 +1131,8 @@ public class StateMachine extends StateMachineBase {
                 if (isRegStep1Passed == true && isRegStep2Passed == true
                         && isRegStep3Passed == true) {
                     tabs.setSelectedIndex(3);
+                } else {
+                    checkRegButtonPressed();
                 }
             }
         });
@@ -977,24 +1151,14 @@ public class StateMachine extends StateMachineBase {
             }
         });
 
-        //tabs.
-        Picker pickerCountry = (Picker) findByName("pickerStep2Country", f);
-        pickerCountry.setType(Display.PICKER_TYPE_STRINGS);
-        pickerCountry.setStrings("Select Country", "Brazil", "South Africa", "Zimbabwe");
-
-        Picker pickerProvince = (Picker) findByName("pickerStep3Province", f);
-        pickerProvince.setType(Display.PICKER_TYPE_STRINGS);
-        pickerProvince.setStrings("Select Province", "Gauteng", "Kwazulu Natal");
-
         Container contRadioButtons = (Container) findByName("contRadioButtons", f);
-
-        RadioButton rdYes = (RadioButton) findByName("rdYes", contRadioButtons);
-        RadioButton rdNo = (RadioButton) findByName("rdNo", contRadioButtons);
 
         ButtonGroup btButtonGroup = new ButtonGroup();
 
         btButtonGroup.add(rdYes);
         btButtonGroup.add(rdNo);
+
+        rdYes.setSelected(true);
 
         Command back = new Command("Login") {
 
