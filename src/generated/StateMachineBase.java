@@ -258,18 +258,6 @@ public abstract class StateMachineBase extends UIBuilder {
         return cmp;
     }
 
-    public com.codename1.ui.spinner.Picker findPickerStep3Province(Component root) {
-        return (com.codename1.ui.spinner.Picker)findByName("pickerStep3Province", root);
-    }
-
-    public com.codename1.ui.spinner.Picker findPickerStep3Province() {
-        com.codename1.ui.spinner.Picker cmp = (com.codename1.ui.spinner.Picker)findByName("pickerStep3Province", Display.getInstance().getCurrent());
-        if(cmp == null && aboutToShowThisContainer != null) {
-            cmp = (com.codename1.ui.spinner.Picker)findByName("pickerStep3Province", aboutToShowThisContainer);
-        }
-        return cmp;
-    }
-
     public com.codename1.ui.Container findContProfile(Component root) {
         return (com.codename1.ui.Container)findByName("ContProfile", root);
     }
@@ -654,6 +642,18 @@ public abstract class StateMachineBase extends UIBuilder {
         return cmp;
     }
 
+    public com.codename1.ui.Container findStep3PostalCont(Component root) {
+        return (com.codename1.ui.Container)findByName("step3PostalCont", root);
+    }
+
+    public com.codename1.ui.Container findStep3PostalCont() {
+        com.codename1.ui.Container cmp = (com.codename1.ui.Container)findByName("step3PostalCont", Display.getInstance().getCurrent());
+        if(cmp == null && aboutToShowThisContainer != null) {
+            cmp = (com.codename1.ui.Container)findByName("step3PostalCont", aboutToShowThisContainer);
+        }
+        return cmp;
+    }
+
     public com.codename1.ui.TextField findTxtPassword(Component root) {
         return (com.codename1.ui.TextField)findByName("txtPassword", root);
     }
@@ -662,6 +662,18 @@ public abstract class StateMachineBase extends UIBuilder {
         com.codename1.ui.TextField cmp = (com.codename1.ui.TextField)findByName("txtPassword", Display.getInstance().getCurrent());
         if(cmp == null && aboutToShowThisContainer != null) {
             cmp = (com.codename1.ui.TextField)findByName("txtPassword", aboutToShowThisContainer);
+        }
+        return cmp;
+    }
+
+    public com.codename1.ui.spinner.Picker findStep3Province(Component root) {
+        return (com.codename1.ui.spinner.Picker)findByName("step3Province", root);
+    }
+
+    public com.codename1.ui.spinner.Picker findStep3Province() {
+        com.codename1.ui.spinner.Picker cmp = (com.codename1.ui.spinner.Picker)findByName("step3Province", Display.getInstance().getCurrent());
+        if(cmp == null && aboutToShowThisContainer != null) {
+            cmp = (com.codename1.ui.spinner.Picker)findByName("step3Province", aboutToShowThisContainer);
         }
         return cmp;
     }
@@ -2967,8 +2979,8 @@ public abstract class StateMachineBase extends UIBuilder {
                 onRegistration_TxtStep3AddressAction(c, event);
                 return;
             }
-            if("pickerStep3Province".equals(c.getName())) {
-                onRegistration_PickerStep3ProvinceAction(c, event);
+            if("step3Province".equals(c.getName())) {
+                onRegistration_Step3ProvinceAction(c, event);
                 return;
             }
             if("txtStep3City".equals(c.getName())) {
@@ -3259,7 +3271,7 @@ public abstract class StateMachineBase extends UIBuilder {
       protected void onRegistration_TxtStep3AddressAction(Component c, ActionEvent event) {
       }
 
-      protected void onRegistration_PickerStep3ProvinceAction(Component c, ActionEvent event) {
+      protected void onRegistration_Step3ProvinceAction(Component c, ActionEvent event) {
       }
 
       protected void onRegistration_TxtStep3CityAction(Component c, ActionEvent event) {

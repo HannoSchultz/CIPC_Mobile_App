@@ -68,6 +68,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TimeZone;
+import services.Utility;
 import za.co.cipc.webservices.UserWebServices;
 import ui.FormProgress;
 import za.co.cipc.pojos.User;
@@ -79,6 +80,7 @@ import za.co.cipc.pojos.User;
  */
 public class StateMachine extends StateMachineBase {
 
+    static boolean hasGonePastACS = false;
     static boolean isRegStep1Passed = false;
     static boolean isRegStep2Passed = false;
     static boolean isRegStep3Passed = false;
@@ -141,6 +143,8 @@ public class StateMachine extends StateMachineBase {
         if (Display.getInstance().isSimulator()) {
             AGENT_CODE = "KD7788";
 
+            //UserWebServices u = new UserWebServices();
+            //u.getToken(null);
 //
 //            User tmpUser = new User();
 //
@@ -189,8 +193,8 @@ public class StateMachine extends StateMachineBase {
             Log.setLevel(Log.DEBUG);
             Log.p("issimulator", Log.DEBUG);
 
-            return "Login";
-            //return "Registration";
+            //return "Login";
+            return "Registration";
 
         } else {
             Log.setLevel(Log.REPORTING_PRODUCTION);//To disable debug information
@@ -619,6 +623,8 @@ public class StateMachine extends StateMachineBase {
         Tabs tabs = (Tabs) findByName("Tabs", cont);
         tabs.setSwipeActivated(false);
 
+        Log.p("Cart agent=" + AGENT_CODE, Log.DEBUG);
+
         UserWebServices u = new UserWebServices();
         User user = new User();
         user.setAgent_code(AGENT_CODE);
@@ -811,6 +817,56 @@ public class StateMachine extends StateMachineBase {
         String txtCustomerCode = ((TextField) findByName("txtCustomerCode", c)).getText();
         final String password = ((TextField) findByName("txtPassword", c)).getText();
 
+        if (txtCustomerCode.equals("aaa")) {
+            int height = Display.getInstance().getDisplayHeight();
+            int width = Display.getInstance().getDisplayWidth();
+
+            Log.p("width=" + width + ", height=" + height, Log.DEBUG);
+
+            String URL = "http://www.google.com";
+
+            // String URL = "https://paymenttest.cipc.co.za/Pay.aspx?custCode=G110iMQgyJs%3d&custId=z9MyXkVPe2F0F2OEr0xsjA%3d%3d&appId=6"
+            //       + "&width=" + width + "&height=" + height;
+            Log.p(URL, Log.DEBUG);
+
+            Form hi = new Form("Hi World", new BorderLayout());
+
+            hasGonePastACS = false;
+
+            String directURL = "https://paymenttest.cipc.co.za/ACSRedirect.aspx";
+            String errorURL = "https://paymenttest.cipc.co.za/PaymentError.aspx?error=1EwiapDpld0GrXoBVjnhEC52%2fRVCNKIi9Xsi%2fs9YpzA%3d&ref=T9122961860";
+
+            BrowserComponent browser = new BrowserComponent();
+            browser.setURL(URL);
+
+            browser.addBrowserNavigationCallback(new BrowserNavigationCallback() {
+                @Override
+                public boolean shouldNavigate(String url) {
+
+                    hi.setTitle(url);
+
+                    if (url.indexOf("PaymentError") > -1) {
+                        //error
+                        Log.p("Error occured", Log.DEBUG);
+                        Dialog.show("Error", "Error occurred", "Ok", null);
+                    } else if (url.indexOf(directURL) > -1) {
+                        //redirect
+                        Log.p("Redirect", Log.DEBUG);
+                    } else if (hasGonePastACS == true) {
+                        Log.p("ACS", Log.DEBUG);
+                        Dialog.show("Success", "Payment success", "Ok", null);
+                    }
+
+                    return true;
+                }
+            });
+
+            //browser.setProperty("useragent", "Mozilla/5.0 (Linux; Android 4.0.4; Galaxy Nexus Build/IMM76K) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.166 Mobile Safari/535.19");
+            //browser.setProperty("useragent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.45 Safari/535.19");
+            hi.add(BorderLayout.CENTER, browser);
+            hi.show();
+        }
+
         za.co.cipc.pojos.User user = new za.co.cipc.pojos.User();
         user.setAgent_code(txtCustomerCode);
         user.setParamPassword(password);
@@ -919,24 +975,21 @@ public class StateMachine extends StateMachineBase {
         tabs.setSwipeActivated(false);
         tabs.hideTabs();
 
+        Button btnStep1NoID = (Button) findByName("btnStep1NoID", tabs);
+
         Button btnStep1Continue = (Button) findByName("btnStep1Continue", tabs);
         Button btnStep2Continue = (Button) findByName("btnStep2Continue", tabs);
         Button btnStep3Next = (Button) findByName("btnStep3Next", tabs);
         Button btnStep4Register = (Button) findByName("btnStep4Register", tabs);
 
         Picker pickerCountry = (Picker) findByName("pickerStep2Country", f);
+
         pickerCountry.setType(Display.PICKER_TYPE_STRINGS);
         pickerCountry.setStrings(strCoutries);
-
-        Picker pickerProvince = (Picker) findByName("pickerStep3Province", f);
-        pickerProvince.setType(Display.PICKER_TYPE_STRINGS);
-        pickerProvince.setStrings("Select Province",
-                "Eastern Cape", "Free State", "Gauteng", "Kwazulu Natal", "Limpopo",
-                "Mpumlanga", "North West", "Northern Cape", "Western Cape");
+        pickerCountry.setSelectedStringIndex(0);
 
         TextField txtStep2FirstName = (TextField) findByName("txtStep2FirstName", tabs);
         TextField txtStep2LastName = (TextField) findByName("txtStep2LastName", tabs);
-        Picker pickerStep2Country = (Picker) findByName("pickerStep2Country", tabs);
         TextField txtStep2CellPhone = (TextField) findByName("txtStep2CellPhone", tabs);
         TextField txtStep2Email = (TextField) findByName("txtStep2Email", tabs);
         TextField txtStep2EmailRetype = (TextField) findByName("txtStep2EmailRetype", tabs);
@@ -944,11 +997,74 @@ public class StateMachine extends StateMachineBase {
         TextField txtStep2FaxNumber = (TextField) findByName("txtStep2FaxNumber", tabs);
 
         TextArea txtStep3Address = (TextArea) findByName("txtStep3Address", tabs);
-        Picker pickerStep3Province = (Picker) findByName("pickerStep3Province", tabs);
         TextField txtStep3City = (TextField) findByName("txtStep3City", tabs);
         TextField txtStep3PostalCode = (TextField) findByName("txtStep3PostalCode", tabs);
+        Picker step3Province = (Picker) findByName("step3Province", f);
+        step3Province.setType(Display.PICKER_TYPE_STRINGS);
+        String[] strProvinces = {"Select Province",
+            "Eastern Cape", "Free State", "Gauteng", "Kwazulu Natal", "Limpopo",
+            "Mpumlanga", "North West", "Northern Cape", "Western Cape"};
+        step3Province.setStrings(strProvinces);
+        step3Province.setSelectedStringIndex(0);
+
+        TextArea txtStep3PostalAddress = new TextArea();
+        Picker step3PostalProvince = new Picker();
+        TextField txtStep3PostalCity = new TextField();
+        TextField txtStep3PostalPostalCode = new TextField();
+
         RadioButton rdYes = (RadioButton) findByName("rdYes", tabs);
         RadioButton rdNo = (RadioButton) findByName("rdNo", tabs);
+
+        Container step3PostalCont = (Container) findByName("step3PostalCont", tabs);
+
+        rdNo.addActionListener((ActionListener) (ActionEvent evt) -> {
+            boolean isSelected = rdNo.isSelected();
+            step3PostalCont.removeAll();
+
+            if (true == isSelected) {
+
+                step3PostalProvince.setType(Display.PICKER_TYPE_STRINGS);
+                String[] strPostalProvinces = {"Select Province",
+                    "Eastern Cape", "Free State", "Gauteng", "Kwazulu Natal", "Limpopo",
+                    "Mpumlanga", "North West", "Northern Cape", "Western Cape"};
+                step3PostalProvince.setStrings(strPostalProvinces);
+                step3PostalProvince.setSelectedStringIndex(0);
+
+                txtStep3PostalAddress.setName("txtStep3PostalAddress");
+                step3PostalProvince.setName("step3PostalProvince");
+                txtStep3PostalCity.setName("txtStep3PostalCity");
+                txtStep3PostalPostalCode.setName("txtStep3PostalPostalCode");
+
+                step3PostalCont.add("Postal Address").add(txtStep3PostalAddress);
+                step3PostalCont.add("Postal Province").add(step3PostalProvince);
+                step3PostalCont.add("Postal City").add(txtStep3PostalCity);
+                step3PostalCont.add("Postal Code").add(txtStep3PostalPostalCode);
+                //step3PostalCont.add("").add();
+
+                if (Display.getInstance().isSimulator()) {
+                    if (Display.getInstance().isSimulator()) {
+                        step3PostalProvince.setSelectedStringIndex(3);
+                        txtStep3PostalAddress.setText("Postal Address");
+                        txtStep3PostalCity.setText("Pretoria");
+                        txtStep3PostalPostalCode.setText("0001");
+                    }
+                }
+
+                step3PostalCont.repaint();
+
+            }
+
+        });
+
+        rdYes.addActionListener((ActionListener) (ActionEvent evt) -> {
+            boolean isSelected = rdYes.isSelected();
+
+            if (true == isSelected) {
+                step3PostalCont.removeAll();
+                step3PostalCont.repaint();
+            }
+
+        });
 
         Button btnStep4ViewPasswordRules = (Button) findByName("btnStep4ViewPasswordRules", tabs);
         TextField txtStep4Password = (TextField) findByName("txtStep4Password", tabs);
@@ -965,10 +1081,24 @@ public class StateMachine extends StateMachineBase {
 
         TextField txtStep1IDNumber = (TextField) findByName("txtStep1IDNumber", tabs);
 
+        btnStep1NoID.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                Dialog.show("ID Number", "The CIPC App is only available to users that have valid South African IDs", "Ok", null);
+            }
+        });
+
         btnStep1Continue.addActionListener((ActionListener) (ActionEvent evt) -> {
             String msg = "";
             if (txtStep1IDNumber.getText().length() != 13) {
                 msg += "Please enter 13 character ID Number. ";
+            }
+
+            //verify id
+            String customer_code = u.Get_Cust_code_id_MOBI(txtStep1IDNumber.getText());
+
+            if (customer_code != null && customer_code.length() == 6) {
+                msg += "The ID number " + txtStep1IDNumber.getText() + " is already registered with the following Customer Code: " + customer_code;
             }
 
             if (msg.length() == 0) {
@@ -983,16 +1113,16 @@ public class StateMachine extends StateMachineBase {
 
         if (Display.getInstance().isSimulator()) {
             //Step 1
-            txtStep1IDNumber.setText("9001215598086");
+            txtStep1IDNumber.setText("9001215598085");
             //Step 2
-            pickerStep2Country.setSelectedStringIndex(1);
+            pickerCountry.setSelectedStringIndex(1);
             txtStep2FirstName.setText("Blessing");
             txtStep2LastName.setText("Mahlalela");
             txtStep2CellPhone.setText("0763598094");
             txtStep2Email.setText("blessing@mfactory.mobi");
             txtStep2EmailRetype.setText("blessing@mfactory.mobi");
             //Step 3
-            pickerStep3Province.setSelectedStringIndex(1);
+            step3Province.setSelectedStringIndex(3);
             txtStep3Address.setText("Address will go here");
             txtStep3City.setText("Pretoria");
             txtStep3PostalCode.setText("0001");
@@ -1004,13 +1134,13 @@ public class StateMachine extends StateMachineBase {
 
         btnStep2Continue.addActionListener((ActionListener) (ActionEvent evt) -> {
 
-            Log.p("pickerStep2Country=" + pickerStep2Country.getSelectedString(), Log.DEBUG);
+            Log.p("pickerCountry=" + pickerCountry.getSelectedString(), Log.DEBUG);
 
             String msg = "";
-            if (pickerStep2Country.getSelectedString() == null
-                    || pickerStep2Country.getSelectedStringIndex() == 0
-                    || pickerStep2Country.getSelectedString().equals("Select Country")) {
-                msg += "Please Select a country. ";
+            if (pickerCountry.getSelectedString() == null
+                    || pickerCountry.getSelectedStringIndex() == 0
+                    || pickerCountry.getSelectedString().equals("Select Country")) {
+                msg += "Please select a country. ";
             }
 
             if (txtStep2FirstName.getText().length() == 0) {
@@ -1025,11 +1155,11 @@ public class StateMachine extends StateMachineBase {
                 msg += "Please enter Cell Phone Number. ";
             }
             if (txtStep2Email.getText().length() == 0) {
-                msg += "Please Enter Email. ";
+                msg += "Please enter Email. ";
             }
 
             if (txtStep2EmailRetype.getText().length() == 0) {
-                msg += "Please Retytpe Email. ";
+                msg += "Please retytpe Email. ";
             }
 
             if (txtStep2Email.getText()
@@ -1039,6 +1169,7 @@ public class StateMachine extends StateMachineBase {
             }
 
             if (msg.length() == 0) {
+
                 isRegStep2Passed = true;
                 btnStep3Next.setEnabled(true);
                 tabs.setSelectedIndex(2);
@@ -1050,24 +1181,45 @@ public class StateMachine extends StateMachineBase {
 
         btnStep3Next.addActionListener((ActionListener) (ActionEvent evt) -> {
 
-            Log.p("pickerStep3Province=" + pickerStep3Province.getSelectedString(), Log.DEBUG);
+            Log.p("pickerStep3Province=" + step3Province.getSelectedString(), Log.DEBUG);
 
             String msg = "";
-            if (pickerStep3Province.getSelectedString() == null
-                    || pickerStep3Province.getSelectedStringIndex() == 0
-                    || pickerStep3Province.getSelectedString().equals("Select Province")) {
-                msg += "Please Select a Province. ";
+            if (step3Province.getSelectedString() == null
+                    || step3Province.getSelectedStringIndex() == 0
+                    || step3Province.getSelectedString().equals("Select Province")) {
+                msg += "Please select Physical Province. ";
             }
 
             if (txtStep3Address.getText().length() == 0) {
-                msg += "Please enter Address. ";
+                msg += "Please enter Physical Address. ";
             }
             if (txtStep3City.getText().length() == 0) {
-                msg += "Please Enter City. ";
+                msg += "Please enter Physical City. ";
             }
 
             if (txtStep3PostalCode.getText().length() == 0) {
-                msg += "Please Postal Code. ";
+                msg += "Please select Physical Code. ";
+            }
+
+            if (rdNo.isSelected()) {
+                //POSTAL VALIDATIONS
+                if (step3PostalProvince.getSelectedString() == null
+                        || step3PostalProvince.getSelectedStringIndex() == 0
+                        || step3PostalProvince.getSelectedString().equals("Select Postal Province")) {
+                    msg += "Please select Postal Province. ";
+                }
+
+                if (txtStep3PostalAddress.getText().length() == 0) {
+                    msg += "Please enter Postal Address. ";
+                }
+                if (txtStep3PostalCity.getText().length() == 0) {
+                    msg += "Please enter Physical City. ";
+                }
+
+                if (txtStep3PostalPostalCode.getText().length() == 0) {
+                    msg += "Please postal Code. ";
+                }
+
             }
 
             if (msg.length() == 0) {
@@ -1097,6 +1249,20 @@ public class StateMachine extends StateMachineBase {
 
             }
 
+            Utility utility = new Utility();
+
+            String errorResponse = utility.isPasswordValid(password);
+
+            if (errorResponse.length() > 0) {
+                msg += errorResponse;
+            }
+
+            /*String errorResponseConfirm = utility.isPasswordValid(passwordRetype);
+
+            if (errorResponseConfirm.length() > 0) {
+                msg += errorResponseConfirm;
+            }*/
+
             if (msg.length() == 0) {
                 Log.p("Success Registration", Log.DEBUG);
 
@@ -1118,8 +1284,15 @@ public class StateMachine extends StateMachineBase {
                 //step 3
                 tmpUser.setPhys_addr1(txtStep3Address.getText());//Street
                 tmpUser.setPhys_addr2(txtStep3City.getText());//City
-                tmpUser.setPhys_addr3(pickerProvince.getSelectedString());//Province
+                tmpUser.setPhys_addr3(step3Province.getSelectedString());//Province
                 tmpUser.setPost_code(txtStep3PostalCode.getText());
+
+                if (rdNo.isSelected()) {//only when radio button is selected
+                    tmpUser.setPost_addr1(txtStep3PostalAddress.getText());
+                    tmpUser.setPost_addr2(txtStep3PostalCity.getText());
+                    tmpUser.setPost_addr3(step3PostalProvince.getSelectedString());
+                    tmpUser.setPost_code(txtStep3PostalPostalCode.getText());
+                }
 
                 //step 4
                 tmpUser.setPassword(txtStep4Password.getText());
@@ -1127,7 +1300,12 @@ public class StateMachine extends StateMachineBase {
                 //u.get_countries(tmpUser);
                 String result = u.ReceiveNewCustData_Reg_MOBI(tmpUser);
 
-                if (result.indexOf("exists") > -1) {//error
+                if (result.indexOf("exists") > -1 || result.indexOf("Transaction Rejected") > -1
+                        || result.indexOf("Invalid") > -1
+                        || result.indexOf("already registered") > -1
+                        || result.indexOf("customer code does not") > -1
+                        || result.indexOf("Transaction Rejected") > -1
+                        || result.indexOf("existing") > -1) {//error
                     Dialog.show("Error", result, "Ok", null);
                 } else {
                     Dialog.show("Success", result, "Ok", null);
@@ -1232,7 +1410,11 @@ public class StateMachine extends StateMachineBase {
             @Override
             public void actionPerformed(ActionEvent evt) {
                 super.actionPerformed(evt);
-                current.showBack();
+                if (current != null) {
+                    current.showBack();
+                } else {
+                    showForm("Login", null);
+                }
             }
 
         };
@@ -1273,13 +1455,11 @@ public class StateMachine extends StateMachineBase {
     @Override
     protected void onForgotPassword_BtnRecoverPasswordAction(Component c, ActionEvent event) {
 
-     
-
     }
 
     @Override
     protected boolean onForgotPasswordRequest() {
-           String customerCode = findTxtCustomerCode().getText();
+        String customerCode = findTxtCustomerCode().getText();
 
         String msg = "";
 
@@ -1292,11 +1472,18 @@ public class StateMachine extends StateMachineBase {
             UserWebServices u = new UserWebServices();
             String res1 = u.forget_password_MOBI(customerCode);
             Log.p("res1 len=" + res1.length(), Log.DEBUG);
-            Dialog.show("Success", res1, "Ok", null);
+            if (res1.indexOf("not registered") > -1) {
+                Dialog.show("Error", res1, "Ok", null);
+                return true;
+            } else {
+                Dialog.show("Success", res1, "Ok", null);
+            }
+
         } else {
             Dialog.show("Error", msg, "Ok", null);
             return true;
         }
         return false;
     }
+
 }

@@ -367,4 +367,61 @@ public class Utility {
         return value;
 
     }
+
+    public String isPasswordValid(String password) {
+        String response = "";
+        //It must be a minimum of 8 characters.
+        if (password.length() < 8) {
+            response += "Password must have minimum 8 characters. ";
+        }
+
+        //At least 1 UPPERCASE letter.
+        //65 to 90
+        boolean hasCapital = false;
+        boolean hasNumber = false;
+        String notSpecialChar = "";
+
+        char character;
+
+        for (int i = 0; i < password.length(); i++) {
+            character = password.charAt(i);
+            //Log.p("character=" + character, Log.DEBUG);
+            if (character >= 65 && character <= 90) {
+                hasCapital = true;
+            }
+
+            character = password.charAt(i);
+            if (character >= 48 && character <= 57) {
+                hasNumber = true;
+            }
+
+            if ((character >= 48 && character <= 57)
+                    || (character >= 65 && character <= 90)
+                    || (character >= 97 && character <= 122)
+                    || character == 33 || character == 35 || character == 36
+                    || character == 37
+                    || character == 61 || character == 64) {
+
+            } else {
+                notSpecialChar += " " + character;
+            }
+        }
+
+        if (hasCapital == false) {
+            response += "Password must have atleast one capital letter. ";
+        }
+        //At least 1 number
+        //48 to 57
+
+        if (hasNumber == false) {
+            response += "Password must have atleast one number. ";
+        }
+
+        if (notSpecialChar.length() > 0) {
+            response += "Password may not contain the following characters (s): " + notSpecialChar;
+        }
+
+        return response;
+
+    }
 }

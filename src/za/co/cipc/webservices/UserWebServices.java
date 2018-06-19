@@ -897,22 +897,24 @@ public class UserWebServices {
 //        Dialog dlg = prog.showInifiniteBlocking();
 //        httpRequest.setDisposeOnCompletion(dlg);
         NetworkManager.getInstance().addToQueueAndWait(httpRequest);
-        String data = new String(httpRequest.getResponseData());//TODO do null check
+        if(httpRequest.getResponseData() != null){
+            String data = new String(httpRequest.getResponseData());//TODO do null check
 
-        try {
+            try {
 
-            Result result = Result.fromContent(data, Result.XML);
-            User responseUser = new User();
+                Result result = Result.fromContent(data, Result.XML);
+                User responseUser = new User();
 
-            Log.p("get_cust_MOBI: " + result, Log.DEBUG);
+                Log.p("get_cust_MOBI: " + result, Log.DEBUG);
 
-            responseUser.setAgent_code(user.getAgent_code());
-            responseUser.setPassword(result.getAsString("//get_cust_mobiresult"));
+                responseUser.setAgent_code(user.getAgent_code());
+                responseUser.setPassword(result.getAsString("//get_cust_mobiresult"));
 
-            return responseUser;
+                return responseUser;
 
-        } catch (IllegalArgumentException e) {
-            Log.p(e.toString());
+            } catch (IllegalArgumentException e) {
+                Log.p(e.toString());
+            }
         }
 
         return null;
@@ -920,7 +922,7 @@ public class UserWebServices {
     }//end login
 
     public String forget_password_MOBI(String customerCode) {
-        
+
         String responseString = null;
 
         final String SOAP_BODY
@@ -938,7 +940,7 @@ public class UserWebServices {
                 + "\n"
                 + "          <cipc:sBankID>wBAA7LAkWIs=</cipc:sBankID>\n"
                 + "\n"
-                + "         <cipc:sCust_Code>"+customerCode+"</cipc:sCust_Code>\n"
+                + "         <cipc:sCust_Code>" + customerCode + "</cipc:sCust_Code>\n"
                 + "\n"
                 + "      </cipc:forget_password_MOBI>\n"
                 + "\n"
@@ -993,7 +995,6 @@ public class UserWebServices {
             Log.p("forget_password_MOBI: " + result, Log.DEBUG);
 
             responseString = result.getAsString("//forget_password_mobiresult");
-           
 
             return responseString;
 
@@ -1085,7 +1086,6 @@ public class UserWebServices {
             Result result = Result.fromContent(data, Result.XML);
 
             //Log.p("get_countries: " + result, Log.DEBUG);
-
             XMLParser parser = new XMLParser();
             parser.setCaseSensitive(true);
             Element element = parser.parse(convertStringtoInputStreamReader(result.getAsString("//dataset")));
@@ -1104,11 +1104,11 @@ public class UserWebServices {
                 list.add(c);
 
             }
-            
-            String countriesArray[] = new String[list.size()+1];
+
+            String countriesArray[] = new String[list.size() + 1];
             countriesArray[0] = "Select Country";
-            for(int i = 0; i < list.size(); i++){
-                countriesArray[i+1] = list.get(i).getCountry();
+            for (int i = 0; i < list.size(); i++) {
+                countriesArray[i + 1] = list.get(i).getCountry();
             }
 
             return countriesArray;
@@ -1121,7 +1121,7 @@ public class UserWebServices {
 
     }//end get_countries
 
-    public User Get_Cust_code_id_MOBI(User user) {
+    public String Get_Cust_code_id_MOBI(String id) {
 
         final String SOAP_BODY
                 = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cipc=\"CIPC_WEB_SERVICES\">\n"
@@ -1138,7 +1138,7 @@ public class UserWebServices {
                 + "\n"
                 + "         <cipc:sBankID>wBAA7LAkWIs=</cipc:sBankID>\n"
                 + "\n"
-                + "         <cipc:sid_no>7104085085085</cipc:sid_no>\n"
+                + "         <cipc:sid_no>"+id+"</cipc:sid_no>\n"
                 + "\n"
                 + "      </cipc:Get_Cust_code_id_MOBI>\n"
                 + "\n"
@@ -1191,44 +1191,11 @@ public class UserWebServices {
             Result result = Result.fromContent(data, Result.XML);
             User responseUser = new User();
 
-            Log.p("Get_Cust_code_id_MOBI: " + result, Log.DEBUG);
+            String customer_code = result.getAsString("//customer_code");
 
-            responseUser.setAgent_code(result.getAsString("//agent_code"));
-            responseUser.setAgent_type(result.getAsString("//agent_type"));
-            responseUser.setPassword(result.getAsString("//password"));
-            responseUser.setAgent_name(result.getAsString("//agent_name"));
-            responseUser.setTel_no(result.getAsString("//tel_code"));
-            responseUser.setTel_no(result.getAsString("//tel_no"));
-            responseUser.setFax_code(result.getAsString("//fax_code"));
-            responseUser.setFax_no(result.getAsString("//fax_no"));
-            responseUser.setPhys_addr1(result.getAsString("//phys_addr1"));
-            responseUser.setPhys_addr2(result.getAsString("//phys_addr2"));
-            responseUser.setPhys_addr3(result.getAsString("//phys_addr3"));
-            responseUser.setPhys_addr4(result.getAsString("//phys_addr4"));
-            responseUser.setPhys_code(result.getAsString("//phys_code"));
-            responseUser.setPost_addr1(result.getAsString("//post_addr1"));
-            responseUser.setPost_addr2(result.getAsString("//post_addr2"));
-            responseUser.setPost_addr3(result.getAsString("//post_addr3"));
-            responseUser.setPost_addr4(result.getAsString("//post_addr4"));
-            responseUser.setPost_code(result.getAsString("//post_code"));
-            responseUser.setEmail(result.getAsString("//email"));
-            responseUser.setDocex(result.getAsString("//docex"));
-            responseUser.setCorresp_code(result.getAsString("//corresp_code"));
-            responseUser.setComm_code(result.getAsString("//comm_code"));
-            responseUser.setDeliv_code(result.getAsString("//deliv_code"));
-            responseUser.setModify_date(result.getAsString("//modify_date"));
-            responseUser.setBalance(result.getAsString("//balance"));
-            responseUser.setStatus(result.getAsString("//status"));
-            responseUser.setCurrent_login(result.getAsString("//current_login"));
-            responseUser.setPrevious_login(result.getAsString("//previous_login"));
-            responseUser.setId_type(result.getAsString("//id_type"));
-            responseUser.setAgent_id_no(result.getAsString("//agent_id_no"));
-            responseUser.setRegistration_no(result.getAsString("//registration_no"));
-            responseUser.setCell_no(result.getAsString("//cell_no"));
-            responseUser.setSms(result.getAsString("//sms"));
-            responseUser.setStatus_desc(result.getAsString("//status_desc"));
+            Log.p("Get_Cust_code_id_MOBI -> customer_code= " + customer_code, Log.DEBUG);
 
-            return responseUser;
+            return customer_code;
 
         } catch (IllegalArgumentException e) {
             Log.p(e.toString());
@@ -2465,9 +2432,9 @@ public class UserWebServices {
                 + "\n"
                 + "                     <reference_no></reference_no>\n"
                 + "\n"
-                + "                     <id_no>"+requestUser.getAgent_id_no()+"</id_no>\n"
+                + "                     <id_no>" + requestUser.getAgent_id_no() + "</id_no>\n"
                 + "\n"
-                + "                     <cust_name>"+requestUser.getFirst_name() + " "+ requestUser.getLast_name()+"</cust_name>\n"
+                + "                     <cust_name>" + requestUser.getFirst_name() + " " + requestUser.getLast_name() + "</cust_name>\n"
                 + "\n"
                 + "                     <agent_code></agent_code>\n"
                 + "\n"
@@ -2479,37 +2446,37 @@ public class UserWebServices {
                 + "\n"
                 + "                     <tel_code/>\n"
                 + "\n"
-                + "                     <tel_no>"+requestUser.getTel_no()+"</tel_no>\n"
+                + "                     <tel_no>" + requestUser.getTel_no() + "</tel_no>\n"
                 + "\n"
                 + "                     <fax_code/>\n"
                 + "\n"
-                + "                     <fax_no>"+requestUser.getFax_no()+"</fax_no>\n"
+                + "                     <fax_no>" + requestUser.getFax_no() + "</fax_no>\n"
                 + "\n"
-                + "                     <cell_no>"+requestUser.getCell_no()+"</cell_no>\n"
+                + "                     <cell_no>" + requestUser.getCell_no() + "</cell_no>\n"
                 + "\n"
-                + "                     <email_address>"+requestUser.getEmail()+"</email_address>\n"
+                + "                     <email_address>" + requestUser.getEmail() + "</email_address>\n"
                 + "\n"
                 + "                     <docex/>\n"
                 + "\n"
-                + "                     <phys_add1>"+requestUser.getPhys_addr1()+"</phys_add1>\n"
+                + "                     <phys_add1>" + requestUser.getPhys_addr1() + "</phys_add1>\n"
                 + "\n"
-                + "                     <phys_add2>"+requestUser.getPhys_addr2()+"</phys_add2>\n"
+                + "                     <phys_add2>" + requestUser.getPhys_addr2() + "</phys_add2>\n"
                 + "\n"
-                + "                     <phys_add3>"+requestUser.getPhys_addr3()+"</phys_add3>\n"
+                + "                     <phys_add3>" + requestUser.getPhys_addr3() + "</phys_add3>\n"
                 + "\n"
                 + "                     <phys_add4>GAUTENG</phys_add4>\n"
                 + "\n"
-                + "                     <phys_code>"+requestUser.getPhys_code()+"</phys_code>\n"
+                + "                     <phys_code>" + requestUser.getPhys_code() + "</phys_code>\n"
                 + "\n"
-                + "                     <postal_add1>"+requestUser.getPost_addr1()+"</postal_add1>\n"
+                + "                     <postal_add1>" + requestUser.getPost_addr1() + "</postal_add1>\n"
                 + "\n"
-                + "                     <postal_add2>"+requestUser.getPost_addr2()+"</postal_add2>\n"
+                + "                     <postal_add2>" + requestUser.getPost_addr2() + "</postal_add2>\n"
                 + "\n"
-                + "                     <postal_add3>"+requestUser.getPost_addr3()+"</postal_add3>\n"
+                + "                     <postal_add3>" + requestUser.getPost_addr3() + "</postal_add3>\n"
                 + "\n"
                 + "                     <postal_add4>GAUTENG</postal_add4>\n"
                 + "\n"
-                + "                     <postal_code>"+requestUser.getPost_code()+"</postal_code>\n"
+                + "                     <postal_code>" + requestUser.getPost_code() + "</postal_code>\n"
                 + "\n"
                 + "                     <comm_code>1</comm_code>\n"
                 + "\n"
