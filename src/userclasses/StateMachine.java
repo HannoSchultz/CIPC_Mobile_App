@@ -80,6 +80,9 @@ import za.co.cipc.pojos.User;
  */
 public class StateMachine extends StateMachineBase {
 
+    static int width;
+    static int height;
+
     static boolean hasGonePastACS = false;
     static boolean isRegStep1Passed = false;
     static boolean isRegStep2Passed = false;
@@ -193,8 +196,8 @@ public class StateMachine extends StateMachineBase {
             Log.setLevel(Log.DEBUG);
             Log.p("issimulator", Log.DEBUG);
 
-            //return "Login";
-            return "Registration";
+            return "Login";
+            //return "Registration";
 
         } else {
             Log.setLevel(Log.REPORTING_PRODUCTION);//To disable debug information
@@ -280,26 +283,36 @@ public class StateMachine extends StateMachineBase {
             String name3 = txtName3.getText();
             String name4 = txtName4.getText();
 
-            UserWebServices u = new UserWebServices();
-            ArrayList<NameSearchObject> arrayList = u.search_name_MOBI(AGENT_CODE, name1, name2, name3, name4);
+            String msg = "";
 
-            for (int i = 0; i < arrayList.size(); i++) {
-                int count = i + 1;
-                Label lblResponse = (Label) findByName("lblName" + count + "Response", contTasks);
-                NameSearchObject n = arrayList.get(i);
-                if (n.isIsValid()) {
-                    lblResponse.setText("Might be available");
-                    lblResponse.setUIID("LabelGreen");
-                } else {
-                    lblResponse.setText("Is not available");
-                    lblResponse.setUIID("LabelRed");
-
-                }
+            if (name1.length() == 0) {
+                msg += "Please submit at least Name 1. ";
             }
 
-            //lblLine1.scrollRectToVisible(BACK_COMMAND_ID, BACK_COMMAND_ID, BACK_COMMAND_ID, BACK_COMMAND_ID, contentPane);
-            contTasks.repaint();
+            if (msg.length() > 0) {
+                Dialog.show("Error", msg, "Ok", null);
+            } else {
 
+                UserWebServices u = new UserWebServices();
+                ArrayList<NameSearchObject> arrayList = u.search_name_MOBI(AGENT_CODE, name1, name2, name3, name4);
+
+                for (int i = 0; i < arrayList.size(); i++) {
+                    int count = i + 1;
+                    Label lblResponse = (Label) findByName("lblName" + count + "Response", contTasks);
+                    NameSearchObject n = arrayList.get(i);
+                    if (n.isIsValid()) {
+                        lblResponse.setText("Might be available");
+                        lblResponse.setUIID("LabelGreen");
+                    } else {
+                        lblResponse.setText("Is not available");
+                        lblResponse.setUIID("LabelRed");
+
+                    }
+                }
+
+                //lblLine1.scrollRectToVisible(BACK_COMMAND_ID, BACK_COMMAND_ID, BACK_COMMAND_ID, BACK_COMMAND_ID, contentPane);
+                contTasks.repaint();
+            }
         });
 
         btnLodge.addActionListener((ActionListener) (ActionEvent evt) -> {
@@ -307,19 +320,31 @@ public class StateMachine extends StateMachineBase {
             String name2 = txtName2.getText();
             String name3 = txtName3.getText();
             String name4 = txtName4.getText();
-            UserWebServices u = new UserWebServices();
-            String responseCall = u.Namereservation_MOBI(AGENT_CODE, name1, name2, name3, name4);
 
-            if (responseCall != null && responseCall.length() > 0
-                    && responseCall.indexOf("already filed") == -1) {
-                Dialog.show("Success", responseCall, "Ok", null);
-                showCart(f);
-            } else if (responseCall != null && responseCall.length() > 0
-                    && responseCall.indexOf("already filed") != -1) {
-                Dialog.show("Error", responseCall, "Ok", null);//TODO scroll to top
-            } else {
-                Dialog.show("Error", "Error occurred while processing your request. Please try again later or contact CIPC.", "Ok", null);
+            String msg = "";
+
+            if (name1.length() == 0) {
+                msg += "Please submit at least Name 1. ";
             }
+
+            if (msg.length() > 0) {
+                Dialog.show("Error", msg, "Ok", null);
+            } else {
+                UserWebServices u = new UserWebServices();
+                String responseCall = u.Namereservation_MOBI(AGENT_CODE, name1, name2, name3, name4);
+
+                if (responseCall != null && responseCall.length() > 0
+                        && responseCall.indexOf("already filed") == -1) {
+                    Dialog.show("Success", responseCall, "Ok", null);
+                    showCart(f);
+                } else if (responseCall != null && responseCall.length() > 0
+                        && responseCall.indexOf("already filed") != -1) {
+                    Dialog.show("Error", responseCall, "Ok", null);//TODO scroll to top
+                } else {
+                    Dialog.show("Error", "Error occurred while processing your request. Please try again later or contact CIPC.", "Ok", null);
+                }
+            }
+
         });
 
         f.add(contTasks);
@@ -690,23 +715,72 @@ public class StateMachine extends StateMachineBase {
             }
         });
 
-        Button btnPayNow = (Button) findByName("btnPayNow", tabs);
-        btnPayNow.addActionListener(new ActionListener() {
+        Container contStep2 = (Container) findByName("contStep2", tabs);
+        contStep2.removeAll();
+        contStep2.setLayout(new BorderLayout());
+        
+        Log.p("width=" + width + ", height=" + height, Log.DEBUG);
+        Dialog.show("", "width=" + width + ", height=" + height, "Ok", null);
+
+        //String URL = "http://www.google.com";
+        String URL = "https://paymenttest.cipc.co.za/Pay.aspx?custCode=G110iMQgyJs%3d&custId=z9MyXkVPe2F0F2OEr0xsjA%3d%3d&appId=6"
+                + "&width=" + width + "&height=" + height;
+        Log.p(URL, Log.DEBUG);
+
+        hasGonePastACS = false;
+
+        String directURL = "https://paymenttest.cipc.co.za/ACSRedirect.aspx";
+        String errorURL = "https://paymenttest.cipc.co.za/PaymentError.aspx?error=1EwiapDpld0GrXoBVjnhEC52%2fRVCNKIi9Xsi%2fs9YpzA%3d&ref=T9122961860";
+
+        BrowserComponent browser = new BrowserComponent();
+        browser.setURL(URL);
+        browser.setScrollableX(false);
+        browser.setScrollableY(false);
+        browser.setPinchToZoomEnabled(false);
+
+        browser.addBrowserNavigationCallback(new BrowserNavigationCallback() {
             @Override
-            public void actionPerformed(ActionEvent evt) {
-                formProgress = new FormProgress(f);
-                try {
+            public boolean shouldNavigate(String url) {
 
-                    Thread.sleep(3000L);
-                } catch (InterruptedException e) {
-                    Log.e(e);
+                //hi.setTitle(url);
+
+                if (url.indexOf("PaymentError") > -1) {
+                    //error
+                    Log.p("Error occured", Log.DEBUG);
+                    Dialog.show("Error", "Error occurred", "Ok", null);
+                } else if (url.indexOf(directURL) > -1) {
+                    //redirect
+                    Log.p("Redirect", Log.DEBUG);
+                } else if (hasGonePastACS == true) {
+                    Log.p("ACS", Log.DEBUG);
+                    Dialog.show("Success", "Payment success", "Ok", null);
                 }
-                formProgress.removeProgress();
 
-                Dialog.show("Processed", "Payment processed", "Ok", null);
+                return true;
             }
         });
 
+        //browser.setProperty("useragent", "Mozilla/5.0 (Linux; Android 4.0.4; Galaxy Nexus Build/IMM76K) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.166 Mobile Safari/535.19");
+        //browser.setProperty("useragent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.45 Safari/535.19");
+        contStep2.add(BorderLayout.CENTER, browser);
+        contStep2.revalidate();
+
+//        Button btnPayNow = (Button) findByName("btnPayNow", tabs);
+//        btnPayNow.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent evt) {
+//                formProgress = new FormProgress(f);
+//                try {
+//
+//                    Thread.sleep(3000L);
+//                } catch (InterruptedException e) {
+//                    Log.e(e);
+//                }
+//                formProgress.removeProgress();
+//
+//                Dialog.show("Processed", "Payment processed", "Ok", null);
+//            }
+//        });
         f.add(cont);
         if (formProgress != null) {
             formProgress.removeProgress();
@@ -818,15 +892,13 @@ public class StateMachine extends StateMachineBase {
         final String password = ((TextField) findByName("txtPassword", c)).getText();
 
         if (txtCustomerCode.equals("aaa")) {
-            int height = Display.getInstance().getDisplayHeight();
-            int width = Display.getInstance().getDisplayWidth();
 
             Log.p("width=" + width + ", height=" + height, Log.DEBUG);
+            Dialog.show("", "width=" + width + ", height=" + height, "Ok", null);
 
-            String URL = "http://www.google.com";
-
-            // String URL = "https://paymenttest.cipc.co.za/Pay.aspx?custCode=G110iMQgyJs%3d&custId=z9MyXkVPe2F0F2OEr0xsjA%3d%3d&appId=6"
-            //       + "&width=" + width + "&height=" + height;
+            //String URL = "http://www.google.com";
+            String URL = "https://paymenttest.cipc.co.za/Pay.aspx?custCode=G110iMQgyJs%3d&custId=z9MyXkVPe2F0F2OEr0xsjA%3d%3d&appId=6"
+                    + "&width=" + width + "&height=" + height;
             Log.p(URL, Log.DEBUG);
 
             Form hi = new Form("Hi World", new BorderLayout());
@@ -1262,7 +1334,6 @@ public class StateMachine extends StateMachineBase {
             if (errorResponseConfirm.length() > 0) {
                 msg += errorResponseConfirm;
             }*/
-
             if (msg.length() == 0) {
                 Log.p("Success Registration", Log.DEBUG);
 
@@ -1449,7 +1520,8 @@ public class StateMachine extends StateMachineBase {
 
     @Override
     protected void postLogin(Form f) {
-
+        height = Display.getInstance().getDisplayHeight();
+        width = Display.getInstance().getDisplayWidth();
     }
 
     @Override
