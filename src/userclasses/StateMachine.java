@@ -21,6 +21,7 @@ import com.codename1.io.NetworkEvent;
 import com.codename1.io.NetworkManager;
 import com.codename1.io.Util;
 import com.codename1.io.services.TwitterRESTService;
+import com.codename1.l10n.L10NManager;
 import com.codename1.l10n.SimpleDateFormat;
 import com.codename1.messaging.Message;
 import com.codename1.processing.Result;
@@ -50,6 +51,7 @@ import com.codename1.ui.validation.Constraint;
 import com.codename1.ui.validation.LengthConstraint;
 import com.codename1.ui.validation.RegexConstraint;
 import com.codename1.ui.validation.Validator;
+import com.codename1.util.StringUtil;
 import com.codename1.util.regex.RE;
 
 import com.sun.prism.paint.Color;
@@ -79,6 +81,8 @@ import za.co.cipc.pojos.User;
  * @author Your name here
  */
 public class StateMachine extends StateMachineBase {
+
+    Map map;
 
     static int width;
     static int height;
@@ -146,8 +150,10 @@ public class StateMachine extends StateMachineBase {
         if (Display.getInstance().isSimulator()) {
             AGENT_CODE = "KD7788";
 
-            //UserWebServices u = new UserWebServices();
-            //u.getToken(null);
+            /* UserWebServices u = new UserWebServices();
+            User user = new User();
+            user.setAgent_code(AGENT_CODE);
+            u.getCart(user);*/
 //
 //            User tmpUser = new User();
 //
@@ -431,6 +437,8 @@ public class StateMachine extends StateMachineBase {
 
     public void showAnnualReturns(final Form f) {
 
+        f.setLayout(new BorderLayout());
+
         UserWebServices u = new UserWebServices();
         final ArrayList list = u.Get_AR_ent_type_mobi(null);
 
@@ -445,6 +453,58 @@ public class StateMachine extends StateMachineBase {
 
         Tabs tabs = (Tabs) findByName("Tabs", contProjects);
         tabs.setSwipeActivated(false);
+        tabs.hideTabs();
+
+        Button btn1 = new Button("1");
+        Button btn2 = new Button("2");
+        Button btn3 = new Button("3");
+        Button btn4 = new Button("4");
+
+        btn1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                //Log.p("clicked btn1", Log.DEBUG);
+                tabs.setSelectedIndex(0);
+            }
+        });
+
+        btn2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                //Log.p("clicked btn2, isRegStep1Passed=" + isRegStep1Passed
+                //   + ", isRegStep2Passed=" + isRegStep2Passed, Log.DEBUG);
+                if (isARStep1Passed == true) {
+                    tabs.setSelectedIndex(1);
+                } else {
+                    checkARButtonPressed();
+                }
+            }
+        });
+
+        btn3.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                //Log.p("clicked btn3", Log.DEBUG);
+                if (isARStep1Passed == true && isARStep2Passed == true) {
+                    tabs.setSelectedIndex(2);
+                } else {
+                    checkARButtonPressed();
+                }
+            }
+        });
+
+        btn4.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                //Log.p("clicked btn4", Log.DEBUG);
+                if (isARStep1Passed == true && isARStep2Passed == true
+                        && isARStep3Passed == true) {
+                    tabs.setSelectedIndex(3);
+                } else {
+                    checkARButtonPressed();
+                }
+            }
+        });
 
         //Step 1
         TextField txtStep1a = (TextField) findByName("txtStep1a", tabs);
@@ -472,6 +532,8 @@ public class StateMachine extends StateMachineBase {
 
         Button btnStep1RetrieveDetails = (Button) findByName("btnStep1RetrieveDetails", tabs);
         Button btnStep2Confirm = (Button) findByName("btnStep2Confirm", tabs);
+        Button btnStep3CalcOutAmount = (Button) findByName("btnStep3CalcOutAmount", tabs);
+        Button btnStep4AddToCart = (Button) findByName("btnStep4AddToCart", tabs);
 
         //Step 2
         Label lblStep2EnterpriseNumber = (Label) findByName("lblStep2EnterpriseNumber", contStep2);
@@ -484,40 +546,56 @@ public class StateMachine extends StateMachineBase {
             @Override
             public void actionPerformed(ActionEvent evt) {
 
-                ENT_NUMBER = txtStep1a.getText() + "/" + txtStep1b.getText()
-                        + "/" + txtStep1c.getText();
-                //ENT_NUMBER  = "K2013064531";
+                String msg = "";
 
-                UserWebServices u = new UserWebServices();
-                enterpriseDetails = u.soap_GetEnterpriseDetails(ENT_NUMBER); //"K2013064531");//2014 / 016320 /  07
+                if (txtStep1a.getText().length() != 4
+                        || txtStep1b.getText().length() != 6
+                        || txtStep1c.getText().length() != 2) {
+                    msg += "Please enter correct Enterprise Number.";
+                }
 
-                if (enterpriseDetails != null) {
-                    lblStep2EnterpriseNumber.setText(enterpriseDetails.getEnt_no());
-                    lblStep2EnterpriseName.setText(enterpriseDetails.getEnt_name());
-                    lblStep2EnterpriseType.setText(enterpriseDetails.getEnt_type_descr());
-                    lblStep2EnterpriseStatus.setText(enterpriseDetails.getEnt_status_descr());
-                    lblStep2RegistrationDate.setText(enterpriseDetails.getReg_date());
+                if (msg.length() > 0) {
+                    Dialog.show("Error", msg, "Ok", null);
+                } else {
 
-                    tabs.setSelectedIndex(1);
+                    ENT_NUMBER = txtStep1a.getText() + "/" + txtStep1b.getText()
+                            + "/" + txtStep1c.getText();
+                    //ENT_NUMBER  = "K2013064531";
 
-                    //Step 2
-                    Log.p("code=" + enterpriseDetails.getEnt_status_code(), Log.DEBUG);
+                    UserWebServices u = new UserWebServices();
+                    enterpriseDetails = u.soap_GetEnterpriseDetails(ENT_NUMBER); //"K2013064531");//2014 / 016320 /  07
 
-                    if (enterpriseDetails.getEnt_status_code().equals("03")
-                            || enterpriseDetails.getEnt_status_code().equals("38")) {
+                    if (enterpriseDetails != null) {
+                        lblStep2EnterpriseNumber.setText(enterpriseDetails.getEnt_no());
+                        lblStep2EnterpriseName.setText(enterpriseDetails.getEnt_name());
+                        lblStep2EnterpriseType.setText(enterpriseDetails.getEnt_type_descr());
+                        lblStep2EnterpriseStatus.setText(enterpriseDetails.getEnt_status_descr());
+                        lblStep2RegistrationDate.setText(enterpriseDetails.getReg_date());
 
-                        btnStep2Confirm.setVisible(true);
-                        btnStep2Confirm.repaint();
+                        tabs.setSelectedIndex(1);
+                        isARStep1Passed = true;
+                        btnStep2Confirm.setEnabled(true);
+
+                        //Step 2
+                        Log.p("code=" + enterpriseDetails.getEnt_status_code(), Log.DEBUG);
+
+                        if (enterpriseDetails.getEnt_status_code().equals("03")
+                                || enterpriseDetails.getEnt_status_code().equals("38")) {
+
+                            btnStep2Confirm.setVisible(true);
+                            btnStep2Confirm.repaint();
+
+                        } else {
+                            showDialog("Invalid Enterprise Status \"" + enterpriseDetails.getEnt_status_descr() + "\". Not allowed to file Annual Returns.");
+
+                            btnStep2Confirm.setVisible(false);
+                            btnStep2Confirm.repaint();
+                        }
 
                     } else {
-                        showDialog("Invalid Enterprise Status \"" + enterpriseDetails.getEnt_status_descr() + "\". Not allowed to file Annual Returns.");
-
-                        btnStep2Confirm.setVisible(false);
-                        btnStep2Confirm.repaint();
+                        Dialog.show("Error", "Could not obtain enterprise details. Please ensure that your Enterprise number is valid", "Ok", null);
                     }
 
-                } else {
-                    Dialog.show("Error", "Could not obtain enterprise details. Please ensure that your Enterprise number is valid", "Ok", null);
                 }
 
             }
@@ -553,9 +631,9 @@ public class StateMachine extends StateMachineBase {
             }
 
             tabs.setSelectedIndex(2);
+            isARStep2Passed = true;
+            btnStep3CalcOutAmount.setEnabled(true);
         });
-
-        Button btnStep3CalcOutAmount = (Button) findByName("btnStep3CalcOutAmount", tabs);
 
         Container contStep4AnnualReturns = (Container) findByName("contStep4AnnualReturns", tabs);
 
@@ -565,10 +643,16 @@ public class StateMachine extends StateMachineBase {
 
             String dataset = "";
 
+            boolean flag = false;
+
             for (int i = 0; i < listEnterpriseDetails.size(); i++) {
 
                 EnterpriseDetails entDetails = listEnterpriseDetails.get(i);
                 TextArea txtTurnover = listTextEnterpriseDetails.get(i);
+
+                if (txtTurnover.getText().length() == 0) {
+                    flag = true;
+                }
 
                 dataset += "<Table1 diffgr:id=\"Table11\" msdata:rowOrder=\"0\" diffgr:hasChanges=\"inserted\">\n"
                         + "<ent_no>" + entDetails.getEnt_no() + "</ent_no>\n"
@@ -579,49 +663,55 @@ public class StateMachine extends StateMachineBase {
 
             }
 
-            Log.p("dataset=" + dataset, Log.DEBUG);
-
-            listCalculateARTran = u.CalculateARTranData(dataset);
-            contStep4AnnualReturns.removeAll();
-
-            if (listCalculateARTran.isEmpty()) {
-                Log.p("listCalculateARTran=0", Log.DEBUG);
+            if (flag == true) {
+                Dialog.show("Error", "Please complete all fields. ", "Ok", null);
             } else {
-                Log.p("listCalculateARTran=" + listCalculateARTran.size(), Log.DEBUG);
+
+                Log.p("dataset=" + dataset, Log.DEBUG);
+
+                listCalculateARTran = u.CalculateARTranData(dataset);
+                contStep4AnnualReturns.removeAll();
+
+                if (listCalculateARTran.isEmpty()) {
+                    Log.p("listCalculateARTran=0", Log.DEBUG);
+                } else {
+                    Log.p("listCalculateARTran=" + listCalculateARTran.size(), Log.DEBUG);
+                }
+
+                for (int i = 0; i < listCalculateARTran.size(); i++) {
+
+                    EnterpriseDetails e = listCalculateARTran.get(i);
+                    MultiButton mb = new MultiButton();
+                    mb.setUIID("CalendarDay");
+                    mb.setUIIDLine1("MultiButtonBlack");
+                    mb.setUIIDLine2("MultiButtonBlack");
+                    mb.setUIIDLine3("MultiButtonBlack");
+                    mb.setUIIDLine4("MultiButtonBlack");
+                    mb.setTextLine1("Enterprise No: " + e.getEnt_no());
+                    mb.setTextLine2("Reference No: " + e.getReference_no());
+                    mb.setTextLine3("AR Year: " + e.getAr_year() + ", Turnover: R" + e.getTurnover());
+                    mb.setTextLine4("AR Amount: R" + e.getAr_amount() + ", Penalty: R" + e.getAr_penalty());
+
+                    contStep4AnnualReturns.add(mb);
+
+                }
+
+                if (listCalculateARTran.size() > 0) {
+                    EnterpriseDetails lastObject = listCalculateARTran.get(listCalculateARTran.size() - 1);
+                    lblTotalDue.setText("Total Due: R" + lastObject.getAr_total());
+                    lblTotalDue.repaint();
+                }
+
+                contStep4AnnualReturns.repaint();
+
+                tabs.setSelectedIndex(3);
+                isARStep3Passed = true;
+                btnStep4AddToCart.setEnabled(true);
             }
-
-            for (int i = 0; i < listCalculateARTran.size(); i++) {
-
-                EnterpriseDetails e = listCalculateARTran.get(i);
-                MultiButton mb = new MultiButton();
-                mb.setUIID("CalendarDay");
-                mb.setUIIDLine1("MultiButtonBlack");
-                mb.setUIIDLine2("MultiButtonBlack");
-                mb.setUIIDLine3("MultiButtonBlack");
-                mb.setUIIDLine4("MultiButtonBlack");
-                mb.setTextLine1("Enterprise No: " + e.getEnt_no());
-                mb.setTextLine2("Reference No: " + e.getReference_no());
-                mb.setTextLine3("AR Year: " + e.getAr_year() + ", Turnover: R" + e.getTurnover());
-                mb.setTextLine4("AR Amount: R" + e.getAr_amount() + ", Penalty: R" + e.getAr_penalty());
-
-                contStep4AnnualReturns.add(mb);
-
-            }
-
-            if (listCalculateARTran.size() > 0) {
-                EnterpriseDetails lastObject = listCalculateARTran.get(listCalculateARTran.size() - 1);
-                lblTotalDue.setText("Total Due: R" + lastObject.getAr_total());
-                lblTotalDue.repaint();
-            }
-
-            contStep4AnnualReturns.repaint();
-
-            tabs.setSelectedIndex(3);
 
         });
 
         //Step 4
-        Button btnStep4AddToCart = (Button) findByName("btnStep4AddToCart", tabs);
         btnStep4AddToCart.addActionListener((ActionListener) (ActionEvent evt) -> {
 
             Dialog.show("Success", "Annual Return (s) added to shopping cart", "Ok", null);
@@ -629,7 +719,15 @@ public class StateMachine extends StateMachineBase {
 
         });
 
-        f.add(contProjects);
+        Container contTop = new Container();
+        contTop.setUIID("LabelWhite");
+        contTop.setLayout(new GridLayout(1, 4));
+        contTop.add(btn1).add(btn2).add(btn3).add(btn4);
+
+        f.add(BorderLayout.NORTH, contTop);
+
+        f.add(BorderLayout.CENTER, contProjects);
+
         if (formProgress != null) {
             formProgress.removeProgress();
         }
@@ -637,151 +735,162 @@ public class StateMachine extends StateMachineBase {
     }
 
     public void showCart(final Form f) {
-        formProgress = new FormProgress(f);
-        closeMenu(f, true);
-        analytics(f, "Shopping Cart");
-        current = f;
-        Container contentPane = f.getContentPane();
-        contentPane.removeAll();
-        Container cont = (Container) createContainer("/theme", "ContCart");
-
-        Tabs tabs = (Tabs) findByName("Tabs", cont);
-        tabs.setSwipeActivated(false);
-
-        Log.p("Cart agent=" + AGENT_CODE, Log.DEBUG);
 
         UserWebServices u = new UserWebServices();
         User user = new User();
         user.setAgent_code(AGENT_CODE);
-        Map map = u.getCart(user);
+        map = u.getCart(user);
 
-        Container contStep1AnnualReturns = (Container) findByName("contStep1AnnualReturns", tabs);
-        contStep1AnnualReturns.removeAll();
-        Container contStep1EServices = (Container) findByName("contStep1EServices", tabs);
-        contStep1EServices.removeAll();
-        Label lblTotal = (Label) findByName("lblTotal", tabs);
+        if (map != null && map.size() > 0) {
+            Container cont = (Container) createContainer("/theme", "ContCart");
 
-        String CustomerCode = map.get("CustomerCode").toString();
-        double AnnualReturnsTotalAmount = Double.parseDouble(map.get("AnnualReturnsTotalAmount").toString());
-        double ItemDataTotalAmount = Double.parseDouble(map.get("ItemDataTotalAmount").toString());
-        double TotalAmount = Double.parseDouble(map.get("TotalAmount").toString());
-        double ItemsCount = Double.parseDouble(map.get("ItemsCount").toString());
-        ArrayList AnnualReturns = (ArrayList) map.get("AnnualReturns");
-        ArrayList CartItems = (ArrayList) map.get("CartItems");
+            formProgress = new FormProgress(f);
+            closeMenu(f, true);
+            analytics(f, "Shopping Cart");
+            current = f;
+            Container contentPane = f.getContentPane();
+            contentPane.setLayout(new GridLayout(1, 1));
+            contentPane.removeAll();
 
-        double eserviceTotal = 0.0;
-        for (Object o : CartItems) {
+            Tabs tabs = (Tabs) findByName("Tabs", cont);
+            tabs.setSwipeActivated(false);
 
-            Container contItem = new Container(BoxLayout.y());
-            contItem.setUIID("CalendarDay");
-            Map m = (Map) o;
-            String ItemType = m.get("ItemType").toString();
-            String StatusDate = m.get("StatusDate").toString();
-            double ReferenceNumber = Double.parseDouble(m.get("ReferenceNumber").toString());
-            String EnterpriseNumber = m.get("EnterpriseNumber").toString();
-            String FormCode = m.get("FormCode").toString();
-            double TotalAmountItemType = Double.parseDouble(m.get("TotalAmount").toString());
-            eserviceTotal += TotalAmountItemType;
+            Log.p("Cart agent=" + AGENT_CODE, Log.DEBUG);
 
-            MultiButton mb = new MultiButton();
-            mb.setUIID("Label");
-            mb.setUIIDLine1("MultiButtonBlack");
-            mb.setUIIDLine2("MultiButtonBlack");
-            mb.setUIIDLine3("MultiButtonBlack");
-            mb.setUIIDLine4("MultiButtonBlack");
+            Container contStep1AnnualReturns = (Container) findByName("contStep1AnnualReturns", tabs);
+            contStep1AnnualReturns.removeAll();
+            Container contStep1EServices = (Container) findByName("contStep1EServices", tabs);
+            contStep1EServices.removeAll();
+            Label lblTotal = (Label) findByName("lblTotal", tabs);
 
-            mb.setTextLine1("Reference No: " + ReferenceNumber);
-            mb.setTextLine2("Enterprise No: " + EnterpriseNumber);
-            mb.setTextLine3("Service: " + ItemType);
-            mb.setTextLine3("Item Cost: R" + TotalAmountItemType);
+            String CustomerCode = map.get("CustomerCode").toString();
+            double AnnualReturnsTotalAmount = Double.parseDouble(map.get("AnnualReturnsTotalAmount").toString());
+            double ItemDataTotalAmount = Double.parseDouble(map.get("ItemDataTotalAmount").toString());
+            double TotalAmount = Double.parseDouble(map.get("TotalAmount").toString());
+            double ItemsCount = Double.parseDouble(map.get("ItemsCount").toString());
+            ArrayList AnnualReturns = (ArrayList) map.get("AnnualReturns");
+            ArrayList CartItems = (ArrayList) map.get("CartItems");
 
-            Container c0 = new Container();
-            Button btnRemove0 = new Button("REMOVE");
-            c0.add(btnRemove0);
-            contItem.add(mb).add(c0);
-            contStep1EServices.add(contItem);
+            double eserviceTotal = 0.0;
+            for (Object o : CartItems) {
 
-        }
-        ArrayList Items = (ArrayList) map.get("Items");
+                Container contItem = new Container(BoxLayout.y());
+                contItem.setUIID("CalendarDay");
+                Map m = (Map) o;
+                String ItemType = m.get("ItemType").toString();
+                String StatusDate = m.get("StatusDate").toString();
+                String ReferenceNumber = L10NManager.getInstance().format(Double.parseDouble(m.get("ReferenceNumber").toString()));
+                ReferenceNumber = ReferenceNumber.trim();
+                ReferenceNumber = StringUtil.replaceAll(ReferenceNumber, ",", "");
 
-        lblTotal.setText("Total: R" + eserviceTotal);
-        lblTotal.repaint();
+                String EnterpriseNumber = m.get("EnterpriseNumber").toString();
+                String FormCode = m.get("FormCode").toString();
+                double TotalAmountItemType = Double.parseDouble(m.get("TotalAmount").toString());
+                eserviceTotal += TotalAmountItemType;
 
-        Button btnCheckout = (Button) findByName("btnCheckout", tabs);
-        btnCheckout.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                tabs.setSelectedIndex(1);
+                MultiButton mb = new MultiButton();
+                mb.setUIID("Label");
+                mb.setUIIDLine1("MultiButtonBlack");
+                mb.setUIIDLine2("MultiButtonBlack");
+                mb.setUIIDLine3("MultiButtonBlack");
+                mb.setUIIDLine4("MultiButtonBlack");
+
+                mb.setTextLine1("Reference No: " + ReferenceNumber);
+                mb.setTextLine2("Enterprise No: " + EnterpriseNumber);
+                mb.setTextLine3("Service: " + ItemType);
+                mb.setTextLine3("Item Cost: R" + TotalAmountItemType);
+
+                Container c0 = new Container();
+                Button btnRemove0 = new Button("REMOVE");
+                c0.add(btnRemove0);
+                contItem.add(mb).add(c0);
+                contStep1EServices.add(contItem);
+
             }
-        });
+            ArrayList Items = (ArrayList) map.get("Items");
 
-        Container contStep2 = (Container) findByName("contStep2", tabs);
-        contStep2.removeAll();
-        contStep2.setLayout(new BorderLayout());
-        
-        Log.p("width=" + width + ", height=" + height, Log.DEBUG);
-        Dialog.show("", "width=" + width + ", height=" + height, "Ok", null);
+            lblTotal.setText("Total: R" + eserviceTotal);
+            lblTotal.repaint();
 
-        //String URL = "http://www.google.com";
-        String URL = "https://paymenttest.cipc.co.za/Pay.aspx?custCode=G110iMQgyJs%3d&custId=z9MyXkVPe2F0F2OEr0xsjA%3d%3d&appId=6"
-                + "&width=" + width + "&height=" + height;
-        Log.p(URL, Log.DEBUG);
-
-        hasGonePastACS = false;
-
-        String directURL = "https://paymenttest.cipc.co.za/ACSRedirect.aspx";
-        String errorURL = "https://paymenttest.cipc.co.za/PaymentError.aspx?error=1EwiapDpld0GrXoBVjnhEC52%2fRVCNKIi9Xsi%2fs9YpzA%3d&ref=T9122961860";
-
-        BrowserComponent browser = new BrowserComponent();
-        browser.setURL(URL);
-        browser.setScrollableX(false);
-        browser.setScrollableY(false);
-        browser.setPinchToZoomEnabled(false);
-
-        browser.addBrowserNavigationCallback(new BrowserNavigationCallback() {
-            @Override
-            public boolean shouldNavigate(String url) {
-
-                //hi.setTitle(url);
-
-                if (url.indexOf("PaymentError") > -1) {
-                    //error
-                    Log.p("Error occured", Log.DEBUG);
-                    Dialog.show("Error", "Error occurred", "Ok", null);
-                } else if (url.indexOf(directURL) > -1) {
-                    //redirect
-                    Log.p("Redirect", Log.DEBUG);
-                } else if (hasGonePastACS == true) {
-                    Log.p("ACS", Log.DEBUG);
-                    Dialog.show("Success", "Payment success", "Ok", null);
+            Button btnCheckout = (Button) findByName("btnCheckout", tabs);
+            btnCheckout.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent evt) {
+                    tabs.setSelectedIndex(1);
                 }
+            });
 
-                return true;
-            }
-        });
+            Container contStep2 = (Container) findByName("contStep2", tabs);
+            contStep2.removeAll();
+            contStep2.setLayout(new BorderLayout());
 
-        //browser.setProperty("useragent", "Mozilla/5.0 (Linux; Android 4.0.4; Galaxy Nexus Build/IMM76K) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.166 Mobile Safari/535.19");
-        //browser.setProperty("useragent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.45 Safari/535.19");
-        contStep2.add(BorderLayout.CENTER, browser);
-        contStep2.revalidate();
+            Log.p("width=" + width + ", height=" + height, Log.DEBUG);
+            //Dialog.show("", "width=" + width + ", height=" + height, "Ok", null);
 
-//        Button btnPayNow = (Button) findByName("btnPayNow", tabs);
-//        btnPayNow.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent evt) {
-//                formProgress = new FormProgress(f);
-//                try {
-//
-//                    Thread.sleep(3000L);
-//                } catch (InterruptedException e) {
-//                    Log.e(e);
-//                }
-//                formProgress.removeProgress();
-//
-//                Dialog.show("Processed", "Payment processed", "Ok", null);
-//            }
-//        });
-        f.add(cont);
+            //String URL = "http://www.google.com";
+            String URL = "https://paymenttest.cipc.co.za/Pay.aspx?custCode=G110iMQgyJs%3d&custId=z9MyXkVPe2F0F2OEr0xsjA%3d%3d&appId=6"
+                    + "&width=" + width + "&height=" + height;
+            Log.p(URL, Log.DEBUG);
+
+            hasGonePastACS = false;
+
+            String directURL = "https://paymenttest.cipc.co.za/ACSRedirect.aspx";
+            String errorURL = "https://paymenttest.cipc.co.za/PaymentError.aspx?error=1EwiapDpld0GrXoBVjnhEC52%2fRVCNKIi9Xsi%2fs9YpzA%3d&ref=T9122961860";
+
+            BrowserComponent browser = new BrowserComponent();
+            browser.setURL(URL);
+            browser.setScrollableX(false);
+            browser.setScrollableY(false);
+            browser.setPinchToZoomEnabled(false);
+
+            browser.addBrowserNavigationCallback(new BrowserNavigationCallback() {
+                @Override
+                public boolean shouldNavigate(String url) {
+
+                    //hi.setTitle(url);
+                    if (url.indexOf("PaymentError") > -1) {
+                        //error
+                        Log.p("Error occured", Log.DEBUG);
+                        Dialog.show("Error", "Error occurred", "Ok", null);
+                    } else if (url.indexOf(directURL) > -1) {
+                        //redirect
+                        Log.p("Redirect", Log.DEBUG);
+                    } else if (hasGonePastACS == true) {
+                        Log.p("ACS", Log.DEBUG);
+                        Dialog.show("Success", "Payment success", "Ok", null);
+                    }
+
+                    return true;
+                }
+            });
+
+            //browser.setProperty("useragent", "Mozilla/5.0 (Linux; Android 4.0.4; Galaxy Nexus Build/IMM76K) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.166 Mobile Safari/535.19");
+            //browser.setProperty("useragent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.45 Safari/535.19");
+            contStep2.add(BorderLayout.CENTER, browser);
+            f.revalidate();
+
+            //        Button btnPayNow = (Button) findByName("btnPayNow", tabs);
+            //        btnPayNow.addActionListener(new ActionListener() {
+            //            @Override
+            //            public void actionPerformed(ActionEvent evt) {
+            //                formProgress = new FormProgress(f);
+            //                try {
+            //
+            //                    Thread.sleep(3000L);
+            //                } catch (InterruptedException e) {
+            //                    Log.e(e);
+            //                }
+            //                formProgress.removeProgress();
+            //
+            //                Dialog.show("Processed", "Payment processed", "Ok", null);
+            //            }
+            //        });
+            f.add(cont);
+
+        } else {
+            Dialog.show("No Items", "You do not have any cart items.", "Ok", null);
+        }
+
         if (formProgress != null) {
             formProgress.removeProgress();
         }
@@ -1030,6 +1139,22 @@ public class StateMachine extends StateMachineBase {
         } else if (isRegStep2Passed == false) {
             msg = "Please complete step 2 first and press Continue.";
         } else if (isRegStep3Passed == false) {
+            msg = "Please complete step 3 first and press Next.";
+        }
+
+        Dialog.show("Error", msg, "Ok", null);
+
+    }
+
+    public void checkARButtonPressed() {
+
+        String msg = "";
+
+        if (isARStep1Passed == false) {
+            msg = "Please complete step 1 first and press Continue.";
+        } else if (isARStep2Passed == false) {
+            msg = "Please complete step 2 first and press Continue.";
+        } else if (isARStep3Passed == false) {
             msg = "Please complete step 3 first and press Next.";
         }
 

@@ -680,7 +680,8 @@ public class UserWebServices {
 
         post.setUrl("https://apidev.cipc.co.za/v1/payment/cart/" + user.getAgent_code());
         post.setPost(false);
-        post.setContentType("application/json");
+        //post.setContentType("application/json");
+        post.addRequestHeader("Content-Type", "application/json; charset=utf-8");
 
         post.addRequestHeader("Authorization", auth.getToken_type() + " " + auth.getAccess_token());
         NetworkManager.getInstance().addToQueueAndWait(post);
@@ -690,6 +691,8 @@ public class UserWebServices {
             try {
                 JSONParser parser = new JSONParser();
                 map = parser.parseJSON(convertStringtoInputStreamReader(data));
+                Log.p("data=" + data, Log.DEBUG);
+                Log.p("map=" + map, Log.DEBUG);
 
             } catch (IOException e) {
                 Log.e(e);
