@@ -150,10 +150,10 @@ public class StateMachine extends StateMachineBase {
         if (Display.getInstance().isSimulator()) {
             AGENT_CODE = "KD7788";
 
-            /* UserWebServices u = new UserWebServices();
+            UserWebServices u = new UserWebServices();
             User user = new User();
             user.setAgent_code(AGENT_CODE);
-            u.getCart(user);*/
+            u.getCart(user);
 //
 //            User tmpUser = new User();
 //
@@ -1000,92 +1000,58 @@ public class StateMachine extends StateMachineBase {
         String txtCustomerCode = ((TextField) findByName("txtCustomerCode", c)).getText();
         final String password = ((TextField) findByName("txtPassword", c)).getText();
 
-        if (txtCustomerCode.equals("aaa")) {
+        String msg = "";
 
-            Log.p("width=" + width + ", height=" + height, Log.DEBUG);
-            Dialog.show("", "width=" + width + ", height=" + height, "Ok", null);
-
-            //String URL = "http://www.google.com";
-            String URL = "https://paymenttest.cipc.co.za/Pay.aspx?custCode=G110iMQgyJs%3d&custId=z9MyXkVPe2F0F2OEr0xsjA%3d%3d&appId=6"
-                    + "&width=" + width + "&height=" + height;
-            Log.p(URL, Log.DEBUG);
-
-            Form hi = new Form("Hi World", new BorderLayout());
-
-            hasGonePastACS = false;
-
-            String directURL = "https://paymenttest.cipc.co.za/ACSRedirect.aspx";
-            String errorURL = "https://paymenttest.cipc.co.za/PaymentError.aspx?error=1EwiapDpld0GrXoBVjnhEC52%2fRVCNKIi9Xsi%2fs9YpzA%3d&ref=T9122961860";
-
-            BrowserComponent browser = new BrowserComponent();
-            browser.setURL(URL);
-
-            browser.addBrowserNavigationCallback(new BrowserNavigationCallback() {
-                @Override
-                public boolean shouldNavigate(String url) {
-
-                    hi.setTitle(url);
-
-                    if (url.indexOf("PaymentError") > -1) {
-                        //error
-                        Log.p("Error occured", Log.DEBUG);
-                        Dialog.show("Error", "Error occurred", "Ok", null);
-                    } else if (url.indexOf(directURL) > -1) {
-                        //redirect
-                        Log.p("Redirect", Log.DEBUG);
-                    } else if (hasGonePastACS == true) {
-                        Log.p("ACS", Log.DEBUG);
-                        Dialog.show("Success", "Payment success", "Ok", null);
-                    }
-
-                    return true;
-                }
-            });
-
-            //browser.setProperty("useragent", "Mozilla/5.0 (Linux; Android 4.0.4; Galaxy Nexus Build/IMM76K) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.166 Mobile Safari/535.19");
-            //browser.setProperty("useragent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.45 Safari/535.19");
-            hi.add(BorderLayout.CENTER, browser);
-            hi.show();
+        if (txtCustomerCode.length() == 0 || password.length() == 0) {
+            msg += "Please complete all fields.";
         }
 
-        za.co.cipc.pojos.User user = new za.co.cipc.pojos.User();
-        user.setAgent_code(txtCustomerCode);
-        user.setParamPassword(password);
+        if (msg.length() == 0) {
 
-        formProgress = new FormProgress(f);
+            za.co.cipc.pojos.User user = new za.co.cipc.pojos.User();
+            user.setAgent_code(txtCustomerCode);
+            user.setParamPassword(password);
 
-        UserWebServices userWebServices = new UserWebServices();
+            formProgress = new FormProgress(f);
 
-        za.co.cipc.pojos.User responseUser = userWebServices.get_cust_MOBI(user);
+            UserWebServices userWebServices = new UserWebServices();
 
-        String errorMessage = "";
+            za.co.cipc.pojos.User responseUser = userWebServices.get_cust_MOBI(user);
 
-        if (responseUser == null) {
+            String errorMessage = "";
+
+            if (responseUser == null) {
+                formProgress.removeProgress();
+                Log.p("exception" + "", Log.DEBUG);
+
+                errorMessage += "Incorrect Customer Code or password. ";
+
+            }
+
+            String responsePassword = responseUser.getPassword();
+
+            Log.p(password + ":" + responsePassword);
+
+            if (password.equals(responsePassword)) {
+                AGENT_CODE = txtCustomerCode;
+                return false;
+            } else {
+                errorMessage += "Invalid Customer Code or Password. ";
+            }
+
             formProgress.removeProgress();
-            Log.p("exception" + "", Log.DEBUG);
 
-            errorMessage += "Incorrect Customer Code or password. ";
+            if (errorMessage != null && errorMessage.length() > 0) {
+                showDialog(errorMessage);
+                return true;//block
+            } else {
+                return false;
+            }
 
-        }
-
-        String responsePassword = responseUser.getPassword();
-
-        Log.p(password + ":" + responsePassword);
-
-        if (password.equals(responsePassword)) {
-            AGENT_CODE = txtCustomerCode;
-            return false;
         } else {
-            errorMessage += "Invalid Customer Code or Password. ";
-        }
-
-        formProgress.removeProgress();
-
-        if (errorMessage != null && errorMessage.length() > 0) {
-            showDialog(errorMessage);
-            return true;//block
-        } else {
-            return false;
+            //error
+            Dialog.show("Error", msg, "Ok", null);
+            return true;
         }
 
     }
