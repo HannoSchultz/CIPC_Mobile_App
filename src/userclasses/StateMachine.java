@@ -16,6 +16,7 @@ import com.codename1.components.SpanButton;
 import com.codename1.components.SpanLabel;
 import com.codename1.components.ToastBar;
 import com.codename1.io.ConnectionRequest;
+import com.codename1.io.FileSystemStorage;
 import com.codename1.io.Log;
 import com.codename1.io.NetworkEvent;
 import com.codename1.io.NetworkManager;
@@ -55,10 +56,12 @@ import com.codename1.util.StringUtil;
 import com.codename1.util.regex.RE;
 
 import com.sun.prism.paint.Color;
+import java.io.ByteArrayInputStream;
 //import com.pmovil.nativega.GANative;
 //import com.pmovil.nativega.HitBuilders;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -70,6 +73,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TimeZone;
+import org.bouncycastle.crypto.InvalidCipherTextException;
 import services.Utility;
 import za.co.cipc.webservices.UserWebServices;
 import ui.FormProgress;
@@ -153,8 +157,46 @@ public class StateMachine extends StateMachineBase {
             UserWebServices u = new UserWebServices();
             User user = new User();
             user.setAgent_code(AGENT_CODE);
-            u.getCart(user);
+            //u.insertCartItemService(user);
+
+            Map mapCart = u.getCart(user);
+
+            ArrayList items = (ArrayList) mapCart.get("AnnualReturns");
+            Log.p("Annual Returns=" + items.size(), Log.DEBUG);
+
+            ArrayList CartItems = (ArrayList) mapCart.get("CartItems");
+            Log.p("CartItems=" + CartItems.size(), Log.DEBUG);
+
+//            mapCart = u.getCart(user);
+//            items = (ArrayList) mapCart.get("CartItems");//ItemData
+//            Log.p("CartItems Size after insert=" + items.size(), Log.DEBUG);
+//            
+//            ArrayList CartItems = (ArrayList) mapCart.get("CartItems");
+//            Map mapCartItem = (Map) CartItems.get(0);
+//            String ReferenceNumber = mapCartItem.get("ReferenceNumber").toString();
+//            int Status = 2;//delete
+//            String StatusDate = mapCartItem.get("StatusDate").toString();
+//            String CustomerCode = mapCart.get("CustomerCode").toString();
+//            String ItemType = mapCart.get("ItemType").toString();//4 Name Reservation
+//            
+//            //How many items???
+//                              //  + "\"Item   Data\":\"{\\\"ReferenceNumber\\\":9118779575,\\\"EnterpriseNumber\\\":\\\"\\\",\\\"FormCode\\\":\\\"CoR9.1\\\",\\\"ChangeTypeCode\\\":\\\"30\\\",\\\"Description\\\":null,\\\"TotalAmount\\\":50.0}\","
 //
+//            
+//            
+//            double TotalAmount = Double.parseDouble(mapCart.get("TotalAmount").toString());
+//
+//            String BODY
+//                    = "{\"ReferenceNumber\":8118779575,"
+//                    + "\"Status\":2,"
+//                    + "\"StatusDate\":\"2018-04-23T13:04:28.873\","
+//                    + "\"CustomerCode\":\"" + user.getAgent_code() + "\","
+//                    + "\"ItemType\":4,"
+//                    + "\"Item   Data\":\"{\\\"ReferenceNumber\\\":9118779575,\\\"EnterpriseNumber\\\":\\\"\\\",\\\"FormCode\\\":\\\"CoR9.1\\\",\\\"ChangeTypeCode\\\":\\\"30\\\",\\\"Description\\\":null,\\\"TotalAmount\\\":50.0}\","
+//                    + "\"Amount\":50.0"
+//                    + "}";
+//
+////
 //            User tmpUser = new User();
 //
 //            //Step 1: check id if registered with CIPC. if exists show user customer code
@@ -342,6 +384,16 @@ public class StateMachine extends StateMachineBase {
                 if (responseCall != null && responseCall.length() > 0
                         && responseCall.indexOf("already filed") == -1) {
                     Dialog.show("Success", responseCall, "Ok", null);
+
+                    Log.p("Name reservation responseCall=" + responseCall, Log.DEBUG);
+
+                    User tempUser = new User();
+                    tempUser.setAgent_code(AGENT_CODE);
+                    //getReferenceNo
+                    String referenceNo = getReferenceNo(responseCall);
+                    int intReferenceNo = Integer.parseInt(referenceNo);
+                    u.insertCartItemService(tempUser, intReferenceNo);
+
                     showCart(f);
                 } else if (responseCall != null && responseCall.length() > 0
                         && responseCall.indexOf("already filed") != -1) {
@@ -364,6 +416,8 @@ public class StateMachine extends StateMachineBase {
     public void showDashboard(final Form f) {
         formProgress = new FormProgress(f);
         closeMenu(f, true);
+        
+        f.setLayout(new BoxLayout(BoxLayout.Y_AXIS));
 
         analytics(f, "Dashboard");
 
@@ -621,7 +675,10 @@ public class StateMachine extends StateMachineBase {
                     txt0a.setEditable(false);
                     TextArea txt0b = new TextArea();
                     txt0b.setHint("Amount in rands");
-                    txt0b.setConstraint(TextArea.DECIMAL);
+                    txt0b.setConstraint(TextField.DECIMAL);
+                    if (Display.getInstance().isSimulator()) {
+                        txt0b.setText("0");
+                    }
                     listTextEnterpriseDetails.add(txt0b);
                     cont0.add(txt0a).add(txt0b);
                     contStep3Turnovers.add(cont0);
@@ -713,6 +770,13 @@ public class StateMachine extends StateMachineBase {
 
         //Step 4
         btnStep4AddToCart.addActionListener((ActionListener) (ActionEvent evt) -> {
+            
+            User newUser = new User();
+            newUser.setAgent_code(AGENT_CODE);
+            
+            EnterpriseDetails tempDetails = listCalculateARTran.get(0);
+            
+            u.insertCartItemAR(newUser, tempDetails.getReference_no());
 
             Dialog.show("Success", "Annual Return (s) added to shopping cart", "Ok", null);
             showCart(f);
@@ -741,7 +805,13 @@ public class StateMachine extends StateMachineBase {
         user.setAgent_code(AGENT_CODE);
         map = u.getCart(user);
 
-        if (map != null && map.size() > 0) {
+        ArrayList AnnualReturns = (ArrayList) map.get("AnnualReturns");
+        Log.p("Annual Returns=" + AnnualReturns.size(), Log.DEBUG);
+
+        ArrayList CartItems = (ArrayList) map.get("CartItems");
+        Log.p("CartItems=" + CartItems.size(), Log.DEBUG);
+
+        if (!AnnualReturns.isEmpty() || !CartItems.isEmpty()) {
             Container cont = (Container) createContainer("/theme", "ContCart");
 
             formProgress = new FormProgress(f);
@@ -768,10 +838,48 @@ public class StateMachine extends StateMachineBase {
             double ItemDataTotalAmount = Double.parseDouble(map.get("ItemDataTotalAmount").toString());
             double TotalAmount = Double.parseDouble(map.get("TotalAmount").toString());
             double ItemsCount = Double.parseDouble(map.get("ItemsCount").toString());
-            ArrayList AnnualReturns = (ArrayList) map.get("AnnualReturns");
-            ArrayList CartItems = (ArrayList) map.get("CartItems");
 
             double eserviceTotal = 0.0;
+            
+             //Annual Returns
+            for (Object o : AnnualReturns) {
+
+                Container contItem = new Container(BoxLayout.y());
+                contItem.setUIID("CalendarDay");
+                Map m = (Map) o;
+                //String ItemType = m.get("ItemType").toString();
+                //String StatusDate = m.get("StatusDate").toString();
+                String ReferenceNumber = L10NManager.getInstance().format(Double.parseDouble(m.get("ReferenceNumber").toString()));
+                ReferenceNumber = ReferenceNumber.trim();
+                ReferenceNumber = StringUtil.replaceAll(ReferenceNumber, ",", "");//remove comma
+                ReferenceNumber = StringUtil.replaceAll(ReferenceNumber, " ", "");//remove spaces
+
+                String EnterpriseNumber = m.get("EnterpriseNumber").toString();
+                //String FormCode = m.get("FormCode").toString();
+                double TotalAmountItemType = Double.parseDouble(m.get("TotalAmount").toString());
+                eserviceTotal += TotalAmountItemType;
+
+                MultiButton mb = new MultiButton();
+                mb.setUIID("Label");
+                mb.setUIIDLine1("MultiButtonBlack");
+                mb.setUIIDLine2("MultiButtonBlack");
+                mb.setUIIDLine3("MultiButtonBlack");
+                mb.setUIIDLine4("MultiButtonBlack");
+
+                mb.setTextLine1("Reference No: " + ReferenceNumber);
+                mb.setTextLine2("Enterprise No: " + EnterpriseNumber);
+                //mb.setTextLine3("Service: " + ItemType);
+                mb.setTextLine3("Item Cost: R" + TotalAmountItemType);
+
+                Container c0 = new Container();
+                Button btnRemove0 = new Button("REMOVE");
+                c0.add(btnRemove0);
+                contItem.add(mb).add(c0);
+                contStep1EServices.add(contItem);
+
+            }
+            
+            //CartItems
             for (Object o : CartItems) {
 
                 Container contItem = new Container(BoxLayout.y());
@@ -781,7 +889,8 @@ public class StateMachine extends StateMachineBase {
                 String StatusDate = m.get("StatusDate").toString();
                 String ReferenceNumber = L10NManager.getInstance().format(Double.parseDouble(m.get("ReferenceNumber").toString()));
                 ReferenceNumber = ReferenceNumber.trim();
-                ReferenceNumber = StringUtil.replaceAll(ReferenceNumber, ",", "");
+                ReferenceNumber = StringUtil.replaceAll(ReferenceNumber, ",", "");//remove comma
+                ReferenceNumber = StringUtil.replaceAll(ReferenceNumber, " ", "");//remove spaces
 
                 String EnterpriseNumber = m.get("EnterpriseNumber").toString();
                 String FormCode = m.get("FormCode").toString();
@@ -807,10 +916,96 @@ public class StateMachine extends StateMachineBase {
                 contStep1EServices.add(contItem);
 
             }
-            ArrayList Items = (ArrayList) map.get("Items");
 
             lblTotal.setText("Total: R" + eserviceTotal);
             lblTotal.repaint();
+
+            tabs.addSelectionListener(new SelectionListener() {
+                @Override
+                public void selectionChanged(int oldSelected, int newSelected) {
+                    if (newSelected == 1) {
+                        Container contStep2 = (Container) findByName("contStep2", cont);
+                        contStep2.removeAll();
+                        contStep2.setLayout(new BorderLayout());
+
+                        Log.p("width=" + width + ", height=" + height, Log.DEBUG);
+                        //Dialog.show("", "width=" + width + ", height=" + height, "Ok", null);
+
+                        //String URL = "http://www.google.com";
+                        String encodedCustCode = "";
+                        String filePath = FileSystemStorage.getInstance().getAppHomePath() + "/a.txt";
+                        String home = FileSystemStorage.getInstance().getAppHomePath();
+
+                        OutputStream fos = null;
+                        InputStream fis = null;
+                        String encryptCode = "KD7788";
+                        String encryptID = "7104085085085";
+                        try {
+
+                            DESede_BC encrypter = new DESede_BC();
+
+                            fos = FileSystemStorage.getInstance().openOutputStream(filePath);
+                            fis = new ByteArrayInputStream(AGENT_CODE.getBytes());
+                            encodedCustCode = encrypter.encrypt(fis, fos);
+                            Log.p("encodedCustCode=" + encodedCustCode, Log.DEBUG);
+                            fis.close();
+                            fos.close();
+
+                        } catch (InvalidCipherTextException ex) {
+                            Log.e(ex);
+                        } catch (IOException ex) {
+                            Log.e(ex);
+                        }
+
+                        String URL = "https://paymenttest.cipc.co.za/Pay.aspx?custCode=" + encodedCustCode + "&custId=" + encodedCustCode + "&appId=6"
+                                + "&width=" + width + "&height=" + height;
+                        Log.p(URL, Log.DEBUG);
+
+                        hasGonePastACS = false;
+
+                        String directURL = "https://paymenttest.cipc.co.za/ACSRedirect.aspx";
+                        String errorURL = "https://paymenttest.cipc.co.za/PaymentError.aspx?error=1EwiapDpld0GrXoBVjnhEC52%2fRVCNKIi9Xsi%2fs9YpzA%3d&ref=T9122961860";
+
+                        BrowserComponent browser = new BrowserComponent();
+                        browser.setURL(URL);
+                        browser.setScrollableX(false);
+                        browser.setScrollableY(false);
+                        browser.setPinchToZoomEnabled(false);
+
+                        browser.addBrowserNavigationCallback(new BrowserNavigationCallback() {
+                            @Override
+                            public boolean shouldNavigate(String url) {
+
+                                Log.p("url=" + url, Log.DEBUG);
+
+                                String trans = getPaymentTransNoFromURL(url);
+
+                                if (trans.length() > 0) {//trans successful
+
+                                    Dialog.show("Success", "Payment processed. Transaction Number " + trans, "Ok", null);
+                                    showDashboard(f);
+
+                                } else if (url.indexOf("PaymentError") > -1) {
+
+                                    //Dialog.show("Error", "Payment error. Please contact CIPC.", "Ok", null);
+                                    //showDashboard(f);
+                                }
+
+                                return true;
+                            }
+                        });
+
+                        //browser.setProperty("useragent", "Mozilla/5.0 (Linux; Android 4.0.4; Galaxy Nexus Build/IMM76K) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.166 Mobile Safari/535.19");
+                        //browser.setProperty("useragent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.45 Safari/535.19");
+                        contStep2.add(BorderLayout.CENTER, browser);
+                        contStep2.setScrollableX(false);
+                        contStep2.setScrollableY(false);
+                        f.setScrollableX(false);
+                        f.setScrollableY(false);
+                        f.revalidate();
+                    }
+                }
+            });
 
             Button btnCheckout = (Button) findByName("btnCheckout", tabs);
             btnCheckout.addActionListener(new ActionListener() {
@@ -819,55 +1014,6 @@ public class StateMachine extends StateMachineBase {
                     tabs.setSelectedIndex(1);
                 }
             });
-
-            Container contStep2 = (Container) findByName("contStep2", tabs);
-            contStep2.removeAll();
-            contStep2.setLayout(new BorderLayout());
-
-            Log.p("width=" + width + ", height=" + height, Log.DEBUG);
-            //Dialog.show("", "width=" + width + ", height=" + height, "Ok", null);
-
-            //String URL = "http://www.google.com";
-            String URL = "https://paymenttest.cipc.co.za/Pay.aspx?custCode=G110iMQgyJs%3d&custId=z9MyXkVPe2F0F2OEr0xsjA%3d%3d&appId=6"
-                    + "&width=" + width + "&height=" + height;
-            Log.p(URL, Log.DEBUG);
-
-            hasGonePastACS = false;
-
-            String directURL = "https://paymenttest.cipc.co.za/ACSRedirect.aspx";
-            String errorURL = "https://paymenttest.cipc.co.za/PaymentError.aspx?error=1EwiapDpld0GrXoBVjnhEC52%2fRVCNKIi9Xsi%2fs9YpzA%3d&ref=T9122961860";
-
-            BrowserComponent browser = new BrowserComponent();
-            browser.setURL(URL);
-            browser.setScrollableX(false);
-            browser.setScrollableY(false);
-            browser.setPinchToZoomEnabled(false);
-
-            browser.addBrowserNavigationCallback(new BrowserNavigationCallback() {
-                @Override
-                public boolean shouldNavigate(String url) {
-
-                    //hi.setTitle(url);
-                    if (url.indexOf("PaymentError") > -1) {
-                        //error
-                        Log.p("Error occured", Log.DEBUG);
-                        Dialog.show("Error", "Error occurred", "Ok", null);
-                    } else if (url.indexOf(directURL) > -1) {
-                        //redirect
-                        Log.p("Redirect", Log.DEBUG);
-                    } else if (hasGonePastACS == true) {
-                        Log.p("ACS", Log.DEBUG);
-                        Dialog.show("Success", "Payment success", "Ok", null);
-                    }
-
-                    return true;
-                }
-            });
-
-            //browser.setProperty("useragent", "Mozilla/5.0 (Linux; Android 4.0.4; Galaxy Nexus Build/IMM76K) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.166 Mobile Safari/535.19");
-            //browser.setProperty("useragent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.45 Safari/535.19");
-            contStep2.add(BorderLayout.CENTER, browser);
-            f.revalidate();
 
             //        Button btnPayNow = (Button) findByName("btnPayNow", tabs);
             //        btnPayNow.addActionListener(new ActionListener() {
@@ -888,7 +1034,8 @@ public class StateMachine extends StateMachineBase {
             f.add(cont);
 
         } else {
-            Dialog.show("No Items", "You do not have any cart items.", "Ok", null);
+            Dialog.show("No Items", "You do not have any cart items. Please lodge a Name Reservation or submit Annual Returns.", "Ok", null);
+            showDashboard(f);
         }
 
         if (formProgress != null) {
@@ -1647,6 +1794,26 @@ public class StateMachine extends StateMachineBase {
             return true;
         }
         return false;
+    }
+
+    public String getPaymentTransNoFromURL(String url) {
+        String paymentTransNo = "";
+        String trans = "trans=";
+
+        if (url != null && url.indexOf(trans) > -1) {
+            int transIndex = url.indexOf(trans) + 6;
+            paymentTransNo = url.substring(transIndex);
+        }
+
+        return paymentTransNo;
+    }
+
+    public static String getReferenceNo(String responseCall) {
+        int startIndex = responseCall.indexOf("Reference No:") + 13;
+        int endIndex = responseCall.indexOf(". First proposed");
+
+        String newString = responseCall.substring(startIndex, endIndex).trim();
+        return newString;
     }
 
 }
