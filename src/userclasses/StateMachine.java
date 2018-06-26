@@ -131,6 +131,7 @@ public class StateMachine extends StateMachineBase {
     private static String AGENT_CODE = "";
 
     EnterpriseDetails enterpriseDetails;
+    ArrayList<NameSearchObject> arrayListNameReservation;
 
     public StateMachine(String resFile) {
         super(resFile);
@@ -153,16 +154,17 @@ public class StateMachine extends StateMachineBase {
 
         if (Display.getInstance().isSimulator()) {
 
-            AGENT_CODE = "KD7788";
+            AGENT_CODE = "BLE076";
 
             String entNo = getShortEnterpriseName("2011", "100088", "07");
             System.out.println("enta=" + entNo);
 
-            //AGENT_CODE = "BLE076";
-            UserWebServices u = new UserWebServices();
-            User user = new User();
-            user.setAgent_code(AGENT_CODE);
-            u.pendingAnnualReturns(user, entNo);
+//            //AGENT_CODE = "BLE076";
+//            UserWebServices u = new UserWebServices();
+//            User user = new User();
+//            user.setAgent_code(AGENT_CODE);
+            //u.getCustomerData(user);
+            //u.pendingAnnualReturns(user, entNo);
 //
 //            Map mapCart = u.getCart(user);
 //
@@ -328,6 +330,7 @@ public class StateMachine extends StateMachineBase {
 
         Button btnVerify = (Button) findByName("btnVerify", contTasks);
         Button btnLodge = (Button) findByName("btnLodge", contTasks);
+        
 
         btnVerify.addActionListener((ActionListener) (ActionEvent evt) -> {
             String name1 = txtName1.getText();
@@ -346,12 +349,12 @@ public class StateMachine extends StateMachineBase {
             } else {
 
                 UserWebServices u = new UserWebServices();
-                ArrayList<NameSearchObject> arrayList = u.search_name_MOBI(AGENT_CODE, name1, name2, name3, name4);
+                arrayListNameReservation = u.search_name_MOBI(AGENT_CODE, name1, name2, name3, name4);
 
-                for (int i = 0; i < arrayList.size(); i++) {
+                for (int i = 0; i < arrayListNameReservation.size(); i++) {
                     int count = i + 1;
                     Label lblResponse = (Label) findByName("lblName" + count + "Response", contTasks);
-                    NameSearchObject n = arrayList.get(i);
+                    NameSearchObject n = arrayListNameReservation.get(i);
                     if (n.isIsValid()) {
                         lblResponse.setText("Might be available");
                         lblResponse.setUIID("LabelGreen");
@@ -374,10 +377,16 @@ public class StateMachine extends StateMachineBase {
             String name4 = txtName4.getText();
 
             String msg = "";
-
-            if (name1.length() == 0) {
+            
+            if(arrayListNameReservation == null || arrayListNameReservation.size() == 0){
+                msg += "Please validate Names before clicking on Add to Cart. ";
+            }
+           
+            else if (name1.length() == 0) {
                 msg += "Please submit at least Name 1. ";
             }
+            
+            
 
             if (msg.length() > 0) {
                 Dialog.show("Error", msg, "Ok", null);
@@ -621,6 +630,19 @@ public class StateMachine extends StateMachineBase {
                     //ENT_NUMBER  = "K2013064531";
 
                     UserWebServices u = new UserWebServices();
+
+                    User user = new User();
+                    user.setAgent_code(AGENT_CODE);
+                    String entNo = getShortEnterpriseName(txtStep1a.getText(), txtStep1b.getText(),
+                            txtStep1c.getText());
+                    Map map = u.pendingAnnualReturns(user, entNo);
+
+                    if (map != null & map.size() > 0) {
+                        Dialog.show("Error", "Annual Returns are already in a Shopping cart. "
+                                + "Please process payment or try again tomorrow.", "Ok", null);
+                        return; //TODO better way to exit
+                    }
+
                     enterpriseDetails = u.soap_GetEnterpriseDetails(ENT_NUMBER); //"K2013064531");//2014 / 016320 /  07
 
                     if (enterpriseDetails != null) {
@@ -823,8 +845,8 @@ public class StateMachine extends StateMachineBase {
 
         OutputStream fos = null;
         InputStream fis = null;
-        String encryptCode = "KD7788";
-        String encryptID = "7104085085085";
+        String encryptCode = "BLE076";
+        String encryptID = "9103295910080";
         try {
 
             DESede_BC encrypter = new DESede_BC();
@@ -1188,8 +1210,7 @@ public class StateMachine extends StateMachineBase {
 
             String responsePassword = responseUser.getPassword();
 
-            Log.p(password + ":" + responsePassword);
-
+            //Log.p(password + ":" + responsePassword);
             if (password.equals(responsePassword)) {
                 AGENT_CODE = txtCustomerCode;
                 return false;
@@ -1250,8 +1271,8 @@ public class StateMachine extends StateMachineBase {
             TextField txtPassword = (TextField) findByName("txtPassword", f);
             //txtPassword.setText("Password12");
 
-            txtCustomerCode.setText("KD7788");
-            txtPassword.setText("fijiaudi");
+            txtCustomerCode.setText("BLE076");
+            txtPassword.setText("Password1");
 
         }
 
@@ -1799,7 +1820,7 @@ public class StateMachine extends StateMachineBase {
         if (msg.length() == 0) {
             UserWebServices u = new UserWebServices();
             String res1 = u.forget_password_MOBI(customerCode);
-            Log.p("res1 len=" + res1.length(), Log.DEBUG);
+            //Log.p("res1 len=" + res1.length(), Log.DEBUG);
             if (res1.indexOf("not registered") > -1) {
                 Dialog.show("Error", res1, "Ok", null);
                 return true;

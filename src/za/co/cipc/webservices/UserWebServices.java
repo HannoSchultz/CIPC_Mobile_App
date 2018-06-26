@@ -710,6 +710,44 @@ public class UserWebServices {
         return map;
     }
     
+    public Map getCustomerData(User user) {
+
+        Map map = null;
+
+        AuthObject auth = getToken(user);
+
+        /* Map jsonData = Rest.get("https://apidev.cipc.co.za/v1/payment/cart/" + user.getAgent_code())
+                .header("Authorization", auth.getToken_type() + " " + auth.getAccess_token()).jsonContent()
+                .getAsJsonMap().getResponseData();
+
+        Log.p("getCart=" + jsonData.toString());*/
+        ConnectionRequest post = new ConnectionRequest();
+
+        post.setUrl("https://apidev.cipc.co.za/v1/customer/customer/" + user.getAgent_code());
+        post.setPost(false);
+        post.addRequestHeader("Content-Type", "application/json; charset=utf-8");
+
+        post.addRequestHeader("Authorization", auth.getToken_type() + " " + auth.getAccess_token());
+        NetworkManager.getInstance().addToQueueAndWait(post);
+        byte[] responseData = post.getResponseData();
+        if (responseData != null) {
+            String data = new String(responseData);
+            try {
+                JSONParser parser = new JSONParser();
+                map = parser.parseJSON(convertStringtoInputStreamReader(data));
+                Log.p("getCustomerData=" + data, Log.DEBUG);
+                Log.p("getCustomerData=" + map, Log.DEBUG);
+
+            } catch (IOException e) {
+                Log.e(e);
+            }
+
+            //JSONParser
+        }
+
+        return map;
+    }
+    
      public Map pendingAnnualReturns(User user, String entNo) {
 
         Map map = null;
