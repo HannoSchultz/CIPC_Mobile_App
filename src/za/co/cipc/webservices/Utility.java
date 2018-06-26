@@ -67,8 +67,8 @@ public class Utility {
 
         return result;
     }
-    
-     public static InputStreamReader convertStringtoInputStreamReader(String data) {
+
+    public static InputStreamReader convertStringtoInputStreamReader(String data) {
 
         byte[] resultByte = data.getBytes();
         ByteArrayInputStream bis = new ByteArrayInputStream(resultByte);
@@ -223,8 +223,6 @@ public class Utility {
         return num;
     }
 
-   
-
     public static String removeWord(String message, String word) {
         String tempMessage = word;
         message = message.substring(tempMessage.length() + 3);//remove first "message"
@@ -257,7 +255,7 @@ public class Utility {
         int space = 32;//space character
         for (int i = 0; i < toConvert.length(); i++) {
             int c = (int) toConvert.charAt(i);
-            if ( (c >= sstart && c <= send) || c == space || c == asterisk) {
+            if ((c >= sstart && c <= send) || c == space || c == asterisk) {
                 newString += (char) c;
             }
         }
@@ -289,8 +287,6 @@ public class Utility {
         return newString;
 
     }
-
-   
 
     public static Element parseXML(String data) {
 

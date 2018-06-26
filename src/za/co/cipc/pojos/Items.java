@@ -10,5 +10,5 @@ package za.co.cipc.pojos;
  * @author HanSchultz
  */
 public class Items {
-    
+
 }

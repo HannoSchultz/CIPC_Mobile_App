@@ -99,8 +99,6 @@ public class CIPC implements PushCallback {
         Log.p("key is " + deviceId, Log.DEBUG);
         //Utility.showDialog("new deviceId", deviceId);
 
-      
-
     }
 
     @Override

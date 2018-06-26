@@ -389,6 +389,5 @@ public class User {
     public void setParamCustomerCode(String paramCustomerCode) {
         this.paramCustomerCode = paramCustomerCode;
     }
-    
-    
+
 }

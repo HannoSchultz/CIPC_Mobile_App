@@ -12,13 +12,13 @@ import java.util.ArrayList;
  * @author HanSchultz
  */
 public class Cart {
-    
+
     private String CustomerCode;
     private double AnnualReturnsTotalAmount;
     private double ItemDataTotalAmount;
     private double TotalAmount;
     private double ItemsCount;
-    
+
     private ArrayList<AnnualReturns> AnnualReturns;
     private ArrayList<CartItems> CartItems;
     private ArrayList<Items> Items;
@@ -90,8 +90,4 @@ public class Cart {
         this.Items = Items;
     }
 
-    
-    
-    
-    
 }

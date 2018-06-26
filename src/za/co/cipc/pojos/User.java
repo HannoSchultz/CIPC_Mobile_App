@@ -51,10 +51,10 @@ public class User {
     String status_desc;
     private String first_name;
     private String last_name;
-    
+
     String paramCustomerCode;
     String paramPassword;
-    
+
     public User() {
     }
 
@@ -399,9 +399,5 @@ public class User {
     public void setLast_name(String last_name) {
         this.last_name = last_name;
     }
-
-    
-
-    
 
 }

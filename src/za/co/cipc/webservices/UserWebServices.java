@@ -545,12 +545,12 @@ public class UserWebServices {
         String END_POINT = "https://apidev.cipc.co.za/v1/payment/cartitem";
 
         String BODY
-                = "{\"ReferenceNumber\": "+ReferenceNumber+","
+                = "{\"ReferenceNumber\": " + ReferenceNumber + ","
                 + "\"Status\":0,"
                 + "\"StatusDate\":\"2018-06-23T17:04:28.873\","
                 + "\"CustomerCode\":\"" + "KD7788" + "\","
                 + "\"ItemType\":4,"
-                + "\"ItemData\":\"{\\\"ReferenceNumber\\\": "+ReferenceNumber+ ",\\\"EnterpriseNumber\\\":\\\"\\\",\\\"FormCode\\\":\\\"COR9.1\\\",\\\"ChangeTypeCode\\\":\\\"30\\\",\\\"Description\\\":null,\\\"TotalAmount\\\":50.0}\","
+                + "\"ItemData\":\"{\\\"ReferenceNumber\\\": " + ReferenceNumber + ",\\\"EnterpriseNumber\\\":\\\"\\\",\\\"FormCode\\\":\\\"COR9.1\\\",\\\"ChangeTypeCode\\\":\\\"30\\\",\\\"Description\\\":null,\\\"TotalAmount\\\":50.0}\","
                 + "\"Amount\":50.0"
                 + "}";
 
@@ -588,19 +588,19 @@ public class UserWebServices {
 
         String BODY
                 = "{\n"
-                + "                \"ReferenceNumber\":"+ReferenceNumber+",\n"
+                + "                \"ReferenceNumber\":" + ReferenceNumber + ",\n"
                 + "                \"Status\":0,\n"
                 + "                \"StatusDate\":\"2018-04-23T13:04:28.873\",\n"
                 + "                \"CustomerCode\":\"" + user.getAgent_code() + "\",\n"
                 + "                \"ItemType\":1,\n"
                 + "                \"ItemData\":\""
-                + "{\\\"ReferenceNumber\\\":"+ReferenceNumber+",\\\"FormCode\\\":\\\"CK2B\\\",\\\"EnterpriseNumber\\\":\\\"B1988003406\\\",\\\"EnterpriseType\\\":\\\"23\\\",\\\"EnterpriseStatus\\\":\\\"28\\\",\\\"EmailAddress\\\":\\\"jbruton@cipc.co.za\\\",\\\"TelephoneCode\\\":\\\"012\\\",\\\"TelephoneNumber\\\":\\\"1234567\\\",\\\"CellphoneNumber\\\":\\\"\\\",\\\"WebsiteAddress\\\":\\\"\\\",\\\"BusinessDescription\\\":\\\"CARD PAYMENT\\\",\\\"PrincipalPlaceOfBusiness\\\":\\\"\\\",\\\"EnterpriseNameChanged\\\":0,\\\"FinancialYearEndChanged\\\":0,\\\"RegisteredOfficeChanged\\\":0,\\\"LocationOfRecordsChanged\\\":0,\\\"DirectorsChanged\\\":0,\\\"CompanySecretaryChanged\\\":0,\\\"AuditorsChanged\\\":0,\\\"TotalAmount\\\":2250.00,\\\"YearData\\\":["
-                + "{\\\"ReferenceNumber\\\":"+ReferenceNumber+",\\\"EnterpriseNumber\\\":\\\"B1988003406\\\",\\\"Year\\\":2009,\\\"Turnover\\\":0.0,\\\"Amount\\\":100.00,\\\"PenaltyFee\\\":150.00,\\\"TotalAmount\\\":250.00,\\\"Status\\\":null,\\\"StatusDate\\\":\\\"0001-01-01T00:00:00\\\"},{\\\"ReferenceNumber\\\":533549914,\\\"EnterpriseNumber\\\":\\\"B1988003406\\\",\\\"Year\\\":2010,\\\"Turnover\\\":0.0,\\\"Amount\\\":100.00,\\\"PenaltyFee\\\":150.00,\\\"TotalAmount\\\":250.00,\\\"Status\\\":null,\\\"StatusDate\\\":\\\"0001-01-01T00:00:00\\\"},"
-                + "{\\\"ReferenceNumber\\\":"+ReferenceNumber+",\\\"EnterpriseNumber\\\":\\\"B1988003406\\\",\\\"Year\\\":2011,\\\"Turnover\\\":0.0,\\\"Amount\\\":100.00,\\\"PenaltyFee\\\":150.00,\\\"TotalAmount\\\":250.00,\\\"Status\\\":null,\\\"StatusDate\\\":\\\"0001-01-01T00:00:00\\\"},{\\\"ReferenceNumber\\\":533549914,\\\"EnterpriseNumber\\\":\\\"B1988003406\\\",\\\"Year\\\":2012,\\\"Turnover\\\":0.0,\\\"Amount\\\":100.00,\\\"PenaltyFee\\\":150.00,\\\"TotalAmount\\\":250.00,\\\"Status\\\":null,\\\"StatusDate\\\":\\\"0001-01-01T00:00:00\\\"},"
-                + "{\\\"ReferenceNumber\\\":"+ReferenceNumber+",\\\"EnterpriseNumber\\\":\\\"B1988003406\\\",\\\"Year\\\":2013,\\\"Turnover\\\":0.0,\\\"Amount\\\":100.00,\\\"PenaltyFee\\\":150.00,\\\"TotalAmount\\\":250.00,\\\"Status\\\":null,\\\"StatusDate\\\":\\\"0001-01-01T00:00:00\\\"},{\\\"ReferenceNumber\\\":533549914,\\\"EnterpriseNumber\\\":\\\"B1988003406\\\",\\\"Year\\\":2014,\\\"Turnover\\\":0.0,\\\"Amount\\\":100.00,\\\"PenaltyFee\\\":150.00,\\\"TotalAmount\\\":250.00,\\\"Status\\\":null,\\\"StatusDate\\\":\\\"0001-01-01T00:00:00\\\"},"
-                + "{\\\"ReferenceNumber\\\":"+ReferenceNumber+",\\\"EnterpriseNumber\\\":\\\"B1988003406\\\",\\\"Year\\\":2015,\\\"Turnover\\\":0.0,\\\"Amount\\\":100.00,\\\"PenaltyFee\\\":150.00,\\\"TotalAmount\\\":250.00,\\\"Status\\\":null,\\\"StatusDate\\\":\\\"0001-01-01T00:00:00\\\"},"
-                + "{\\\"ReferenceNumber\\\":"+ReferenceNumber+",\\\"EnterpriseNumber\\\":\\\"B1988003406\\\",\\\"Year\\\":2016,\\\"Turnover\\\":0.0,\\\"Amount\\\":100.00,\\\"PenaltyFee\\\":150.00,\\\"TotalAmount\\\":250.00,\\\"Status\\\":null,\\\"StatusDate\\\":\\\"0001-01-01T00:00:00\\\"},"
-                + "{\\\"ReferenceNumber\\\":"+ReferenceNumber+",\\\"EnterpriseNumber\\\":\\\"B1988003406\\\",\\\"Year\\\":2017,\\\"Turnover\\\":0.0,\\\"Amount\\\":100.00,\\\"PenaltyFee\\\":150.00,\\\"TotalAmount\\\":250.00,\\\"Status\\\":null,\\\"StatusDate\\\":\\\"0001-01-01T00:00:00\\\"}],\\\"ItemsCount\\\":9}\",\n"
+                + "{\\\"ReferenceNumber\\\":" + ReferenceNumber + ",\\\"FormCode\\\":\\\"CK2B\\\",\\\"EnterpriseNumber\\\":\\\"K2011100088\\\",\\\"EnterpriseType\\\":\\\"23\\\",\\\"EnterpriseStatus\\\":\\\"28\\\",\\\"EmailAddress\\\":\\\"jbruton@cipc.co.za\\\",\\\"TelephoneCode\\\":\\\"012\\\",\\\"TelephoneNumber\\\":\\\"1234567\\\",\\\"CellphoneNumber\\\":\\\"\\\",\\\"WebsiteAddress\\\":\\\"\\\",\\\"BusinessDescription\\\":\\\"CARD PAYMENT\\\",\\\"PrincipalPlaceOfBusiness\\\":\\\"\\\",\\\"EnterpriseNameChanged\\\":0,\\\"FinancialYearEndChanged\\\":0,\\\"RegisteredOfficeChanged\\\":0,\\\"LocationOfRecordsChanged\\\":0,\\\"DirectorsChanged\\\":0,\\\"CompanySecretaryChanged\\\":0,\\\"AuditorsChanged\\\":0,\\\"TotalAmount\\\":2250.00,\\\"YearData\\\":["
+                + "{\\\"ReferenceNumber\\\":" + ReferenceNumber + ",\\\"EnterpriseNumber\\\":\\\"K2011100088\\\",\\\"Year\\\":2009,\\\"Turnover\\\":0.0,\\\"Amount\\\":100.00,\\\"PenaltyFee\\\":150.00,\\\"TotalAmount\\\":250.00,\\\"Status\\\":null,\\\"StatusDate\\\":\\\"0001-01-01T00:00:00\\\"},{\\\"ReferenceNumber\\\":533549914,\\\"EnterpriseNumber\\\":\\\"K2011100088\\\",\\\"Year\\\":2010,\\\"Turnover\\\":0.0,\\\"Amount\\\":100.00,\\\"PenaltyFee\\\":150.00,\\\"TotalAmount\\\":250.00,\\\"Status\\\":null,\\\"StatusDate\\\":\\\"0001-01-01T00:00:00\\\"},"
+                + "{\\\"ReferenceNumber\\\":" + ReferenceNumber + ",\\\"EnterpriseNumber\\\":\\\"K2011100088\\\",\\\"Year\\\":2011,\\\"Turnover\\\":0.0,\\\"Amount\\\":100.00,\\\"PenaltyFee\\\":150.00,\\\"TotalAmount\\\":250.00,\\\"Status\\\":null,\\\"StatusDate\\\":\\\"0001-01-01T00:00:00\\\"},{\\\"ReferenceNumber\\\":533549914,\\\"EnterpriseNumber\\\":\\\"K2011100088\\\",\\\"Year\\\":2012,\\\"Turnover\\\":0.0,\\\"Amount\\\":100.00,\\\"PenaltyFee\\\":150.00,\\\"TotalAmount\\\":250.00,\\\"Status\\\":null,\\\"StatusDate\\\":\\\"0001-01-01T00:00:00\\\"},"
+                + "{\\\"ReferenceNumber\\\":" + ReferenceNumber + ",\\\"EnterpriseNumber\\\":\\\"K2011100088\\\",\\\"Year\\\":2013,\\\"Turnover\\\":0.0,\\\"Amount\\\":100.00,\\\"PenaltyFee\\\":150.00,\\\"TotalAmount\\\":250.00,\\\"Status\\\":null,\\\"StatusDate\\\":\\\"0001-01-01T00:00:00\\\"},{\\\"ReferenceNumber\\\":533549914,\\\"EnterpriseNumber\\\":\\\"K2011100088\\\",\\\"Year\\\":2014,\\\"Turnover\\\":0.0,\\\"Amount\\\":100.00,\\\"PenaltyFee\\\":150.00,\\\"TotalAmount\\\":250.00,\\\"Status\\\":null,\\\"StatusDate\\\":\\\"0001-01-01T00:00:00\\\"},"
+                + "{\\\"ReferenceNumber\\\":" + ReferenceNumber + ",\\\"EnterpriseNumber\\\":\\\"K2011100088\\\",\\\"Year\\\":2015,\\\"Turnover\\\":0.0,\\\"Amount\\\":100.00,\\\"PenaltyFee\\\":150.00,\\\"TotalAmount\\\":250.00,\\\"Status\\\":null,\\\"StatusDate\\\":\\\"0001-01-01T00:00:00\\\"},"
+                + "{\\\"ReferenceNumber\\\":" + ReferenceNumber + ",\\\"EnterpriseNumber\\\":\\\"K2011100088\\\",\\\"Year\\\":2016,\\\"Turnover\\\":0.0,\\\"Amount\\\":100.00,\\\"PenaltyFee\\\":150.00,\\\"TotalAmount\\\":250.00,\\\"Status\\\":null,\\\"StatusDate\\\":\\\"0001-01-01T00:00:00\\\"},"
+                + "{\\\"ReferenceNumber\\\":" + ReferenceNumber + ",\\\"EnterpriseNumber\\\":\\\"K2011100088\\\",\\\"Year\\\":2017,\\\"Turnover\\\":0.0,\\\"Amount\\\":100.00,\\\"PenaltyFee\\\":150.00,\\\"TotalAmount\\\":250.00,\\\"Status\\\":null,\\\"StatusDate\\\":\\\"0001-01-01T00:00:00\\\"}],\\\"ItemsCount\\\":9}\",\n"
                 + "                \"Amount\":50.0\n"
                 + "}";
 
@@ -699,6 +699,44 @@ public class UserWebServices {
                 map = parser.parseJSON(convertStringtoInputStreamReader(data));
                 Log.p("data=" + data, Log.DEBUG);
                 Log.p("map=" + map, Log.DEBUG);
+
+            } catch (IOException e) {
+                Log.e(e);
+            }
+
+            //JSONParser
+        }
+
+        return map;
+    }
+    
+     public Map pendingAnnualReturns(User user, String entNo) {
+
+        Map map = null;
+
+        AuthObject auth = getToken(user);
+
+        /* Map jsonData = Rest.get("https://apidev.cipc.co.za/v1/payment/cart/" + user.getAgent_code())
+                .header("Authorization", auth.getToken_type() + " " + auth.getAccess_token()).jsonContent()
+                .getAsJsonMap().getResponseData();
+
+        Log.p("getCart=" + jsonData.toString());*/
+        ConnectionRequest post = new ConnectionRequest();
+
+        post.setUrl("https://apidev.cipc.co.za/v1/payment/cartitem/enterprise/" + entNo);
+        post.setPost(false);
+        post.addRequestHeader("Content-Type", "application/json; charset=utf-8");
+
+        post.addRequestHeader("Authorization", auth.getToken_type() + " " + auth.getAccess_token());
+        NetworkManager.getInstance().addToQueueAndWait(post);
+        byte[] responseData = post.getResponseData();
+        if (responseData != null) {
+            String data = new String(responseData);
+            try {
+                JSONParser parser = new JSONParser();
+                map = parser.parseJSON(convertStringtoInputStreamReader(data));
+                Log.p("pendingAnnualReturns data=" + data, Log.DEBUG);
+                Log.p("pendingAnnualReturns map=" + map, Log.DEBUG);
 
             } catch (IOException e) {
                 Log.e(e);
@@ -906,7 +944,7 @@ public class UserWebServices {
 //        Dialog dlg = prog.showInifiniteBlocking();
 //        httpRequest.setDisposeOnCompletion(dlg);
         NetworkManager.getInstance().addToQueueAndWait(httpRequest);
-        if(httpRequest.getResponseData() != null){
+        if (httpRequest.getResponseData() != null) {
             String data = new String(httpRequest.getResponseData());//TODO do null check
 
             try {
@@ -1147,7 +1185,7 @@ public class UserWebServices {
                 + "\n"
                 + "         <cipc:sBankID>wBAA7LAkWIs=</cipc:sBankID>\n"
                 + "\n"
-                + "         <cipc:sid_no>"+id+"</cipc:sid_no>\n"
+                + "         <cipc:sid_no>" + id + "</cipc:sid_no>\n"
                 + "\n"
                 + "      </cipc:Get_Cust_code_id_MOBI>\n"
                 + "\n"

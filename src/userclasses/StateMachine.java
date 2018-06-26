@@ -152,21 +152,25 @@ public class StateMachine extends StateMachineBase {
         }
 
         if (Display.getInstance().isSimulator()) {
+
             AGENT_CODE = "KD7788";
 
+            String entNo = getShortEnterpriseName("2011", "100088", "07");
+            System.out.println("enta=" + entNo);
+
+            //AGENT_CODE = "BLE076";
             UserWebServices u = new UserWebServices();
             User user = new User();
             user.setAgent_code(AGENT_CODE);
-            //u.insertCartItemService(user);
-
-            Map mapCart = u.getCart(user);
-
-            ArrayList items = (ArrayList) mapCart.get("AnnualReturns");
-            Log.p("Annual Returns=" + items.size(), Log.DEBUG);
-
-            ArrayList CartItems = (ArrayList) mapCart.get("CartItems");
-            Log.p("CartItems=" + CartItems.size(), Log.DEBUG);
-
+            u.pendingAnnualReturns(user, entNo);
+//
+//            Map mapCart = u.getCart(user);
+//
+//            ArrayList items = (ArrayList) mapCart.get("AnnualReturns");
+//            Log.p("Annual Returns=" + items.size(), Log.DEBUG);
+//
+//            ArrayList CartItems = (ArrayList) mapCart.get("CartItems");
+//            Log.p("CartItems=" + CartItems.size(), Log.DEBUG);
 //            mapCart = u.getCart(user);
 //            items = (ArrayList) mapCart.get("CartItems");//ItemData
 //            Log.p("CartItems Size after insert=" + items.size(), Log.DEBUG);
@@ -236,10 +240,10 @@ public class StateMachine extends StateMachineBase {
     @Override
     protected String getFirstFormName() {
 
-        if (Display.getInstance().isSimulator()) {//Prepoluate with Debug info
+        if (Display.getInstance().isSimulator()) {//Pre populate with Debug info
 
-            defaultEmail = "KD7788";
-            defaultPassword = "fijiaudi";
+            defaultEmail = "BLE076";
+            defaultPassword = "Password12";
 
             Log.setLevel(Log.DEBUG);
             Log.p("issimulator", Log.DEBUG);
@@ -416,7 +420,7 @@ public class StateMachine extends StateMachineBase {
     public void showDashboard(final Form f) {
         formProgress = new FormProgress(f);
         closeMenu(f, true);
-        
+
         f.setLayout(new BoxLayout(BoxLayout.Y_AXIS));
 
         analytics(f, "Dashboard");
@@ -770,13 +774,17 @@ public class StateMachine extends StateMachineBase {
 
         //Step 4
         btnStep4AddToCart.addActionListener((ActionListener) (ActionEvent evt) -> {
-            
+
             User newUser = new User();
             newUser.setAgent_code(AGENT_CODE);
-            
+
             EnterpriseDetails tempDetails = listCalculateARTran.get(0);
-            
+
             u.insertCartItemAR(newUser, tempDetails.getReference_no());
+
+            isARStep1Passed = false;
+            isARStep2Passed = false;
+            isARStep3Passed = false;
 
             Dialog.show("Success", "Annual Return (s) added to shopping cart", "Ok", null);
             showCart(f);
@@ -799,6 +807,87 @@ public class StateMachine extends StateMachineBase {
     }
 
     public void showCart(final Form f) {
+        Container cont = (Container) createContainer("/theme", "ContCart");
+
+        Container contStep2 = (Container) findByName("contStep2", cont);
+        contStep2.removeAll();
+        contStep2.setLayout(new BorderLayout());
+
+        Log.p("width=" + width + ", height=" + height, Log.DEBUG);
+        //Dialog.show("", "width=" + width + ", height=" + height, "Ok", null);
+
+        //String URL = "http://www.google.com";
+        String encodedCustCode = "";
+        String filePath = FileSystemStorage.getInstance().getAppHomePath() + "/a.txt";
+        String home = FileSystemStorage.getInstance().getAppHomePath();
+
+        OutputStream fos = null;
+        InputStream fis = null;
+        String encryptCode = "KD7788";
+        String encryptID = "7104085085085";
+        try {
+
+            DESede_BC encrypter = new DESede_BC();
+
+            fos = FileSystemStorage.getInstance().openOutputStream(filePath);
+            fis = new ByteArrayInputStream(AGENT_CODE.getBytes());
+            encodedCustCode = encrypter.encrypt(fis, fos);
+            Log.p("encodedCustCode=" + encodedCustCode, Log.DEBUG);
+            fis.close();
+            fos.close();
+
+        } catch (InvalidCipherTextException ex) {
+            Log.e(ex);
+        } catch (IOException ex) {
+            Log.e(ex);
+        }
+
+        String URL = "https://paymenttest.cipc.co.za/Pay.aspx?custCode=" + encodedCustCode + "&custId=" + encodedCustCode + "&appId=6"
+                + "&width=" + width + "&height=" + height;
+        Log.p(URL, Log.DEBUG);
+
+        hasGonePastACS = false;
+
+        String directURL = "https://paymenttest.cipc.co.za/ACSRedirect.aspx";
+        String errorURL = "https://paymenttest.cipc.co.za/PaymentError.aspx?error=1EwiapDpld0GrXoBVjnhEC52%2fRVCNKIi9Xsi%2fs9YpzA%3d&ref=T9122961860";
+
+        BrowserComponent browser = new BrowserComponent();
+        browser.setURL(URL);
+        browser.setScrollableX(false);
+        browser.setScrollableY(false);
+        browser.setPinchToZoomEnabled(false);
+
+        browser.addBrowserNavigationCallback(new BrowserNavigationCallback() {
+            @Override
+            public boolean shouldNavigate(String url) {
+
+                Log.p("url=" + url, Log.DEBUG);
+
+                String trans = getPaymentTransNoFromURL(url);
+
+                if (trans.length() > 0) {//trans successful
+
+                    Dialog.show("Success", "Payment processed. Transaction Number " + trans, "Ok", null);
+                    showDashboard(f);
+
+                } else if (url.indexOf("PaymentError") > -1) {
+
+                    //Dialog.show("Error", "Payment error. Please contact CIPC.", "Ok", null);
+                    //showDashboard(f);
+                }
+
+                return true;
+            }
+        });
+
+        //browser.setProperty("useragent", "Mozilla/5.0 (Linux; Android 4.0.4; Galaxy Nexus Build/IMM76K) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.166 Mobile Safari/535.19");
+        //browser.setProperty("useragent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.45 Safari/535.19");
+        contStep2.add(BorderLayout.CENTER, browser);
+        contStep2.setScrollableX(false);
+        contStep2.setScrollableY(false);
+        f.setScrollableX(false);
+        f.setScrollableY(false);
+        f.revalidate();
 
         UserWebServices u = new UserWebServices();
         User user = new User();
@@ -812,7 +901,6 @@ public class StateMachine extends StateMachineBase {
         Log.p("CartItems=" + CartItems.size(), Log.DEBUG);
 
         if (!AnnualReturns.isEmpty() || !CartItems.isEmpty()) {
-            Container cont = (Container) createContainer("/theme", "ContCart");
 
             formProgress = new FormProgress(f);
             closeMenu(f, true);
@@ -824,6 +912,7 @@ public class StateMachine extends StateMachineBase {
 
             Tabs tabs = (Tabs) findByName("Tabs", cont);
             tabs.setSwipeActivated(false);
+            tabs.hideTabs();
 
             Log.p("Cart agent=" + AGENT_CODE, Log.DEBUG);
 
@@ -840,8 +929,8 @@ public class StateMachine extends StateMachineBase {
             double ItemsCount = Double.parseDouble(map.get("ItemsCount").toString());
 
             double eserviceTotal = 0.0;
-            
-             //Annual Returns
+
+            //Annual Returns
             for (Object o : AnnualReturns) {
 
                 Container contItem = new Container(BoxLayout.y());
@@ -878,7 +967,7 @@ public class StateMachine extends StateMachineBase {
                 contStep1EServices.add(contItem);
 
             }
-            
+
             //CartItems
             for (Object o : CartItems) {
 
@@ -924,85 +1013,7 @@ public class StateMachine extends StateMachineBase {
                 @Override
                 public void selectionChanged(int oldSelected, int newSelected) {
                     if (newSelected == 1) {
-                        Container contStep2 = (Container) findByName("contStep2", cont);
-                        contStep2.removeAll();
-                        contStep2.setLayout(new BorderLayout());
 
-                        Log.p("width=" + width + ", height=" + height, Log.DEBUG);
-                        //Dialog.show("", "width=" + width + ", height=" + height, "Ok", null);
-
-                        //String URL = "http://www.google.com";
-                        String encodedCustCode = "";
-                        String filePath = FileSystemStorage.getInstance().getAppHomePath() + "/a.txt";
-                        String home = FileSystemStorage.getInstance().getAppHomePath();
-
-                        OutputStream fos = null;
-                        InputStream fis = null;
-                        String encryptCode = "KD7788";
-                        String encryptID = "7104085085085";
-                        try {
-
-                            DESede_BC encrypter = new DESede_BC();
-
-                            fos = FileSystemStorage.getInstance().openOutputStream(filePath);
-                            fis = new ByteArrayInputStream(AGENT_CODE.getBytes());
-                            encodedCustCode = encrypter.encrypt(fis, fos);
-                            Log.p("encodedCustCode=" + encodedCustCode, Log.DEBUG);
-                            fis.close();
-                            fos.close();
-
-                        } catch (InvalidCipherTextException ex) {
-                            Log.e(ex);
-                        } catch (IOException ex) {
-                            Log.e(ex);
-                        }
-
-                        String URL = "https://paymenttest.cipc.co.za/Pay.aspx?custCode=" + encodedCustCode + "&custId=" + encodedCustCode + "&appId=6"
-                                + "&width=" + width + "&height=" + height;
-                        Log.p(URL, Log.DEBUG);
-
-                        hasGonePastACS = false;
-
-                        String directURL = "https://paymenttest.cipc.co.za/ACSRedirect.aspx";
-                        String errorURL = "https://paymenttest.cipc.co.za/PaymentError.aspx?error=1EwiapDpld0GrXoBVjnhEC52%2fRVCNKIi9Xsi%2fs9YpzA%3d&ref=T9122961860";
-
-                        BrowserComponent browser = new BrowserComponent();
-                        browser.setURL(URL);
-                        browser.setScrollableX(false);
-                        browser.setScrollableY(false);
-                        browser.setPinchToZoomEnabled(false);
-
-                        browser.addBrowserNavigationCallback(new BrowserNavigationCallback() {
-                            @Override
-                            public boolean shouldNavigate(String url) {
-
-                                Log.p("url=" + url, Log.DEBUG);
-
-                                String trans = getPaymentTransNoFromURL(url);
-
-                                if (trans.length() > 0) {//trans successful
-
-                                    Dialog.show("Success", "Payment processed. Transaction Number " + trans, "Ok", null);
-                                    showDashboard(f);
-
-                                } else if (url.indexOf("PaymentError") > -1) {
-
-                                    //Dialog.show("Error", "Payment error. Please contact CIPC.", "Ok", null);
-                                    //showDashboard(f);
-                                }
-
-                                return true;
-                            }
-                        });
-
-                        //browser.setProperty("useragent", "Mozilla/5.0 (Linux; Android 4.0.4; Galaxy Nexus Build/IMM76K) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.166 Mobile Safari/535.19");
-                        //browser.setProperty("useragent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.45 Safari/535.19");
-                        contStep2.add(BorderLayout.CENTER, browser);
-                        contStep2.setScrollableX(false);
-                        contStep2.setScrollableY(false);
-                        f.setScrollableX(false);
-                        f.setScrollableY(false);
-                        f.revalidate();
                     }
                 }
             });
@@ -1235,8 +1246,11 @@ public class StateMachine extends StateMachineBase {
 
         if (Display.getInstance().isSimulator()) {
             TextField txtCustomerCode = (TextField) findByName("txtCustomerCode", f);
-            txtCustomerCode.setText("KD7788");
+            //txtCustomerCode.setText("BLE076");
             TextField txtPassword = (TextField) findByName("txtPassword", f);
+            //txtPassword.setText("Password12");
+
+            txtCustomerCode.setText("KD7788");
             txtPassword.setText("fijiaudi");
 
         }
@@ -1248,11 +1262,11 @@ public class StateMachine extends StateMachineBase {
         String msg = "";
 
         if (isRegStep1Passed == false) {
-            msg = "Please complete step 1 first and press Continue.";
+            msg = "Please complete step 1 first.";
         } else if (isRegStep2Passed == false) {
-            msg = "Please complete step 2 first and press Continue.";
+            msg = "Please complete step 2 first.";
         } else if (isRegStep3Passed == false) {
-            msg = "Please complete step 3 first and press Next.";
+            msg = "Please complete step 3 first.";
         }
 
         Dialog.show("Error", msg, "Ok", null);
@@ -1264,11 +1278,11 @@ public class StateMachine extends StateMachineBase {
         String msg = "";
 
         if (isARStep1Passed == false) {
-            msg = "Please complete step 1 first and press Continue.";
+            msg = "Please complete step 1 first.";
         } else if (isARStep2Passed == false) {
-            msg = "Please complete step 2 first and press Continue.";
+            msg = "Please complete step 2 first.";
         } else if (isARStep3Passed == false) {
-            msg = "Please complete step 3 first and press Next.";
+            msg = "Please complete step 3 first.";
         }
 
         Dialog.show("Error", msg, "Ok", null);
@@ -1618,6 +1632,10 @@ public class StateMachine extends StateMachineBase {
                     Dialog.show("Error", result, "Ok", null);
                 } else {
                     Dialog.show("Success", result, "Ok", null);
+                    showForm("Login", null);
+                    isRegStep1Passed = false;
+                    isRegStep2Passed = false;
+                    isRegStep3Passed = false;
                 }
 
             } else {
@@ -1814,6 +1832,34 @@ public class StateMachine extends StateMachineBase {
 
         String newString = responseCall.substring(startIndex, endIndex).trim();
         return newString;
+    }
+
+    public String getShortEnterpriseName(String year, String body, String type) {
+        String entNo = "";
+        int yearInt = Integer.parseInt(year);
+        if (type.equals("23")) {
+
+            entNo = "B" + year + body;
+
+        } else if (type.equals("06") || type.equals("07") || type.equals("30") || type.equals("08") || type.equals("10") || type.equals("12") || type.equals("21")) {
+
+            if (body.startsWith("0") && yearInt == 2011) {
+
+                entNo = "M" + year + body;
+
+            } else if (yearInt < 2011) {
+
+                entNo = "M" + year + body;
+
+            } else {
+
+                entNo = "K" + year + body;
+
+            }
+
+        }
+
+        return entNo;
     }
 
 }

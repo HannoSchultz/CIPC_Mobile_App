@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <component type="Container" name="ContContacts" cloudDestinationProperty="ContContacts" layout="BoxLayout" boxLayoutAxis="Y" >
-  <component type="Label" name="LabelTitle" cloudDestinationProperty="LabelTitle" uiid="LabelWhite" text=" " >
-  </component>
-  <component type="Container" name="Container" cloudDestinationProperty="Container" layout="BorderLayout" borderLayoutAbsoluteCenter="false" >
-    <component type="TextField" name="txtSearch" cloudBoundProperty="text" cloudDestinationProperty="TextField" text="" hint="Type here to search" >
-      <layoutConstraint value="Center" />
+    <component type="Label" name="LabelTitle" cloudDestinationProperty="LabelTitle" uiid="LabelWhite" text=" " >
     </component>
-    <component type="Button" name="Button" cloudDestinationProperty="Button" text="Search" >
-      <layoutConstraint value="East" />
+    <component type="Container" name="Container" cloudDestinationProperty="Container" layout="BorderLayout" borderLayoutAbsoluteCenter="false" >
+        <component type="TextField" name="txtSearch" cloudBoundProperty="text" cloudDestinationProperty="TextField" text="" hint="Type here to search" >
+            <layoutConstraint value="Center" />
+        </component>
+        <component type="Button" name="Button" cloudDestinationProperty="Button" text="Search" >
+            <layoutConstraint value="East" />
+        </component>
     </component>
-  </component>
-  <component type="List" name="List" cloudDestinationProperty="List"  selectedRenderer="ContactItem" unselectedRenderer="ContactItem" >
-    <mapItems>
-      <imageItem key="btnIcon" value="profile1.png" />
-      <stringItem key="lblTitle" value="Schalk Burger" />
-    </mapItems>
-    <mapItems>
-      <imageItem key="btnIcon" value="profile2.png" />
-      <stringItem key="lblTitle" value="Betty Khoza" />
-    </mapItems>
-    <mapItems>
-      <imageItem key="btnIcon" value="profile3.png" />
-      <stringItem key="lblTitle" value="Blessing Mahlalela" />
-    </mapItems>
-  </component>
+    <component type="List" name="List" cloudDestinationProperty="List"  selectedRenderer="ContactItem" unselectedRenderer="ContactItem" >
+        <mapItems>
+            <imageItem key="btnIcon" value="profile1.png" />
+            <stringItem key="lblTitle" value="Schalk Burger" />
+        </mapItems>
+        <mapItems>
+            <imageItem key="btnIcon" value="profile2.png" />
+            <stringItem key="lblTitle" value="Betty Khoza" />
+        </mapItems>
+        <mapItems>
+            <imageItem key="btnIcon" value="profile3.png" />
+            <stringItem key="lblTitle" value="Blessing Mahlalela" />
+        </mapItems>
+    </component>
 </component>

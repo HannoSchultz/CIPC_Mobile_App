@@ -10,7 +10,7 @@ package userclasses;
  * @author Blessing
  */
 public class NameSearchObject {
-    
+
     private String name;
     private boolean isValid;
 
@@ -29,7 +29,5 @@ public class NameSearchObject {
     public void setIsValid(boolean isValid) {
         this.isValid = isValid;
     }
-    
-    
-    
+
 }

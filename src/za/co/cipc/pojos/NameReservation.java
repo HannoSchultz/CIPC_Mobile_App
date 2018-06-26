@@ -10,7 +10,7 @@ package za.co.cipc.pojos;
  * @author Blessing
  */
 public class NameReservation {
-    
+
     String S_name1;
     String S_name2;
     String S_name3;
@@ -50,7 +50,5 @@ public class NameReservation {
     public void setS_name4(String S_name4) {
         this.S_name4 = S_name4;
     }
-    
-    
-    
+
 }

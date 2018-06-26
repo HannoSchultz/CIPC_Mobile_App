@@ -10,12 +10,12 @@ package za.co.cipc.pojos;
  * @author Blessing
  */
 public class Country {
-    
+
     private String country;
     private String countr_code;
-    
-    public Country(){
-        
+
+    public Country() {
+
     }
 
     public String getCountry() {
@@ -33,5 +33,5 @@ public class Country {
     public void setCountr_code(String countr_code) {
         this.countr_code = countr_code;
     }
-    
+
 }

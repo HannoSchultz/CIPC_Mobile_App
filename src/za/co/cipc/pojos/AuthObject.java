@@ -18,7 +18,6 @@ public class AuthObject {
     public AuthObject() {
     }
 
-    
     public String getAccess_token() {
         return access_token;
     }
@@ -42,7 +41,5 @@ public class AuthObject {
     public void setExpires_in(long expires_in) {
         this.expires_in = expires_in;
     }
-    
-    
 
 }

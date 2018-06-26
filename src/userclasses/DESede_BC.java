@@ -43,20 +43,17 @@ public class DESede_BC {
         String sb = "";
         try {
             //InputStream in = FileSystemStorage.getInstance().openInputStream(FileSystemStorage.getInstance().getAppHomePath() + "/Security.bin");
-           
+
             InputStream in = Display.getInstance().getResourceAsStream(getClass(), "/Security.bin");
-            
+
             key = Util.readInputStream(in);
-            
+
             //String byteStr = new String(key);
             //Log.p("bytestr ="+byteStr, Log.DEBUG);
-            
         } catch (IOException ioe) {
             Log.e(ioe);
         }
-        
-                
-        
+
         //key = "SECRET_1SECRET_2SECRET_3".getBytes();
         //key = "7fc56270e7a70fa81a5935b72".getBytes() ;
         InitCiphers();
@@ -101,27 +98,27 @@ public class DESede_BC {
             }
             noBytesProcessed
                     = encryptCipher.doFinal(obuf, 0);
-            
-            byte []newByteArray = new byte[noBytesProcessed];
-            
-             for(int i=0;i<noBytesProcessed; i++) {
+
+            byte[] newByteArray = new byte[noBytesProcessed];
+
+            for (int i = 0; i < noBytesProcessed; i++) {
                 newByteArray[i] = obuf[i];
             }
 
             String stringOut = Base64.encode(newByteArray);
             String htmlEncoded = HTMLUtils.encodeString(stringOut);
-            
-            Log.p("output="+stringOut+", htmlEncoded=" + htmlEncoded, Log.DEBUG);
-     
+
+            Log.p("output=" + stringOut + ", htmlEncoded=" + htmlEncoded, Log.DEBUG);
+
             encryptedValue = htmlEncoded;
-            
+
             out.write(obuf, 0, noBytesProcessed);
 
             out.flush();
         } catch (java.io.IOException e) {
             System.out.println(e.getMessage());
         }
-        
+
         return encryptedValue;
     }
 

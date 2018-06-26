@@ -26,9 +26,9 @@ import userclasses.Const;
  * @author blessingmobile
  */
 public class UserWebServices {
-    
+
     public User get_cust_MOBI(User user) {
-        
+
         String scustcode = user.getParamCustomerCode().toUpperCase();//service expects uppercase
 
         final String SOAP_BODY
@@ -40,13 +40,13 @@ public class UserWebServices {
                 + "\n"
                 + "      <cipc:get_cust_MOBI>\n"
                 + "\n"
-                + "         <cipc:sUserName>"+Const.sUserName+"</cipc:sUserName>\n"
+                + "         <cipc:sUserName>" + Const.sUserName + "</cipc:sUserName>\n"
                 + "\n"
-                + "         <cipc:sPassword>"+Const.sPassword+"</cipc:sPassword>\n"
+                + "         <cipc:sPassword>" + Const.sPassword + "</cipc:sPassword>\n"
                 + "\n"
-                + "         <cipc:sBankID>"+Const.sBankID+"</cipc:sBankID>\n"
+                + "         <cipc:sBankID>" + Const.sBankID + "</cipc:sBankID>\n"
                 + "\n"
-                + "         <cipc:scustcode>"+scustcode+"</cipc:scustcode>\n"
+                + "         <cipc:scustcode>" + scustcode + "</cipc:scustcode>\n"
                 + "\n"
                 + "      </cipc:get_cust_MOBI>\n"
                 + "\n"
@@ -103,10 +103,9 @@ public class UserWebServices {
             Log.p("result: " + result, Log.DEBUG);
             Log.p("password: " + result.getAsString("//get_cust_mobiresult"), Log.DEBUG);
 
-            String userPass =  result.getAsString("//get_cust_mobiresult").trim();
+            String userPass = result.getAsString("//get_cust_mobiresult").trim();
             responseUser.setPassword(userPass);
             responseUser.setResponse(result.toString());
-           
 
             return responseUser;
 
@@ -117,7 +116,6 @@ public class UserWebServices {
         return null;
 
     }//end login
-
 
     public User forget_password_MOBI(User user) {
 
