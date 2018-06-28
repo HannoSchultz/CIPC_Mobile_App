@@ -548,7 +548,7 @@ public class UserWebServices {
                 = "{\"ReferenceNumber\": " + ReferenceNumber + ","
                 + "\"Status\":0,"
                 + "\"StatusDate\":\"2018-06-23T17:04:28.873\","
-                + "\"CustomerCode\":\"" + "KD7788" + "\","
+                + "\"CustomerCode\":\"" + user.getAgent_code() + "\","
                 + "\"ItemType\":4,"
                 + "\"ItemData\":\"{\\\"ReferenceNumber\\\": " + ReferenceNumber + ",\\\"EnterpriseNumber\\\":\\\"\\\",\\\"FormCode\\\":\\\"COR9.1\\\",\\\"ChangeTypeCode\\\":\\\"30\\\",\\\"Description\\\":null,\\\"TotalAmount\\\":50.0}\","
                 + "\"Amount\":50.0"
