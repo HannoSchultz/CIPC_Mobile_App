@@ -330,7 +330,6 @@ public class StateMachine extends StateMachineBase {
 
         Button btnVerify = (Button) findByName("btnVerify", contTasks);
         Button btnLodge = (Button) findByName("btnLodge", contTasks);
-        
 
         btnVerify.addActionListener((ActionListener) (ActionEvent evt) -> {
             String name1 = txtName1.getText();
@@ -377,16 +376,12 @@ public class StateMachine extends StateMachineBase {
             String name4 = txtName4.getText();
 
             String msg = "";
-            
-            if(arrayListNameReservation == null || arrayListNameReservation.size() == 0){
+
+            if (arrayListNameReservation == null || arrayListNameReservation.size() == 0) {
                 msg += "Please validate Names before clicking on Add to Cart. ";
-            }
-           
-            else if (name1.length() == 0) {
+            } else if (name1.length() == 0) {
                 msg += "Please submit at least Name 1. ";
             }
-            
-            
 
             if (msg.length() > 0) {
                 Dialog.show("Error", msg, "Ok", null);
@@ -878,6 +873,27 @@ public class StateMachine extends StateMachineBase {
         browser.setScrollableX(false);
         browser.setScrollableY(false);
         browser.setPinchToZoomEnabled(false);
+
+        browser.addWebEventListener("onStart", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                Log.p("onStart", Log.DEBUG);
+            }
+        });
+
+        browser.addWebEventListener("onLoad", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                Log.p("onLoad", Log.DEBUG);
+            }
+        });
+
+        browser.addWebEventListener("onError", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                Log.p("onError", Log.DEBUG);
+            }
+        });
 
         browser.addBrowserNavigationCallback(new BrowserNavigationCallback() {
             @Override
