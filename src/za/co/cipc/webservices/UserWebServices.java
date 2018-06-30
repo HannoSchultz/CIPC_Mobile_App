@@ -2512,7 +2512,7 @@ public class UserWebServices {
                 + "\n"
                 + "                  <Table1 diffgr:id=\"Table11\" msdata:rowOrder=\"0\" diffgr:hasChanges=\"inserted\">\n"
                 + "\n"
-                + "                     <password>Password1</password>>\n"
+                + "                     <password>"+requestUser.getPassword()+"</password>>\n"
                 + "\n"
                 + "                     <bank_ID>wBAA7LAkWIs=</bank_ID>\n"
                 + "\n"
