@@ -389,13 +389,11 @@ public class StateMachine extends StateMachineBase {
                 UserWebServices u = new UserWebServices();
 
                 //Dialog.show("Output 1", "AGENT_CODE=" + AGENT_CODE + " name1=" + name1
-                  //      + ", name2=" + name2 + ", name3=" + name3 + ", name4=" + name4, "Ok", null);
-
+                //      + ", name2=" + name2 + ", name3=" + name3 + ", name4=" + name4, "Ok", null);
                 String responseCall = u.Namereservation_MOBI(AGENT_CODE, name1, name2, name3, name4);
 
                 //Dialog.show("Output 2", "AGENT_CODE=" + AGENT_CODE + " name1=" + name1
-                  //      + ", name2=" + name2 + ", name3=" + name3 + ", name4=" + name4, "Ok", null);
-
+                //      + ", name2=" + name2 + ", name3=" + name3 + ", name4=" + name4, "Ok", null);
                 if (responseCall != null && responseCall.length() > 0
                         && responseCall.indexOf("already filed") == -1) {
                     Dialog.show("Success", responseCall, "Ok", null);
@@ -407,9 +405,8 @@ public class StateMachine extends StateMachineBase {
                     //getReferenceNo
                     String referenceNo = getReferenceNo(responseCall);
 
-                   // Dialog.show("Output 5 referenceNo", "AGENT_CODE=" + AGENT_CODE + " referenceNo="
-                     //       + referenceNo, "Ok", null);
-
+                    // Dialog.show("Output 5 referenceNo", "AGENT_CODE=" + AGENT_CODE + " referenceNo="
+                    //       + referenceNo, "Ok", null);
                     int intReferenceNo = Integer.parseInt(referenceNo);
                     u.insertCartItemService(tempUser, intReferenceNo);
 
@@ -583,6 +580,9 @@ public class StateMachine extends StateMachineBase {
         TextField txtStep1a = (TextField) findByName("txtStep1a", tabs);
         TextField txtStep1b = (TextField) findByName("txtStep1b", tabs);
         TextField txtStep1c = (TextField) findByName("txtStep1c", tabs);
+
+        automoveToNext(txtStep1a, txtStep1b, 4);
+        automoveToNext(txtStep1b, txtStep1c, 6);
 
         txtStep1c.addDataChangedListener(new DataChangedListener() {
             @Override
@@ -1167,6 +1167,11 @@ public class StateMachine extends StateMachineBase {
         contSideMenu.setScrollableX(false);//This fixed the side menu scroll issue
         contSideMenu.setScrollableY(false);
 
+        Container contProfile = (Container) findByName("contProfile", contSideMenu);
+        contProfile.setVisible(false);
+
+        contSideMenu.removeComponent(contProfile);
+        contSideMenu.repaint();
         btnProfilePic = (Button) findByName("btnProfilePic", contSideMenu);
         btnProfileName = (Button) findByName("btnProfileName", contSideMenu);
 
@@ -1236,6 +1241,7 @@ public class StateMachine extends StateMachineBase {
 
             String errorMessage = "";
 
+            String responsePassword = null;
             if (responseUser == null) {
                 formProgress.removeProgress();
                 Log.p("exception" + "", Log.DEBUG);
@@ -1243,12 +1249,13 @@ public class StateMachine extends StateMachineBase {
                 errorMessage += "Incorrect Customer Code or password. ";
 
             }
-
-            String responsePassword = responseUser.getPassword();
+            else{
+                responsePassword = responseUser.getPassword();
+            }
 
             //Log.p(password + ":" + responsePassword);
-            if (password.equals(responsePassword)) {
-                AGENT_CODE = txtCustomerCode.toUpperCase();//ble076 or BLE076
+            if (password != null && password.equals(responsePassword)) {
+                AGENT_CODE = txtCustomerCode.toUpperCase();//CIPC web service expects uppercase customer code
                 return false;
             } else {
                 errorMessage += "Invalid Customer Code or Password. ";
@@ -1279,18 +1286,23 @@ public class StateMachine extends StateMachineBase {
 
     }
 
-    private void automoveToNext(final TextField current, final TextField next) {
-        current.addDataChangeListener(new DataChangedListener() {
-            public void dataChanged(int type, int index) {
-                if (current.getText().length() == 5) {
-                    Display.getInstance().stopEditing(current);
-                    String val = current.getText();
-                    current.setText(val.substring(0, 4));
-                    next.setText(val.substring(4));
-                    Display.getInstance().editString(next, 5, current.getConstraint(), next.getText());
-                }
-            }
-        });
+    private void automoveToNext(final TextField current, final TextField next, final int limit) {
+          current.addDataChangedListener((type, index) -> {
+            if (current.getText().length() == limit) {
+                next.requestFocus();
+                next.startEditing();
+            }});
+//        current.addDataChangedListener(new DataChangedListener() {
+//            public void dataChanged(int type, int index) {
+//                if (current.getText().length() == limit + 1) {
+//                    Display.getInstance().stopEditing(current);
+//                    String val = current.getText();
+//                    current.setText(val.substring(0, limit));
+//                    next.setText(val.substring(limit));
+//                    Display.getInstance().editString(next, limit, current.getConstraint(), next.getText());
+//                }
+//            }
+//        });
     }
 
     public void isTableInputForm(Form f) {
@@ -1300,6 +1312,13 @@ public class StateMachine extends StateMachineBase {
     protected void beforeLogin(final Form f) {
 
         current = f;
+        f.setScrollVisible(false);
+        Container containerParent = (Container) findByName("containerParent", f);
+        Container contentPane = f.getContentPane();
+        contentPane.setScrollVisible(false);
+        containerParent.setScrollVisible(false);
+
+        f.repaint();
 
         if (Display.getInstance().isSimulator()) {
             TextField txtCustomerCode = (TextField) findByName("txtCustomerCode", f);
