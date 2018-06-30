@@ -387,7 +387,14 @@ public class StateMachine extends StateMachineBase {
                 Dialog.show("Error", msg, "Ok", null);
             } else {
                 UserWebServices u = new UserWebServices();
+
+                //Dialog.show("Output 1", "AGENT_CODE=" + AGENT_CODE + " name1=" + name1
+                  //      + ", name2=" + name2 + ", name3=" + name3 + ", name4=" + name4, "Ok", null);
+
                 String responseCall = u.Namereservation_MOBI(AGENT_CODE, name1, name2, name3, name4);
+
+                //Dialog.show("Output 2", "AGENT_CODE=" + AGENT_CODE + " name1=" + name1
+                  //      + ", name2=" + name2 + ", name3=" + name3 + ", name4=" + name4, "Ok", null);
 
                 if (responseCall != null && responseCall.length() > 0
                         && responseCall.indexOf("already filed") == -1) {
@@ -399,6 +406,10 @@ public class StateMachine extends StateMachineBase {
                     tempUser.setAgent_code(AGENT_CODE);
                     //getReferenceNo
                     String referenceNo = getReferenceNo(responseCall);
+
+                   // Dialog.show("Output 5 referenceNo", "AGENT_CODE=" + AGENT_CODE + " referenceNo="
+                     //       + referenceNo, "Ok", null);
+
                     int intReferenceNo = Integer.parseInt(referenceNo);
                     u.insertCartItemService(tempUser, intReferenceNo);
 
@@ -630,13 +641,13 @@ public class StateMachine extends StateMachineBase {
                     user.setAgent_code(AGENT_CODE);
                     String entNo = getShortEnterpriseName(txtStep1a.getText(), txtStep1b.getText(),
                             txtStep1c.getText());
-                    Map map = u.pendingAnnualReturns(user, entNo);
-
-                    if (map != null & map.size() > 0) {
-                        Dialog.show("Error", "Annual Returns are already in a Shopping cart. "
-                                + "Please process payment or try again tomorrow.", "Ok", null);
-                        return; //TODO better way to exit
-                    }
+//                    Map map = u.pendingAnnualReturns(user, entNo);
+//
+//                    if (map != null & map.size() > 0) {
+//                        Dialog.show("Error", "Annual Returns are already in a Shopping cart. "
+//                                + "Please process payment or try again tomorrow.", "Ok", null);
+//                        return; //TODO better way to exit
+//                    }
 
                     enterpriseDetails = u.soap_GetEnterpriseDetails(ENT_NUMBER); //"K2013064531");//2014 / 016320 /  07
 
@@ -840,8 +851,6 @@ public class StateMachine extends StateMachineBase {
 
         OutputStream fos = null;
         InputStream fis = null;
-        String encryptCode = "BLE076";
-        String encryptID = "9103295910080";
         try {
 
             DESede_BC encrypter = new DESede_BC();
@@ -905,12 +914,23 @@ public class StateMachine extends StateMachineBase {
 
                 if (trans.length() > 0) {//trans successful
 
-                    Dialog.show("Success", "Payment processed. Transaction Number " + trans, "Ok", null);
-                    showDashboard(f);
+                    Display.getInstance().callSerially(new Runnable() {
+                        @Override
+                        public void run() {
+                            showDashboard(f);
+                            Dialog.show("Success", "Payment processed. Transaction Number " + trans, "Ok", null);
+
+                        }
+                    });
 
                 } else if (url.indexOf("PaymentError") > -1) {
 
-                    //Dialog.show("Error", "Payment error. Please contact CIPC.", "Ok", null);
+                    Display.getInstance().callSerially(new Runnable() {
+                        @Override
+                        public void run() {
+                            Dialog.show("Error", "Payment error. Please contact CIPC.", "Ok", null);
+                        }
+                    });
                     //showDashboard(f);
                 }
 
@@ -1000,7 +1020,7 @@ public class StateMachine extends StateMachineBase {
 
                 Container c0 = new Container();
                 Button btnRemove0 = new Button("REMOVE");
-                c0.add(btnRemove0);
+                //c0.add(btnRemove0);
                 contItem.add(mb).add(c0);
                 contStep1EServices.add(contItem);
 
@@ -1038,7 +1058,7 @@ public class StateMachine extends StateMachineBase {
 
                 Container c0 = new Container();
                 Button btnRemove0 = new Button("REMOVE");
-                c0.add(btnRemove0);
+                //c0.add(btnRemove0);
                 contItem.add(mb).add(c0);
                 contStep1EServices.add(contItem);
 
@@ -1228,7 +1248,7 @@ public class StateMachine extends StateMachineBase {
 
             //Log.p(password + ":" + responsePassword);
             if (password.equals(responsePassword)) {
-                AGENT_CODE = txtCustomerCode;
+                AGENT_CODE = txtCustomerCode.toUpperCase();//ble076 or BLE076
                 return false;
             } else {
                 errorMessage += "Invalid Customer Code or Password. ";

@@ -2154,6 +2154,7 @@ public class UserWebServices {
         try {
 
             Result result = Result.fromContent(data, Result.XML);
+            //Dialog.show("Result", result.toString(), "Ok", null);
             String namereservation_mobiresult = result.getAsString("//namereservation_mobiresult");
 
             response = namereservation_mobiresult;
