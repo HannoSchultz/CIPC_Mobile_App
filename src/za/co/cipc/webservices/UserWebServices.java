@@ -46,6 +46,8 @@ import za.co.cipc.pojos.User;
  * @author blessingmobile
  */
 public class UserWebServices {
+    
+    String AR_BODY;
 
     public ArrayList Get_AR_ent_type_mobi(String dataset) {
 
@@ -315,8 +317,10 @@ public class UserWebServices {
 
                     String ent_no = RSM(((Element) child.getTextChildren(null, true).get(0)).toString());
                     String ar_year = RSM(((Element) child.getTextChildren(null, true).get(1)).toString());
+                    int intAr_year = Integer.parseInt(ar_year);
                     //String trak_no = RSM(((Element) child.getTextChildren(null, true).get(2)).toString());
                     String turnover = RSM(((Element) child.getTextChildren(null, true).get(2)).toString());
+                    double dblTurnover = Double.parseDouble(turnover);
                     String amt_paid = RSM(((Element) child.getTextChildren(null, true).get(3)).toString());
                     //String date_paid = RSM(((Element) child.getTextChildren(null, true).get(5)).toString());
                     String reg_date = RSM(((Element) child.getTextChildren(null, true).get(4)).toString());
@@ -329,8 +333,8 @@ public class UserWebServices {
                     EnterpriseDetails e = new EnterpriseDetails();
 
                     e.setEnt_no(ent_no);
-                    e.setAr_year(ar_year);
-                    e.setTurnover(turnover);
+                    e.setAr_year(intAr_year);
+                    e.setTurnover(dblTurnover);
                     e.setAmt_paid(amt_paid);
                     e.setReg_date(reg_date);
                     e.setAr_start_date(ar_start_date);
@@ -479,23 +483,29 @@ public class UserWebServices {
 
                 String ent_no = RSM(((Element) child.getTextChildren(null, true).get(0)).toString());
                 String ar_year = RSM(((Element) child.getTextChildren(null, true).get(1)).toString());
+                int intAr_year = Integer.parseInt(ar_year);
                 String ent_type_code = RSM(((Element) child.getTextChildren(null, true).get(2)).toString());
                 String turnover = RSM(((Element) child.getTextChildren(null, true).get(3)).toString());
+                double dblTurnover = Double.parseDouble(turnover);
                 String ar_amount = RSM(((Element) child.getTextChildren(null, true).get(4)).toString());
+                double dblAr_amount = Double.parseDouble(ar_amount);
                 String ar_total = RSM(((Element) child.getTextChildren(null, true).get(5)).toString());
+                double dblAr_total = Double.parseDouble(ar_total);
                 String reference_no = RSM(((Element) child.getTextChildren(null, true).get(6)).toString());
+                int intReference_no = Integer.parseInt(reference_no);
                 String ar_penalty = RSM(((Element) child.getTextChildren(null, true).get(7)).toString());
+                double dblAr_penalty = Double.parseDouble(ar_penalty);
 
                 EnterpriseDetails e = new EnterpriseDetails();
 
                 e.setEnt_no(ent_no);
-                e.setAr_year(ar_year);
+                e.setAr_year(intAr_year);
                 e.setEnt_type_code(ent_type_code);
-                e.setTurnover(turnover);
-                e.setAr_amount(ar_amount);
-                e.setAr_total(ar_total);
-                e.setReference_no(reference_no);
-                e.setAr_penalty(ar_penalty);
+                e.setTurnover(dblTurnover);
+                e.setAr_amount(dblAr_amount);
+                e.setAr_total(dblAr_total);
+                e.setReference_no(intReference_no);
+                e.setAr_penalty(dblAr_penalty);
 
                 enterpriseDetailses.add(e);
 
@@ -602,11 +612,19 @@ public class UserWebServices {
         return null;
     }
 
-    public String insertCartItemAR(User user, String ReferenceNumber) {
+    public String insertCartItemAR(User user, ArrayList<EnterpriseDetails> listCalculateARTran) {
+        
+        EnterpriseDetails ent = listCalculateARTran.get(0);//this can fail
 
         String END_POINT = "https://apidev.cipc.co.za/v1/payment/cartitem";
-
-        String BODY
+        
+        int ReferenceNumber = ent.getReference_no();
+        Log.p("insertCartItemAR ReferenceNumber=" + ReferenceNumber, Log.DEBUG);
+        String dateNow = getAnnualReturnsDateNow();
+        Log.p("insertCartItemAR dateNow=" + dateNow, Log.DEBUG);
+        
+        
+         String AR_BODY
                 = "{\n"
                 + "                \"ReferenceNumber\":" + ReferenceNumber + ",\n"
                 + "                \"Status\":0,\n"
@@ -623,12 +641,52 @@ public class UserWebServices {
                 + "{\\\"ReferenceNumber\\\":" + ReferenceNumber + ",\\\"EnterpriseNumber\\\":\\\"K2011100088\\\",\\\"Year\\\":2017,\\\"Turnover\\\":0.0,\\\"Amount\\\":100.00,\\\"PenaltyFee\\\":150.00,\\\"TotalAmount\\\":250.00,\\\"Status\\\":null,\\\"StatusDate\\\":\\\"0001-01-01T00:00:00\\\"}],\\\"ItemsCount\\\":9}\",\n"
                 + "                \"Amount\":50.0\n"
                 + "}";
+        
+        //String ReferenceNumber = "589117789";
+        
+//          AR_BODY = 
+//                "{\n"
+//                + "                \"ReferenceNumber\":" + ReferenceNumber + ",\n"
+//                + "                \"Status\":0,\n"
+//                + "                \"StatusDate\":\" "+dateNow+"\",\n"
+//                + "                \"CustomerCode\":\"" + user.getAgent_code() + "\",\n"
+//                + "                \"ItemType\":1,\n"
+//                + "                \"ItemData\":\""
+//                + "{\\\"ReferenceNumber\\\":" + ReferenceNumber + ",\\\"FormCode\\\":\\\"CK2B\\\",\\\"EnterpriseNumber\\\":\\\"K2011100088\\\",\\\"EnterpriseType\\\":\\\"23\\\",\\\"EnterpriseStatus\\\":\\\"28\\\",\\\"EmailAddress\\\":\\\"jbruton@cipc.co.za\\\",\\\"TelephoneCode\\\":\\\"012\\\",\\\"TelephoneNumber\\\":\\\"1234567\\\",\\\"CellphoneNumber\\\":\\\"\\\",\\\"WebsiteAddress\\\":\\\"\\\",\\\"BusinessDescription\\\":\\\"CARD PAYMENT\\\",\\\"PrincipalPlaceOfBusiness\\\":\\\"\\\",\\\"EnterpriseNameChanged\\\":0,\\\"FinancialYearEndChanged\\\":0,\\\"RegisteredOfficeChanged\\\":0,\\\"LocationOfRecordsChanged\\\":0,\\\"DirectorsChanged\\\":0,\\\"CompanySecretaryChanged\\\":0,\\\"AuditorsChanged\\\":0,\\\"TotalAmount\\\":2250.00,\\\"YearData\\\":["
+//                + "{\\\"ReferenceNumber\\\":" + ReferenceNumber + ",\\\"EnterpriseNumber\\\":\\\"K2011100088\\\",\\\"Year\\\":2009,\\\"Turnover\\\":0.0,\\\"Amount\\\":100.00,\\\"PenaltyFee\\\":150.00,\\\"TotalAmount\\\":250.00,\\\"Status\\\":null,\\\"StatusDate\\\":\\\"0001-01-01T00:00:00\\\"},{\\\"ReferenceNumber\\\":533549914,\\\"EnterpriseNumber\\\":\\\"K2011100088\\\",\\\"Year\\\":2010,\\\"Turnover\\\":0.0,\\\"Amount\\\":100.00,\\\"PenaltyFee\\\":150.00,\\\"TotalAmount\\\":250.00,\\\"Status\\\":null,\\\"StatusDate\\\":\\\"0001-01-01T00:00:00\\\"},"
+//                + "{\\\"ReferenceNumber\\\":" + ReferenceNumber + ",\\\"EnterpriseNumber\\\":\\\"K2011100088\\\",\\\"Year\\\":2011,\\\"Turnover\\\":0.0,\\\"Amount\\\":100.00,\\\"PenaltyFee\\\":150.00,\\\"TotalAmount\\\":250.00,\\\"Status\\\":null,\\\"StatusDate\\\":\\\"0001-01-01T00:00:00\\\"},{\\\"ReferenceNumber\\\":533549914,\\\"EnterpriseNumber\\\":\\\"K2011100088\\\",\\\"Year\\\":2012,\\\"Turnover\\\":0.0,\\\"Amount\\\":100.00,\\\"PenaltyFee\\\":150.00,\\\"TotalAmount\\\":250.00,\\\"Status\\\":null,\\\"StatusDate\\\":\\\"0001-01-01T00:00:00\\\"},"
+//                + "{\\\"ReferenceNumber\\\":" + ReferenceNumber + ",\\\"EnterpriseNumber\\\":\\\"K2011100088\\\",\\\"Year\\\":2013,\\\"Turnover\\\":0.0,\\\"Amount\\\":100.00,\\\"PenaltyFee\\\":150.00,\\\"TotalAmount\\\":250.00,\\\"Status\\\":null,\\\"StatusDate\\\":\\\"0001-01-01T00:00:00\\\"},{\\\"ReferenceNumber\\\":533549914,\\\"EnterpriseNumber\\\":\\\"K2011100088\\\",\\\"Year\\\":2014,\\\"Turnover\\\":0.0,\\\"Amount\\\":100.00,\\\"PenaltyFee\\\":150.00,\\\"TotalAmount\\\":250.00,\\\"Status\\\":null,\\\"StatusDate\\\":\\\"0001-01-01T00:00:00\\\"},"
+//                + "{\\\"ReferenceNumber\\\":" + ReferenceNumber + ",\\\"EnterpriseNumber\\\":\\\"K2011100088\\\",\\\"Year\\\":2015,\\\"Turnover\\\":0.0,\\\"Amount\\\":100.00,\\\"PenaltyFee\\\":150.00,\\\"TotalAmount\\\":250.00,\\\"Status\\\":null,\\\"StatusDate\\\":\\\"0001-01-01T00:00:00\\\"},"
+//                + "{\\\"ReferenceNumber\\\":" + ReferenceNumber + ",\\\"EnterpriseNumber\\\":\\\"K2011100088\\\",\\\"Year\\\":2016,\\\"Turnover\\\":0.0,\\\"Amount\\\":100.00,\\\"PenaltyFee\\\":150.00,\\\"TotalAmount\\\":250.00,\\\"Status\\\":null,\\\"StatusDate\\\":\\\"0001-01-01T00:00:00\\\"},"
+//                + "{\\\"ReferenceNumber\\\":" + ReferenceNumber + ",\\\"EnterpriseNumber\\\":\\\"K2011100088\\\",\\\"Year\\\":2017,\\\"Turnover\\\":0.0,\\\"Amount\\\":100.00,\\\"PenaltyFee\\\":150.00,\\\"TotalAmount\\\":250.00,\\\"Status\\\":null,\\\"StatusDate\\\":\\\"0001-01-01T00:00:00\\\"}],\\\"ItemsCount\\\":9}\",\n"
+//                + "                \"Amount\":50.0\n"
+//                + "}";
+
+//        String BODY
+//                = "{\n"
+//                + "                \"ReferenceNumber\":" + ent.getReference_no() + ",\n"
+//                + "                \"Status\":0,\n"
+//                + "                \"StatusDate\":\" "+getDateNow()+"\",\n"
+//                + "                \"CustomerCode\":\"" + user.getAgent_code() + "\",\n"
+//                + "                \"ItemType\":1,\n"
+//                + "                \"ItemData\":\""
+//                + "{\\\"ReferenceNumber\\\":" + ent.getReference_no() + ",\\\"FormCode\\\":\\\"CK2B\\\",\\\"EnterpriseNumber\\\":\\\"K2011100088\\\",\\\"EnterpriseType\\\":\\\"23\\\",\\\"EnterpriseStatus\\\":\\\"28\\\",\\\"EmailAddress\\\":\\\"jbruton@cipc.co.za\\\",\\\"TelephoneCode\\\":\\\"012\\\",\\\"TelephoneNumber\\\":\\\"1234567\\\",\\\"CellphoneNumber\\\":\\\"\\\",\\\"WebsiteAddress\\\":\\\"\\\",\\\"BusinessDescription\\\":\\\"CARD PAYMENT\\\",\\\"PrincipalPlaceOfBusiness\\\":\\\"\\\",\\\"EnterpriseNameChanged\\\":0,\\\"FinancialYearEndChanged\\\":0,\\\"RegisteredOfficeChanged\\\":0,\\\"LocationOfRecordsChanged\\\":0,\\\"DirectorsChanged\\\":0,\\\"CompanySecretaryChanged\\\":0,\\\"AuditorsChanged\\\":0,\\\"TotalAmount\\\":2250.00,\\\"YearData\\\":"
+//                + "[{\\\"ReferenceNumber\\\":" + ent.getReference_no() + ",\\\"EnterpriseNumber\\\":\\\"K2011100088\\\",\\\"Year\\\":2009,\\\"Turnover\\\":0.0,\\\"Amount\\\":100.00,\\\"PenaltyFee\\\":150.00,\\\"TotalAmount\\\":250.00,\\\"Status\\\":null,\\\"StatusDate\\\":\\\"0001-01-01T00:00:00\\\"},{\\\"ReferenceNumber\\\":"+ ent.getReference_no() +" ,\\\"EnterpriseNumber\\\":\\\"K2011100088\\\",\\\"Year\\\":2010,\\\"Turnover\\\":0.0,\\\"Amount\\\":100.00,\\\"PenaltyFee\\\":150.00,\\\"TotalAmount\\\":250.00,\\\"Status\\\":null,\\\"StatusDate\\\":\\\"0001-01-01T00:00:00\\\"},"
+//                + "{\\\"ReferenceNumber\\\":" + ent.getReference_no() + ",\\\"EnterpriseNumber\\\":\\\"K2011100088\\\",\\\"Year\\\":2011,\\\"Turnover\\\":0.0,\\\"Amount\\\":100.00,\\\"PenaltyFee\\\":150.00,\\\"TotalAmount\\\":250.00,\\\"Status\\\":null,\\\"StatusDate\\\":\\\"0001-01-01T00:00:00\\\"},{\\\"ReferenceNumber\\\":"+ ent.getReference_no() +",\\\"EnterpriseNumber\\\":\\\"K2011100088\\\",\\\"Year\\\":2012,\\\"Turnover\\\":0.0,\\\"Amount\\\":100.00,\\\"PenaltyFee\\\":150.00,\\\"TotalAmount\\\":250.00,\\\"Status\\\":null,\\\"StatusDate\\\":\\\"0001-01-01T00:00:00\\\"},"
+//                + "{\\\"ReferenceNumber\\\":" + ent.getReference_no() + ",\\\"EnterpriseNumber\\\":\\\"K2011100088\\\",\\\"Year\\\":2013,\\\"Turnover\\\":0.0,\\\"Amount\\\":100.00,\\\"PenaltyFee\\\":150.00,\\\"TotalAmount\\\":250.00,\\\"Status\\\":null,\\\"StatusDate\\\":\\\"0001-01-01T00:00:00\\\"},{\\\"ReferenceNumber\\\":"+ ent.getReference_no() +",\\\"EnterpriseNumber\\\":\\\"K2011100088\\\",\\\"Year\\\":2014,\\\"Turnover\\\":0.0,\\\"Amount\\\":100.00,\\\"PenaltyFee\\\":150.00,\\\"TotalAmount\\\":250.00,\\\"Status\\\":null,\\\"StatusDate\\\":\\\"0001-01-01T00:00:00\\\"},"
+//                + "{\\\"ReferenceNumber\\\":" + ent.getReference_no() + ",\\\"EnterpriseNumber\\\":\\\"K2011100088\\\",\\\"Year\\\":2015,\\\"Turnover\\\":0.0,\\\"Amount\\\":100.00,\\\"PenaltyFee\\\":150.00,\\\"TotalAmount\\\":250.00,\\\"Status\\\":null,\\\"StatusDate\\\":\\\"0001-01-01T00:00:00\\\"},"
+//                + "{\\\"ReferenceNumber\\\":" + ent.getReference_no() + ",\\\"EnterpriseNumber\\\":\\\"K2011100088\\\",\\\"Year\\\":2016,\\\"Turnover\\\":0.0,\\\"Amount\\\":100.00,\\\"PenaltyFee\\\":150.00,\\\"TotalAmount\\\":250.00,\\\"Status\\\":null,\\\"StatusDate\\\":\\\"0001-01-01T00:00:00\\\"},"
+//                + "{\\\"ReferenceNumber\\\":" + ent.getReference_no() + ",\\\"EnterpriseNumber\\\":\\\"K2011100088\\\",\\\"Year\\\":2017,\\\"Turnover\\\":0.0,\\\"Amount\\\":100.00,\\\"PenaltyFee\\\":150.00,\\\"TotalAmount\\\":250.00,\\\"Status\\\":null,\\\"StatusDate\\\":\\\"0001-01-01T00:00:00\\\"}],\\\"ItemsCount\\\":9}\",\n"
+//                + "                \"Amount\":50.0\n"
+//                + "}";
+        
+        Log.p("insertCartItemAR REQUEST=" + AR_BODY, Log.DEBUG);
 
         ConnectionRequest post = new ConnectionRequest() {
             @Override
             protected void buildRequestBody(OutputStream os) throws IOException {
                 //Log.p(BODY.toString().trim());
-                os.write(BODY.toString().trim().getBytes("UTF-8"));
+                os.write(AR_BODY.toString().trim().getBytes("UTF-8"));
             }
 
             @Override
@@ -2186,7 +2244,7 @@ public class UserWebServices {
                 int intReferenceNo = Integer.parseInt(ReferenceNo);
                 double Amount = 50.0;
                 double Total = 50.0;
-                String StatusDate = getDateNow();
+                String StatusDate = getNameReservationDateNow();
 
                 n = new NameReservation();
                 n.setReferenceNumber(intReferenceNo);
@@ -2693,10 +2751,18 @@ public class UserWebServices {
         return newString;
     }
 
-    public String getDateNow() {
+    public String getNameReservationDateNow() {
         long dateNow = System.currentTimeMillis();
         Date newDate = new Date(dateNow);
         String dateString = new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss.SSS").format(newDate);
+        dateString = StringUtil.replaceAll(dateString, "_", "T");
+        return dateString;
+    }
+    
+        public String getAnnualReturnsDateNow() {
+        long dateNow = System.currentTimeMillis();
+        Date newDate = new Date(dateNow);
+        String dateString = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss.SSS").format(newDate);
         dateString = StringUtil.replaceAll(dateString, "_", "T");
         return dateString;
     }

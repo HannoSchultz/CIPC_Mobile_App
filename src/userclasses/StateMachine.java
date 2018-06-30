@@ -131,6 +131,7 @@ public class StateMachine extends StateMachineBase {
     private String message = "";
 
     private static String AGENT_CODE = "";
+    private Container contStep3Turnovers;
 
     EnterpriseDetails enterpriseDetails;
     ArrayList<NameSearchObject> arrayListNameReservation;
@@ -157,10 +158,8 @@ public class StateMachine extends StateMachineBase {
         if (Display.getInstance().isSimulator()) {
 
             AGENT_CODE = "BLE076";
-            
-           
-            //Log.p("dateString = " + dateString, Log.DEBUG);
 
+            //Log.p("dateString = " + dateString, Log.DEBUG);
             //Test Name Service
 //            UserWebServices u = new UserWebServices();
 //            String randomName = getRandomString(10);
@@ -170,7 +169,6 @@ public class StateMachine extends StateMachineBase {
 //            User user = new User();
 //            user.setAgent_code(n.getCustomerCode());
 //            u.insertCartItemService(n);
-
             //ReferenceNumber
             //StatusDate
             //CustomerCode
@@ -349,6 +347,10 @@ public class StateMachine extends StateMachineBase {
 
         Button btnVerify = (Button) findByName("btnVerify", contTasks);
         Button btnLodge = (Button) findByName("btnLodge", contTasks);
+        
+        if(Display.getInstance().isSimulator()){
+            txtName1.setText(getRandomString(10));
+        }
 
         btnVerify.addActionListener((ActionListener) (ActionEvent evt) -> {
             String name1 = txtName1.getText();
@@ -706,11 +708,10 @@ public class StateMachine extends StateMachineBase {
         });
 
         //Step 3//Please enter Annual Turnover for the current filing year, 2018:
-        Container contStep3Turnovers = (Container) findByName("contStep3Turnovers", tabs);
-        contStep3Turnovers.removeAll();
+        contStep3Turnovers = (Container) findByName("contStep3Turnovers", tabs);
 
         btnStep2Confirm.addActionListener((ActionListener) (ActionEvent evt) -> {
-
+            contStep3Turnovers.removeAll();
             listEnterpriseDetails = u.GetAREntTranDetails(ENT_NUMBER, AGENT_CODE);
 
             if (listEnterpriseDetails.size() > 0) {
@@ -826,7 +827,9 @@ public class StateMachine extends StateMachineBase {
 
             EnterpriseDetails tempDetails = listCalculateARTran.get(0);
 
-            u.insertCartItemAR(newUser, tempDetails.getReference_no());
+            tempDetails.setCustomerCode(AGENT_CODE);
+
+            u.insertCartItemAR(newUser, listCalculateARTran);
 
             isARStep1Passed = false;
             isARStep2Passed = false;
@@ -971,12 +974,10 @@ public class StateMachine extends StateMachineBase {
         map = u.getCart(user);
 
         ArrayList AnnualReturns = (ArrayList) map.get("AnnualReturns");
-        Log.p("Annual Returns=" + AnnualReturns.size(), Log.DEBUG);
 
         ArrayList CartItems = (ArrayList) map.get("CartItems");
-        Log.p("CartItems=" + CartItems.size(), Log.DEBUG);
 
-        if (!AnnualReturns.isEmpty() || !CartItems.isEmpty()) {
+        if ((AnnualReturns != null && !AnnualReturns.isEmpty()) || (CartItems != null && !CartItems.isEmpty())) {
 
             formProgress = new FormProgress(f);
             closeMenu(f, true);
@@ -1006,80 +1007,87 @@ public class StateMachine extends StateMachineBase {
 
             double eserviceTotal = 0.0;
 
-            //Annual Returns
-            for (Object o : AnnualReturns) {
+            if (AnnualReturns != null) {
+                Log.p("Annual Returns=" + AnnualReturns.size(), Log.DEBUG);
 
-                Container contItem = new Container(BoxLayout.y());
-                contItem.setUIID("CalendarDay");
-                Map m = (Map) o;
-                //String ItemType = m.get("ItemType").toString();
-                //String StatusDate = m.get("StatusDate").toString();
-                String ReferenceNumber = L10NManager.getInstance().format(Double.parseDouble(m.get("ReferenceNumber").toString()));
-                ReferenceNumber = ReferenceNumber.trim();
-                ReferenceNumber = StringUtil.replaceAll(ReferenceNumber, ",", "");//remove comma
-                ReferenceNumber = StringUtil.replaceAll(ReferenceNumber, " ", "");//remove spaces
+                //Annual Returns
+                for (Object o : AnnualReturns) {
 
-                String EnterpriseNumber = m.get("EnterpriseNumber").toString();
-                //String FormCode = m.get("FormCode").toString();
-                double TotalAmountItemType = Double.parseDouble(m.get("TotalAmount").toString());
-                eserviceTotal += TotalAmountItemType;
+                    Container contItem = new Container(BoxLayout.y());
+                    contItem.setUIID("CalendarDay");
+                    Map m = (Map) o;
+                    //String ItemType = m.get("ItemType").toString();
+                    //String StatusDate = m.get("StatusDate").toString();
+                    String ReferenceNumber = L10NManager.getInstance().format(Double.parseDouble(m.get("ReferenceNumber").toString()));
+                    ReferenceNumber = ReferenceNumber.trim();
+                    ReferenceNumber = StringUtil.replaceAll(ReferenceNumber, ",", "");//remove comma
+                    ReferenceNumber = StringUtil.replaceAll(ReferenceNumber, " ", "");//remove spaces
 
-                MultiButton mb = new MultiButton();
-                mb.setUIID("Label");
-                mb.setUIIDLine1("MultiButtonBlack");
-                mb.setUIIDLine2("MultiButtonBlack");
-                mb.setUIIDLine3("MultiButtonBlack");
-                mb.setUIIDLine4("MultiButtonBlack");
+                    String EnterpriseNumber = m.get("EnterpriseNumber").toString();
+                    //String FormCode = m.get("FormCode").toString();
+                    double TotalAmountItemType = Double.parseDouble(m.get("TotalAmount").toString());
+                    eserviceTotal += TotalAmountItemType;
 
-                mb.setTextLine1("Reference No: " + ReferenceNumber);
-                mb.setTextLine2("Enterprise No: " + EnterpriseNumber);
-                //mb.setTextLine3("Service: " + ItemType);
-                mb.setTextLine3("Item Cost: R" + TotalAmountItemType);
+                    MultiButton mb = new MultiButton();
+                    mb.setUIID("Label");
+                    mb.setUIIDLine1("MultiButtonBlack");
+                    mb.setUIIDLine2("MultiButtonBlack");
+                    mb.setUIIDLine3("MultiButtonBlack");
+                    mb.setUIIDLine4("MultiButtonBlack");
 
-                Container c0 = new Container();
-                Button btnRemove0 = new Button("REMOVE");
-                //c0.add(btnRemove0);
-                contItem.add(mb).add(c0);
-                contStep1EServices.add(contItem);
+                    mb.setTextLine1("Reference No: " + ReferenceNumber);
+                    mb.setTextLine2("Enterprise No: " + EnterpriseNumber);
+                    //mb.setTextLine3("Service: " + ItemType);
+                    mb.setTextLine3("Item Cost: R" + TotalAmountItemType);
 
+                    Container c0 = new Container();
+                    Button btnRemove0 = new Button("REMOVE");
+                    //c0.add(btnRemove0);
+                    contItem.add(mb).add(c0);
+                    contStep1EServices.add(contItem);
+
+                }
             }
 
-            //CartItems
-            for (Object o : CartItems) {
+            if (CartItems != null) {
+                Log.p("CartItems=" + CartItems.size(), Log.DEBUG);
+                //CartItems
+                for (Object o : CartItems) {
 
-                Container contItem = new Container(BoxLayout.y());
-                contItem.setUIID("CalendarDay");
-                Map m = (Map) o;
-                String ItemType = m.get("ItemType").toString();
-                String StatusDate = m.get("StatusDate").toString();
-                String ReferenceNumber = L10NManager.getInstance().format(Double.parseDouble(m.get("ReferenceNumber").toString()));
-                ReferenceNumber = ReferenceNumber.trim();
-                ReferenceNumber = StringUtil.replaceAll(ReferenceNumber, ",", "");//remove comma
-                ReferenceNumber = StringUtil.replaceAll(ReferenceNumber, " ", "");//remove spaces
+                    Container contItem = new Container(BoxLayout.y());
+                    contItem.setUIID("CalendarDay");
+                    Map m = (Map) o;
+                    String ItemType = m.get("ItemType").toString();
+                    String StatusDate = m.get("StatusDate").toString();
+                    String ReferenceNumber = L10NManager.getInstance().format(Double.parseDouble(m.get("ReferenceNumber").toString()));
+                    ReferenceNumber = ReferenceNumber.trim();
+                    ReferenceNumber = StringUtil.replaceAll(ReferenceNumber, ",", "");//remove comma
+                    ReferenceNumber = StringUtil.replaceAll(ReferenceNumber, " ", "");//remove spaces
 
-                String EnterpriseNumber = m.get("EnterpriseNumber").toString();
-                String FormCode = m.get("FormCode").toString();
-                double TotalAmountItemType = Double.parseDouble(m.get("TotalAmount").toString());
-                eserviceTotal += TotalAmountItemType;
+                    String EnterpriseNumber = m.get("EnterpriseNumber").toString();
+                    String FormCode = m.get("FormCode").toString();
+                    double TotalAmountItemType = Double.parseDouble(m.get("TotalAmount").toString());
+                    eserviceTotal += TotalAmountItemType;
 
-                MultiButton mb = new MultiButton();
-                mb.setUIID("Label");
-                mb.setUIIDLine1("MultiButtonBlack");
-                mb.setUIIDLine2("MultiButtonBlack");
-                mb.setUIIDLine3("MultiButtonBlack");
-                mb.setUIIDLine4("MultiButtonBlack");
+                    MultiButton mb = new MultiButton();
+                    mb.setUIID("Label");
+                    mb.setUIIDLine1("MultiButtonBlack");
+                    mb.setUIIDLine2("MultiButtonBlack");
+                    mb.setUIIDLine3("MultiButtonBlack");
+                    mb.setUIIDLine4("MultiButtonBlack");
 
-                mb.setTextLine1("Reference No: " + ReferenceNumber);
-                mb.setTextLine2("Enterprise No: " + EnterpriseNumber);
-                mb.setTextLine3("Service: " + ItemType);
-                mb.setTextLine3("Item Cost: R" + TotalAmountItemType);
+                    mb.setTextLine1("Reference No: " + ReferenceNumber);
+                    mb.setTextLine2("Enterprise No: " + EnterpriseNumber);
+                    mb.setTextLine3("Service: " + ItemType);
+                    mb.setTextLine3("Item Cost: R" + TotalAmountItemType);
 
-                Container c0 = new Container();
-                Button btnRemove0 = new Button("REMOVE");
-                //c0.add(btnRemove0);
-                contItem.add(mb).add(c0);
-                contStep1EServices.add(contItem);
+                    Container c0 = new Container();
+                    Button btnRemove0 = new Button("REMOVE");
+                    //c0.add(btnRemove0);
+                    contItem.add(mb).add(c0);
+                    contStep1EServices.add(contItem);
 
+                }
             }
 
             lblTotal.setText("Total: R" + eserviceTotal);

@@ -13,10 +13,11 @@ import com.codename1.xml.Element;
  */
 public class EnterpriseDetails {
 
+    private String customerCode;
     private String ent_no;
-    private String ar_year;
+    private int ar_year;
     private String trak_no;
-    private String turnover;
+    private double turnover;
     private String amt_paid;
     private String date_paid;
     private String reg_date;
@@ -25,10 +26,10 @@ public class EnterpriseDetails {
     private String ent_type_code;
     private String ar_month;
     private String cust_code_old;
-    private String ar_amount;
-    private String ar_total;
-    private String reference_no;
-    private String ar_penalty;
+    private double ar_amount;
+    private double ar_total;
+    private int reference_no;
+    private double ar_penalty;
 
     private String ent_status_descr;
     private String ent_status_code;
@@ -46,11 +47,11 @@ public class EnterpriseDetails {
         this.ent_no = ent_no;
     }
 
-    public String getAr_year() {
+    public int getAr_year() {
         return ar_year;
     }
 
-    public void setAr_year(String ar_year) {
+    public void setAr_year(int ar_year) {
         this.ar_year = ar_year;
     }
 
@@ -62,11 +63,11 @@ public class EnterpriseDetails {
         this.trak_no = trak_no;
     }
 
-    public String getTurnover() {
+    public double getTurnover() {
         return turnover;
     }
 
-    public void setTurnover(String turnover) {
+    public void setTurnover(double turnover) {
         this.turnover = turnover;
     }
 
@@ -158,35 +159,35 @@ public class EnterpriseDetails {
         this.ent_name = ent_name;
     }
 
-    public String getAr_amount() {
+    public double getAr_amount() {
         return ar_amount;
     }
 
-    public void setAr_amount(String ar_amount) {
+    public void setAr_amount(double ar_amount) {
         this.ar_amount = ar_amount;
     }
 
-    public String getAr_total() {
+    public double getAr_total() {
         return ar_total;
     }
 
-    public void setAr_total(String ar_total) {
+    public void setAr_total(double ar_total) {
         this.ar_total = ar_total;
     }
 
-    public String getReference_no() {
+    public int getReference_no() {
         return reference_no;
     }
 
-    public void setReference_no(String reference_no) {
+    public void setReference_no(int reference_no) {
         this.reference_no = reference_no;
     }
 
-    public String getAr_penalty() {
+    public double getAr_penalty() {
         return ar_penalty;
     }
 
-    public void setAr_penalty(String ar_penalty) {
+    public void setAr_penalty(double ar_penalty) {
         this.ar_penalty = ar_penalty;
     }
 
@@ -206,4 +207,14 @@ public class EnterpriseDetails {
         this.isAllowed = isAllowed;
     }
 
+    public String getCustomerCode() {
+        return customerCode;
+    }
+
+    public void setCustomerCode(String customerCode) {
+        this.customerCode = customerCode;
+    }
+
+    
+    
 }
