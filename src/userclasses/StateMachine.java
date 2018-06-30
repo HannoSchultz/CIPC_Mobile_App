@@ -22,6 +22,7 @@ import com.codename1.io.NetworkEvent;
 import com.codename1.io.NetworkManager;
 import com.codename1.io.Util;
 import com.codename1.io.services.TwitterRESTService;
+import com.codename1.l10n.DateFormat;
 import com.codename1.l10n.L10NManager;
 import com.codename1.l10n.SimpleDateFormat;
 import com.codename1.messaging.Message;
@@ -70,6 +71,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TimeZone;
@@ -155,10 +157,27 @@ public class StateMachine extends StateMachineBase {
         if (Display.getInstance().isSimulator()) {
 
             AGENT_CODE = "BLE076";
+            
+           
+            //Log.p("dateString = " + dateString, Log.DEBUG);
 
-            String entNo = getShortEnterpriseName("2011", "100088", "07");
-            System.out.println("enta=" + entNo);
+            //Test Name Service
+//            UserWebServices u = new UserWebServices();
+//            String randomName = getRandomString(10);
+//
+//            NameReservation n = u.Namereservation_MOBI(AGENT_CODE, randomName, "", "", "");
+//            Log.p("randomName=" + randomName, Log.DEBUG);
+//            User user = new User();
+//            user.setAgent_code(n.getCustomerCode());
+//            u.insertCartItemService(n);
 
+            //ReferenceNumber
+            //StatusDate
+            //CustomerCode
+            //Amount
+            //TotalAmount
+            //String entNo = getShortEnterpriseName("2011", "100088", "07");
+            //System.out.println("enta=" + entNo);
 //            //AGENT_CODE = "BLE076";
 //            UserWebServices u = new UserWebServices();
 //            User user = new User();
@@ -390,30 +409,29 @@ public class StateMachine extends StateMachineBase {
 
                 //Dialog.show("Output 1", "AGENT_CODE=" + AGENT_CODE + " name1=" + name1
                 //      + ", name2=" + name2 + ", name3=" + name3 + ", name4=" + name4, "Ok", null);
-                String responseCall = u.Namereservation_MOBI(AGENT_CODE, name1, name2, name3, name4);
+                NameReservation responseCall = u.Namereservation_MOBI(AGENT_CODE, name1, name2, name3, name4);
 
                 //Dialog.show("Output 2", "AGENT_CODE=" + AGENT_CODE + " name1=" + name1
                 //      + ", name2=" + name2 + ", name3=" + name3 + ", name4=" + name4, "Ok", null);
-                if (responseCall != null && responseCall.length() > 0
-                        && responseCall.indexOf("already filed") == -1) {
-                    Dialog.show("Success", responseCall, "Ok", null);
+                if (responseCall != null
+                        && responseCall.getResponseMessage().indexOf("already filed") == -1) {
+                    Dialog.show("Success", responseCall.getResponseMessage(), "Ok", null);
 
                     Log.p("Name reservation responseCall=" + responseCall, Log.DEBUG);
 
                     User tempUser = new User();
                     tempUser.setAgent_code(AGENT_CODE);
                     //getReferenceNo
-                    String referenceNo = getReferenceNo(responseCall);
+                    //NameReservation n = getNameReservationReferenceNo(responseCall);
 
                     // Dialog.show("Output 5 referenceNo", "AGENT_CODE=" + AGENT_CODE + " referenceNo="
                     //       + referenceNo, "Ok", null);
-                    int intReferenceNo = Integer.parseInt(referenceNo);
-                    u.insertCartItemService(tempUser, intReferenceNo);
+                    u.insertCartItemService(responseCall);
 
                     showCart(f);
-                } else if (responseCall != null && responseCall.length() > 0
-                        && responseCall.indexOf("already filed") != -1) {
-                    Dialog.show("Error", responseCall, "Ok", null);//TODO scroll to top
+                } else if (responseCall != null
+                        && responseCall.getResponseMessage().indexOf("already filed") != -1) {
+                    Dialog.show("Error", responseCall.getResponseMessage(), "Ok", null);//TODO scroll to top
                 } else {
                     Dialog.show("Error", "Error occurred while processing your request. Please try again later or contact CIPC.", "Ok", null);
                 }
@@ -1248,8 +1266,7 @@ public class StateMachine extends StateMachineBase {
 
                 errorMessage += "Incorrect Customer Code or password. ";
 
-            }
-            else{
+            } else {
                 responsePassword = responseUser.getPassword();
             }
 
@@ -1287,11 +1304,12 @@ public class StateMachine extends StateMachineBase {
     }
 
     private void automoveToNext(final TextField current, final TextField next, final int limit) {
-          current.addDataChangedListener((type, index) -> {
+        current.addDataChangedListener((type, index) -> {
             if (current.getText().length() == limit) {
                 next.requestFocus();
                 next.startEditing();
-            }});
+            }
+        });
 //        current.addDataChangedListener(new DataChangedListener() {
 //            public void dataChanged(int type, int index) {
 //                if (current.getText().length() == limit + 1) {
@@ -1902,14 +1920,6 @@ public class StateMachine extends StateMachineBase {
         return paymentTransNo;
     }
 
-    public static String getReferenceNo(String responseCall) {
-        int startIndex = responseCall.indexOf("Reference No:") + 13;
-        int endIndex = responseCall.indexOf(". First proposed");
-
-        String newString = responseCall.substring(startIndex, endIndex).trim();
-        return newString;
-    }
-
     public String getShortEnterpriseName(String year, String body, String type) {
         String entNo = "";
         int yearInt = Integer.parseInt(year);
@@ -1936,6 +1946,16 @@ public class StateMachine extends StateMachineBase {
         }
 
         return entNo;
+    }
+
+    private static String getRandomString(int numchars) {
+        Random r = new Random();
+        StringBuffer sb = new StringBuffer();
+        while (sb.length() < numchars) {
+            sb.append(Integer.toHexString(r.nextInt()));
+        }
+
+        return sb.toString().substring(0, numchars);
     }
 
 }

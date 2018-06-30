@@ -14,9 +14,12 @@ import com.codename1.io.NetworkManager;
 import com.codename1.io.rest.RequestBuilder;
 import com.codename1.io.rest.Response;
 import com.codename1.io.rest.Rest;
+import com.codename1.l10n.DateFormat;
+import com.codename1.l10n.SimpleDateFormat;
 import com.codename1.processing.Result;
 import com.codename1.ui.Dialog;
 import com.codename1.ui.Display;
+import com.codename1.util.StringUtil;
 import com.codename1.xml.Element;
 import com.codename1.xml.XMLParser;
 import java.io.ByteArrayInputStream;
@@ -25,12 +28,14 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Hashtable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
 import userclasses.Constants;
 import userclasses.EnterpriseDetails;
+import userclasses.NameReservation;
 import userclasses.NameSearchObject;
 import za.co.cipc.pojos.AuthObject;
 import za.co.cipc.pojos.Country;
@@ -540,19 +545,32 @@ public class UserWebServices {
         return null;
     }
 
-    public String insertCartItemService(User user, int ReferenceNumber) {
+    public String insertCartItemService(NameReservation nameReservation) {
 
         String END_POINT = "https://apidev.cipc.co.za/v1/payment/cartitem";
 
         String BODY
-                = "{\"ReferenceNumber\": " + ReferenceNumber + ","
+                = "{\"ReferenceNumber\": " + nameReservation.getReferenceNumber() + ","
                 + "\"Status\":0,"
-                + "\"StatusDate\":\"2018-06-23T17:04:28.873\","
-                + "\"CustomerCode\":\"" + user.getAgent_code() + "\","
+                + "\"StatusDate\":\"" + nameReservation.getStatusDate() + "\","
+                + "\"CustomerCode\":\"" + nameReservation.getCustomerCode() + "\","
                 + "\"ItemType\":4,"
-                + "\"ItemData\":\"{\\\"ReferenceNumber\\\": " + ReferenceNumber + ",\\\"EnterpriseNumber\\\":\\\"\\\",\\\"FormCode\\\":\\\"COR9.1\\\",\\\"ChangeTypeCode\\\":\\\"30\\\",\\\"Description\\\":null,\\\"TotalAmount\\\":50.0}\","
-                + "\"Amount\":50.0"
+                + "\"ItemData\":\"{\\\"ReferenceNumber\\\": " + nameReservation.getReferenceNumber() + ",\\\"EnterpriseNumber\\\":\\\"\\\",\\\"FormCode\\\":\\\"COR9.1\\\",\\\"ChangeTypeCode\\\":\\\"30\\\",\\\"Description\\\":null,\\\"TotalAmount\\\":" + nameReservation.getTotalAmount() + "}\","
+                + "\"Amount\":" + nameReservation.getAmount() + ""
                 + "}";
+
+//  String BODY
+//                = "{\"ReferenceNumber\": " + nameReservation.getReferenceNumber() + ","
+//                + "\"Status\":0,"
+//                + "\"StatusDate\":\"2018-06-23T17:04:28.873\","
+//                + "\"CustomerCode\":\"" + nameReservation.getCustomerCode() + "\","
+//                + "\"ItemType\":4,"
+//                + "\"ItemData\":\"{\\\"ReferenceNumber\\\": " + nameReservation.getReferenceNumber() + ",\\\"EnterpriseNumber\\\":\\\"\\\",\\\"FormCode\\\":\\\"COR9.1\\\",\\\"ChangeTypeCode\\\":\\\"30\\\",\\\"Description\\\":null,\\\"TotalAmount\\\":50.0}\","
+//                + "\"Amount\":50.0"
+//                + "}";
+
+
+        Log.p("insertCartItemService request=" + BODY, Log.DEBUG);
 
         ConnectionRequest post = new ConnectionRequest() {
             @Override
@@ -570,6 +588,8 @@ public class UserWebServices {
         post.setPost(true);
         post.setContentType("application/json");
 
+        User user = new User();
+        user.setAgent_code(nameReservation.getCustomerCode());
         AuthObject auth = getToken(user);
 
         post.addRequestHeader("Authorization", auth.getToken_type() + " " + auth.getAccess_token());
@@ -709,7 +729,7 @@ public class UserWebServices {
 
         return map;
     }
-    
+
     public Map getCustomerData(User user) {
 
         Map map = null;
@@ -747,8 +767,8 @@ public class UserWebServices {
 
         return map;
     }
-    
-     public Map pendingAnnualReturns(User user, String entNo) {
+
+    public Map pendingAnnualReturns(User user, String entNo) {
 
         Map map = null;
 
@@ -2048,9 +2068,11 @@ public class UserWebServices {
 
     }//end name reservation
 
-    public String Namereservation_MOBI(String customerCode, String name1, String name2, String name3, String name4) {
+    public NameReservation Namereservation_MOBI(String customerCode, String name1, String name2, String name3, String name4) {
 
         String response = "";
+
+        NameReservation n = null;
 
         final String SOAP_BODY
                 = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cipc=\"CIPC_WEB_SERVICES\">\n"
@@ -2157,9 +2179,23 @@ public class UserWebServices {
             //Dialog.show("Result", result.toString(), "Ok", null);
             String namereservation_mobiresult = result.getAsString("//namereservation_mobiresult");
 
-            response = namereservation_mobiresult;
-            if (response != null) {
-                response = response.trim();
+            if (namereservation_mobiresult != null && namereservation_mobiresult.indexOf("Reference No:") > -1) {
+
+                namereservation_mobiresult = namereservation_mobiresult.trim();
+                String ReferenceNo = getNameReservationReferenceNo(namereservation_mobiresult);
+                int intReferenceNo = Integer.parseInt(ReferenceNo);
+                double Amount = 50.0;
+                double Total = 50.0;
+                String StatusDate = getDateNow();
+
+                n = new NameReservation();
+                n.setReferenceNumber(intReferenceNo);
+                n.setAmount(Amount);
+                n.setTotalAmount(Total);
+                n.setCustomerCode(customerCode);
+                n.setStatusDate(StatusDate);
+                n.setResponseMessage(namereservation_mobiresult);
+
             }
 
             //Log.p("result: " + result, Log.DEBUG);
@@ -2168,7 +2204,7 @@ public class UserWebServices {
             Log.p(e.toString());
         }
 
-        return response;
+        return n;
     }//end name reservation
 
     public ArrayList search_name_MOBI(String customerCode, String name1, String name2, String name3, String name4) {
@@ -2512,7 +2548,7 @@ public class UserWebServices {
                 + "\n"
                 + "                  <Table1 diffgr:id=\"Table11\" msdata:rowOrder=\"0\" diffgr:hasChanges=\"inserted\">\n"
                 + "\n"
-                + "                     <password>"+requestUser.getPassword()+"</password>>\n"
+                + "                     <password>" + requestUser.getPassword() + "</password>>\n"
                 + "\n"
                 + "                     <bank_ID>wBAA7LAkWIs=</bank_ID>\n"
                 + "\n"
@@ -2648,5 +2684,21 @@ public class UserWebServices {
         return null;
 
     }//end register
+
+    public static String getNameReservationReferenceNo(String responseCall) {
+        int startIndex = responseCall.indexOf("Reference No:") + 13;
+        int endIndex = responseCall.indexOf(". First proposed");
+
+        String newString = responseCall.substring(startIndex, endIndex).trim();
+        return newString;
+    }
+
+    public String getDateNow() {
+        long dateNow = System.currentTimeMillis();
+        Date newDate = new Date(dateNow);
+        String dateString = new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss.SSS").format(newDate);
+        dateString = StringUtil.replaceAll(dateString, "_", "T");
+        return dateString;
+    }
 
 }
