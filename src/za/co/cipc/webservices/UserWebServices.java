@@ -46,7 +46,7 @@ import za.co.cipc.pojos.User;
  * @author blessingmobile
  */
 public class UserWebServices {
-    
+
     String AR_BODY;
 
     public ArrayList Get_AR_ent_type_mobi(String dataset) {
@@ -558,11 +558,10 @@ public class UserWebServices {
     public String insertCartItemService(NameReservation nameReservation) {
 
         String END_POINT = "https://apidev.cipc.co.za/v1/payment/cartitem";
-        
+
         /*String ref = nameReservation.getReferenceNumber()+"";
         ref = "1" + ref;
         nameReservation.setReferenceNumber(Integer.parseInt(ref));*/
-        
         String BODY
                 = "{\"ReferenceNumber\": " + nameReservation.getReferenceNumber() + ","
                 + "\"Status\":0,"
@@ -582,8 +581,6 @@ public class UserWebServices {
 //                + "\"ItemData\":\"{\\\"ReferenceNumber\\\": " + nameReservation.getReferenceNumber() + ",\\\"EnterpriseNumber\\\":\\\"\\\",\\\"FormCode\\\":\\\"COR9.1\\\",\\\"ChangeTypeCode\\\":\\\"30\\\",\\\"Description\\\":null,\\\"TotalAmount\\\":50.0}\","
 //                + "\"Amount\":50.0"
 //                + "}";
-
-
         Log.p("insertCartItemService request=" + BODY, Log.DEBUG);
 
         ConnectionRequest post = new ConnectionRequest() {
@@ -617,37 +614,81 @@ public class UserWebServices {
     }
 
     public String insertCartItemAR(User user, ArrayList<EnterpriseDetails> listCalculateARTran) {
-        
+
         EnterpriseDetails ent = listCalculateARTran.get(0);//this can fail
 
         String END_POINT = "https://apidev.cipc.co.za/v1/payment/cartitem";
-        
+
         int ReferenceNumber = ent.getReference_no();
         Log.p("insertCartItemAR ReferenceNumber=" + ReferenceNumber, Log.DEBUG);
         String dateNow = getAnnualReturnsDateNow();
         Log.p("insertCartItemAR dateNow=" + dateNow, Log.DEBUG);
         
-        
-         String AR_BODY
-                = "{\n"
-                + "                \"ReferenceNumber\":" + ReferenceNumber + ",\n"
-                + "                \"Status\":0,\n"
-                + "                \"StatusDate\":\"2018-04-23T13:04:28.873\",\n"
-                + "                \"CustomerCode\":\"" + user.getAgent_code() + "\",\n"
-                + "                \"ItemType\":1,\n"
-                + "                \"ItemData\":\""
-                + "{\\\"ReferenceNumber\\\":" + ReferenceNumber + ",\\\"FormCode\\\":\\\"CK2B\\\",\\\"EnterpriseNumber\\\":\\\"K2011100088\\\",\\\"EnterpriseType\\\":\\\"23\\\",\\\"EnterpriseStatus\\\":\\\"28\\\",\\\"EmailAddress\\\":\\\"jbruton@cipc.co.za\\\",\\\"TelephoneCode\\\":\\\"012\\\",\\\"TelephoneNumber\\\":\\\"1234567\\\",\\\"CellphoneNumber\\\":\\\"\\\",\\\"WebsiteAddress\\\":\\\"\\\",\\\"BusinessDescription\\\":\\\"CARD PAYMENT\\\",\\\"PrincipalPlaceOfBusiness\\\":\\\"\\\",\\\"EnterpriseNameChanged\\\":0,\\\"FinancialYearEndChanged\\\":0,\\\"RegisteredOfficeChanged\\\":0,\\\"LocationOfRecordsChanged\\\":0,\\\"DirectorsChanged\\\":0,\\\"CompanySecretaryChanged\\\":0,\\\"AuditorsChanged\\\":0,\\\"TotalAmount\\\":2250.00,\\\"YearData\\\":["
-                + "{\\\"ReferenceNumber\\\":" + ReferenceNumber + ",\\\"EnterpriseNumber\\\":\\\"K2011100088\\\",\\\"Year\\\":2009,\\\"Turnover\\\":0.0,\\\"Amount\\\":100.00,\\\"PenaltyFee\\\":150.00,\\\"TotalAmount\\\":250.00,\\\"Status\\\":null,\\\"StatusDate\\\":\\\"0001-01-01T00:00:00\\\"},{\\\"ReferenceNumber\\\":533549914,\\\"EnterpriseNumber\\\":\\\"K2011100088\\\",\\\"Year\\\":2010,\\\"Turnover\\\":0.0,\\\"Amount\\\":100.00,\\\"PenaltyFee\\\":150.00,\\\"TotalAmount\\\":250.00,\\\"Status\\\":null,\\\"StatusDate\\\":\\\"0001-01-01T00:00:00\\\"},"
-                + "{\\\"ReferenceNumber\\\":" + ReferenceNumber + ",\\\"EnterpriseNumber\\\":\\\"K2011100088\\\",\\\"Year\\\":2011,\\\"Turnover\\\":0.0,\\\"Amount\\\":100.00,\\\"PenaltyFee\\\":150.00,\\\"TotalAmount\\\":250.00,\\\"Status\\\":null,\\\"StatusDate\\\":\\\"0001-01-01T00:00:00\\\"},{\\\"ReferenceNumber\\\":533549914,\\\"EnterpriseNumber\\\":\\\"K2011100088\\\",\\\"Year\\\":2012,\\\"Turnover\\\":0.0,\\\"Amount\\\":100.00,\\\"PenaltyFee\\\":150.00,\\\"TotalAmount\\\":250.00,\\\"Status\\\":null,\\\"StatusDate\\\":\\\"0001-01-01T00:00:00\\\"},"
-                + "{\\\"ReferenceNumber\\\":" + ReferenceNumber + ",\\\"EnterpriseNumber\\\":\\\"K2011100088\\\",\\\"Year\\\":2013,\\\"Turnover\\\":0.0,\\\"Amount\\\":100.00,\\\"PenaltyFee\\\":150.00,\\\"TotalAmount\\\":250.00,\\\"Status\\\":null,\\\"StatusDate\\\":\\\"0001-01-01T00:00:00\\\"},{\\\"ReferenceNumber\\\":533549914,\\\"EnterpriseNumber\\\":\\\"K2011100088\\\",\\\"Year\\\":2014,\\\"Turnover\\\":0.0,\\\"Amount\\\":100.00,\\\"PenaltyFee\\\":150.00,\\\"TotalAmount\\\":250.00,\\\"Status\\\":null,\\\"StatusDate\\\":\\\"0001-01-01T00:00:00\\\"},"
-                + "{\\\"ReferenceNumber\\\":" + ReferenceNumber + ",\\\"EnterpriseNumber\\\":\\\"K2011100088\\\",\\\"Year\\\":2015,\\\"Turnover\\\":0.0,\\\"Amount\\\":100.00,\\\"PenaltyFee\\\":150.00,\\\"TotalAmount\\\":250.00,\\\"Status\\\":null,\\\"StatusDate\\\":\\\"0001-01-01T00:00:00\\\"},"
-                + "{\\\"ReferenceNumber\\\":" + ReferenceNumber + ",\\\"EnterpriseNumber\\\":\\\"K2011100088\\\",\\\"Year\\\":2016,\\\"Turnover\\\":0.0,\\\"Amount\\\":100.00,\\\"PenaltyFee\\\":150.00,\\\"TotalAmount\\\":250.00,\\\"Status\\\":null,\\\"StatusDate\\\":\\\"0001-01-01T00:00:00\\\"},"
-                + "{\\\"ReferenceNumber\\\":" + ReferenceNumber + ",\\\"EnterpriseNumber\\\":\\\"K2011100088\\\",\\\"Year\\\":2017,\\\"Turnover\\\":0.0,\\\"Amount\\\":100.00,\\\"PenaltyFee\\\":150.00,\\\"TotalAmount\\\":250.00,\\\"Status\\\":null,\\\"StatusDate\\\":\\\"0001-01-01T00:00:00\\\"}],\\\"ItemsCount\\\":9}\",\n"
-                + "                \"Amount\":50.0\n"
+         double total = 0.0;
+        //refactor tot calc
+        for(int i = 0; i < listCalculateARTran.size();i++){
+            total += listCalculateARTran.get(i).getAr_total();
+        }
+     
+        if (listCalculateARTran.size() == 1) {
+            AR_BODY
+                    = "{\n"
+                    + "                \"ReferenceNumber\":" + ReferenceNumber + ",\n"
+                    + "                \"Status\":0,\n"
+                    + "                \"StatusDate\":\" " + getAnnualReturnsDateNow() + " \",\n"
+                    + "                \"CustomerCode\":\"" + user.getAgent_code() + "\",\n"
+                    + "                \"ItemType\":1,\n"
+                    + "                \"ItemData\":\""
+                    + "{\\\"ReferenceNumber\\\":" + ReferenceNumber + ",\\\"FormCode\\\":\\\"CK2B\\\",\\\"EnterpriseNumber\\\":\\\"" + ent.getEnt_no() + "\\\",\\\"EnterpriseType\\\":\\\"  " + ent.getEnt_type_code() + " \\\",\\\"EnterpriseStatus\\\":\\\"28\\\",\\\"EmailAddress\\\":\\\"  \\\",\\\"TelephoneCode\\\":\\\"012\\\",\\\"TelephoneNumber\\\":\\\"1234567\\\",\\\"CellphoneNumber\\\":\\\"\\\",\\\"WebsiteAddress\\\":\\\"\\\",\\\"BusinessDescription\\\":\\\"CARD PAYMENT\\\",\\\"PrincipalPlaceOfBusiness\\\":\\\"\\\",\\\"EnterpriseNameChanged\\\":0,\\\"FinancialYearEndChanged\\\":0,\\\"RegisteredOfficeChanged\\\":0,\\\"LocationOfRecordsChanged\\\":0,\\\"DirectorsChanged\\\":0,\\\"CompanySecretaryChanged\\\":0,\\\"AuditorsChanged\\\":0,\\\"TotalAmount\\\":" + total + ",\\\"YearData\\\":[";
+
+            AR_BODY += "{\\\"ReferenceNumber\\\":" + ReferenceNumber + ",\\\"EnterpriseNumber\\\":\\\" " + ent.getEnt_no() + " \\\",\\\"Year\\\":" + ent.getAr_year() + ",\\\"Turnover\\\":" + ent.getTurnover() + ",\\\"Amount\\\":" + ent.getAr_amount() + ",\\\"PenaltyFee\\\":" + ent.getAr_penalty() + ",\\\"TotalAmount\\\": " + ent.getAr_total() + " ,\\\"Status\\\":null,\\\"StatusDate\\\":\\\" " + getAnnualReturnsDateNow() + "  \\\"}";
+
+        } else {
+            AR_BODY
+                    = "{\n"
+                    + "                \"ReferenceNumber\":" + ReferenceNumber + ",\n"
+                    + "                \"Status\":0,\n"
+                    + "                \"StatusDate\":\" " + getAnnualReturnsDateNow() + " \",\n"
+                    + "                \"CustomerCode\":\"" + user.getAgent_code() + "\",\n"
+                    + "                \"ItemType\":1,\n"
+                    + "                \"ItemData\":\""
+                    + "{\\\"ReferenceNumber\\\":" + ReferenceNumber + ",\\\"FormCode\\\":\\\"CK2B\\\",\\\"EnterpriseNumber\\\":\\\"" + ent.getEnt_no() + "\\\",\\\"EnterpriseType\\\":\\\"  " + ent.getEnt_type_code() + " \\\",\\\"EnterpriseStatus\\\":\\\"28\\\",\\\"EmailAddress\\\":\\\"  \\\",\\\"TelephoneCode\\\":\\\"012\\\",\\\"TelephoneNumber\\\":\\\"1234567\\\",\\\"CellphoneNumber\\\":\\\"\\\",\\\"WebsiteAddress\\\":\\\"\\\",\\\"BusinessDescription\\\":\\\"CARD PAYMENT\\\",\\\"PrincipalPlaceOfBusiness\\\":\\\"\\\",\\\"EnterpriseNameChanged\\\":0,\\\"FinancialYearEndChanged\\\":0,\\\"RegisteredOfficeChanged\\\":0,\\\"LocationOfRecordsChanged\\\":0,\\\"DirectorsChanged\\\":0,\\\"CompanySecretaryChanged\\\":0,\\\"AuditorsChanged\\\":0,\\\"TotalAmount\\\":" + total + ",\\\"YearData\\\":[";
+
+            AR_BODY += "{\\\"ReferenceNumber\\\":" + ReferenceNumber + ",\\\"EnterpriseNumber\\\":\\\" " + ent.getEnt_no() + " \\\",\\\"Year\\\":" + ent.getAr_year() + ",\\\"Turnover\\\":" + ent.getTurnover() + ",\\\"Amount\\\":" + ent.getAr_amount() + ",\\\"PenaltyFee\\\":" + ent.getAr_penalty() + ",\\\"TotalAmount\\\": " + ent.getAr_total() + " ,\\\"Status\\\":null,\\\"StatusDate\\\":\\\" " + getAnnualReturnsDateNow() + "  \\\"}";
+
+            for (int i = 1; i < listCalculateARTran.size(); i++) {
+                ent = listCalculateARTran.get(i);//this can fail
+                AR_BODY += "{\\\"ReferenceNumber\\\":" + ReferenceNumber + ",\\\"EnterpriseNumber\\\":\\\" " + ent.getEnt_no() + " \\\",\\\"Year\\\":" + ent.getAr_year() + ",\\\"Turnover\\\":" + ent.getTurnover() + ",\\\"Amount\\\":" + ent.getAr_amount() + ",\\\"PenaltyFee\\\":" + ent.getAr_penalty() + ",\\\"TotalAmount\\\": " + ent.getAr_total() + " ,\\\"Status\\\":null,\\\"StatusDate\\\":\\\" " + getAnnualReturnsDateNow() + "  \\\"}";
+
+            }
+
+        }
+
+        AR_BODY += "],\\\"ItemsCount\\\":" + listCalculateARTran.size() + "}\",\n"
+                + "\"Amount\":50.0\n"
                 + "}";
-        
+
+//        working sample
+//        AR_BODY
+//                = "{\n"
+//                + "                \"ReferenceNumber\":" + ReferenceNumber + ",\n"
+//                + "                \"Status\":0,\n"
+//                + "                \"StatusDate\":\" " + getAnnualReturnsDateNow() + " \",\n"
+//                + "                \"CustomerCode\":\"" + user.getAgent_code() + "\",\n"
+//                + "                \"ItemType\":1,\n"
+//                + "                \"ItemData\":\""
+//                + "{\\\"ReferenceNumber\\\":" + ReferenceNumber + ",\\\"FormCode\\\":\\\"CK2B\\\",\\\"EnterpriseNumber\\\":\\\""+ent.getEnt_no()+"\\\",\\\"EnterpriseType\\\":\\\"  "+ent.getEnt_type_code()+" \\\",\\\"EnterpriseStatus\\\":\\\"28\\\",\\\"EmailAddress\\\":\\\"  \\\",\\\"TelephoneCode\\\":\\\"012\\\",\\\"TelephoneNumber\\\":\\\"1234567\\\",\\\"CellphoneNumber\\\":\\\"\\\",\\\"WebsiteAddress\\\":\\\"\\\",\\\"BusinessDescription\\\":\\\"CARD PAYMENT\\\",\\\"PrincipalPlaceOfBusiness\\\":\\\"\\\",\\\"EnterpriseNameChanged\\\":0,\\\"FinancialYearEndChanged\\\":0,\\\"RegisteredOfficeChanged\\\":0,\\\"LocationOfRecordsChanged\\\":0,\\\"DirectorsChanged\\\":0,\\\"CompanySecretaryChanged\\\":0,\\\"AuditorsChanged\\\":0,\\\"TotalAmount\\\":" + total + ",\\\"YearData\\\":"
+//                
+//                
+//                
+//                + "[{\\\"ReferenceNumber\\\":" + ReferenceNumber + ",\\\"EnterpriseNumber\\\":\\\" "+ent.getEnt_no()+" \\\",\\\"Year\\\":" + ent.getAr_year() + ",\\\"Turnover\\\":" + ent.getTurnover() + ",\\\"Amount\\\":" + ent.getAr_amount() + ",\\\"PenaltyFee\\\":" + ent.getAr_penalty() + ",\\\"TotalAmount\\\": " + ent.getAr_total() + " ,\\\"Status\\\":null,\\\"StatusDate\\\":\\\" " + getAnnualReturnsDateNow() + "  \\\"}]"
+//               
+//                
+//                
+//                + ",\\\"ItemsCount\\\":" + size + "}\",\n"
+//                + "\"Amount\":50.0\n"
+//                + "}";
         //String ReferenceNumber = "589117789";
-        
 //          AR_BODY = 
 //                "{\n"
 //                + "                \"ReferenceNumber\":" + ReferenceNumber + ",\n"
@@ -665,7 +706,6 @@ public class UserWebServices {
 //                + "{\\\"ReferenceNumber\\\":" + ReferenceNumber + ",\\\"EnterpriseNumber\\\":\\\"K2011100088\\\",\\\"Year\\\":2017,\\\"Turnover\\\":0.0,\\\"Amount\\\":100.00,\\\"PenaltyFee\\\":150.00,\\\"TotalAmount\\\":250.00,\\\"Status\\\":null,\\\"StatusDate\\\":\\\"0001-01-01T00:00:00\\\"}],\\\"ItemsCount\\\":9}\",\n"
 //                + "                \"Amount\":50.0\n"
 //                + "}";
-
 //        String BODY
 //                = "{\n"
 //                + "                \"ReferenceNumber\":" + ent.getReference_no() + ",\n"
@@ -683,7 +723,6 @@ public class UserWebServices {
 //                + "{\\\"ReferenceNumber\\\":" + ent.getReference_no() + ",\\\"EnterpriseNumber\\\":\\\"K2011100088\\\",\\\"Year\\\":2017,\\\"Turnover\\\":0.0,\\\"Amount\\\":100.00,\\\"PenaltyFee\\\":150.00,\\\"TotalAmount\\\":250.00,\\\"Status\\\":null,\\\"StatusDate\\\":\\\"0001-01-01T00:00:00\\\"}],\\\"ItemsCount\\\":9}\",\n"
 //                + "                \"Amount\":50.0\n"
 //                + "}";
-        
         Log.p("insertCartItemAR REQUEST=" + AR_BODY, Log.DEBUG);
 
         ConnectionRequest post = new ConnectionRequest() {
@@ -2762,8 +2801,8 @@ public class UserWebServices {
         dateString = StringUtil.replaceAll(dateString, "_", "T");
         return dateString;
     }
-    
-        public String getAnnualReturnsDateNow() {
+
+    public String getAnnualReturnsDateNow() {
         long dateNow = System.currentTimeMillis();
         Date newDate = new Date(dateNow);
         String dateString = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss.SSS").format(newDate);
