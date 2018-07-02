@@ -1010,6 +1010,12 @@ public class StateMachine extends StateMachineBase {
             if (AnnualReturns != null) {
                 Log.p("Annual Returns=" + AnnualReturns.size(), Log.DEBUG);
 
+                if(!AnnualReturns.isEmpty()){
+                    Label lbl = new Label("ANNUAL RETURNS");
+                    contStep1EServices.add(lbl);
+                }
+                
+                
                 //Annual Returns
                 for (Object o : AnnualReturns) {
 
@@ -1051,6 +1057,11 @@ public class StateMachine extends StateMachineBase {
 
             if (CartItems != null) {
                 Log.p("CartItems=" + CartItems.size(), Log.DEBUG);
+                
+                if(!CartItems.isEmpty()){
+                    Label lbl = new Label("E-SERVICES");
+                    contStep1EServices.add(lbl);
+                }
                 //CartItems
                 for (Object o : CartItems) {
 
@@ -1077,8 +1088,8 @@ public class StateMachine extends StateMachineBase {
                     mb.setUIIDLine4("MultiButtonBlack");
 
                     mb.setTextLine1("Reference No: " + ReferenceNumber);
-                    mb.setTextLine2("Enterprise No: " + EnterpriseNumber);
-                    mb.setTextLine3("Service: " + ItemType);
+                    //mb.setTextLine2("Enterprise No: " + EnterpriseNumber);
+                    mb.setTextLine2("Service: " + ItemType);
                     mb.setTextLine3("Item Cost: R" + TotalAmountItemType);
 
                     Container c0 = new Container();

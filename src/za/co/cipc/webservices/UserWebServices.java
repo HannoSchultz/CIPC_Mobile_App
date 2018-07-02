@@ -558,7 +558,11 @@ public class UserWebServices {
     public String insertCartItemService(NameReservation nameReservation) {
 
         String END_POINT = "https://apidev.cipc.co.za/v1/payment/cartitem";
-
+        
+        /*String ref = nameReservation.getReferenceNumber()+"";
+        ref = "1" + ref;
+        nameReservation.setReferenceNumber(Integer.parseInt(ref));*/
+        
         String BODY
                 = "{\"ReferenceNumber\": " + nameReservation.getReferenceNumber() + ","
                 + "\"Status\":0,"
@@ -2754,7 +2758,7 @@ public class UserWebServices {
     public String getNameReservationDateNow() {
         long dateNow = System.currentTimeMillis();
         Date newDate = new Date(dateNow);
-        String dateString = new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss.SSS").format(newDate);
+        String dateString = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss.SSS").format(newDate);
         dateString = StringUtil.replaceAll(dateString, "_", "T");
         return dateString;
     }
