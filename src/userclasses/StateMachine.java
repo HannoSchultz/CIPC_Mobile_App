@@ -144,10 +144,18 @@ public class StateMachine extends StateMachineBase {
 
     protected void initVars(Resources res) {
 
-        NetworkManager.getInstance().addErrorListener(new ActionListener<NetworkEvent>() {
-            @Override
-            public void actionPerformed(NetworkEvent evt) {
-                //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        NetworkManager.getInstance().setTimeout(30000);
+
+        Display.getInstance().addEdtErrorHandler(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                evt.consume();
+                Log.p("User " + AGENT_CODE);
+                Log.p("Exception in AppName version " + Display.getInstance().getProperty("AppVersion", "Unknown"));
+                Log.p("OS " + Display.getInstance().getPlatformName());
+                Log.p("Error " + evt.getSource());
+                Log.p("Current Form " + Display.getInstance().getCurrent().getName());
+                Log.e((Throwable) evt.getSource());
+                Log.sendLog();
             }
         });
 
@@ -347,8 +355,8 @@ public class StateMachine extends StateMachineBase {
 
         Button btnVerify = (Button) findByName("btnVerify", contTasks);
         Button btnLodge = (Button) findByName("btnLodge", contTasks);
-        
-        if(Display.getInstance().isSimulator()){
+
+        if (Display.getInstance().isSimulator()) {
             txtName1.setText(getRandomString(10));
         }
 
@@ -450,6 +458,18 @@ public class StateMachine extends StateMachineBase {
     }
 
     public void showDashboard(final Form f) {
+
+        Command back = new Command("Back") {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                super.actionPerformed(evt); //To change body of generated methods, choose Tools | Templates.
+                Log.p("back", Log.DEBUG);
+            }
+
+        };
+
+        f.setBackCommand(back);
+
         formProgress = new FormProgress(f);
         closeMenu(f, true);
 
@@ -526,6 +546,10 @@ public class StateMachine extends StateMachineBase {
     }
 
     public void showAnnualReturns(final Form f) {
+
+        isARStep1Passed = false;
+        isARStep2Passed = false;
+        isARStep3Passed = false;
 
         f.setLayout(new BorderLayout());
 
@@ -1010,12 +1034,11 @@ public class StateMachine extends StateMachineBase {
             if (AnnualReturns != null) {
                 Log.p("Annual Returns=" + AnnualReturns.size(), Log.DEBUG);
 
-                if(!AnnualReturns.isEmpty()){
+                if (!AnnualReturns.isEmpty()) {
                     Label lbl = new Label("ANNUAL RETURNS");
                     contStep1EServices.add(lbl);
                 }
-                
-                
+
                 //Annual Returns
                 for (Object o : AnnualReturns) {
 
@@ -1057,8 +1080,8 @@ public class StateMachine extends StateMachineBase {
 
             if (CartItems != null) {
                 Log.p("CartItems=" + CartItems.size(), Log.DEBUG);
-                
-                if(!CartItems.isEmpty()){
+
+                if (!CartItems.isEmpty()) {
                     Label lbl = new Label("E-SERVICES");
                     contStep1EServices.add(lbl);
                 }
@@ -1347,6 +1370,21 @@ public class StateMachine extends StateMachineBase {
 
     @Override
     protected void beforeLogin(final Form f) {
+        Command loginBack = new Command("") {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                super.actionPerformed(evt); //To change body of generated methods, choose Tools | Templates.
+
+                boolean flag = Dialog.show("Exit", "Are you sure you want to Exit App?", "Yes", "No");
+                if (flag) {
+                    System.exit(0);
+                }
+
+            }
+
+        };
+
+        f.setBackCommand(loginBack);
 
         current = f;
         f.setScrollVisible(false);
@@ -1404,6 +1442,22 @@ public class StateMachine extends StateMachineBase {
 
     @Override
     protected void beforeRegistration(Form f) {
+
+        isRegStep1Passed = false;
+        isRegStep2Passed = false;
+        isRegStep3Passed = false;
+
+        Command back = new Command("") {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                super.actionPerformed(evt); //To change body of generated methods, choose Tools | Templates.
+                Form f = (Form) createContainer("Login", "/theme");
+                f.showBack();
+
+            }
+
+        };
+        f.setBackCommand(back);
 
         UserWebServices u = new UserWebServices();
         String strCoutries[] = u.get_countries(null);
@@ -1845,7 +1899,7 @@ public class StateMachine extends StateMachineBase {
 
         rdYes.setSelected(true);
 
-        Command back = new Command("Login") {
+        Command b = new Command("Login") {
 
             @Override
             public void actionPerformed(ActionEvent evt) {
@@ -1858,8 +1912,20 @@ public class StateMachine extends StateMachineBase {
             }
 
         };
-        bar.addCommandToLeftBar(back);
-        bar.setBackCommand(back);
+        bar.addCommandToLeftBar(b);
+
+        Command physicalBackButton = new Command("") {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                super.actionPerformed(evt); //To change body of generated methods, choose Tools | Templates.
+
+                Log.p("Registration back button", Log.DEBUG);
+
+            }
+
+        };
+
+        bar.setBackCommand(physicalBackButton);
 
     }
 
@@ -1975,6 +2041,20 @@ public class StateMachine extends StateMachineBase {
         }
 
         return sb.toString().substring(0, numchars);
+    }
+
+    @Override
+    protected void setBackCommand(Form f, Command backCommand) {
+        super.setBackCommand(f, backCommand); //To change body of generated methods, choose Tools | Templates.
+
+        Log.p("f=" + f.getTitle() + ", backCommand=" + backCommand.getCommandName(), Log.DEBUG);
+
+    }
+
+    @Override
+    public void back(Component sourceComponent) {
+        super.back(sourceComponent); //To change body of generated methods, choose Tools | Templates.
+        Log.p("back=" + sourceComponent.getName(), Log.DEBUG);
     }
 
 }

@@ -5,12 +5,16 @@ import com.codename1.ui.Form;
 import com.codename1.ui.Dialog;
 import userclasses.StateMachine;
 import com.codename1.io.Log;
+import com.codename1.io.NetworkManager;
 import com.codename1.messaging.Message;
 import com.codename1.push.Push;
 import com.codename1.push.PushCallback;
+import com.codename1.ui.CN;
 import com.codename1.ui.Component;
 import com.codename1.ui.Container;
 import com.codename1.ui.Toolbar;
+import com.codename1.ui.events.ActionEvent;
+import com.codename1.ui.events.ActionListener;
 import com.codename1.ui.plaf.DefaultLookAndFeel;
 import com.codename1.ui.plaf.UIManager;
 import java.util.HashSet;
@@ -32,11 +36,13 @@ public class CIPC implements PushCallback {
         //Toolbar.setGlobalToolbar(true);
 
         // Pro only feature, uncomment if you have a pro subscription
-        if (Display.getInstance().isSimulator()) {
-            Log.bindCrashProtection(false);
-        } else {//In production (on device)
-            Log.bindCrashProtection(true);
-        }
+//        if (Display.getInstance().isSimulator()) {
+//            Log.bindCrashProtection(false);
+//        } else {//In production (on device)
+        //Log.bindCrashProtection(true);
+        //}
+
+
 
         UIManager.getInstance().setLookAndFeel(new DefaultLookAndFeel(UIManager.getInstance()) {
             @Override
