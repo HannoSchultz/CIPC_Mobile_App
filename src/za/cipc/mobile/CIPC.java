@@ -41,9 +41,6 @@ public class CIPC implements PushCallback {
 //        } else {//In production (on device)
         //Log.bindCrashProtection(true);
         //}
-
-
-
         UIManager.getInstance().setLookAndFeel(new DefaultLookAndFeel(UIManager.getInstance()) {
             @Override
             public void bind(Component cmp) {

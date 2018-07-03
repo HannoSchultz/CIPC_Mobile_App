@@ -145,7 +145,7 @@ public class StateMachine extends StateMachineBase {
     }
 
     protected void initVars(Resources res) {
-        
+
         Display.getInstance().setProperty("WebLoadingHidden", "true");
 
         NetworkManager.getInstance().setTimeout(30000);

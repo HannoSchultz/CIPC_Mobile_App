@@ -1094,20 +1094,18 @@ public class UserWebServices {
             protected void handleIOException(IOException err) {
                 super.handleIOException(err); //To change body of generated methods, choose Tools | Templates.
                 Log.p("handleIOException: " + err.toString());
-                Dialog.show("handleIOException 1", "", "Ok", null);
-                
-                if(Connectivity.isConnected()){
-                Dialog.show("isConnected", "", "Ok", null);
-                    
-                }
-                else{
-                    //no connection
-                            Dialog.show("no connection", "", "Ok", null);
+                Dialog.show("Connection Error", "Error connecting to CIPC.", "Ok", null);
 
-                
-                }
-                Dialog.show("44444444444no connection", "", "Ok", null);
-                
+//                if (Connectivity.isConnected()) {
+//                    Dialog.show("isConnected", "", "Ok", null);
+//
+//                } else {
+//                    //no connection
+//                    Dialog.show("no connection", "", "Ok", null);
+//
+//                }
+//                Dialog.show("44444444444no connection", "", "Ok", null);
+
             }
 
             @Override
