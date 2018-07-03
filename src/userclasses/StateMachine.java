@@ -88,6 +88,8 @@ import za.co.cipc.pojos.User;
  */
 public class StateMachine extends StateMachineBase {
 
+    String ReferenceNumber;
+    int j = 0;
     Map map;
 
     static int width;
@@ -275,8 +277,8 @@ public class StateMachine extends StateMachineBase {
             Log.setLevel(Log.DEBUG);
             Log.p("issimulator", Log.DEBUG);
 
-            return "Login";
-            //return "Registration";
+            //return "Login";
+            return "Splash";
 
         } else {
             Log.setLevel(Log.REPORTING_PRODUCTION);//To disable debug information
@@ -334,6 +336,11 @@ public class StateMachine extends StateMachineBase {
     }
 
     public void showNameReservation(Form f, String taskType) {
+
+        if (arrayListNameReservation != null) {
+            arrayListNameReservation.clear();
+        }
+
         formProgress = new FormProgress(f);
         closeMenu(f, true);
 
@@ -368,8 +375,9 @@ public class StateMachine extends StateMachineBase {
 
             String msg = "";
 
-            if (name1.length() == 0) {
-                msg += "Please submit at least Name 1. ";
+            if (name1.length() == 0 && name2.length() == 0
+                    && name3.length() == 0 && name4.length() == 0) {
+                msg += "Please submit at least one Name. ";
             }
 
             if (msg.length() > 0) {
@@ -407,9 +415,23 @@ public class StateMachine extends StateMachineBase {
             String msg = "";
 
             if (arrayListNameReservation == null || arrayListNameReservation.size() == 0) {
-                msg += "Please validate Names before clicking on Add to Cart. ";
-            } else if (name1.length() == 0) {
-                msg += "Please submit at least Name 1. ";
+
+                msg += "Please validate Names before clicking on Add to Cart and ensure you have at least one name that might be available. ";
+
+            } else {
+
+                boolean atleastOneNameAvailable = false;
+
+                for (int i = 0; i < arrayListNameReservation.size(); i++) {
+                    NameSearchObject n = arrayListNameReservation.get(i);
+                    if (n.isIsValid()) {
+                        atleastOneNameAvailable = true;
+                    }
+                }
+
+                if (atleastOneNameAvailable == false) {
+                    msg += "Please validate Names before clicking on Add to Cart and ensure you have at least one name that might be available. ";
+                }
             }
 
             if (msg.length() > 0) {
@@ -425,8 +447,15 @@ public class StateMachine extends StateMachineBase {
                 //      + ", name2=" + name2 + ", name3=" + name3 + ", name4=" + name4, "Ok", null);
                 if (responseCall != null
                         && responseCall.getResponseMessage().indexOf("already filed") == -1) {
-                    Dialog.show("Success", responseCall.getResponseMessage(), "Ok", null);
 
+                    int indexStart = responseCall.getResponseMessage().indexOf("Reference No: ") + 14;
+                    int indexEnd = responseCall.getResponseMessage().indexOf(". First proposed");
+
+                    String ref = responseCall.getResponseMessage().substring(indexStart, indexEnd);
+
+                    Dialog.show("Success", "Dear Customer, Name Reservation Lodged successfully. Reference No: " + ref, "Ok", null);
+
+                    //Dialog.show("Success", responseCall.getResponseMessage(), "Ok", null); do not remove
                     Log.p("Name reservation responseCall=" + responseCall, Log.DEBUG);
 
                     User tempUser = new User();
@@ -1036,6 +1065,7 @@ public class StateMachine extends StateMachineBase {
 
                 if (!AnnualReturns.isEmpty()) {
                     Label lbl = new Label("ANNUAL RETURNS");
+                    lbl.setUIID("LabelCart");
                     contStep1EServices.add(lbl);
                 }
 
@@ -1083,17 +1113,24 @@ public class StateMachine extends StateMachineBase {
 
                 if (!CartItems.isEmpty()) {
                     Label lbl = new Label("E-SERVICES");
+                    lbl.setUIID("LabelCart");
                     contStep1EServices.add(lbl);
                 }
                 //CartItems
-                for (Object o : CartItems) {
-
+                for (j = 0; j < CartItems.size(); j++) {
+                    Object o = CartItems.get(j);
                     Container contItem = new Container(BoxLayout.y());
                     contItem.setUIID("CalendarDay");
                     Map m = (Map) o;
                     String ItemType = m.get("ItemType").toString();
-                    String StatusDate = m.get("StatusDate").toString();
-                    String ReferenceNumber = L10NManager.getInstance().format(Double.parseDouble(m.get("ReferenceNumber").toString()));
+                    //String Status = m.get("Status").toString();
+                    //String StatusDate = m.get("StatusDate").toString();
+
+                    m.put("Status", 2);
+                    m.put("StatusDate", getAnnualReturnsDateNow());
+
+                    String rawReferenceNumber = m.get("ReferenceNumber").toString();
+                    ReferenceNumber = L10NManager.getInstance().format(Double.parseDouble(m.get("ReferenceNumber").toString()));
                     ReferenceNumber = ReferenceNumber.trim();
                     ReferenceNumber = StringUtil.replaceAll(ReferenceNumber, ",", "");//remove comma
                     ReferenceNumber = StringUtil.replaceAll(ReferenceNumber, " ", "");//remove spaces
@@ -1117,7 +1154,27 @@ public class StateMachine extends StateMachineBase {
 
                     Container c0 = new Container();
                     Button btnRemove0 = new Button("REMOVE");
-                    //c0.add(btnRemove0);
+
+                    btnRemove0.addActionListener((ActionListener) (ActionEvent evt) -> {
+                        ArrayList Items = (ArrayList) map.get("Items");
+                        if (Items != null && Items.size() > 0) {
+                            Map objectToDelete = (Map) Items.get(0);
+                            objectToDelete.put("Status", 2);
+                            String ReferenceNumberToDelete = L10NManager.getInstance().format(Double.parseDouble(objectToDelete.get("ReferenceNumber").toString()));
+                            ReferenceNumberToDelete = ReferenceNumberToDelete.trim();
+                            ReferenceNumberToDelete = StringUtil.replaceAll(ReferenceNumberToDelete, ",", "");//remove comma
+                            ReferenceNumberToDelete = StringUtil.replaceAll(ReferenceNumberToDelete, " ", "");//remove spaces
+
+                            Log.p("ReferenceNumber=" + ReferenceNumber, Log.DEBUG);
+                            Log.p("ReferenceNumberToDelete=" + ReferenceNumberToDelete, Log.DEBUG);
+                            u.deleteCartItem(user, objectToDelete);
+                        }
+                        showCart(f);
+                        //contItem.remove();
+                        //contStep1EServices.repaint();
+                    });
+
+                    c0.add(btnRemove0);
                     contItem.add(mb).add(c0);
                     contStep1EServices.add(contItem);
 
@@ -1370,6 +1427,7 @@ public class StateMachine extends StateMachineBase {
 
     @Override
     protected void beforeLogin(final Form f) {
+
         Command loginBack = new Command("") {
             @Override
             public void actionPerformed(ActionEvent evt) {
@@ -1446,18 +1504,18 @@ public class StateMachine extends StateMachineBase {
         isRegStep1Passed = false;
         isRegStep2Passed = false;
         isRegStep3Passed = false;
-
-        Command back = new Command("") {
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                super.actionPerformed(evt); //To change body of generated methods, choose Tools | Templates.
-                Form f = (Form) createContainer("Login", "/theme");
-                f.showBack();
-
-            }
-
-        };
-        f.setBackCommand(back);
+//
+//        Command back = new Command("") {
+//            @Override
+//            public void actionPerformed(ActionEvent evt) {
+//                super.actionPerformed(evt); //To change body of generated methods, choose Tools | Templates.
+//                Form f = (Form) createContainer("Login", "/theme");
+//                f.showBack();
+//
+//            }
+//
+//        };
+//        f.setBackCommand(back);
 
         UserWebServices u = new UserWebServices();
         String strCoutries[] = u.get_countries(null);
@@ -1899,7 +1957,7 @@ public class StateMachine extends StateMachineBase {
 
         rdYes.setSelected(true);
 
-        Command b = new Command("Login") {
+        Command b = new Command("") {
 
             @Override
             public void actionPerformed(ActionEvent evt) {
@@ -1912,7 +1970,7 @@ public class StateMachine extends StateMachineBase {
             }
 
         };
-        bar.addCommandToLeftBar(b);
+        //bar.addCommandToLeftBar(b);
 
         Command physicalBackButton = new Command("") {
             @Override
@@ -1920,6 +1978,23 @@ public class StateMachine extends StateMachineBase {
                 super.actionPerformed(evt); //To change body of generated methods, choose Tools | Templates.
 
                 Log.p("Registration back button", Log.DEBUG);
+                if (isRegStep1Passed == false && isRegStep2Passed == false
+                        && isRegStep3Passed == false) {//Step 1
+                    Form f = (Form) createContainer("theme", "Login");
+                    f.showBack();
+                } else if (isRegStep1Passed == true && isRegStep2Passed == false
+                        && isRegStep3Passed == false) {//Step 2
+                    tabs.setSelectedIndex(0);
+                    isRegStep1Passed = false;
+                } else if (isRegStep1Passed == true && isRegStep2Passed == true
+                        && isRegStep3Passed == false) {//Step 3
+                    tabs.setSelectedIndex(1);
+                    isRegStep2Passed = false;
+                } else if (isRegStep1Passed == true && isRegStep2Passed == true
+                        && isRegStep3Passed == true) {//Step 4
+                    tabs.setSelectedIndex(2);
+                    isRegStep3Passed = false;
+                }
 
             }
 
@@ -1935,7 +2010,7 @@ public class StateMachine extends StateMachineBase {
 
         isTableInputForm(f);
 
-        Command back = new Command("Login") {
+        Command back = new Command("") {
 
             @Override
             public void actionPerformed(ActionEvent evt) {
@@ -1944,7 +2019,7 @@ public class StateMachine extends StateMachineBase {
             }
 
         };
-        bar.addCommandToLeftBar(back);
+        //bar.addCommandToLeftBar(back);
         bar.setBackCommand(back);
     }
 
@@ -2055,6 +2130,14 @@ public class StateMachine extends StateMachineBase {
     public void back(Component sourceComponent) {
         super.back(sourceComponent); //To change body of generated methods, choose Tools | Templates.
         Log.p("back=" + sourceComponent.getName(), Log.DEBUG);
+    }
+
+    public String getAnnualReturnsDateNow() {
+        long dateNow = System.currentTimeMillis();
+        Date newDate = new Date(dateNow);
+        String dateString = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss.SSS").format(newDate);
+        dateString = StringUtil.replaceAll(dateString, "_", "T");
+        return dateString;
     }
 
 }

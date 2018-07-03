@@ -752,19 +752,22 @@ public class UserWebServices {
         return null;
     }
 
-    public String deleteCartItem(User user) {
+    public String deleteCartItem(User user, Map m) {
 
         String END_POINT = "https://apidev.cipc.co.za/v1/payment/cartitem/update";
+        
+        String BODY = Result.fromContent(m).toString();
+        Log.p("deleteCartItem BODY=" + BODY, Log.DEBUG);
 
-        String BODY
-                = "{\"ReferenceNumber\":8118779575,"
-                + "\"Status\":2,"
-                + "\"StatusDate\":\"2018-04-23T13:04:28.873\","
-                + "\"CustomerCode\":\"" + user.getAgent_code() + "\","
-                + "\"ItemType\":4,"
-                + "\"ItemData\":\"{\\\"ReferenceNumber\\\":9118779575,\\\"EnterpriseNumber\\\":\\\"\\\",\\\"FormCode\\\":\\\"CoR9.1\\\",\\\"ChangeTypeCode\\\":\\\"30\\\",\\\"Description\\\":null,\\\"TotalAmount\\\":50.0}\","
-                + "\"Amount\":50.0"
-                + "}";
+//        String BODY
+//                = "{\"ReferenceNumber\":8118779575,"
+//                + "\"Status\":2,"
+//                + "\"StatusDate\":\"2018-04-23T13:04:28.873\","
+//                + "\"CustomerCode\":\"" + user.getAgent_code() + "\","
+//                + "\"ItemType\":4,"
+//                + "\"ItemData\":\"{\\\"ReferenceNumber\\\":9118779575,\\\"EnterpriseNumber\\\":\\\"\\\",\\\"FormCode\\\":\\\"CoR9.1\\\",\\\"ChangeTypeCode\\\":\\\"30\\\",\\\"Description\\\":null,\\\"TotalAmount\\\":50.0}\","
+//                + "\"Amount\":50.0"
+//                + "}";
 
         ConnectionRequest post = new ConnectionRequest() {
             @Override
@@ -817,6 +820,7 @@ public class UserWebServices {
             String data = new String(responseData);
             try {
                 JSONParser parser = new JSONParser();
+                parser.setIncludeNulls(true);
                 map = parser.parseJSON(convertStringtoInputStreamReader(data));
                 Log.p("data=" + data, Log.DEBUG);
                 Log.p("map=" + map, Log.DEBUG);
