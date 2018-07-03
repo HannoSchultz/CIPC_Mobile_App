@@ -33,6 +33,7 @@ import java.util.Hashtable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
+import org.littlemonkey.connectivity.Connectivity;
 import userclasses.Constants;
 import userclasses.EnterpriseDetails;
 import userclasses.NameReservation;
@@ -623,13 +624,13 @@ public class UserWebServices {
         Log.p("insertCartItemAR ReferenceNumber=" + ReferenceNumber, Log.DEBUG);
         String dateNow = getAnnualReturnsDateNow();
         Log.p("insertCartItemAR dateNow=" + dateNow, Log.DEBUG);
-        
-         double total = 0.0;
+
+        double total = 0.0;
         //refactor tot calc
-        for(int i = 0; i < listCalculateARTran.size();i++){
+        for (int i = 0; i < listCalculateARTran.size(); i++) {
             total += listCalculateARTran.get(i).getAr_total();
         }
-     
+
         if (listCalculateARTran.size() == 1) {
             AR_BODY
                     = "{\n"
@@ -755,7 +756,7 @@ public class UserWebServices {
     public String deleteCartItem(User user, Map m) {
 
         String END_POINT = "https://apidev.cipc.co.za/v1/payment/cartitem/update";
-        
+
         String BODY = Result.fromContent(m).toString();
         Log.p("deleteCartItem BODY=" + BODY, Log.DEBUG);
 
@@ -768,7 +769,6 @@ public class UserWebServices {
 //                + "\"ItemData\":\"{\\\"ReferenceNumber\\\":9118779575,\\\"EnterpriseNumber\\\":\\\"\\\",\\\"FormCode\\\":\\\"CoR9.1\\\",\\\"ChangeTypeCode\\\":\\\"30\\\",\\\"Description\\\":null,\\\"TotalAmount\\\":50.0}\","
 //                + "\"Amount\":50.0"
 //                + "}";
-
         ConnectionRequest post = new ConnectionRequest() {
             @Override
             protected void buildRequestBody(OutputStream os) throws IOException {
@@ -1091,9 +1091,37 @@ public class UserWebServices {
             }
 
             @Override
+            protected void handleIOException(IOException err) {
+                super.handleIOException(err); //To change body of generated methods, choose Tools | Templates.
+                Log.p("handleIOException: " + err.toString());
+                Dialog.show("handleIOException 1", "", "Ok", null);
+                
+                if(Connectivity.isConnected()){
+                Dialog.show("isConnected", "", "Ok", null);
+                    
+                }
+                else{
+                    //no connection
+                            Dialog.show("no connection", "", "Ok", null);
+
+                
+                }
+                Dialog.show("44444444444no connection", "", "Ok", null);
+                
+            }
+
+            @Override
+            protected void handleRuntimeException(RuntimeException err) {
+                super.handleRuntimeException(err); //To change body of generated methods, choose Tools | Templates.
+                Log.p("Exception: " + err.toString());
+                Dialog.show("handleRuntimeException", "", "Ok", null);
+
+            }
+
+            @Override
             protected void handleException(Exception err) {
                 Log.p("Exception: " + err.toString());
-                Dialog.show("No Internet", "There is no internet connection. Please switch your connection on.", "Okay", null);
+                //Dialog.show("No Internet", "There is no internet connection. Please switch your connection on.", "Okay", null);
 
             }
         };

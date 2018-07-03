@@ -145,6 +145,8 @@ public class StateMachine extends StateMachineBase {
     }
 
     protected void initVars(Resources res) {
+        
+        Display.getInstance().setProperty("WebLoadingHidden", "true");
 
         NetworkManager.getInstance().setTimeout(30000);
 
@@ -277,8 +279,8 @@ public class StateMachine extends StateMachineBase {
             Log.setLevel(Log.DEBUG);
             Log.p("issimulator", Log.DEBUG);
 
-            //return "Login";
-            return "Splash";
+            return "Login";
+            //return "Splash";
 
         } else {
             Log.setLevel(Log.REPORTING_PRODUCTION);//To disable debug information
@@ -1980,7 +1982,7 @@ public class StateMachine extends StateMachineBase {
                 Log.p("Registration back button", Log.DEBUG);
                 if (isRegStep1Passed == false && isRegStep2Passed == false
                         && isRegStep3Passed == false) {//Step 1
-                    Form f = (Form) createContainer("theme", "Login");
+                    Form f = (Form) createContainer("/theme", "Login");
                     f.showBack();
                 } else if (isRegStep1Passed == true && isRegStep2Passed == false
                         && isRegStep3Passed == false) {//Step 2
