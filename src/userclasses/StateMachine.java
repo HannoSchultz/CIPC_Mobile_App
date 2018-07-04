@@ -88,6 +88,8 @@ import za.co.cipc.pojos.User;
  */
 public class StateMachine extends StateMachineBase {
 
+    Container contSideMenu;
+
     String ReferenceNumber;
     int j = 0;
     Map map;
@@ -351,12 +353,15 @@ public class StateMachine extends StateMachineBase {
         formProgress = new FormProgress(f);
         closeMenu(f, true);
         Toolbar bar = analytics(f, "Name Reservation");
+        f.removeAllCommands();
+        f.repaint();
 
         Command back = new Command("") {
             @Override
             public void actionPerformed(ActionEvent evt) {
                 super.actionPerformed(evt); //To change body of generated methods, choose Tools | Templates.
                 Log.p("Name Reservation back", Log.DEBUG);
+                showDashboard(f);
             }
 
         };
@@ -506,18 +511,19 @@ public class StateMachine extends StateMachineBase {
     }
 
     public void showDashboard(final Form f) {
+        f.removeAllCommands();
+        addSideMenu(f);
 
-        Command back = new Command("Back") {
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                super.actionPerformed(evt); //To change body of generated methods, choose Tools | Templates.
-                Log.p("back", Log.DEBUG);
-            }
-
-        };
-
-        f.setBackCommand(back);
-
+//        Command back = new Command("") {
+//            @Override
+//            public void actionPerformed(ActionEvent evt) {
+//                super.actionPerformed(evt); //To change body of generated methods, choose Tools | Templates.
+//                Log.p("back", Log.DEBUG);
+//            }
+//
+//        };
+//
+//        f.setBackCommand(back);
         formProgress = new FormProgress(f);
         closeMenu(f, true);
 
@@ -616,6 +622,35 @@ public class StateMachine extends StateMachineBase {
         Tabs tabs = (Tabs) findByName("Tabs", contProjects);
         tabs.setSwipeActivated(false);
         tabs.hideTabs();
+
+        Command back = new Command("") {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                super.actionPerformed(evt); //To change body of generated methods, choose Tools | Templates.
+                Log.p("AR back", Log.DEBUG);
+
+                if (isARStep1Passed == false && isARStep2Passed == false
+                        && isARStep3Passed == false) {//Step 1
+                    showDashboard(f);
+                } else if (isARStep1Passed == true && isARStep2Passed == false
+                        && isARStep3Passed == false) {//Step 2
+                    tabs.setSelectedIndex(0);
+                    isARStep1Passed = false;
+                } else if (isARStep1Passed == true && isARStep2Passed == true
+                        && isARStep3Passed == false) {//Step 3
+                    tabs.setSelectedIndex(1);
+                    isARStep2Passed = false;
+                } else if (isARStep1Passed == true && isARStep2Passed == true
+                        && isARStep3Passed == true) {//Step 4
+                    tabs.setSelectedIndex(2);
+                    isARStep3Passed = false;
+                }
+
+            }
+
+        };
+        f.removeAllCommands();
+        f.getToolbar().setBackCommand(back);
 
         Button btn1 = new Button("1");
         Button btn2 = new Button("2");
@@ -927,8 +962,23 @@ public class StateMachine extends StateMachineBase {
 
     }
 
+    boolean isCartStep2 = false;
+
     public void showCart(final Form f) {
+
         Container cont = (Container) createContainer("/theme", "ContCart");
+
+        Tabs Tabs = (Tabs) findByName("Tabs", cont);
+        Tabs.addSelectionListener(new SelectionListener() {
+            @Override
+            public void selectionChanged(int oldSelected, int newSelected) {
+                if (newSelected == 2) {
+                    isCartStep2 = true;
+                } else {
+                    isCartStep2 = false;
+                }
+            }
+        });
 
         Container contStep2 = (Container) findByName("contStep2", cont);
         contStep2.removeAll();
@@ -1271,9 +1321,29 @@ public class StateMachine extends StateMachineBase {
             //        });
             f.add(cont);
 
+            Command back = new Command("") {
+                @Override
+                public void actionPerformed(ActionEvent evt) {
+                    super.actionPerformed(evt); //To change body of generated methods, choose Tools | Templates.
+                    Log.p("CART back", Log.DEBUG);
+                    if (isCartStep2 == true) {
+                        Tabs.setSelectedIndex(0);
+                        isCartStep2 = false;
+                    } else {
+
+                        showDashboard(f);
+
+                    }
+                }
+
+            };
+
+            f.removeAllCommands();
+            f.getToolbar().setBackCommand(back);
+
         } else {
             Dialog.show("No Items", "You do not have any cart items. Please lodge a Name Reservation or submit Annual Returns.", "Ok", null);
-            showDashboard(f);
+            //showDashboard(f);
         }
 
         if (formProgress != null) {
@@ -1332,7 +1402,10 @@ public class StateMachine extends StateMachineBase {
 
         showDashboard(f);
 
-        Container contSideMenu = (Container) createContainer("/theme", "ContSideMenu");
+    }
+
+    private void addSideMenu(Form f) {
+        contSideMenu = (Container) createContainer("/theme", "ContSideMenu");
         contSideMenu.setScrollableX(false);//This fixed the side menu scroll issue
         contSideMenu.setScrollableY(false);
 
@@ -1369,7 +1442,8 @@ public class StateMachine extends StateMachineBase {
         Command command = new Command("Update Photo");
         command.putClientProperty("SideComponent", contSideMenu);
 
-        f.getToolbar().addComponentToSideMenu(contSideMenu);
+        //f.getToolbar().addComponentToSideMenu(contSideMenu);
+        f.revalidate();
 
     }
 
