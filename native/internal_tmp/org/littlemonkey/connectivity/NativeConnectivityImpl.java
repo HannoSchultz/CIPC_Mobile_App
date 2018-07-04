@@ -1,7 +1,6 @@
 package org.littlemonkey.connectivity;
 
-public class NativeConnectivityImpl implements org.littlemonkey.connectivity.NativeConnectivity {
-
+public class NativeConnectivityImpl implements org.littlemonkey.connectivity.NativeConnectivity{
     public int getConnectionStatus() {
         return 0;
     }

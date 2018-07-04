@@ -153,6 +153,11 @@ public class StateMachine extends StateMachineBase {
         Display.getInstance().addEdtErrorHandler(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 evt.consume();
+                if (Display.getInstance().isSimulator()) {
+                    Log.p("Environment is Simulator");
+                } else {
+                    Log.p("Environment is Device");
+                }
                 Log.p("User " + AGENT_CODE);
                 Log.p("Exception in AppName version " + Display.getInstance().getProperty("AppVersion", "Unknown"));
                 Log.p("OS " + Display.getInstance().getPlatformName());
@@ -345,6 +350,18 @@ public class StateMachine extends StateMachineBase {
 
         formProgress = new FormProgress(f);
         closeMenu(f, true);
+        Toolbar bar = analytics(f, "Name Reservation");
+
+        Command back = new Command("") {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                super.actionPerformed(evt); //To change body of generated methods, choose Tools | Templates.
+                Log.p("Name Reservation back", Log.DEBUG);
+            }
+
+        };
+
+        bar.setBackCommand(back);
 
         Container contentPane = f.getContentPane();
         contentPane.removeAll();
@@ -1102,9 +1119,35 @@ public class StateMachine extends StateMachineBase {
                     mb.setTextLine3("Item Cost: R" + TotalAmountItemType);
 
                     Container c0 = new Container();
+                    c0.setUIID("DeleteButtonCont");
                     Button btnRemove0 = new Button("REMOVE");
-                    //c0.add(btnRemove0);
-                    contItem.add(mb).add(c0);
+                    btnRemove0.setName(ReferenceNumber);//ensure we have correct button
+                    btnRemove0.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent evt) {
+                            ArrayList Items = (ArrayList) map.get("Items");
+                            if (Items != null && Items.size() > 0) {
+                                for (int k = 0; k < Items.size(); k++) {
+                                    Map objectToDelete = (Map) Items.get(k);
+                                    objectToDelete.put("Status", 2);
+                                    String ReferenceNumberToDelete = L10NManager.getInstance().format(Double.parseDouble(objectToDelete.get("ReferenceNumber").toString()));
+                                    ReferenceNumberToDelete = ReferenceNumberToDelete.trim();
+                                    ReferenceNumberToDelete = StringUtil.replaceAll(ReferenceNumberToDelete, ",", "");//remove comma
+                                    ReferenceNumberToDelete = StringUtil.replaceAll(ReferenceNumberToDelete, " ", "");//remove spaces
+
+                                    if (btnRemove0.getName().equals(ReferenceNumberToDelete)) {
+                                        Log.p("Delete AR ReferenceNumber=" + ReferenceNumberToDelete, Log.DEBUG);
+                                        u.deleteCartItem(user, objectToDelete);
+                                        showCart(f);
+                                    }
+                                }
+                            }
+                        }
+                    });
+                    c0.add(btnRemove0);
+
+                    contItem.add(mb)
+                            .add(c0);
                     contStep1EServices.add(contItem);
 
                 }
@@ -1155,23 +1198,30 @@ public class StateMachine extends StateMachineBase {
                     mb.setTextLine3("Item Cost: R" + TotalAmountItemType);
 
                     Container c0 = new Container();
+                    c0.setUIID("DeleteButtonCont");
                     Button btnRemove0 = new Button("REMOVE");
+                    btnRemove0.setName(ReferenceNumber);//ensure we have correct reference
+                    //btnRemove0.setUIID("CalendarDay");
 
                     btnRemove0.addActionListener((ActionListener) (ActionEvent evt) -> {
                         ArrayList Items = (ArrayList) map.get("Items");
                         if (Items != null && Items.size() > 0) {
-                            Map objectToDelete = (Map) Items.get(0);
-                            objectToDelete.put("Status", 2);
-                            String ReferenceNumberToDelete = L10NManager.getInstance().format(Double.parseDouble(objectToDelete.get("ReferenceNumber").toString()));
-                            ReferenceNumberToDelete = ReferenceNumberToDelete.trim();
-                            ReferenceNumberToDelete = StringUtil.replaceAll(ReferenceNumberToDelete, ",", "");//remove comma
-                            ReferenceNumberToDelete = StringUtil.replaceAll(ReferenceNumberToDelete, " ", "");//remove spaces
+                            for (int k = 0; k < Items.size(); k++) {
+                                Map objectToDelete = (Map) Items.get(k);
+                                objectToDelete.put("Status", 2);
+                                String ReferenceNumberToDelete = L10NManager.getInstance().format(Double.parseDouble(objectToDelete.get("ReferenceNumber").toString()));
+                                ReferenceNumberToDelete = ReferenceNumberToDelete.trim();
+                                ReferenceNumberToDelete = StringUtil.replaceAll(ReferenceNumberToDelete, ",", "");//remove comma
+                                ReferenceNumberToDelete = StringUtil.replaceAll(ReferenceNumberToDelete, " ", "");//remove spaces
 
-                            Log.p("ReferenceNumber=" + ReferenceNumber, Log.DEBUG);
-                            Log.p("ReferenceNumberToDelete=" + ReferenceNumberToDelete, Log.DEBUG);
-                            u.deleteCartItem(user, objectToDelete);
+                                if (btnRemove0.getName().equals(ReferenceNumberToDelete)) {
+                                    Log.p("Delete Name reservation ReferenceNumber=" + ReferenceNumberToDelete, Log.DEBUG);
+                                    u.deleteCartItem(user, objectToDelete);
+                                    showCart(f);
+                                }
+                            }
                         }
-                        showCart(f);
+                        // 
                         //contItem.remove();
                         //contStep1EServices.repaint();
                     });
@@ -1430,11 +1480,13 @@ public class StateMachine extends StateMachineBase {
     @Override
     protected void beforeLogin(final Form f) {
 
+        Toolbar toolbar = analytics(f, "");
+
         Command loginBack = new Command("") {
             @Override
             public void actionPerformed(ActionEvent evt) {
                 super.actionPerformed(evt); //To change body of generated methods, choose Tools | Templates.
-
+                Log.p("Login back clicked", Log.DEBUG);
                 boolean flag = Dialog.show("Exit", "Are you sure you want to Exit App?", "Yes", "No");
                 if (flag) {
                     System.exit(0);
@@ -1443,8 +1495,9 @@ public class StateMachine extends StateMachineBase {
             }
 
         };
-
-        f.setBackCommand(loginBack);
+        //toolbar.setBackCommand(loginBack);
+        toolbar.addCommandToLeftBar(loginBack);
+        toolbar.setBackCommand(loginBack);
 
         current = f;
         f.setScrollVisible(false);
