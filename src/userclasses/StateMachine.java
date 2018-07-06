@@ -166,7 +166,9 @@ public class StateMachine extends StateMachineBase {
                 Log.p("Error " + evt.getSource());
                 Log.p("Current Form " + Display.getInstance().getCurrent().getName());
                 Log.e((Throwable) evt.getSource());
-                Log.sendLog();
+                if (!Display.getInstance().isSimulator()) {
+                    Log.sendLog();
+                }
             }
         });
 
@@ -280,8 +282,8 @@ public class StateMachine extends StateMachineBase {
 
         if (Display.getInstance().isSimulator()) {//Pre populate with Debug info
 
-            defaultEmail = "BLE076";
-            defaultPassword = "Password12";
+            defaultEmail = "NEWLNE";
+            defaultPassword = "PleaseWork1!";
 
             Log.setLevel(Log.DEBUG);
             Log.p("issimulator", Log.DEBUG);
@@ -512,7 +514,6 @@ public class StateMachine extends StateMachineBase {
 
     public void showDashboard(final Form f) {
         f.removeAllCommands();
-        addSideMenu(f);
 
 //        Command back = new Command("") {
 //            @Override
@@ -529,7 +530,8 @@ public class StateMachine extends StateMachineBase {
 
         f.setLayout(new BoxLayout(BoxLayout.Y_AXIS));
 
-        analytics(f, "Dashboard");
+        Toolbar tb = analytics(f, "Dashboard");
+        addSideMenu(f, tb);
 
         Container contentPane = f.getContentPane();
         contentPane.removeAll();
@@ -831,7 +833,7 @@ public class StateMachine extends StateMachineBase {
                     txt0a.setText("Please enter Annual Turnover for " + ent.getAr_year());
                     txt0a.setEnabled(false);
                     txt0a.setEditable(false);
-                    TextArea txt0b = new TextArea();
+                    TextField txt0b = new TextField();
                     txt0b.setHint("Amount in rands");
                     txt0b.setConstraint(TextField.DECIMAL);
                     if (Display.getInstance().isSimulator()) {
@@ -1026,17 +1028,26 @@ public class StateMachine extends StateMachineBase {
         browser.setScrollableY(false);
         browser.setPinchToZoomEnabled(false);
 
+        InfiniteProgress prog = new InfiniteProgress();
+
         browser.addWebEventListener("onStart", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
-                Log.p("onStart", Log.DEBUG);
+                Log.p("onStart: " + browser.getURL(), Log.DEBUG);
+                if ((browser.getURL().indexOf("Pay.aspx") > -1 || browser.getURL().indexOf("ACSRedirect.aspx") > -1)) {
+                    formProgress = new FormProgress(f);
+                }
             }
         });
 
         browser.addWebEventListener("onLoad", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
-                Log.p("onLoad", Log.DEBUG);
+                Log.p("onLoad: " + browser.getURL(), Log.DEBUG);
+                if (formProgress != null) {
+                    formProgress.removeProgress();
+                }
+
             }
         });
 
@@ -1404,47 +1415,101 @@ public class StateMachine extends StateMachineBase {
 
     }
 
-    private void addSideMenu(Form f) {
-        contSideMenu = (Container) createContainer("/theme", "ContSideMenu");
-        contSideMenu.setScrollableX(false);//This fixed the side menu scroll issue
-        contSideMenu.setScrollableY(false);
+    private void addSideMenu(Form f, Toolbar tb) {
+        int sizeLabel = 5;
 
-        Container contProfile = (Container) findByName("contProfile", contSideMenu);
-        contProfile.setVisible(false);
+        if (contSideMenu == null) {
 
-        contSideMenu.removeComponent(contProfile);
-        contSideMenu.repaint();
-        btnProfilePic = (Button) findByName("btnProfilePic", contSideMenu);
-        btnProfileName = (Button) findByName("btnProfileName", contSideMenu);
+            contSideMenu = (Container) createContainer("/theme", "ContSideMenu");
+            contSideMenu.setScrollableX(false);//This fixed the side menu scroll issue
+            contSideMenu.setScrollableY(false);
 
-        btnProfileName.setText("Update Profile");
+            Container contProfile = (Container) findByName("contProfile", contSideMenu);
+            contProfile.setVisible(false);
 
-        btnProfilePic.addActionListener((ActionListener) (ActionEvent evt) -> {
-            showProfile(f);
-        });
+            contSideMenu.removeComponent(contProfile);
+            contSideMenu.repaint();
+            btnProfilePic = (Button) findByName("btnProfilePic", contSideMenu);
+            btnProfileName = (Button) findByName("btnProfileName", contSideMenu);
 
-        btnProfileName.addActionListener((ActionListener) (ActionEvent evt) -> {
-            showProfile(f);
-        });
+            btnProfileName.setText("Update Profile");
 
-        Button btnDashboard = (Button) findByName("btnDashboard", contSideMenu);
-        btnDashboard.addActionListener((ActionListener) (ActionEvent evt) -> {
-            closeMenu(f, true);
-            showDashboard(f);
-            closeMenu(f, true);
-        });
+            btnProfilePic.addActionListener((ActionListener) (ActionEvent evt) -> {
+                showProfile(f);
+            });
 
-        Button btnLogout = (Button) findByName("btnLogout", contSideMenu);
-        btnLogout.addActionListener((ActionListener) (ActionEvent evt) -> {
-            showForm("Login", null);
-        });
+            btnProfileName.addActionListener((ActionListener) (ActionEvent evt) -> {
+                showProfile(f);
+            });
 
-        Command command = new Command("Update Photo");
-        command.putClientProperty("SideComponent", contSideMenu);
+            Button btnDashboard = (Button) findByName("btnDashboard", contSideMenu);
+            btnDashboard.addActionListener((ActionListener) (ActionEvent evt) -> {
+                closeMenu(f, true);
+                showDashboard(f);
+                closeMenu(f, true);
+            });
 
-        //f.getToolbar().addComponentToSideMenu(contSideMenu);
-        f.revalidate();
+            Button btnLogout = (Button) findByName("btnLogout", contSideMenu);
+            btnLogout.addActionListener((ActionListener) (ActionEvent evt) -> {
+                showLogin();
+            });
 
+            Command command = new Command("Update Photo");
+            command.putClientProperty("SideComponent", contSideMenu);
+
+            Button btnSide = new Button("S");
+            btnSide.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent evt) {
+
+                }
+            });
+            Command side = new Command("S") {
+                @Override
+                public void actionPerformed(ActionEvent evt) {
+                    super.actionPerformed(evt); //To change body of generated methods, choose Tools | Templates.
+                    tb.openSideMenu();
+                }
+
+            };
+
+            Style labelForm = UIManager.getInstance().getComponentStyle("ButtonLabel");
+
+            FontImage img1 = FontImage.createMaterial(FontImage.MATERIAL_MENU, labelForm, sizeLabel);
+
+            f.getToolbar().addCommandToLeftBar("", img1, new ActionListener<ActionEvent>() {
+                @Override
+                public void actionPerformed(ActionEvent evt) {
+                    tb.openSideMenu();
+                }
+            }
+            );
+            f.getToolbar().addComponentToSideMenu(contSideMenu);
+            f.revalidate();
+        } else {
+
+            Style labelForm = UIManager.getInstance().getComponentStyle("ButtonLabel");
+
+            FontImage img1 = FontImage.createMaterial(FontImage.MATERIAL_MENU, labelForm, sizeLabel);
+
+            f.getToolbar().addCommandToLeftBar("", img1, new ActionListener<ActionEvent>() {
+                @Override
+                public void actionPerformed(ActionEvent evt) {
+                    tb.openSideMenu();
+                }
+            }
+            );
+            //f.getToolbar().addComponentToSideMenu(contSideMenu);
+            f.revalidate();
+
+        }
+
+    }
+
+    public void showLogin() {
+        contSideMenu.removeAll();
+        contSideMenu = null;
+        showForm("Login", null);
     }
 
     public String trimEmail(String email) {
@@ -1588,8 +1653,8 @@ public class StateMachine extends StateMachineBase {
             TextField txtPassword = (TextField) findByName("txtPassword", f);
             //txtPassword.setText("Password12");
 
-            txtCustomerCode.setText("BLE076");
-            txtPassword.setText("Password1");
+            txtCustomerCode.setText(defaultEmail);
+            txtPassword.setText(defaultPassword);
 
         }
 
