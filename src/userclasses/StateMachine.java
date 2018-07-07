@@ -48,6 +48,7 @@ import com.codename1.ui.plaf.Style;
 import com.codename1.ui.plaf.UIManager;
 import com.codename1.ui.spinner.DateSpinner;
 import com.codename1.ui.spinner.Picker;
+import com.codename1.ui.table.TableLayout;
 import com.codename1.ui.util.Resources;
 import com.codename1.ui.validation.Constraint;
 import com.codename1.ui.validation.LengthConstraint;
@@ -172,10 +173,13 @@ public class StateMachine extends StateMachineBase {
             }
         });
 
-        if (Display.getInstance().isTablet()) {
-            Toolbar.setPermanentSideMenu(true);
-        }
-
+//        if (Display.getInstance().isTablet() || Display.getInstance().isDesktop()) {//Lock landscape
+//            //Toolbar.setPermanentSideMenu(true);
+//            Display.getInstance().lockOrientation(false);
+//        }
+//        else{//Portrait
+//            Display.getInstance().lockOrientation(true);
+//        }
         if (Display.getInstance().isSimulator()) {
 
             AGENT_CODE = "BLE076";
@@ -425,10 +429,11 @@ public class StateMachine extends StateMachineBase {
                         lblResponse.setUIID("LabelRed");
 
                     }
+                    lblResponse.repaint();
                 }
 
-                //lblLine1.scrollRectToVisible(BACK_COMMAND_ID, BACK_COMMAND_ID, BACK_COMMAND_ID, BACK_COMMAND_ID, contentPane);
-                contTasks.repaint();
+                lblLine1.scrollRectToVisible(0, 0, 0, 0, lblLine1);
+                lblLine1.repaint();
             }
         });
 
@@ -515,16 +520,17 @@ public class StateMachine extends StateMachineBase {
     public void showDashboard(final Form f) {
         f.removeAllCommands();
 
-//        Command back = new Command("") {
-//            @Override
-//            public void actionPerformed(ActionEvent evt) {
-//                super.actionPerformed(evt); //To change body of generated methods, choose Tools | Templates.
-//                Log.p("back", Log.DEBUG);
-//            }
-//
-//        };
-//
-//        f.setBackCommand(back);
+        Command back = new Command("") {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                super.actionPerformed(evt); //To change body of generated methods, choose Tools | Templates.
+                Log.p("back", Log.DEBUG);
+                Display.getInstance().minimizeApplication();
+            }
+
+        };
+
+        f.setBackCommand(back);
         formProgress = new FormProgress(f);
         closeMenu(f, true);
 
@@ -1354,7 +1360,7 @@ public class StateMachine extends StateMachineBase {
 
         } else {
             Dialog.show("No Items", "You do not have any cart items. Please lodge a Name Reservation or submit Annual Returns.", "Ok", null);
-            //showDashboard(f);
+            showDashboard(f);
         }
 
         if (formProgress != null) {
@@ -1457,22 +1463,6 @@ public class StateMachine extends StateMachineBase {
             Command command = new Command("Update Photo");
             command.putClientProperty("SideComponent", contSideMenu);
 
-            Button btnSide = new Button("S");
-            btnSide.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent evt) {
-
-                }
-            });
-            Command side = new Command("S") {
-                @Override
-                public void actionPerformed(ActionEvent evt) {
-                    super.actionPerformed(evt); //To change body of generated methods, choose Tools | Templates.
-                    tb.openSideMenu();
-                }
-
-            };
-
             Style labelForm = UIManager.getInstance().getComponentStyle("ButtonLabel");
 
             FontImage img1 = FontImage.createMaterial(FontImage.MATERIAL_MENU, labelForm, sizeLabel);
@@ -1507,9 +1497,11 @@ public class StateMachine extends StateMachineBase {
     }
 
     public void showLogin() {
-        contSideMenu.removeAll();
-        contSideMenu = null;
-        showForm("Login", null);
+        if (contSideMenu != null) {
+            contSideMenu.removeAll();
+            contSideMenu = null;
+        }
+        Form f = showForm("Login", null);
     }
 
     public String trimEmail(String email) {
@@ -1619,6 +1611,12 @@ public class StateMachine extends StateMachineBase {
     @Override
     protected void beforeLogin(final Form f) {
 
+        if (Display.getInstance().isTablet()) {
+            f.setLayout(new GridLayout(1, 3));
+            f.addComponent(0, new Label(" "));
+            f.repaint();
+        }
+
         Toolbar toolbar = analytics(f, "");
 
         Command loginBack = new Command("") {
@@ -1692,8 +1690,45 @@ public class StateMachine extends StateMachineBase {
 
     }
 
+    public void updateLayoutRegistration(Form f) {
+
+        boolean isPotrait = Display.getInstance().isPortrait();
+
+        if (Display.getInstance().isTablet()) {
+
+            TableLayout layout = new TableLayout(1, 3);
+
+            Container content = (Container) findByName("content", f);
+            f.removeComponent(content);
+            f.removeAll();
+            f.setLayout(layout);
+
+            if (isPotrait) {
+                f.addComponent(layout.createConstraint().widthPercentage(10), new Label(" "));
+                f.addComponent(layout.createConstraint().widthPercentage(80), content);
+                f.addComponent(layout.createConstraint().widthPercentage(10), new Label(" "));
+            } else {
+                f.addComponent(layout.createConstraint().widthPercentage(25), new Label(" "));
+                f.addComponent(layout.createConstraint().widthPercentage(50), content);
+                f.addComponent(layout.createConstraint().widthPercentage(25), new Label(" "));
+            }
+        }
+
+        f.repaint();
+    }
+
     @Override
     protected void beforeRegistration(Form f) {
+
+        f.addOrientationListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                updateLayoutRegistration(f);
+
+            }
+        });
+
+        updateLayoutRegistration(f);
 
         isRegStep1Passed = false;
         isRegStep2Passed = false;
@@ -1793,7 +1828,7 @@ public class StateMachine extends StateMachineBase {
                     }
                 }
 
-                step3PostalCont.repaint();
+                f.repaint();
 
             }
 
@@ -1804,7 +1839,7 @@ public class StateMachine extends StateMachineBase {
 
             if (true == isSelected) {
                 step3PostalCont.removeAll();
-                step3PostalCont.repaint();
+                f.repaint();
             }
 
         });
@@ -2133,7 +2168,8 @@ public class StateMachine extends StateMachineBase {
         contTop.setLayout(new GridLayout(1, 4));
         contTop.add(btn1).add(btn2).add(btn3).add(btn4);
 
-        f.add(BorderLayout.NORTH, contTop);
+        Container content = (Container) findByName("content", f);
+        content.add(BorderLayout.NORTH, contTop);
 
         tabs.addSelectionListener(new SelectionListener() {
             @Override
@@ -2174,8 +2210,7 @@ public class StateMachine extends StateMachineBase {
                 Log.p("Registration back button", Log.DEBUG);
                 if (isRegStep1Passed == false && isRegStep2Passed == false
                         && isRegStep3Passed == false) {//Step 1
-                    Form f = (Form) createContainer("/theme", "Login");
-                    f.showBack();
+                    showLogin();
                 } else if (isRegStep1Passed == true && isRegStep2Passed == false
                         && isRegStep3Passed == false) {//Step 2
                     tabs.setSelectedIndex(0);

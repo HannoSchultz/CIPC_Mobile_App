@@ -1542,6 +1542,18 @@ public abstract class StateMachineBase extends UIBuilder {
         return cmp;
     }
 
+    public com.codename1.ui.Container findContent(Component root) {
+        return (com.codename1.ui.Container)findByName("content", root);
+    }
+
+    public com.codename1.ui.Container findContent() {
+        com.codename1.ui.Container cmp = (com.codename1.ui.Container)findByName("content", Display.getInstance().getCurrent());
+        if(cmp == null && aboutToShowThisContainer != null) {
+            cmp = (com.codename1.ui.Container)findByName("content", aboutToShowThisContainer);
+        }
+        return cmp;
+    }
+
     public com.codename1.ui.Label findLblName2Response(Component root) {
         return (com.codename1.ui.Label)findByName("lblName2Response", root);
     }
