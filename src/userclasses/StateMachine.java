@@ -670,6 +670,9 @@ public class StateMachine extends StateMachineBase {
             public void actionPerformed(ActionEvent evt) {
                 //Log.p("clicked btn1", Log.DEBUG);
                 tabs.setSelectedIndex(0);
+                isARStep1Passed = false;
+                isARStep2Passed = false;
+                isARStep3Passed = false;
             }
         });
 
@@ -678,6 +681,9 @@ public class StateMachine extends StateMachineBase {
             public void actionPerformed(ActionEvent evt) {
                 //Log.p("clicked btn2, isRegStep1Passed=" + isRegStep1Passed
                 //   + ", isRegStep2Passed=" + isRegStep2Passed, Log.DEBUG);
+                isARStep2Passed = false;
+                isARStep3Passed = false;
+
                 if (isARStep1Passed == true) {
                     tabs.setSelectedIndex(1);
                 } else {
@@ -690,6 +696,8 @@ public class StateMachine extends StateMachineBase {
             @Override
             public void actionPerformed(ActionEvent evt) {
                 //Log.p("clicked btn3", Log.DEBUG);
+
+                isARStep3Passed = false;
                 if (isARStep1Passed == true && isARStep2Passed == true) {
                     tabs.setSelectedIndex(2);
                 } else {
@@ -2121,6 +2129,9 @@ public class StateMachine extends StateMachineBase {
             @Override
             public void actionPerformed(ActionEvent evt) {
                 //Log.p("clicked btn1", Log.DEBUG);
+                isRegStep1Passed = false;
+                isRegStep2Passed = false;
+                isRegStep3Passed = false;
                 tabs.setSelectedIndex(0);
             }
         });
@@ -2130,6 +2141,8 @@ public class StateMachine extends StateMachineBase {
             public void actionPerformed(ActionEvent evt) {
                 //Log.p("clicked btn2, isRegStep1Passed=" + isRegStep1Passed
                 //   + ", isRegStep2Passed=" + isRegStep2Passed, Log.DEBUG);
+                isRegStep2Passed = false;
+                isRegStep3Passed = false;
                 if (isRegStep1Passed == true) {
                     tabs.setSelectedIndex(1);
                 } else {
@@ -2142,6 +2155,8 @@ public class StateMachine extends StateMachineBase {
             @Override
             public void actionPerformed(ActionEvent evt) {
                 //Log.p("clicked btn3", Log.DEBUG);
+
+                isRegStep3Passed = false;
                 if (isRegStep1Passed == true && isRegStep2Passed == true) {
                     tabs.setSelectedIndex(2);
                 } else {
