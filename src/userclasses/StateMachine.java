@@ -148,6 +148,8 @@ public class StateMachine extends StateMachineBase {
     }
 
     protected void initVars(Resources res) {
+         
+        Button.setCapsTextDefault(false);
 
         Display.getInstance().setProperty("WebLoadingHidden", "true");
 
