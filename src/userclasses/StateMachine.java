@@ -378,6 +378,21 @@ public class StateMachine extends StateMachineBase {
         contentPane.removeAll();
         Container contTasks = (Container) createContainer("/theme", "ContTasks");
 
+        if (orientationListener != null) {
+            f.removeOrientationListener(orientationListener);
+        }
+
+        orientationListener = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                updateLayoutRegistration(f, contTasks);
+            }
+        };
+
+        f.addOrientationListener(orientationListener);
+
+        updateLayoutRegistration(f, contTasks);
+
         Label lblLine1 = (Label) findByName("lblLine1", contTasks);
 
         TextField txtName1 = (TextField) findByName("txtName1", contTasks);
@@ -509,13 +524,13 @@ public class StateMachine extends StateMachineBase {
 
         });
 
-        f.add(contTasks);
-
+        //f.add(contTasks);
         if (formProgress != null) {
             formProgress.removeProgress();
         }
 
     }
+    ActionListener orientationListener = null;
 
     public void showDashboard(final Form f) {
         f.removeAllCommands();
@@ -542,6 +557,21 @@ public class StateMachine extends StateMachineBase {
         Container contentPane = f.getContentPane();
         contentPane.removeAll();
         Container cont = (Container) createContainer("/theme", "ContDashBoard");
+
+        if (orientationListener != null) {
+            f.removeOrientationListener(orientationListener);
+        }
+
+        orientationListener = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                updateLayoutRegistration(f, cont);
+            }
+        };
+
+        f.addOrientationListener(orientationListener);
+
+        updateLayoutRegistration(f, cont);
 
         MultiButton mbTasks = (MultiButton) findByName("mbTasks", cont);
 
@@ -580,7 +610,7 @@ public class StateMachine extends StateMachineBase {
         mbCart.setTextLine1("Shopping Cart");
         mbCart.setTextLine2("Pay Now for CIPC Services");
 
-        f.add(cont);
+        //f.add(cont);
         if (formProgress != null) {
             formProgress.removeProgress();
         }
@@ -613,8 +643,7 @@ public class StateMachine extends StateMachineBase {
         isARStep2Passed = false;
         isARStep3Passed = false;
 
-        f.setLayout(new BorderLayout());
-
+        //f.setLayout(new BorderLayout());
         UserWebServices u = new UserWebServices();
         final ArrayList list = u.Get_AR_ent_type_mobi(null);
 
@@ -984,10 +1013,28 @@ public class StateMachine extends StateMachineBase {
         contTop.setUIID("LabelWhite");
         contTop.setLayout(new GridLayout(1, 4));
         contTop.add(btn1).add(btn2).add(btn3).add(btn4);
+        
+        Container border = new Container(BorderLayout.absolute());
+        
 
-        f.add(BorderLayout.NORTH, contTop);
+        border.add(BorderLayout.NORTH, contTop);
 
-        f.add(BorderLayout.CENTER, contProjects);
+        border.add(BorderLayout.CENTER, contProjects);
+
+        if (orientationListener != null) {
+            f.removeOrientationListener(orientationListener);
+        }
+
+        orientationListener = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                updateLayoutRegistration(f, border);
+            }
+        };
+
+        f.addOrientationListener(orientationListener);
+
+        updateLayoutRegistration(f, border);
 
         if (formProgress != null) {
             formProgress.removeProgress();
@@ -1003,6 +1050,21 @@ public class StateMachine extends StateMachineBase {
 
         BrowserComponent browser = new BrowserComponent();
         Container cont = (Container) createContainer("/theme", "ContCart");
+
+        if (orientationListener != null) {
+            f.removeOrientationListener(orientationListener);
+        }
+
+        orientationListener = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                updateLayoutRegistration(f, cont);
+            }
+        };
+
+        f.addOrientationListener(orientationListener);
+
+        updateLayoutRegistration(f, cont);
 
         Tabs Tabs = (Tabs) findByName("Tabs", cont);
         Tabs.setSwipeActivated(false);
@@ -1394,8 +1456,7 @@ public class StateMachine extends StateMachineBase {
             //                Dialog.show("Processed", "Payment processed", "Ok", null);
             //            }
             //        });
-            f.add(cont);
-
+            //f.add(cont);
         } else {
             Dialog.show("No Items", "You do not have any cart items. Please lodge a Name Reservation or submit Annual Returns.", "Ok", null);
             showDashboard(f);
@@ -1495,7 +1556,7 @@ public class StateMachine extends StateMachineBase {
 
             Button btnLogout = (Button) findByName("btnLogout", contSideMenu);
             btnLogout.addActionListener((ActionListener) (ActionEvent evt) -> {
-                showLogin();
+                showLogin(null);
             });
 
             Command command = new Command("Update Photo");
@@ -1534,12 +1595,12 @@ public class StateMachine extends StateMachineBase {
 
     }
 
-    public void showLogin() {
+    public void showLogin(Command back) {
         if (contSideMenu != null) {
             contSideMenu.removeAll();
             contSideMenu = null;
         }
-        Form f = showForm("Login", null);
+        Form f = showForm("Login", back);
     }
 
     public String trimEmail(String email) {
@@ -1664,7 +1725,7 @@ public class StateMachine extends StateMachineBase {
                 Log.p("Login back clicked", Log.DEBUG);
                 boolean flag = Dialog.show("Exit", "Are you sure you want to Exit App?", "Yes", "No");
                 if (flag) {
-                    System.exit(0);
+                    Display.getInstance().minimizeApplication();//Android
                 }
 
             }
@@ -1728,7 +1789,7 @@ public class StateMachine extends StateMachineBase {
 
     }
 
-    public void updateLayoutRegistration(Form f) {
+    public void updateLayoutRegistration(Form f, Container contentParam) {
 
         boolean isPotrait = Display.getInstance().isPortrait();
 
@@ -1736,7 +1797,13 @@ public class StateMachine extends StateMachineBase {
 
             TableLayout layout = new TableLayout(1, 3);
 
-            Container content = (Container) findByName("content", f);
+            Container content = null;
+            if (contentParam == null) {
+                content = (Container) findByName("content", f);
+            } else {
+                content = contentParam;
+            }
+
             f.removeComponent(content);
             f.removeAll();
             f.setLayout(layout);
@@ -1761,12 +1828,12 @@ public class StateMachine extends StateMachineBase {
         f.addOrientationListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
-                updateLayoutRegistration(f);
+                updateLayoutRegistration(f, null);
 
             }
         });
 
-        updateLayoutRegistration(f);
+        updateLayoutRegistration(f, null);
 
         isRegStep1Passed = false;
         isRegStep2Passed = false;
@@ -2255,7 +2322,7 @@ public class StateMachine extends StateMachineBase {
                 Log.p("Registration back button", Log.DEBUG);
                 if (isRegStep1Passed == false && isRegStep2Passed == false
                         && isRegStep3Passed == false) {//Step 1
-                    showLogin();
+                    showLogin(this);
                 } else if (isRegStep1Passed == true && isRegStep2Passed == false
                         && isRegStep3Passed == false) {//Step 2
                     tabs.setSelectedIndex(0);
@@ -2280,6 +2347,17 @@ public class StateMachine extends StateMachineBase {
 
     @Override
     protected void beforeForgotPassword(Form f) {
+
+        f.addOrientationListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                updateLayoutRegistration(f, null);
+
+            }
+        });
+
+        updateLayoutRegistration(f, null);
+
         Toolbar bar = analytics(f, "Forgot Login Details");
 
         isTableInputForm(f);
