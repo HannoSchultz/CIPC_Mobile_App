@@ -524,7 +524,10 @@ public class StateMachine extends StateMachineBase {
 
         });
 
-        //f.add(contTasks);
+        if (!Display.getInstance().isTablet()) {
+            f.add(contTasks);
+        }
+
         if (formProgress != null) {
             formProgress.removeProgress();
         }
@@ -610,7 +613,9 @@ public class StateMachine extends StateMachineBase {
         mbCart.setTextLine1("Shopping Cart");
         mbCart.setTextLine2("Pay Now for CIPC Services");
 
-        //f.add(cont);
+        if (!Display.getInstance().isTablet()) {
+            f.add(cont);
+        }
         if (formProgress != null) {
             formProgress.removeProgress();
         }
@@ -1013,9 +1018,8 @@ public class StateMachine extends StateMachineBase {
         contTop.setUIID("LabelWhite");
         contTop.setLayout(new GridLayout(1, 4));
         contTop.add(btn1).add(btn2).add(btn3).add(btn4);
-        
+
         Container border = new Container(BorderLayout.absolute());
-        
 
         border.add(BorderLayout.NORTH, contTop);
 
@@ -1035,6 +1039,11 @@ public class StateMachine extends StateMachineBase {
         f.addOrientationListener(orientationListener);
 
         updateLayoutRegistration(f, border);
+
+        if (!Display.getInstance().isTablet()) {
+            f.setLayout(new GridLayout(1, 1));
+            f.add(border);
+        }
 
         if (formProgress != null) {
             formProgress.removeProgress();
@@ -1456,7 +1465,10 @@ public class StateMachine extends StateMachineBase {
             //                Dialog.show("Processed", "Payment processed", "Ok", null);
             //            }
             //        });
-            //f.add(cont);
+            if (!Display.getInstance().isTablet()) {
+                f.add(cont);
+            }
+
         } else {
             Dialog.show("No Items", "You do not have any cart items. Please lodge a Name Reservation or submit Annual Returns.", "Ok", null);
             showDashboard(f);
