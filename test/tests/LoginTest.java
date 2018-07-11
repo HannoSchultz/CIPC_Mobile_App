@@ -15,7 +15,7 @@ public class LoginTest extends AbstractTest {
         assertLabel("btnForgotPassword", "Forgot Login Details");
         assertTextArea("txtCustomerCode", "NEWLNE");
         assertTextArea("txtPassword", "PleaseWork1!");
-        screenshotTest("LoginTest_1");
+        screenshotTest("1_Login_Screen");
         clickButtonByName("btnLogin");
         assertTitle("");
         waitForFormName("Main");
@@ -38,7 +38,7 @@ public class LoginTest extends AbstractTest {
         assertLabel(new int[]{0, 0, 2, 0, 1}, "Shopping Cart");
         assertLabel(new int[]{0, 0, 2, 1, 0}, "");
         assertLabel(new int[]{0, 0, 2, 2, 0}, "");
-        screenshotTest("LoginTest_2");
+        screenshotTest("2_Home_Screen");
         return true;
     }
 }

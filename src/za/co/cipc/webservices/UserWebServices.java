@@ -33,7 +33,6 @@ import java.util.Hashtable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
-import org.littlemonkey.connectivity.Connectivity;
 import userclasses.Constants;
 import userclasses.EnterpriseDetails;
 import userclasses.NameReservation;

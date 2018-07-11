@@ -107,8 +107,6 @@ public class StateMachine extends StateMachineBase {
     static boolean isARStep2Passed = false;
     static boolean isARStep3Passed = false;
 
-    static boolean isCartStep1Passed = false;
-
     String ENT_NUMBER;
     ArrayList annualReturnsEntDetails;
 
@@ -148,7 +146,7 @@ public class StateMachine extends StateMachineBase {
     }
 
     protected void initVars(Resources res) {
-         
+
         Button.setCapsTextDefault(false);
 
         Display.getInstance().setProperty("WebLoadingHidden", "true");
@@ -954,14 +952,31 @@ public class StateMachine extends StateMachineBase {
 
             tempDetails.setCustomerCode(AGENT_CODE);
 
-            u.insertCartItemAR(newUser, listCalculateARTran);
+            String message = "In terms of Section 33 of the Companies Act 71 of 2008, and regulations 28, 29 and 30 of the Companies Regulations of 2011, a set of criteria is defined for entities to submit Annual Financial Statements (AFSs) together with Annual Returns (ARs). Alternatively, if the set of criteria is not met, entities must submit Financial Accountability Supplements (FASs) together with Annual Returns, as prescribed by Regulation 33 of the Companies Act.\n"
+                    + "\n"
+                    + " \n"
+                    + "\n"
+                    + "By law you are therefore required to either submit AFSs via XBRL or FASs. By clicking \"Accept\" below, you declare that you understand these requirements of the Companies Act. Failure to file either an AFS or FAS will attract an investigation process which can lead to an administrative fine or prosecution. See Section 168(2) and 214 of the Companies Act.\n"
+                    + "\n"
+                    + " \n"
+                    + "\n"
+                    + "Please note that the requirements to submit either FASs or AFSs together with ARs as referenced above don\'t apply to external companies.";
 
-            isARStep1Passed = false;
-            isARStep2Passed = false;
-            isARStep3Passed = false;
+            boolean arFlag = Dialog.show("Compliance Notice", "Annual Return (s) added to shopping cart", "Accept", "I do not Accept");
 
-            Dialog.show("Success", "Annual Return (s) added to shopping cart", "Ok", null);
-            showCart(f);
+            if (arFlag == true) {
+
+                u.insertCartItemAR(newUser, listCalculateARTran);
+
+                isARStep1Passed = false;
+                isARStep2Passed = false;
+                isARStep3Passed = false;
+
+                Dialog.show("Success", "Annual Return (s) added to shopping cart", "Ok", null);
+                showCart(f);
+            } else {
+                //do nothing
+            }
 
         });
 
@@ -980,23 +995,44 @@ public class StateMachine extends StateMachineBase {
 
     }
 
-    boolean isCartStep2 = false;
+    static boolean isCartStep2 = false;
+    static boolean isCartStep3 = false;
+    static boolean isCartStep4 = false;
 
     public void showCart(final Form f) {
 
+        BrowserComponent browser = new BrowserComponent();
         Container cont = (Container) createContainer("/theme", "ContCart");
 
         Tabs Tabs = (Tabs) findByName("Tabs", cont);
-        Tabs.addSelectionListener(new SelectionListener() {
+        Tabs.setSwipeActivated(false);
+        Tabs.hideTabs();
+
+        Command back = new Command("") {
             @Override
-            public void selectionChanged(int oldSelected, int newSelected) {
-                if (newSelected == 2) {
-                    isCartStep2 = true;
-                } else {
+            public void actionPerformed(ActionEvent evt) {
+                super.actionPerformed(evt); //To change body of generated methods, choose Tools | Templates.
+                Log.p("AR back isCartStep2=" + isCartStep2 + " isCartStep3=" + isCartStep3 + "isCartStep4=" + isCartStep4, Log.DEBUG);
+
+                if (isCartStep4 == true) {
+                    browser.back();
+                    isCartStep4 = false;
+                } else if (isCartStep3 == true) {
+                    Tabs.setSelectedIndex(0);
+                    isCartStep3 = false;
+                } else if (isCartStep2 == true) {
+                    Tabs.setSelectedIndex(0);
                     isCartStep2 = false;
+                } else {
+
+                    showDashboard(f);
+
                 }
             }
-        });
+
+        };
+        f.removeAllCommands();
+        f.getToolbar().setBackCommand(back);
 
         Container contStep2 = (Container) findByName("contStep2", cont);
         contStep2.removeAll();
@@ -1038,7 +1074,6 @@ public class StateMachine extends StateMachineBase {
         String directURL = "https://paymenttest.cipc.co.za/ACSRedirect.aspx";
         String errorURL = "https://paymenttest.cipc.co.za/PaymentError.aspx?error=1EwiapDpld0GrXoBVjnhEC52%2fRVCNKIi9Xsi%2fs9YpzA%3d&ref=T9122961860";
 
-        BrowserComponent browser = new BrowserComponent();
         browser.setURL(URL);
         browser.setScrollableX(false);
         browser.setScrollableY(false);
@@ -1050,8 +1085,17 @@ public class StateMachine extends StateMachineBase {
             @Override
             public void actionPerformed(ActionEvent evt) {
                 Log.p("onStart: " + browser.getURL(), Log.DEBUG);
-                if ((browser.getURL().indexOf("Pay.aspx") > -1 || browser.getURL().indexOf("ACSRedirect.aspx") > -1)) {
+
+                if (browser.getURL().indexOf("Pay.aspx") > -1) {
+                    isCartStep3 = true;
                     formProgress = new FormProgress(f);
+
+                }
+
+                if (browser.getURL().indexOf("ACSRedirect.aspx") > -1) {
+                    isCartStep4 = true;
+                    formProgress = new FormProgress(f);
+
                 }
             }
         });
@@ -1062,6 +1106,15 @@ public class StateMachine extends StateMachineBase {
                 Log.p("onLoad: " + browser.getURL(), Log.DEBUG);
                 if (formProgress != null) {
                     formProgress.removeProgress();
+                    formProgress = null;
+                }
+
+                if (browser.getURL().indexOf("Pay.aspx") > -1) {
+                    isCartStep3 = true;
+                }
+
+                if (browser.getURL().indexOf("ACSRedirect.aspx") > -1) {
+                    isCartStep4 = true;
                 }
 
             }
@@ -1087,6 +1140,9 @@ public class StateMachine extends StateMachineBase {
                     Display.getInstance().callSerially(new Runnable() {
                         @Override
                         public void run() {
+                            isCartStep2 = false;
+                            isCartStep3 = false;
+                            isCartStep4 = false;
                             showDashboard(f);
                             Dialog.show("Success", "Payment processed. Transaction Number " + trans, "Ok", null);
 
@@ -1098,6 +1154,9 @@ public class StateMachine extends StateMachineBase {
                     Display.getInstance().callSerially(new Runnable() {
                         @Override
                         public void run() {
+                            isCartStep2 = false;
+                            isCartStep3 = false;
+                            isCartStep4 = false;
                             Dialog.show("Error", "Payment error. Please contact CIPC.", "Ok", null);
                         }
                     });
@@ -1136,17 +1195,13 @@ public class StateMachine extends StateMachineBase {
             contentPane.setLayout(new GridLayout(1, 1));
             contentPane.removeAll();
 
-            Tabs tabs = (Tabs) findByName("Tabs", cont);
-            tabs.setSwipeActivated(false);
-            tabs.hideTabs();
-
             Log.p("Cart agent=" + AGENT_CODE, Log.DEBUG);
 
-            Container contStep1AnnualReturns = (Container) findByName("contStep1AnnualReturns", tabs);
+            Container contStep1AnnualReturns = (Container) findByName("contStep1AnnualReturns", cont);
             contStep1AnnualReturns.removeAll();
-            Container contStep1EServices = (Container) findByName("contStep1EServices", tabs);
+            Container contStep1EServices = (Container) findByName("contStep1EServices", cont);
             contStep1EServices.removeAll();
-            Label lblTotal = (Label) findByName("lblTotal", tabs);
+            Label lblTotal = (Label) findByName("lblTotal", cont);
 
             String CustomerCode = map.get("CustomerCode").toString();
             double AnnualReturnsTotalAmount = Double.parseDouble(map.get("AnnualReturnsTotalAmount").toString());
@@ -1313,20 +1368,13 @@ public class StateMachine extends StateMachineBase {
             lblTotal.setText("Total: R" + eserviceTotal);
             lblTotal.repaint();
 
-            tabs.addSelectionListener(new SelectionListener() {
-                @Override
-                public void selectionChanged(int oldSelected, int newSelected) {
-                    if (newSelected == 1) {
-
-                    }
-                }
-            });
-
-            Button btnCheckout = (Button) findByName("btnCheckout", tabs);
+            Button btnCheckout = (Button) findByName("btnCheckout", cont);
             btnCheckout.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent evt) {
-                    tabs.setSelectedIndex(1);
+                    Log.p("checkout clicked", Log.DEBUG);
+                    isCartStep2 = true;
+                    Tabs.setSelectedIndex(1);
                 }
             });
 
@@ -1347,26 +1395,6 @@ public class StateMachine extends StateMachineBase {
             //            }
             //        });
             f.add(cont);
-
-            Command back = new Command("") {
-                @Override
-                public void actionPerformed(ActionEvent evt) {
-                    super.actionPerformed(evt); //To change body of generated methods, choose Tools | Templates.
-                    Log.p("CART back", Log.DEBUG);
-                    if (isCartStep2 == true) {
-                        Tabs.setSelectedIndex(0);
-                        isCartStep2 = false;
-                    } else {
-
-                        showDashboard(f);
-
-                    }
-                }
-
-            };
-
-            f.removeAllCommands();
-            f.getToolbar().setBackCommand(back);
 
         } else {
             Dialog.show("No Items", "You do not have any cart items. Please lodge a Name Reservation or submit Annual Returns.", "Ok", null);
