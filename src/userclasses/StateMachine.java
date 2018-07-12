@@ -71,6 +71,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
@@ -359,8 +360,15 @@ public class StateMachine extends StateMachineBase {
         formProgress = new FormProgress(f);
         closeMenu(f, true);
         Toolbar bar = analytics(f, "Name Reservation");
+
+        int s = bar.getComponentCount();
+        for (int i = 0; i < s; i++) {
+            Component cc = bar.getComponentAt(i);
+            Log.p("cc: " + cc.getName(), Log.DEBUG);
+        }
+
         f.removeAllCommands();
-        f.repaint();
+        f.revalidate();
 
         Command back = new Command("") {
             @Override
@@ -409,7 +417,9 @@ public class StateMachine extends StateMachineBase {
         Button btnLodge = (Button) findByName("btnLodge", contTasks);
 
         if (Display.getInstance().isSimulator()) {
-            txtName1.setText(getRandomString(10));
+            //txtName1.setText(getRandomString(10));
+            txtName1.setText("Croatia");
+            txtName2.setText(getRandomString(10));
         }
 
         btnVerify.addActionListener((ActionListener) (ActionEvent evt) -> {
@@ -484,14 +494,16 @@ public class StateMachine extends StateMachineBase {
                 Dialog.show("Error", msg, "Ok", null);
             } else {
                 UserWebServices u = new UserWebServices();
+ 
+                NameReservation responseCall = u.Namereservation_MOBI2(AGENT_CODE, name1, name2, name3, name4);
 
-                //Dialog.show("Output 1", "AGENT_CODE=" + AGENT_CODE + " name1=" + name1
-                //      + ", name2=" + name2 + ", name3=" + name3 + ", name4=" + name4, "Ok", null);
-                NameReservation responseCall = u.Namereservation_MOBI(AGENT_CODE, name1, name2, name3, name4);
-
-                //Dialog.show("Output 2", "AGENT_CODE=" + AGENT_CODE + " name1=" + name1
-                //      + ", name2=" + name2 + ", name3=" + name3 + ", name4=" + name4, "Ok", null);
+                Log.p("responseCall = " + responseCall, Log.DEBUG);
+                
                 if (responseCall != null
+                        && responseCall.getResponseMessage() != null
+                        && responseCall.getResponseMessage().indexOf("Error 500") > -1) {
+                    Dialog.show("Error", responseCall.getResponseMessage(), "Ok", null);//TODO scroll to top 
+                } else if (responseCall != null
                         && responseCall.getResponseMessage().indexOf("already filed") == -1) {
 
                     int indexStart = responseCall.getResponseMessage().indexOf("Reference No: ") + 14;
@@ -994,7 +1006,8 @@ public class StateMachine extends StateMachineBase {
                     + "\n"
                     + " \n"
                     + "\n"
-                    + "Please note that the requirements to submit either FASs or AFSs together with ARs as referenced above don\'t apply to external companies.";
+                    + "Please note that the requirements to submit either FASs or AFSs together with ARs as referenced above don\'t apply to external companies.\n\n\n"
+                    + "Please go to the CIPC website after completing this AR payment for more details on both AFS and FAS.";
 
             boolean arFlag = Dialog.show("Compliance Notice", "Annual Return (s) added to shopping cart", "Accept", "I do not Accept");
 
@@ -1470,7 +1483,7 @@ public class StateMachine extends StateMachineBase {
             }
 
         } else {
-            Dialog.show("No Items", "You do not have any cart items. Please lodge a Name Reservation or submit Annual Returns.", "Ok", null);
+            Dialog.show("No Items", "You do not have any cart items. Please perform a transaction first.", "Ok", null);
             showDashboard(f);
         }
 
@@ -1538,6 +1551,8 @@ public class StateMachine extends StateMachineBase {
         if (contSideMenu == null) {
 
             contSideMenu = (Container) createContainer("/theme", "ContSideMenu");
+            contSideMenu.setName("contSideMenu");
+
             contSideMenu.setScrollableX(false);//This fixed the side menu scroll issue
             contSideMenu.setScrollableY(false);
 

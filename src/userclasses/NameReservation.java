@@ -20,6 +20,11 @@ public class NameReservation {
     private double TotalAmount;
     private String responseMessage;
 
+    public NameReservation() {
+    }
+    
+    
+
     public int getReferenceNumber() {
         return ReferenceNumber;
     }

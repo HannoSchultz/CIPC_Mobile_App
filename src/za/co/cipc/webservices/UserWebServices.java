@@ -236,12 +236,6 @@ public class UserWebServices {
 
         ArrayList<EnterpriseDetails> arrayList = new ArrayList<EnterpriseDetails>();
 
-        if (Display.getInstance().isSimulator()
-                && enterpriseNumber == null && agentCode == null) {
-            enterpriseNumber = "2011/100088/07";
-            agentCode = "KD7788";
-        }
-
         final String SOAP_BODY
                 = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cipc=\"CIPC_WEB_SERVICES\">\n"
                 + "   <soapenv:Header/>\n"
@@ -1104,7 +1098,6 @@ public class UserWebServices {
 //
 //                }
 //                Dialog.show("44444444444no connection", "", "Ok", null);
-
             }
 
             @Override
@@ -2198,11 +2191,199 @@ public class UserWebServices {
 
     }//end name reservation
 
-    public NameReservation Namereservation_MOBI(String customerCode, String name1, String name2, String name3, String name4) {
+    public NameReservation Namereservation_MOBI2(String customerCode, String name1, String name2, String name3, String name4) {
 
+        //customerCode = "INKE01";
+        //name = "CRO"
         String response = "";
 
         NameReservation n = null;
+
+        final String SOAP_BODY
+                = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cipc=\"CIPC_WEB_SERVICES\">\n"
+                + "\n"
+                + "   <soapenv:Header/>\n"
+                + "\n"
+                + "   <soapenv:Body>\n"
+                + "\n"
+                + "      <cipc:Namereservation_MOBI_trakno>\n"
+                + "\n"
+                + "         <cipc:sUserName>wBAA7LAkWIs=</cipc:sUserName>\n"
+                + "         <cipc:sPassword>nhXSFLH3xKlrDYYKEWHlVw==</cipc:sPassword>\n"
+                + "         <cipc:sBankID>wBAA7LAkWIs=</cipc:sBankID>\n"
+                + "\n"
+                + "         <cipc:S_name1>" + name1 + "</cipc:S_name1>\n"
+                + "\n"
+                + "         <!--Optional:-->\n"
+                + "\n"
+                + "         <cipc:S_name2>" + name2 + "</cipc:S_name2>\n"
+                + "\n"
+                + "         <!--Optional:-->\n"
+                + "\n"
+                + "         <cipc:S_name3>" + name3 + "</cipc:S_name3>\n"
+                + "\n"
+                + "         <!--Optional:-->\n"
+                + "\n"
+                + "         <cipc:S_name4>" + name4 + "</cipc:S_name4>\n"
+                + "\n"
+                + "         <!--Optional:-->\n"
+                + "\n"
+                + "         <cipc:sCust_Code>" + customerCode + "</cipc:sCust_Code>\n"
+                + "\n"
+                + "      </cipc:Namereservation_MOBI_trakno>\n"
+                + "\n"
+                + "   </soapenv:Body>\n"
+                + "\n"
+                + "</soapenv:Envelope>";
+
+        ConnectionRequest httpRequest = new ConnectionRequest() {
+
+            Element h;
+
+            @Override
+
+            protected void handleErrorResponseCode(int code, String message) {
+
+                super.handleErrorResponseCode(code, message); //To change body of generated methods, choose Tools | Templates.
+
+                if (500 == code) {
+
+                    Dialog.show("Error", "Error 500 Contact CIPC.", "Ok", null);
+
+                }
+
+            }
+
+            @Override
+
+            protected void handleIOException(IOException err) {
+
+                //    super.handleIOException(err); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+
+            protected void handleRuntimeException(RuntimeException err) {
+
+                //super.handleRuntimeException(err); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+
+            protected void buildRequestBody(OutputStream os) throws IOException {
+
+                super.buildRequestBody(os);
+
+                os.write(SOAP_BODY.getBytes("utf-8"));
+
+            }
+
+            protected void postResponse() {
+
+                super.postResponse();
+
+            }
+
+            protected void readResponse(InputStream input) throws IOException {
+
+                super.readResponse(input);
+
+            }
+
+            @Override
+
+            protected void handleException(Exception err) {
+
+                Log.p("Exception: " + err.toString());
+
+                Dialog.show("No Internet", "There is no internet connection. Please switch your connection on.", "Okay", null);
+
+            }
+
+        };
+
+        httpRequest.setUrl("https://testwebservices4.cipc.co.za/enterprise.asmx");
+
+        httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
+
+        httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
+
+        httpRequest.setPost(true);
+
+        httpRequest.setFailSilently(true);
+
+        InfiniteProgress prog = new InfiniteProgress();
+
+        Dialog dlg = prog.showInifiniteBlocking();
+
+        httpRequest.setDisposeOnCompletion(dlg);
+
+        NetworkManager.getInstance().addToQueueAndWait(httpRequest);
+
+        String data = new String(httpRequest.getResponseData());
+
+        Log.p("Data d: " + data, Log.DEBUG);
+
+        try {
+
+            Result result = Result.fromContent(data, Result.XML);
+
+            String Namereservation_MOBI_traknoresult = result.getAsString("//Namereservation_MOBI_traknoresult");
+
+            response = Namereservation_MOBI_traknoresult;
+
+            if (response != null) {
+
+                if (response != null) {
+
+                    response = response.trim();
+
+                    double Amount = 50.0;
+                    double Total = 50.0;
+                    String StatusDate = getNameReservationDateNow();
+
+                    n = new NameReservation();
+
+                    if (response.indexOf("Reference No:") > -1) {
+                        String ReferenceNo = getNameReservationReferenceNo(response);
+                        int intReferenceNo = Integer.parseInt(ReferenceNo);
+                        n.setReferenceNumber(intReferenceNo);
+
+                    }
+                    n.setAmount(Amount);
+                    n.setTotalAmount(Total);
+                    n.setCustomerCode(customerCode);
+                    n.setStatusDate(StatusDate);
+                    response = StringUtil.replaceAll(response, "|", "");
+                    n.setResponseMessage(response);
+
+                }
+
+            }
+
+            //Log.p("result: " + result, Log.DEBUG);
+            //Log.p("namereservation_mobiresult: " + namereservation_mobiresult, Log.DEBUG);
+        } catch (IllegalArgumentException e) {
+
+            Log.p(e.toString());
+
+        }
+
+        return n;
+
+    }//end name reservation
+
+    NameReservation nameReservation = null;
+
+    public NameReservation Namereservation_MOBI(String customerCode, String name1, String name2, String name3, String name4) {
+
+        customerCode = customerCode.toUpperCase();
+        name1 = name1.toUpperCase();
+        name2 = name2.toUpperCase();
+        name3 = name3.toUpperCase();
+        name4 = name4.toUpperCase();
+
+        String response = "";
 
         final String SOAP_BODY
                 = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cipc=\"CIPC_WEB_SERVICES\">\n"
@@ -2250,7 +2431,8 @@ public class UserWebServices {
             protected void handleErrorResponseCode(int code, String message) {
                 super.handleErrorResponseCode(code, message); //To change body of generated methods, choose Tools | Templates.
                 if (500 == code) {
-                    Dialog.show("Error", "Duplicate Name Reservation Error. Please try different names.", "Ok", null);
+                    nameReservation.setResponseMessage("Error 500. Please contact CIPC.");
+                    //Dialog.show("Error", "Duplicate Name Reservation Error. Please try different names.", "Ok", null);
                 }
             }
 
@@ -2307,7 +2489,9 @@ public class UserWebServices {
 
             Result result = Result.fromContent(data, Result.XML);
             //Dialog.show("Result", result.toString(), "Ok", null);
-            String namereservation_mobiresult = result.getAsString("//namereservation_mobiresult");
+            //String namereservation_mobiresult = result.getAsString("//namereservation_mobiresult");
+
+            String namereservation_mobiresult = result.getAsString("//Namereservation_MOBI_traknoresult");
 
             if (namereservation_mobiresult != null && namereservation_mobiresult.indexOf("Reference No:") > -1) {
 
@@ -2318,13 +2502,13 @@ public class UserWebServices {
                 double Total = 50.0;
                 String StatusDate = getNameReservationDateNow();
 
-                n = new NameReservation();
-                n.setReferenceNumber(intReferenceNo);
-                n.setAmount(Amount);
-                n.setTotalAmount(Total);
-                n.setCustomerCode(customerCode);
-                n.setStatusDate(StatusDate);
-                n.setResponseMessage(namereservation_mobiresult);
+                //n = new NameReservation();
+                nameReservation.setReferenceNumber(intReferenceNo);
+                nameReservation.setAmount(Amount);
+                nameReservation.setTotalAmount(Total);
+                nameReservation.setCustomerCode(customerCode);
+                nameReservation.setStatusDate(StatusDate);
+                nameReservation.setResponseMessage(namereservation_mobiresult);
 
             }
 
@@ -2334,7 +2518,7 @@ public class UserWebServices {
             Log.p(e.toString());
         }
 
-        return n;
+        return nameReservation;
     }//end name reservation
 
     public ArrayList search_name_MOBI(String customerCode, String name1, String name2, String name3, String name4) {
