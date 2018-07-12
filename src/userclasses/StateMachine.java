@@ -90,6 +90,8 @@ import za.co.cipc.pojos.User;
  */
 public class StateMachine extends StateMachineBase {
 
+    static za.co.cipc.pojos.User responseUser;
+
     Container contSideMenu;
 
     String ReferenceNumber;
@@ -200,15 +202,15 @@ public class StateMachine extends StateMachineBase {
             //CustomerCode
             //Amount
             //TotalAmount
-            //String entNo = getShortEnterpriseName("2011", "100088", "07");
-            //System.out.println("enta=" + entNo);
-//            //AGENT_CODE = "BLE076";
+//            String entNo = getShortEnterpriseName("2011", "100088", "07");
+//            System.out.println("enta=" + entNo);
+//            AGENT_CODE = "NEWLNE";
 //            UserWebServices u = new UserWebServices();
 //            User user = new User();
 //            user.setAgent_code(AGENT_CODE);
-            //u.getCustomerData(user);
-            //u.pendingAnnualReturns(user, entNo);
-//
+//            u.getCustomerData(user);
+//            boolean isPending = u.pendingAnnualReturns(user, entNo);
+//            Log.p("isPending=" + isPending, Log.DEBUG);
 //            Map mapCart = u.getCart(user);
 //
 //            ArrayList items = (ArrayList) mapCart.get("AnnualReturns");
@@ -494,11 +496,11 @@ public class StateMachine extends StateMachineBase {
                 Dialog.show("Error", msg, "Ok", null);
             } else {
                 UserWebServices u = new UserWebServices();
- 
+
                 NameReservation responseCall = u.Namereservation_MOBI2(AGENT_CODE, name1, name2, name3, name4);
 
                 Log.p("responseCall = " + responseCall, Log.DEBUG);
-                
+
                 if (responseCall != null
                         && responseCall.getResponseMessage() != null
                         && responseCall.getResponseMessage().indexOf("Error 500") > -1) {
@@ -830,13 +832,20 @@ public class StateMachine extends StateMachineBase {
                     user.setAgent_code(AGENT_CODE);
                     String entNo = getShortEnterpriseName(txtStep1a.getText(), txtStep1b.getText(),
                             txtStep1c.getText());
-//                    Map map = u.pendingAnnualReturns(user, entNo);
-//
-//                    if (map != null & map.size() > 0) {
-//                        Dialog.show("Error", "Annual Returns are already in a Shopping cart. "
-//                                + "Please process payment or try again tomorrow.", "Ok", null);
-//                        return; //TODO better way to exit
-//                    }
+
+                    formProgress = new FormProgress(f);
+
+                    boolean isPending = u.pendingAnnualReturns(user, entNo);
+                    Log.p("isPending=" + isPending, Log.DEBUG);
+
+                    if (isPending) {
+                        if (formProgress != null) {
+                            formProgress.removeProgress();
+                        }
+                        Dialog.show("Error", "There is already a Annual Return in the Cart for enterprise.\n\n"
+                                + "If this is incorrect please remove from the cart and try again.", "Ok", null);
+                        return; //TODO better way to exit
+                    }
 
                     enterpriseDetails = u.soap_GetEnterpriseDetails(ENT_NUMBER); //"K2013064531");//2014 / 016320 /  07
 
@@ -865,6 +874,10 @@ public class StateMachine extends StateMachineBase {
 
                             btnStep2Confirm.setVisible(false);
                             btnStep2Confirm.repaint();
+                        }
+
+                        if (formProgress != null) {
+                            formProgress.removeProgress();
                         }
 
                     } else {
@@ -905,11 +918,14 @@ public class StateMachine extends StateMachineBase {
                 }
                 contStep3Turnovers.repaint();
 
+                tabs.setSelectedIndex(2);
+                isARStep2Passed = true;
+                btnStep3CalcOutAmount.setEnabled(true);
+
+            } else {
+                Dialog.show("No Annual Returns", "The Enterprise " + ENT_NUMBER + " has no pending Annual Returns.", "Ok", null);
             }
 
-            tabs.setSelectedIndex(2);
-            isARStep2Passed = true;
-            btnStep3CalcOutAmount.setEnabled(true);
         });
 
         Container contStep4AnnualReturns = (Container) findByName("contStep4AnnualReturns", tabs);
@@ -917,6 +933,8 @@ public class StateMachine extends StateMachineBase {
         Label lblTotalDue = (Label) findByName("lblTotalDue", tabs);
 
         btnStep3CalcOutAmount.addActionListener((ActionListener) (ActionEvent evt) -> {
+
+            Log.p("listEnterpriseDetails=" + listEnterpriseDetails.size(), Log.DEBUG);
 
             String dataset = "";
 
@@ -991,9 +1009,6 @@ public class StateMachine extends StateMachineBase {
         //Step 4
         btnStep4AddToCart.addActionListener((ActionListener) (ActionEvent evt) -> {
 
-            User newUser = new User();
-            newUser.setAgent_code(AGENT_CODE);
-
             EnterpriseDetails tempDetails = listCalculateARTran.get(0);
 
             tempDetails.setCustomerCode(AGENT_CODE);
@@ -1013,7 +1028,7 @@ public class StateMachine extends StateMachineBase {
 
             if (arFlag == true) {
 
-                u.insertCartItemAR(newUser, listCalculateARTran);
+                u.insertCartItemAR(responseUser, listCalculateARTran);
 
                 isARStep1Passed = false;
                 isARStep2Passed = false;
@@ -1663,7 +1678,7 @@ public class StateMachine extends StateMachineBase {
 
             UserWebServices userWebServices = new UserWebServices();
 
-            za.co.cipc.pojos.User responseUser = userWebServices.get_cust_MOBI(user);
+            responseUser = userWebServices.get_cust_MOBI(user);
 
             String errorMessage = "";
 

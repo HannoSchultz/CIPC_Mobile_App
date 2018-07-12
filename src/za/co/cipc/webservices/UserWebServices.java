@@ -218,7 +218,11 @@ public class UserWebServices {
 
                 enterpriseDetails.setEnt_no(result.getAsString("//ent_no"));
                 enterpriseDetails.setEnt_name(result.getAsString("//ent_name"));
-                enterpriseDetails.setReg_date(result.getAsString("//reg_date"));
+                String date = result.getAsString("//reg_date");
+                if (date != null && date.length() > 10) {
+                    date = date.substring(0, 9);
+                }
+                enterpriseDetails.setReg_date(date);
                 enterpriseDetails.setEnt_type_descr(result.getAsString("//ent_type_descr"));
                 enterpriseDetails.setEnt_status_descr(result.getAsString("//ent_status_descr"));
                 enterpriseDetails.setEnt_status_code(result.getAsString("//ent_status_code"));
@@ -566,6 +570,8 @@ public class UserWebServices {
                 + "\"Amount\":" + nameReservation.getAmount() + ""
                 + "}";
 
+        Log.p("joe=" + BODY, Log.DEBUG);
+
 //  String BODY
 //                = "{\"ReferenceNumber\": " + nameReservation.getReferenceNumber() + ","
 //                + "\"Status\":0,"
@@ -633,7 +639,7 @@ public class UserWebServices {
                     + "                \"CustomerCode\":\"" + user.getAgent_code() + "\",\n"
                     + "                \"ItemType\":1,\n"
                     + "                \"ItemData\":\""
-                    + "{\\\"ReferenceNumber\\\":" + ReferenceNumber + ",\\\"FormCode\\\":\\\"CK2B\\\",\\\"EnterpriseNumber\\\":\\\"" + ent.getEnt_no() + "\\\",\\\"EnterpriseType\\\":\\\"  " + ent.getEnt_type_code() + " \\\",\\\"EnterpriseStatus\\\":\\\"28\\\",\\\"EmailAddress\\\":\\\"  \\\",\\\"TelephoneCode\\\":\\\"012\\\",\\\"TelephoneNumber\\\":\\\"1234567\\\",\\\"CellphoneNumber\\\":\\\"\\\",\\\"WebsiteAddress\\\":\\\"\\\",\\\"BusinessDescription\\\":\\\"CARD PAYMENT\\\",\\\"PrincipalPlaceOfBusiness\\\":\\\"\\\",\\\"EnterpriseNameChanged\\\":0,\\\"FinancialYearEndChanged\\\":0,\\\"RegisteredOfficeChanged\\\":0,\\\"LocationOfRecordsChanged\\\":0,\\\"DirectorsChanged\\\":0,\\\"CompanySecretaryChanged\\\":0,\\\"AuditorsChanged\\\":0,\\\"TotalAmount\\\":" + total + ",\\\"YearData\\\":[";
+                    + "{\\\"ReferenceNumber\\\":" + ReferenceNumber + ",\\\"FormCode\\\":\\\"CK2B\\\",\\\"EnterpriseNumber\\\":\\\"" + ent.getEnt_no() + "\\\",\\\"EnterpriseType\\\":\\\"  " + ent.getEnt_type_code() + " \\\",\\\"EnterpriseStatus\\\":\\\"28\\\",\\\"EmailAddress\\\":\\\"  \\\",\\\"TelephoneCode\\\":\\\"" + user.getTel_code() + "\\\",\\\"TelephoneNumber\\\":\\\"" + user.getTel_no() + "\\\",\\\"CellphoneNumber\\\":\\\"" + user.getCell_no() + "\\\",\\\"WebsiteAddress\\\":\\\"\\\",\\\"BusinessDescription\\\":\\\"CARD PAYMENT\\\",\\\"PrincipalPlaceOfBusiness\\\":\\\"\\\",\\\"EnterpriseNameChanged\\\":0,\\\"FinancialYearEndChanged\\\":0,\\\"RegisteredOfficeChanged\\\":0,\\\"LocationOfRecordsChanged\\\":0,\\\"DirectorsChanged\\\":0,\\\"CompanySecretaryChanged\\\":0,\\\"AuditorsChanged\\\":0,\\\"TotalAmount\\\":" + total + ",\\\"YearData\\\":[";
 
             AR_BODY += "{\\\"ReferenceNumber\\\":" + ReferenceNumber + ",\\\"EnterpriseNumber\\\":\\\" " + ent.getEnt_no() + " \\\",\\\"Year\\\":" + ent.getAr_year() + ",\\\"Turnover\\\":" + ent.getTurnover() + ",\\\"Amount\\\":" + ent.getAr_amount() + ",\\\"PenaltyFee\\\":" + ent.getAr_penalty() + ",\\\"TotalAmount\\\": " + ent.getAr_total() + " ,\\\"Status\\\":null,\\\"StatusDate\\\":\\\" " + getAnnualReturnsDateNow() + "  \\\"}";
 
@@ -646,7 +652,7 @@ public class UserWebServices {
                     + "                \"CustomerCode\":\"" + user.getAgent_code() + "\",\n"
                     + "                \"ItemType\":1,\n"
                     + "                \"ItemData\":\""
-                    + "{\\\"ReferenceNumber\\\":" + ReferenceNumber + ",\\\"FormCode\\\":\\\"CK2B\\\",\\\"EnterpriseNumber\\\":\\\"" + ent.getEnt_no() + "\\\",\\\"EnterpriseType\\\":\\\"  " + ent.getEnt_type_code() + " \\\",\\\"EnterpriseStatus\\\":\\\"28\\\",\\\"EmailAddress\\\":\\\"  \\\",\\\"TelephoneCode\\\":\\\"012\\\",\\\"TelephoneNumber\\\":\\\"1234567\\\",\\\"CellphoneNumber\\\":\\\"\\\",\\\"WebsiteAddress\\\":\\\"\\\",\\\"BusinessDescription\\\":\\\"CARD PAYMENT\\\",\\\"PrincipalPlaceOfBusiness\\\":\\\"\\\",\\\"EnterpriseNameChanged\\\":0,\\\"FinancialYearEndChanged\\\":0,\\\"RegisteredOfficeChanged\\\":0,\\\"LocationOfRecordsChanged\\\":0,\\\"DirectorsChanged\\\":0,\\\"CompanySecretaryChanged\\\":0,\\\"AuditorsChanged\\\":0,\\\"TotalAmount\\\":" + total + ",\\\"YearData\\\":[";
+                    + "{\\\"ReferenceNumber\\\":" + ReferenceNumber + ",\\\"FormCode\\\":\\\"CK2B\\\",\\\"EnterpriseNumber\\\":\\\"" + ent.getEnt_no() + "\\\",\\\"EnterpriseType\\\":\\\"  " + ent.getEnt_type_code() + " \\\",\\\"EnterpriseStatus\\\":\\\"28\\\",\\\"EmailAddress\\\":\\\"" + user.getEmail() + "\\\",\\\"TelephoneCode\\\":\\\"" + user.getTel_code() + "\\\",\\\"TelephoneNumber\\\":\\\"" + user.getTel_no() + "\\\",\\\"CellphoneNumber\\\":\\\"" + user.getCell_no() + "\\\",\\\"WebsiteAddress\\\":\\\"\\\",\\\"BusinessDescription\\\":\\\"CARD PAYMENT\\\",\\\"PrincipalPlaceOfBusiness\\\":\\\"\\\",\\\"EnterpriseNameChanged\\\":0,\\\"FinancialYearEndChanged\\\":0,\\\"RegisteredOfficeChanged\\\":0,\\\"LocationOfRecordsChanged\\\":0,\\\"DirectorsChanged\\\":0,\\\"CompanySecretaryChanged\\\":0,\\\"AuditorsChanged\\\":0,\\\"TotalAmount\\\":" + total + ",\\\"YearData\\\":[";
 
             AR_BODY += "{\\\"ReferenceNumber\\\":" + ReferenceNumber + ",\\\"EnterpriseNumber\\\":\\\" " + ent.getEnt_no() + " \\\",\\\"Year\\\":" + ent.getAr_year() + ",\\\"Turnover\\\":" + ent.getTurnover() + ",\\\"Amount\\\":" + ent.getAr_amount() + ",\\\"PenaltyFee\\\":" + ent.getAr_penalty() + ",\\\"TotalAmount\\\": " + ent.getAr_total() + " ,\\\"Status\\\":null,\\\"StatusDate\\\":\\\" " + getAnnualReturnsDateNow() + "  \\\"}";
 
@@ -866,7 +872,9 @@ public class UserWebServices {
         return map;
     }
 
-    public Map pendingAnnualReturns(User user, String entNo) {
+    public boolean pendingAnnualReturns(User user, String entNo) {
+
+        boolean isPending = false;
 
         Map map = null;
 
@@ -893,6 +901,14 @@ public class UserWebServices {
                 map = parser.parseJSON(convertStringtoInputStreamReader(data));
                 Log.p("pendingAnnualReturns data=" + data, Log.DEBUG);
                 Log.p("pendingAnnualReturns map=" + map, Log.DEBUG);
+                Log.p("pendingAnnualReturns data size=" + data.length(), Log.DEBUG);
+                Log.p("pendingAnnualReturns map size =" + map.isEmpty(), Log.DEBUG);
+
+                if (data != null && data.length() > 2) {
+                    isPending = true;
+                } else {
+                    isPending = false;
+                }
 
             } catch (IOException e) {
                 Log.e(e);
@@ -901,7 +917,7 @@ public class UserWebServices {
             //JSONParser
         }
 
-        return map;
+        return isPending;
     }
 
     public String getEnterpriseDetails(User user) {
@@ -1135,9 +1151,42 @@ public class UserWebServices {
 
                 Log.p("get_cust_MOBI: " + result, Log.DEBUG);
 
-                responseUser.setAgent_code(user.getAgent_code());
-                responseUser.setPassword(result.getAsString("//get_cust_mobiresult"));
+                responseUser.setAgent_code(result.getAsString("//agent_code"));
+                responseUser.setPassword(result.getAsString("//password"));
+                responseUser.setAgent_name(result.getAsString("//agent_name"));
 
+                responseUser.setTel_code(result.getAsString("//tel_code"));
+                responseUser.setTel_no(result.getAsString("//tel_no"));
+
+                responseUser.setFax_code(result.getAsString("//fax_code"));
+                responseUser.setFax_no(result.getAsString("//fax_no"));
+
+                responseUser.setEmail(result.getAsString("//email"));
+
+                responseUser.setStatus(result.getAsString("//status"));
+
+                responseUser.setStatus_desc(result.getAsString("//status_desc"));
+                responseUser.setCell_no(result.getAsString("//cell_no"));
+
+                //Log.p("get_countries: " + result, Log.DEBUG);
+//                XMLParser parser = new XMLParser();
+//                parser.setCaseSensitive(true);
+//                Element element = parser.parse(convertStringtoInputStreamReader(result.getAsString("//dataset")));
+//
+//                for (int i = 0; i < element.getNumChildren(); i++) {
+//                    Element child = element.getChildAt(i);
+                // if (child.getTextChildren(null, true).size() == 9) {
+//                    String country = RSM(((Element) child.getTextChildren(null, true).get(0)).toString());
+//                    String countr_code = RSM(((Element) child.getTextChildren(null, true).get(1)).toString());
+//
+//                    //Log.p("country=" + country + ", countr_code=" + countr_code, Log.DEBUG);
+//                    Country c = new Country();
+//                    c.setCountr_code(countr_code);
+//                    c.setCountry(country);
+//                    list.add(c);
+                // }
+                //responseUser.setAgent_code(user.getAgent_code());
+                //responseUser.setPassword(result.getAsString("//get_cust_mobiresult"));
                 return responseUser;
 
             } catch (IllegalArgumentException e) {
