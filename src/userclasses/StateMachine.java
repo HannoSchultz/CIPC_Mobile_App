@@ -149,6 +149,13 @@ public class StateMachine extends StateMachineBase {
     }
 
     protected void initVars(Resources res) {
+        
+//        String d = "1976-06-16T00:00:00+02:00";
+//        d = StringUtil.replaceAll(d, "T", "_");
+//        d = d.substring(0, 19);
+//        
+//        SimpleDateFormat dateString = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+//        Date dateObject = dateString.parse(d);
 
         Button.setCapsTextDefault(false);
 

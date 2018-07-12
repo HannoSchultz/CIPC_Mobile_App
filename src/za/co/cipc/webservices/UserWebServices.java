@@ -15,6 +15,8 @@ import com.codename1.io.rest.RequestBuilder;
 import com.codename1.io.rest.Response;
 import com.codename1.io.rest.Rest;
 import com.codename1.l10n.DateFormat;
+import com.codename1.l10n.L10NManager;
+import com.codename1.l10n.ParseException;
 import com.codename1.l10n.SimpleDateFormat;
 import com.codename1.processing.Result;
 import com.codename1.ui.Dialog;
@@ -220,7 +222,18 @@ public class UserWebServices {
                 enterpriseDetails.setEnt_name(result.getAsString("//ent_name"));
                 String date = result.getAsString("//reg_date");
                 if (date != null && date.length() > 10) {
-                    date = date.substring(0, 9);
+                    //date = date.substring(0, 9);
+                    try {
+                        date = StringUtil.replaceAll(date, "T", "_");
+                        date = date.substring(0, 19);
+
+                        SimpleDateFormat dateString = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+                        Date dateObject = dateString.parse(date);
+                        date = L10NManager.getInstance().formatDateLongStyle(dateObject);
+
+                    } catch (ParseException ex) {
+                        Log.e(ex);
+                    }
                 }
                 enterpriseDetails.setReg_date(date);
                 enterpriseDetails.setEnt_type_descr(result.getAsString("//ent_type_descr"));
