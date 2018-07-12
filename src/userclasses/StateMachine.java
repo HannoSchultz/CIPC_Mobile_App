@@ -221,7 +221,7 @@ public class StateMachine extends StateMachineBase {
 //            mapCart = u.getCart(user);
 //            items = (ArrayList) mapCart.get("CartItems");//ItemData
 //            Log.p("CartItems Size after insert=" + items.size(), Log.DEBUG);
-//            
+//
 //            ArrayList CartItems = (ArrayList) mapCart.get("CartItems");
 //            Map mapCartItem = (Map) CartItems.get(0);
 //            String ReferenceNumber = mapCartItem.get("ReferenceNumber").toString();
@@ -229,12 +229,12 @@ public class StateMachine extends StateMachineBase {
 //            String StatusDate = mapCartItem.get("StatusDate").toString();
 //            String CustomerCode = mapCart.get("CustomerCode").toString();
 //            String ItemType = mapCart.get("ItemType").toString();//4 Name Reservation
-//            
+//
 //            //How many items???
 //                              //  + "\"Item   Data\":\"{\\\"ReferenceNumber\\\":9118779575,\\\"EnterpriseNumber\\\":\\\"\\\",\\\"FormCode\\\":\\\"CoR9.1\\\",\\\"ChangeTypeCode\\\":\\\"30\\\",\\\"Description\\\":null,\\\"TotalAmount\\\":50.0}\","
 //
-//            
-//            
+//
+//
 //            double TotalAmount = Double.parseDouble(mapCart.get("TotalAmount").toString());
 //
 //            String BODY
@@ -504,7 +504,7 @@ public class StateMachine extends StateMachineBase {
                 if (responseCall != null
                         && responseCall.getResponseMessage() != null
                         && responseCall.getResponseMessage().indexOf("Error 500") > -1) {
-                    Dialog.show("Error", responseCall.getResponseMessage(), "Ok", null);//TODO scroll to top 
+                    Dialog.show("Error", responseCall.getResponseMessage(), "Ok", null);//TODO scroll to top
                 } else if (responseCall != null
                         && responseCall.getResponseMessage().indexOf("already filed") == -1) {
 
@@ -1347,7 +1347,10 @@ public class StateMachine extends StateMachineBase {
                     mb.setTextLine1("Reference No: " + ReferenceNumber);
                     mb.setTextLine2("Enterprise No: " + EnterpriseNumber);
                     //mb.setTextLine3("Service: " + ItemType);
-                    mb.setTextLine3("Item Cost: R" + TotalAmountItemType);
+                    Log.p("TotalAmountItemType=" + TotalAmountItemType, Log.DEBUG);
+                    String strTotalAmountItemType = L10NManager.getInstance().formatCurrency(TotalAmountItemType);
+                    Log.p("strTotalAmountItemType=" + strTotalAmountItemType, Log.DEBUG);
+                    mb.setTextLine3("Item Cost: " + strTotalAmountItemType);
 
                     Container c0 = new Container();
                     c0.setUIID("DeleteButtonCont");
@@ -1426,7 +1429,9 @@ public class StateMachine extends StateMachineBase {
                     mb.setTextLine1("Reference No: " + ReferenceNumber);
                     //mb.setTextLine2("Enterprise No: " + EnterpriseNumber);
                     mb.setTextLine2("Service: " + ItemType);
-                    mb.setTextLine3("Item Cost: R" + TotalAmountItemType);
+                    String strTotalAmountItemType = L10NManager.getInstance().formatCurrency(TotalAmountItemType);
+                    Log.p("strTotalAmountItemType=" + strTotalAmountItemType, Log.DEBUG);
+                    mb.setTextLine3("Item Cost: " + strTotalAmountItemType);
 
                     Container c0 = new Container();
                     c0.setUIID("DeleteButtonCont");
@@ -1452,7 +1457,7 @@ public class StateMachine extends StateMachineBase {
                                 }
                             }
                         }
-                        // 
+                        //
                         //contItem.remove();
                         //contStep1EServices.repaint();
                     });
@@ -1464,7 +1469,9 @@ public class StateMachine extends StateMachineBase {
                 }
             }
 
-            lblTotal.setText("Total: R" + eserviceTotal);
+            String strEserviceTotal = L10NManager.getInstance().formatCurrency(eserviceTotal);
+            Log.p("strTotalAmountItemType=" + strEserviceTotal, Log.DEBUG);
+            lblTotal.setText("Total: " + strEserviceTotal);
             lblTotal.repaint();
 
             Button btnCheckout = (Button) findByName("btnCheckout", cont);
