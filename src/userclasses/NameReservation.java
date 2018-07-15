@@ -22,8 +22,6 @@ public class NameReservation {
 
     public NameReservation() {
     }
-    
-    
 
     public int getReferenceNumber() {
         return ReferenceNumber;

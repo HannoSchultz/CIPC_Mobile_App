@@ -34,7 +34,6 @@ public class FormProgress {
         toolBar = f.getToolbar();
         toolBar.setUIID("Label");
         ip = new InfiniteProgress();
-        
 
         toolBar.add(BorderLayout.EAST, ip);
         toolBar.revalidate();

@@ -149,14 +149,13 @@ public class StateMachine extends StateMachineBase {
     }
 
     protected void initVars(Resources res) {
-        
+
 //        String d = "1976-06-16T00:00:00+02:00";
 //        d = StringUtil.replaceAll(d, "T", "_");
 //        d = d.substring(0, 19);
 //        
 //        SimpleDateFormat dateString = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
 //        Date dateObject = dateString.parse(d);
-
         Button.setCapsTextDefault(false);
 
         Display.getInstance().setProperty("WebLoadingHidden", "true");
@@ -183,13 +182,6 @@ public class StateMachine extends StateMachineBase {
             }
         });
 
-//        if (Display.getInstance().isTablet() || Display.getInstance().isDesktop()) {//Lock landscape
-//            //Toolbar.setPermanentSideMenu(true);
-//            Display.getInstance().lockOrientation(false);
-//        }
-//        else{//Portrait
-//            Display.getInstance().lockOrientation(true);
-//        }
         if (Display.getInstance().isSimulator()) {
 
             AGENT_CODE = "BLE076";
@@ -368,13 +360,8 @@ public class StateMachine extends StateMachineBase {
 
         formProgress = new FormProgress(f);
         closeMenu(f, true);
-        Toolbar bar = analytics(f, "Name Reservation");
-
-        int s = bar.getComponentCount();
-        for (int i = 0; i < s; i++) {
-            Component cc = bar.getComponentAt(i);
-            Log.p("cc: " + cc.getName(), Log.DEBUG);
-        }
+        Toolbar bar = analytics(f, "Proposed Name Reservation");
+        Toolbar.setEnableSideMenuSwipe(false);
 
         f.removeAllCommands();
         f.revalidate();
@@ -428,7 +415,7 @@ public class StateMachine extends StateMachineBase {
         if (Display.getInstance().isSimulator()) {
             //txtName1.setText(getRandomString(10));
             txtName1.setText("Croatia");
-            txtName2.setText(getRandomString(10));
+            //txtName2.setText(getRandomString(10));
         }
 
         btnVerify.addActionListener((ActionListener) (ActionEvent evt) -> {
@@ -463,11 +450,11 @@ public class StateMachine extends StateMachineBase {
                         lblResponse.setUIID("LabelRed");
 
                     }
-                    lblResponse.repaint();
+                    //lblResponse.repaint();
                 }
 
                 lblLine1.scrollRectToVisible(0, 0, 0, 0, lblLine1);
-                lblLine1.repaint();
+                contTasks.repaint();
             }
         });
 
@@ -576,6 +563,7 @@ public class StateMachine extends StateMachineBase {
         f.setLayout(new BoxLayout(BoxLayout.Y_AXIS));
 
         Toolbar tb = analytics(f, "Dashboard");
+        Toolbar.setEnableSideMenuSwipe(true);
         addSideMenu(f, tb);
 
         Container contentPane = f.getContentPane();
@@ -626,10 +614,10 @@ public class StateMachine extends StateMachineBase {
         });
 
         mbTasks.setTextLine1("Name Reservations");
-        mbTasks.setTextLine2("Lodge Name(s)");
+        mbTasks.setTextLine2("Submit Proposed Name (s)");
 
         mbCurrency.setTextLine1("Annual Returns");
-        mbCurrency.setTextLine2("Submit Enterprise Returns");
+        mbCurrency.setTextLine2("Submit Enterprise Annual Returns");
 
         mbCart.setTextLine1("Shopping Cart");
         mbCart.setTextLine2("Pay Now for CIPC Services");
@@ -676,6 +664,7 @@ public class StateMachine extends StateMachineBase {
         formProgress = new FormProgress(f);
         closeMenu(f, true);
         analytics(f, "Annual Returns");
+        Toolbar.setEnableSideMenuSwipe(false);
         current = f;
         Container contentPane = f.getContentPane();
         contentPane.removeAll();
@@ -857,7 +846,8 @@ public class StateMachine extends StateMachineBase {
                     enterpriseDetails = u.soap_GetEnterpriseDetails(ENT_NUMBER); //"K2013064531");//2014 / 016320 /  07
 
                     if (enterpriseDetails != null) {
-                        lblStep2EnterpriseNumber.setText(enterpriseDetails.getEnt_no());
+                        //lblStep2EnterpriseNumber.setText(enterpriseDetails.getEnt_no());
+                        lblStep2EnterpriseNumber.setText(ENT_NUMBER);
                         lblStep2EnterpriseName.setText(enterpriseDetails.getEnt_name());
                         lblStep2EnterpriseType.setText(enterpriseDetails.getEnt_type_descr());
                         lblStep2EnterpriseStatus.setText(enterpriseDetails.getEnt_status_descr());
@@ -1139,6 +1129,7 @@ public class StateMachine extends StateMachineBase {
         };
         f.removeAllCommands();
         f.getToolbar().setBackCommand(back);
+        Toolbar.setEnableSideMenuSwipe(false);
 
         Container contStep2 = (Container) findByName("contStep2", cont);
         contStep2.removeAll();
@@ -2443,11 +2434,6 @@ public class StateMachine extends StateMachineBase {
     }
 
     @Override
-    protected void onForgotPassword_BtnRecoverPasswordAction(Component c, ActionEvent event) {
-
-    }
-
-    @Override
     protected boolean onForgotPasswordRequest() {
         String customerCode = findTxtCustomerCode().getText();
 
@@ -2462,18 +2448,20 @@ public class StateMachine extends StateMachineBase {
             UserWebServices u = new UserWebServices();
             String res1 = u.forget_password_MOBI(customerCode);
             //Log.p("res1 len=" + res1.length(), Log.DEBUG);
-            if (res1.indexOf("not registered") > -1) {
+            if (res1.indexOf("The Password was sent to the registered") > -1) {
+                Dialog.show("Success", res1, "Ok", null);
+                return false;
+
+            } else {
                 Dialog.show("Error", res1, "Ok", null);
                 return true;
-            } else {
-                Dialog.show("Success", res1, "Ok", null);
-            }
+
+            } 
 
         } else {
             Dialog.show("Error", msg, "Ok", null);
             return true;
         }
-        return false;
     }
 
     public String getPaymentTransNoFromURL(String url) {
