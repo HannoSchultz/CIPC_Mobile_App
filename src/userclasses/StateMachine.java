@@ -557,12 +557,23 @@ public class StateMachine extends StateMachineBase {
         };
 
         f.setBackCommand(back);
-        formProgress = new FormProgress(f);
+        //formProgress = new FormProgress(f);
         closeMenu(f, true);
 
         f.setLayout(new BoxLayout(BoxLayout.Y_AXIS));
 
         Toolbar tb = analytics(f, "Dashboard");
+
+        Command logout = new Command("Logout") {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                super.actionPerformed(evt); //To change body of generated methods, choose Tools | Templates.
+                showLogin(null);
+            }
+
+        };
+        tb.addCommandToRightBar(logout);
+
         Toolbar.setEnableSideMenuSwipe(true);
         addSideMenu(f, tb);
 
@@ -590,7 +601,7 @@ public class StateMachine extends StateMachineBase {
         mbTasks.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
-                formProgress = new FormProgress(f);
+                //formProgress = new FormProgress(f);
                 showNameReservation(f, Const.TASK_TODAY);
             }
         });
@@ -599,7 +610,7 @@ public class StateMachine extends StateMachineBase {
         mbCurrency.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
-                formProgress = new FormProgress(f);
+                //formProgress = new FormProgress(f);
                 showAnnualReturns(f);
             }
         });
@@ -608,7 +619,7 @@ public class StateMachine extends StateMachineBase {
         mbCart.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
-                formProgress = new FormProgress(f);
+                //formProgress = new FormProgress(f);
                 showCart(f);
             }
         });
@@ -1084,6 +1095,13 @@ public class StateMachine extends StateMachineBase {
 
         BrowserComponent browser = new BrowserComponent();
         Container cont = (Container) createContainer("/theme", "ContCart");
+        Container contStep1AnnualReturns = (Container) findByName("contStep1AnnualReturns", cont);
+        contStep1AnnualReturns.removeAll();
+        Container contStep1EServices = (Container) findByName("contStep1EServices", cont);
+        contStep1EServices.removeAll();
+
+        Container contStep1 = (Container) findByName("contStep1", cont);
+        //contStep1.removeAll();
 
         if (orientationListener != null) {
             f.removeOrientationListener(orientationListener);
@@ -1294,10 +1312,6 @@ public class StateMachine extends StateMachineBase {
 
             Log.p("Cart agent=" + AGENT_CODE, Log.DEBUG);
 
-            Container contStep1AnnualReturns = (Container) findByName("contStep1AnnualReturns", cont);
-            contStep1AnnualReturns.removeAll();
-            Container contStep1EServices = (Container) findByName("contStep1EServices", cont);
-            contStep1EServices.removeAll();
             Label lblTotal = (Label) findByName("lblTotal", cont);
 
             String CustomerCode = map.get("CustomerCode").toString();
@@ -1763,7 +1777,7 @@ public class StateMachine extends StateMachineBase {
             f.repaint();
         }
 
-        Toolbar toolbar = analytics(f, "");
+        Toolbar toolbar = analytics(f, " ");
 
         Command loginBack = new Command("") {
             @Override
@@ -2456,7 +2470,7 @@ public class StateMachine extends StateMachineBase {
                 Dialog.show("Error", res1, "Ok", null);
                 return true;
 
-            } 
+            }
 
         } else {
             Dialog.show("Error", msg, "Ok", null);

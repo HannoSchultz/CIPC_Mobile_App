@@ -14,5 +14,10 @@ public class Constants {
     public static String sBankID = "wBAA7LAkWIs=";
     public static String sPassword = "6EGQAUzYJlhvffhZ+gUFfg==";
     public static String sUserName = "wBAA7LAkWIs=";
+    
+    
+    public static String cartAPIEndPoint = "https://apitest.cipc.co.za/"; //apidev
+    public static String cartAPIUsername = "CipcMobile";
+    public static String cartAPIPassword = "q3CWRG!*WsW9mYae";
 
 }

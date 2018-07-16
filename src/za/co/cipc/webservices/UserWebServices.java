@@ -536,11 +536,11 @@ public class UserWebServices {
 
         ConnectionRequest post = new ConnectionRequest();
 
-        post.setUrl("https://apidev.cipc.co.za/token");
+        post.setUrl(Constants.cartAPIEndPoint +  "token");
         post.setPost(true);
         post.setContentType("x-www-form-urlencoded");
-        post.addArgument("username", "TEST");
-        post.addArgument("password", "TEST");
+        post.addArgument("username", Constants.cartAPIUsername );
+        post.addArgument("password", Constants.cartAPIPassword);
         post.addArgument("grant_type", "password");
 
         NetworkManager.getInstance().addToQueueAndWait(post);
@@ -568,7 +568,7 @@ public class UserWebServices {
 
     public String insertCartItemService(NameReservation nameReservation) {
 
-        String END_POINT = "https://apidev.cipc.co.za/v1/payment/cartitem";
+        String END_POINT = Constants.cartAPIEndPoint + "v1/payment/cartitem";
 
         /*String ref = nameReservation.getReferenceNumber()+"";
         ref = "1" + ref;
@@ -630,7 +630,7 @@ public class UserWebServices {
 
         EnterpriseDetails ent = listCalculateARTran.get(0);//this can fail
 
-        String END_POINT = "https://apidev.cipc.co.za/v1/payment/cartitem";
+        String END_POINT = Constants.cartAPIEndPoint + "v1/payment/cartitem";
 
         int ReferenceNumber = ent.getReference_no();
         Log.p("insertCartItemAR ReferenceNumber=" + ReferenceNumber, Log.DEBUG);
@@ -821,7 +821,7 @@ public class UserWebServices {
         Log.p("getCart=" + jsonData.toString());*/
         ConnectionRequest post = new ConnectionRequest();
 
-        post.setUrl("https://apidev.cipc.co.za/v1/payment/cart/" + user.getAgent_code());
+        post.setUrl(Constants.cartAPIEndPoint + "v1/payment/cart/" + user.getAgent_code());
         post.setPost(false);
         post.addRequestHeader("Content-Type", "application/json; charset=utf-8");
 
@@ -860,7 +860,7 @@ public class UserWebServices {
         Log.p("getCart=" + jsonData.toString());*/
         ConnectionRequest post = new ConnectionRequest();
 
-        post.setUrl("https://apidev.cipc.co.za/v1/customer/customer/" + user.getAgent_code());
+        post.setUrl(Constants.cartAPIEndPoint + "v1/customer/customer/" + user.getAgent_code());
         post.setPost(false);
         post.addRequestHeader("Content-Type", "application/json; charset=utf-8");
 
@@ -900,7 +900,7 @@ public class UserWebServices {
         Log.p("getCart=" + jsonData.toString());*/
         ConnectionRequest post = new ConnectionRequest();
 
-        post.setUrl("https://apidev.cipc.co.za/v1/payment/cartitem/enterprise/" + entNo);
+        post.setUrl(Constants.cartAPIEndPoint + "v1/payment/cartitem/enterprise/" + entNo);
         post.setPost(false);
         post.addRequestHeader("Content-Type", "application/json; charset=utf-8");
 
@@ -939,7 +939,7 @@ public class UserWebServices {
 
         ConnectionRequest post = new ConnectionRequest();
 
-        post.setUrl("https://apidev.cipc.co.za/v1/companies/enterprise/K2013064531");
+        post.setUrl(Constants.cartAPIEndPoint + "v1/companies/enterprise/K2013064531");
         post.setPost(false);
         post.setContentType("application/json");
 
