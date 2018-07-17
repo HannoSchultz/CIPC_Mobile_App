@@ -536,10 +536,10 @@ public class UserWebServices {
 
         ConnectionRequest post = new ConnectionRequest();
 
-        post.setUrl(Constants.cartAPIEndPoint +  "token");
+        post.setUrl(Constants.cartAPIEndPoint + "token");
         post.setPost(true);
         post.setContentType("x-www-form-urlencoded");
-        post.addArgument("username", Constants.cartAPIUsername );
+        post.addArgument("username", Constants.cartAPIUsername);
         post.addArgument("password", Constants.cartAPIPassword);
         post.addArgument("grant_type", "password");
 
@@ -1166,6 +1166,458 @@ public class UserWebServices {
                 responseUser.setStatus_desc(result.getAsString("//status_desc"));
                 responseUser.setCell_no(result.getAsString("//cell_no"));
 
+                //Log.p("get_countries: " + result, Log.DEBUG);
+//                XMLParser parser = new XMLParser();
+//                parser.setCaseSensitive(true);
+//                Element element = parser.parse(convertStringtoInputStreamReader(result.getAsString("//dataset")));
+//
+//                for (int i = 0; i < element.getNumChildren(); i++) {
+//                    Element child = element.getChildAt(i);
+                // if (child.getTextChildren(null, true).size() == 9) {
+//                    String country = RSM(((Element) child.getTextChildren(null, true).get(0)).toString());
+//                    String countr_code = RSM(((Element) child.getTextChildren(null, true).get(1)).toString());
+//
+//                    //Log.p("country=" + country + ", countr_code=" + countr_code, Log.DEBUG);
+//                    Country c = new Country();
+//                    c.setCountr_code(countr_code);
+//                    c.setCountry(country);
+//                    list.add(c);
+                // }
+                //responseUser.setAgent_code(user.getAgent_code());
+                //responseUser.setPassword(result.getAsString("//get_cust_mobiresult"));
+                return responseUser;
+
+            } catch (IllegalArgumentException e) {
+                Log.p(e.toString());
+            }
+        }
+
+        return null;
+
+    }//end login
+
+    public User get_cust_MOBI_2(User user) {
+
+        final String SOAP_BODY
+                = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cipc=\"CIPC_WEB_SERVICES\">\n"
+                + "\n"
+                + "   <soapenv:Header/>\n"
+                + "\n"
+                + "   <soapenv:Body>\n"
+                + "\n"
+                + "      <cipc:get_cust_MOBI_2>\n"
+                + "\n"
+                + "         <!--Optional:-->\n"
+                + "\n"
+                + "                <cipc:sUserName>wBAA7LAkWIs=</cipc:sUserName>\n"
+                + "\n"
+                + "         <cipc:sPassword>nhXSFLH3xKlrDYYKEWHlVw==</cipc:sPassword>\n"
+                + "\n"
+                + "         <cipc:sBankID>wBAA7LAkWIs=</cipc:sBankID>\n"
+                + "\n"
+                + "         <!--Optional:-->\n"
+                + "\n"
+                + "         <cipc:scustcode>INKE01</cipc:scustcode>\n"
+                + "\n"
+                + " \n"
+                + "\n"
+                + "         <!--Optional:-->\n"
+                + "\n"
+                + "         <cipc:deviceOperatingSystem>os</cipc:deviceOperatingSystem>\n"
+                + "\n"
+                + "         <!--Optional:-->\n"
+                + "\n"
+                + "         <cipc:deviceType>dt</cipc:deviceType>\n"
+                + "\n"
+                + "         <!--Optional:-->\n"
+                + "\n"
+                + "         <cipc:cipcAppVersion>1.1</cipc:cipcAppVersion>\n"
+                + "\n"
+                + "      </cipc:get_cust_MOBI_2>\n"
+                + "\n"
+                + "   </soapenv:Body>\n"
+                + "\n"
+                + "</soapenv:Envelope>";
+
+        ConnectionRequest httpRequest = new ConnectionRequest() {
+            Element h;
+
+            @Override
+            protected void buildRequestBody(OutputStream os) throws IOException {
+                super.buildRequestBody(os);
+                os.write(SOAP_BODY.getBytes("utf-8"));
+
+            }
+
+            protected void postResponse() {
+
+                super.postResponse();
+            }
+
+            protected void readResponse(InputStream input) throws IOException {
+                super.readResponse(input);
+
+            }
+
+            @Override
+            protected void handleIOException(IOException err) {
+                super.handleIOException(err); //To change body of generated methods, choose Tools | Templates.
+                Log.p("handleIOException: " + err.toString());
+                Dialog.show("Connection Error", "Error connecting to CIPC.", "Ok", null);
+
+//                if (Connectivity.isConnected()) {
+//                    Dialog.show("isConnected", "", "Ok", null);
+//
+//                } else {
+//                    //no connection
+//                    Dialog.show("no connection", "", "Ok", null);
+//
+//                }
+//                Dialog.show("44444444444no connection", "", "Ok", null);
+            }
+
+            @Override
+            protected void handleRuntimeException(RuntimeException err) {
+                super.handleRuntimeException(err); //To change body of generated methods, choose Tools | Templates.
+                Log.p("Exception: " + err.toString());
+                Dialog.show("handleRuntimeException", "", "Ok", null);
+
+            }
+
+            @Override
+            protected void handleException(Exception err) {
+                Log.p("Exception: " + err.toString());
+                //Dialog.show("No Internet", "There is no internet connection. Please switch your connection on.", "Okay", null);
+
+            }
+        };
+
+        httpRequest.setUrl("https://testwebservices4.cipc.co.za/customer.asmx?wsdl");
+        httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
+        httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
+        httpRequest.setPost(true);
+
+//        InfiniteProgress prog = new InfiniteProgress();
+//        Dialog dlg = prog.showInifiniteBlocking();
+//        httpRequest.setDisposeOnCompletion(dlg);
+        NetworkManager.getInstance().addToQueueAndWait(httpRequest);
+        if (httpRequest.getResponseData() != null) {
+            String data = new String(httpRequest.getResponseData());//TODO do null check
+
+            try {
+
+                Result result = Result.fromContent(data, Result.XML);
+                User responseUser = new User();
+
+                Log.p("get_cust_MOBI_2: " + result, Log.DEBUG);
+
+//                responseUser.setAgent_code(result.getAsString("//agent_code"));
+//                responseUser.setPassword(result.getAsString("//password"));
+//                responseUser.setAgent_name(result.getAsString("//agent_name"));
+//
+//                responseUser.setTel_code(result.getAsString("//tel_code"));
+//                responseUser.setTel_no(result.getAsString("//tel_no"));
+//
+//                responseUser.setFax_code(result.getAsString("//fax_code"));
+//                responseUser.setFax_no(result.getAsString("//fax_no"));
+//
+//                responseUser.setEmail(result.getAsString("//email"));
+//
+//                responseUser.setStatus(result.getAsString("//status"));
+//
+//                responseUser.setStatus_desc(result.getAsString("//status_desc"));
+//                responseUser.setCell_no(result.getAsString("//cell_no"));
+                //Log.p("get_countries: " + result, Log.DEBUG);
+//                XMLParser parser = new XMLParser();
+//                parser.setCaseSensitive(true);
+//                Element element = parser.parse(convertStringtoInputStreamReader(result.getAsString("//dataset")));
+//
+//                for (int i = 0; i < element.getNumChildren(); i++) {
+//                    Element child = element.getChildAt(i);
+                // if (child.getTextChildren(null, true).size() == 9) {
+//                    String country = RSM(((Element) child.getTextChildren(null, true).get(0)).toString());
+//                    String countr_code = RSM(((Element) child.getTextChildren(null, true).get(1)).toString());
+//
+//                    //Log.p("country=" + country + ", countr_code=" + countr_code, Log.DEBUG);
+//                    Country c = new Country();
+//                    c.setCountr_code(countr_code);
+//                    c.setCountry(country);
+//                    list.add(c);
+                // }
+                //responseUser.setAgent_code(user.getAgent_code());
+                //responseUser.setPassword(result.getAsString("//get_cust_mobiresult"));
+                return responseUser;
+
+            } catch (IllegalArgumentException e) {
+                Log.p(e.toString());
+            }
+        }
+
+        return null;
+
+    }//end login
+
+    public String get_app_version(User user) {
+        String version = null;
+
+        final String SOAP_BODY
+                = "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:cipc=\"CIPC_WEB_SERVICES\">\n"
+                + "\n"
+                + "   <soap:Header/>\n"
+                + "\n"
+                + "   <soap:Body>\n"
+                + "\n"
+                + "      <cipc:get_app_version>\n"
+                + "\n"
+                + "            <cipc:sUserName>wBAA7LAkWIs=</cipc:sUserName>\n"
+                + "\n"
+                + "         <cipc:sPassword>6EGQAUzYJlhvffhZ+gUFfg==</cipc:sPassword>\n"
+                + "\n"
+                + "         <cipc:sBankID>wBAA7LAkWIs=</cipc:sBankID>\n"
+                + "\n"
+                + "         <cipc:sCust_Code>INKE01</cipc:sCust_Code>\n"
+                + "\n"
+                + "      </cipc:get_app_version>\n"
+                + "\n"
+                + "   </soap:Body>\n"
+                + "\n"
+                + "</soap:Envelope>";
+
+        ConnectionRequest httpRequest = new ConnectionRequest() {
+            Element h;
+
+            @Override
+            protected void buildRequestBody(OutputStream os) throws IOException {
+                super.buildRequestBody(os);
+                os.write(SOAP_BODY.getBytes("utf-8"));
+
+            }
+
+            protected void postResponse() {
+
+                super.postResponse();
+            }
+
+            protected void readResponse(InputStream input) throws IOException {
+                super.readResponse(input);
+
+            }
+
+            @Override
+            protected void handleIOException(IOException err) {
+                super.handleIOException(err); //To change body of generated methods, choose Tools | Templates.
+                Log.p("handleIOException: " + err.toString());
+                Dialog.show("Connection Error", "Error connecting to CIPC.", "Ok", null);
+
+//                if (Connectivity.isConnected()) {
+//                    Dialog.show("isConnected", "", "Ok", null);
+//
+//                } else {
+//                    //no connection
+//                    Dialog.show("no connection", "", "Ok", null);
+//
+//                }
+//                Dialog.show("44444444444no connection", "", "Ok", null);
+            }
+
+            @Override
+            protected void handleRuntimeException(RuntimeException err) {
+                super.handleRuntimeException(err); //To change body of generated methods, choose Tools | Templates.
+                Log.p("Exception: " + err.toString());
+                Dialog.show("handleRuntimeException", "", "Ok", null);
+
+            }
+
+            @Override
+            protected void handleException(Exception err) {
+                Log.p("Exception: " + err.toString());
+                //Dialog.show("No Internet", "There is no internet connection. Please switch your connection on.", "Okay", null);
+
+            }
+        };
+
+        httpRequest.setUrl("https://testwebservices4.cipc.co.za/enterprise.asmx?wsdl");
+        httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
+        httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
+        httpRequest.setPost(true);
+
+//        InfiniteProgress prog = new InfiniteProgress();
+//        Dialog dlg = prog.showInifiniteBlocking();
+//        httpRequest.setDisposeOnCompletion(dlg);
+        NetworkManager.getInstance().addToQueueAndWait(httpRequest);
+        if (httpRequest.getResponseData() != null) {
+            String data = new String(httpRequest.getResponseData());//TODO do null check
+
+            try {
+
+                Result result = Result.fromContent(data, Result.XML);
+                User responseUser = new User();
+
+                Log.p("get_app_version: " + result, Log.DEBUG);
+                version = result.getAsString("//get_app_versionResult");
+                Log.p("version ====== " + version, Log.DEBUG);
+
+//                responseUser.setAgent_code();
+//                responseUser.setPassword(result.getAsString("//password"));
+//                responseUser.setAgent_name(result.getAsString("//agent_name"));
+//
+//                responseUser.setTel_code(result.getAsString("//tel_code"));
+//                responseUser.setTel_no(result.getAsString("//tel_no"));
+//
+//                responseUser.setFax_code(result.getAsString("//fax_code"));
+//                responseUser.setFax_no(result.getAsString("//fax_no"));
+//
+//                responseUser.setEmail(result.getAsString("//email"));
+//
+//                responseUser.setStatus(result.getAsString("//status"));
+//
+//                responseUser.setStatus_desc(result.getAsString("//status_desc"));
+//                responseUser.setCell_no(result.getAsString("//cell_no"));
+                //Log.p("get_countries: " + result, Log.DEBUG);
+//                XMLParser parser = new XMLParser();
+//                parser.setCaseSensitive(true);
+//                Element element = parser.parse(convertStringtoInputStreamReader(result.getAsString("//dataset")));
+//
+//                for (int i = 0; i < element.getNumChildren(); i++) {
+//                    Element child = element.getChildAt(i);
+                // if (child.getTextChildren(null, true).size() == 9) {
+//                    String country = RSM(((Element) child.getTextChildren(null, true).get(0)).toString());
+//                    String countr_code = RSM(((Element) child.getTextChildren(null, true).get(1)).toString());
+//
+//                    //Log.p("country=" + country + ", countr_code=" + countr_code, Log.DEBUG);
+//                    Country c = new Country();
+//                    c.setCountr_code(countr_code);
+//                    c.setCountry(country);
+//                    list.add(c);
+                // }
+                //responseUser.setAgent_code(user.getAgent_code());
+                //responseUser.setPassword(result.getAsString("//get_cust_mobiresult"));
+                return version;
+
+            } catch (IllegalArgumentException e) {
+                Log.p(e.toString());
+            }
+        }
+
+        return null;
+
+    }//end login
+
+    public User update_app_version(String newVersion) {
+
+        final String SOAP_BODY
+                = "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:cipc=\"CIPC_WEB_SERVICES\">\n"
+                + "\n"
+                + "   <soap:Header/>\n"
+                + "\n"
+                + "   <soap:Body>\n"
+                + "\n"
+                + "      <cipc:update_app_version>\n"
+                + "\n"
+                + "        <cipc:sUserName>wBAA7LAkWIs=</cipc:sUserName>\n"
+                + "\n"
+                + "         <cipc:sPassword>6EGQAUzYJlhvffhZ+gUFfg==</cipc:sPassword>\n"
+                + "\n"
+                + "         <cipc:sBankID>wBAA7LAkWIs=</cipc:sBankID>\n"
+                + "\n"
+                + "         <cipc:ver> "+newVersion+"  </cipc:ver>\n"
+                + "\n"
+                + "         <cipc:sCust_Code>NEWLNE</cipc:sCust_Code>\n"
+                + "\n"
+                + "      </cipc:update_app_version>\n"
+                + "\n"
+                + "   </soap:Body>\n"
+                + "\n"
+                + "</soap:Envelope>";
+
+        ConnectionRequest httpRequest = new ConnectionRequest() {
+            Element h;
+
+            @Override
+            protected void buildRequestBody(OutputStream os) throws IOException {
+                super.buildRequestBody(os);
+                os.write(SOAP_BODY.getBytes("utf-8"));
+
+            }
+
+            protected void postResponse() {
+
+                super.postResponse();
+            }
+
+            protected void readResponse(InputStream input) throws IOException {
+                super.readResponse(input);
+
+            }
+
+            @Override
+            protected void handleIOException(IOException err) {
+                super.handleIOException(err); //To change body of generated methods, choose Tools | Templates.
+                Log.p("handleIOException: " + err.toString());
+                Dialog.show("Connection Error", "Error connecting to CIPC.", "Ok", null);
+
+//                if (Connectivity.isConnected()) {
+//                    Dialog.show("isConnected", "", "Ok", null);
+//
+//                } else {
+//                    //no connection
+//                    Dialog.show("no connection", "", "Ok", null);
+//
+//                }
+//                Dialog.show("44444444444no connection", "", "Ok", null);
+            }
+
+            @Override
+            protected void handleRuntimeException(RuntimeException err) {
+                super.handleRuntimeException(err); //To change body of generated methods, choose Tools | Templates.
+                Log.p("Exception: " + err.toString());
+                Dialog.show("handleRuntimeException", "", "Ok", null);
+
+            }
+
+            @Override
+            protected void handleException(Exception err) {
+                Log.p("Exception: " + err.toString());
+                //Dialog.show("No Internet", "There is no internet connection. Please switch your connection on.", "Okay", null);
+
+            }
+        };
+
+        httpRequest.setUrl("https://testwebservices4.cipc.co.za/enterprise.asmx?wsdl");
+        httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
+        httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
+        httpRequest.setPost(true);
+
+//        InfiniteProgress prog = new InfiniteProgress();
+//        Dialog dlg = prog.showInifiniteBlocking();
+//        httpRequest.setDisposeOnCompletion(dlg);
+        NetworkManager.getInstance().addToQueueAndWait(httpRequest);
+        if (httpRequest.getResponseData() != null) {
+            String data = new String(httpRequest.getResponseData());//TODO do null check
+
+            try {
+
+                Result result = Result.fromContent(data, Result.XML);
+                User responseUser = new User();
+
+                Log.p("update_app_version: " + result, Log.DEBUG);
+
+//                responseUser.setAgent_code(result.getAsString("//agent_code"));
+//                responseUser.setPassword(result.getAsString("//password"));
+//                responseUser.setAgent_name(result.getAsString("//agent_name"));
+//
+//                responseUser.setTel_code(result.getAsString("//tel_code"));
+//                responseUser.setTel_no(result.getAsString("//tel_no"));
+//
+//                responseUser.setFax_code(result.getAsString("//fax_code"));
+//                responseUser.setFax_no(result.getAsString("//fax_no"));
+//
+//                responseUser.setEmail(result.getAsString("//email"));
+//
+//                responseUser.setStatus(result.getAsString("//status"));
+//
+//                responseUser.setStatus_desc(result.getAsString("//status_desc"));
+//                responseUser.setCell_no(result.getAsString("//cell_no"));
                 //Log.p("get_countries: " + result, Log.DEBUG);
 //                XMLParser parser = new XMLParser();
 //                parser.setCaseSensitive(true);

@@ -149,6 +149,8 @@ public class StateMachine extends StateMachineBase {
     }
 
     protected void initVars(Resources res) {
+        
+        
 
 //        String d = "1976-06-16T00:00:00+02:00";
 //        d = StringUtil.replaceAll(d, "T", "_");
@@ -250,7 +252,12 @@ public class StateMachine extends StateMachineBase {
 //            User tmpUser = new User();
 //
 //            //Step 1: check id if registered with CIPC. if exists show user customer code
-//            tmpUser.setAgent_id_no("9001215598086");
+//            tmpUser.setAgent_code("KD7788");
+//            UserWebServices uw = new UserWebServices();
+//            //uw.get_cust_MOBI_2(tmpUser);
+//            //uw.get_app_version(tmpUser);
+//            uw.update_app_version("0.17");
+            
 //
 //            //step2
 //            tmpUser.setFirst_name("Blessing");
@@ -2489,6 +2496,29 @@ public class StateMachine extends StateMachineBase {
     protected void postLogin(Form f) {
         height = Display.getInstance().getDisplayHeight();
         width = Display.getInstance().getDisplayWidth();
+        
+        UserWebServices u = new UserWebServices();
+        User user = new User();
+        String serverVersion = u.get_app_version(user);
+        Log.p("serverVersion=" + serverVersion, Log.DEBUG);
+        
+        String currentAppVersion = Display.getInstance().getProperty("AppVersion", "Unknown");
+        
+        double server = Double.parseDouble(serverVersion);
+        double device = Double.parseDouble(currentAppVersion);
+        
+        if(server == device){
+            Log.p("equal", Log.DEBUG);
+            
+        }
+        else{
+            Dialog.show("App Version","The current CIPC App Version is: " + serverVersion + " and "
+                    + "your  app version is " + currentAppVersion +" Please update your CIPC App to the latest version in order to use the CIPC App.", "Ok", null);
+            System.exit(0);
+            Log.p("server=" + server + " device=" + device, Log.DEBUG); 
+        }
+        
+        
     }
 
     @Override
