@@ -1224,11 +1224,11 @@ public class StateMachine extends StateMachineBase {
                     formProgress = null;
                 }
 
-                if (browser.getURL().indexOf("Pay.aspx") > -1) {
+                if (browser != null && browser.getURL() != null && browser.getURL().indexOf("Pay.aspx") > -1) {
                     isCartStep3 = true;
                 }
 
-                if (browser.getURL().indexOf("ACSRedirect.aspx") > -1) {
+                if (browser != null && browser.getURL() != null && browser.getURL().indexOf("ACSRedirect.aspx") > -1) {
                     isCartStep4 = true;
                 }
 

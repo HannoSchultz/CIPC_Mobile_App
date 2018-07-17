@@ -767,7 +767,7 @@ public class UserWebServices {
 
     public String deleteCartItem(User user, Map m) {
 
-        String END_POINT = "https://apidev.cipc.co.za/v1/payment/cartitem/update";
+        String END_POINT = Constants.cartAPIEndPoint + "/v1/payment/cartitem/update";
 
         String BODY = Result.fromContent(m).toString();
         Log.p("deleteCartItem BODY=" + BODY, Log.DEBUG);
