@@ -814,11 +814,6 @@ public class UserWebServices {
 
         AuthObject auth = getToken(user);
 
-        /* Map jsonData = Rest.get("https://apidev.cipc.co.za/v1/payment/cart/" + user.getAgent_code())
-                .header("Authorization", auth.getToken_type() + " " + auth.getAccess_token()).jsonContent()
-                .getAsJsonMap().getResponseData();
-
-        Log.p("getCart=" + jsonData.toString());*/
         ConnectionRequest post = new ConnectionRequest();
 
         post.setUrl(Constants.cartAPIEndPoint + "v1/payment/cart/" + user.getAgent_code());
@@ -853,11 +848,6 @@ public class UserWebServices {
 
         AuthObject auth = getToken(user);
 
-        /* Map jsonData = Rest.get("https://apidev.cipc.co.za/v1/payment/cart/" + user.getAgent_code())
-                .header("Authorization", auth.getToken_type() + " " + auth.getAccess_token()).jsonContent()
-                .getAsJsonMap().getResponseData();
-
-        Log.p("getCart=" + jsonData.toString());*/
         ConnectionRequest post = new ConnectionRequest();
 
         post.setUrl(Constants.cartAPIEndPoint + "v1/customer/customer/" + user.getAgent_code());
@@ -893,11 +883,6 @@ public class UserWebServices {
 
         AuthObject auth = getToken(user);
 
-        /* Map jsonData = Rest.get("https://apidev.cipc.co.za/v1/payment/cart/" + user.getAgent_code())
-                .header("Authorization", auth.getToken_type() + " " + auth.getAccess_token()).jsonContent()
-                .getAsJsonMap().getResponseData();
-
-        Log.p("getCart=" + jsonData.toString());*/
         ConnectionRequest post = new ConnectionRequest();
 
         post.setUrl(Constants.cartAPIEndPoint + "v1/payment/cartitem/enterprise/" + entNo);

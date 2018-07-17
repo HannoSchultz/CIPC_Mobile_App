@@ -340,10 +340,13 @@ public class StateMachine extends StateMachineBase {
     }
 
     public void showProfile(final Form f) {
+        hideLogout();
         formProgress = new FormProgress(f);
         closeMenu(f, true);
 
     }
+
+    static Command logout = null;
 
     public void uploadProfileImage(String title, Form f, String path, EncodedImage placeHolder, Label lblImage) {
 
@@ -352,8 +355,25 @@ public class StateMachine extends StateMachineBase {
 
     }
 
+    public void hideLogout() {
+        if (logout != null) {
+            logout.setCommandName("");
+            logout.setEnabled(false);
+        
+        }
+    }
+    
+      public void showLogout() {
+        if (logout != null) {
+            logout.setCommandName("Logout");
+            logout.setEnabled(true);
+        }
+    }
+
     public void showNameReservation(Form f, String taskType) {
 
+        hideLogout();
+        
         if (arrayListNameReservation != null) {
             arrayListNameReservation.clear();
         }
@@ -413,8 +433,8 @@ public class StateMachine extends StateMachineBase {
         Button btnLodge = (Button) findByName("btnLodge", contTasks);
 
         if (Display.getInstance().isSimulator()) {
-            //txtName1.setText(getRandomString(10));
-            txtName1.setText("Croatia");
+            txtName1.setText(getRandomString(10));
+            //txtName1.setText("Croatia");
             //txtName2.setText(getRandomString(10));
         }
 
@@ -544,6 +564,7 @@ public class StateMachine extends StateMachineBase {
     ActionListener orientationListener = null;
 
     public void showDashboard(final Form f) {
+                
         f.removeAllCommands();
 
         Command back = new Command("") {
@@ -564,15 +585,33 @@ public class StateMachine extends StateMachineBase {
 
         Toolbar tb = analytics(f, "Dashboard");
 
-        Command logout = new Command("Logout") {
+//        if(logout == null){
+//            Log.p("logout == null", Log.DEBUG);
+//            logout = new Command("Logout") {
+//                @Override
+//                public void actionPerformed(ActionEvent evt) {
+//                    super.actionPerformed(evt); //To change body of generated methods, choose Tools | Templates.
+//                    Log.p("logout actionPerformed", Log.DEBUG);
+//                    showLogin(null);
+//                }
+//
+//            };
+//            tb.addCommandToRightBar(logout);
+//        }
+//        else if(logout != null){
+//             showLogout();
+
+            logout = new Command("Logout") {
             @Override
             public void actionPerformed(ActionEvent evt) {
                 super.actionPerformed(evt); //To change body of generated methods, choose Tools | Templates.
+                Log.p("logout actionPerformed", Log.DEBUG);
                 showLogin(null);
             }
 
         };
         tb.addCommandToRightBar(logout);
+//        }
 
         Toolbar.setEnableSideMenuSwipe(true);
         addSideMenu(f, tb);
@@ -663,6 +702,8 @@ public class StateMachine extends StateMachineBase {
     }
 
     public void showAnnualReturns(final Form f) {
+        
+        hideLogout();
 
         isARStep1Passed = false;
         isARStep2Passed = false;
@@ -674,7 +715,8 @@ public class StateMachine extends StateMachineBase {
 
         formProgress = new FormProgress(f);
         closeMenu(f, true);
-        analytics(f, "Annual Returns");
+        Toolbar toolBar = analytics(f, "Annual Returns");
+
         Toolbar.setEnableSideMenuSwipe(false);
         current = f;
         Container contentPane = f.getContentPane();
@@ -1092,6 +1134,8 @@ public class StateMachine extends StateMachineBase {
     static boolean isCartStep4 = false;
 
     public void showCart(final Form f) {
+        
+        hideLogout();
 
         BrowserComponent browser = new BrowserComponent();
         Container cont = (Container) createContainer("/theme", "ContCart");
