@@ -1150,6 +1150,9 @@ public class StateMachine extends StateMachineBase {
         contStep1AnnualReturns.removeAll();
         Container contStep1EServices = (Container) findByName("contStep1EServices", cont);
         contStep1EServices.removeAll();
+        Label lblTotal = (Label) findByName("lblTotal", cont);
+        lblTotal.setText("");
+        
 
         Container contStep1 = (Container) findByName("contStep1", cont);
         //contStep1.removeAll();
@@ -1362,8 +1365,6 @@ public class StateMachine extends StateMachineBase {
             contentPane.removeAll();
 
             Log.p("Cart agent=" + AGENT_CODE, Log.DEBUG);
-
-            Label lblTotal = (Label) findByName("lblTotal", cont);
 
             String CustomerCode = map.get("CustomerCode").toString();
             double AnnualReturnsTotalAmount = Double.parseDouble(map.get("AnnualReturnsTotalAmount").toString());
