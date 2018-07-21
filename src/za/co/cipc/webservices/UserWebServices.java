@@ -671,14 +671,21 @@ public class UserWebServices {
 
             for (int i = 1; i < listCalculateARTran.size(); i++) {
                 ent = listCalculateARTran.get(i);//this can fail
-                AR_BODY += "{\\\"ReferenceNumber\\\":" + ReferenceNumber + ",\\\"EnterpriseNumber\\\":\\\" " + ent.getEnt_no() + " \\\",\\\"Year\\\":" + ent.getAr_year() + ",\\\"Turnover\\\":" + ent.getTurnover() + ",\\\"Amount\\\":" + ent.getAr_amount() + ",\\\"PenaltyFee\\\":" + ent.getAr_penalty() + ",\\\"TotalAmount\\\": " + ent.getAr_total() + " ,\\\"Status\\\":null,\\\"StatusDate\\\":\\\" " + getAnnualReturnsDateNow() + "  \\\"}";
+                
+               // if(i == listCalculateARTran.size() - 1){
+                        AR_BODY += ",{\\\"ReferenceNumber\\\":" + ReferenceNumber + ",\\\"EnterpriseNumber\\\":\\\" " + ent.getEnt_no() + " \\\",\\\"Year\\\":" + ent.getAr_year() + ",\\\"Turnover\\\":" + ent.getTurnover() + ",\\\"Amount\\\":" + ent.getAr_amount() + ",\\\"PenaltyFee\\\":" + ent.getAr_penalty() + ",\\\"TotalAmount\\\": " + ent.getAr_total() + " ,\\\"Status\\\":null,\\\"StatusDate\\\":\\\" " + getAnnualReturnsDateNow() + "  \\\"}";
+                //}
+                //else{
+                 //                           AR_BODY += "{\\\"ReferenceNumber\\\":" + ReferenceNumber + ",\\\"EnterpriseNumber\\\":\\\" " + ent.getEnt_no() + " \\\",\\\"Year\\\":" + ent.getAr_year() + ",\\\"Turnover\\\":" + ent.getTurnover() + ",\\\"Amount\\\":" + ent.getAr_amount() + ",\\\"PenaltyFee\\\":" + ent.getAr_penalty() + ",\\\"TotalAmount\\\": " + ent.getAr_total() + " ,\\\"Status\\\":null,\\\"StatusDate\\\":\\\" " + getAnnualReturnsDateNow() + "  \\\"},";
 
+                //}
+                        
             }
 
         }
 
         AR_BODY += "],\\\"ItemsCount\\\":" + listCalculateARTran.size() + "}\",\n"
-                + "\"Amount\":50.0\n"
+                + "\"Amount\":"+total+"\n"
                 + "}";
 
 //        working sample
@@ -736,7 +743,7 @@ public class UserWebServices {
 //                + "{\\\"ReferenceNumber\\\":" + ent.getReference_no() + ",\\\"EnterpriseNumber\\\":\\\"K2011100088\\\",\\\"Year\\\":2017,\\\"Turnover\\\":0.0,\\\"Amount\\\":100.00,\\\"PenaltyFee\\\":150.00,\\\"TotalAmount\\\":250.00,\\\"Status\\\":null,\\\"StatusDate\\\":\\\"0001-01-01T00:00:00\\\"}],\\\"ItemsCount\\\":9}\",\n"
 //                + "                \"Amount\":50.0\n"
 //                + "}";
-        Log.p("insertCartItemAR REQUEST=" + AR_BODY, Log.DEBUG);
+        Log.p("insertCartItemAR REQUEST=" + AR_BODY, Log.DEBUG); //2012 128721 07
 
         ConnectionRequest post = new ConnectionRequest() {
             @Override
@@ -760,7 +767,6 @@ public class UserWebServices {
         NetworkManager.getInstance().addToQueueAndWait(post);
         byte[] raw = post.getResponseData();
         Log.p("insertCartItemAR=" + raw);
-//        String data = new String(post.getResponseData());
 
         return null;
     }

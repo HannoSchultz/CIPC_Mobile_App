@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<component type="Container" name="ContCart" cloudDestinationProperty="ContCart" scrollableY="false" layout="GridLayout" gridLayoutRows="1" gridLayoutColumns="1" >
+  <component type="Tabs" name="Tabs" cloudDestinationProperty="Tabs" >
+    <custom name="titles" type="java.lang.String" array="true" dimensions="1" >
+      <str>Step 1</str>
+      <str>Step 2</str>
+    </custom>
+    <component type="Container" name="contStep1" tabTitle="Step 1" cloudDestinationProperty="Container" scrollableY="false" layout="BorderLayout" borderLayoutAbsoluteCenter="false" >
+      <component type="Container" name="Container11" cloudDestinationProperty="Container11" scrollableY="true" layout="BoxLayout" boxLayoutAxis="Y" >
+        <layoutConstraint value="Center" />
+        <component type="Container" name="contStep1AnnualReturns" cloudDestinationProperty="Container" uiid="Container" layout="BoxLayout" boxLayoutAxis="Y" >
+          <component type="Container" name="Container" cloudDestinationProperty="Container" uiid="ContainerCalendarDay" layout="BoxLayout" boxLayoutAxis="Y" >
+            <component type="Label" name="Label" cloudDestinationProperty="Label" text="Annual Returns" >
+            </component>
+          </component>
+          <component type="Container" name="cont" cloudDestinationProperty="cont" layout="BoxLayout" boxLayoutAxis="Y" >
+            <component type="MultiButton" name="MultiButton" cloudDestinationProperty="MultiButton" uiid="Label" >
+              <custom name="line1" type="java.lang.String" value="Reference No: 544334453" />
+              <custom name="line2" type="java.lang.String" value="AR Year: 2009, Turnover R0.00" />
+              <custom name="line3" type="java.lang.String" value="AR Amount: 100.00, Penalty Fee R150.00" />
+              <custom name="uiid1" type="java.lang.String" value="MultiButtonBlack" />
+              <custom name="uiid2" type="java.lang.String" value="MultiButtonBlack" />
+              <custom name="uiid3" type="java.lang.String" value="MultiButtonBlack" />
+              <custom name="uiid4" type="java.lang.String" value="MultiButtonBlack" />
+            </component>
+            <component type="Container" name="Container7" cloudDestinationProperty="Container7" >
+              <component type="Button" name="Button1" cloudDestinationProperty="Button1" text="REMOVE" >
+              </component>
+            </component>
+          </component>
+        </component>
+        <component type="Container" name="contStep1EServices" cloudDestinationProperty="Container" uiid="Container" layout="BoxLayout" boxLayoutAxis="Y" >
+          <component type="Container" name="Container2" cloudDestinationProperty="Container2" uiid="ContainerCalendarDay" layout="BoxLayout" boxLayoutAxis="Y" >
+            <component type="Label" name="Label1" cloudDestinationProperty="Label1" text="E-Services" >
+            </component>
+          </component>
+          <component type="MultiButton" name="MultiButton" cloudDestinationProperty="MultiButton" uiid="Label" >
+            <custom name="line1" type="java.lang.String" value="Reference No: 956755566" />
+            <custom name="line2" type="java.lang.String" value="Enterprise No: K201301234, Form Code CR1" />
+            <custom name="line3" type="java.lang.String" value="Service: Co-operative Registration" />
+            <custom name="line4" type="java.lang.String" value="Amount: R150.00" />
+            <custom name="uiid1" type="java.lang.String" value="MultiButtonBlack" />
+            <custom name="uiid2" type="java.lang.String" value="MultiButtonBlack" />
+            <custom name="uiid3" type="java.lang.String" value="MultiButtonBlack" />
+            <custom name="uiid4" type="java.lang.String" value="MultiButtonBlack" />
+          </component>
+          <component type="Container" name="Container8" cloudDestinationProperty="Container8" >
+            <component type="Button" name="Button1" cloudDestinationProperty="Button1" text="REMOVE" >
+            </component>
+          </component>
+        </component>
+      </component>
+      <component type="Container" name="Container12" cloudDestinationProperty="Container12" uiid="Container" layout="BoxLayout" boxLayoutAxis="Y" >
+        <layoutConstraint value="South" />
+        <component type="Container" name="Container3" cloudDestinationProperty="Container3" uiid="ContainerCalendarDay" >
+          <component type="Label" name="lblTotal" cloudDestinationProperty="Label2" uiid="Label" text="Total: R1 500.00" >
+          </component>
+        </component>
+        <component type="Button" name="btnCheckout" cloudDestinationProperty="Button" uiid="ButtonNameSearch" text="CHECKOUT" >
+        </component>
+      </component>
+    </component>
+    <component type="Container" name="contStep2" tabTitle="Step 2" cloudDestinationProperty="Container1" scrollableY="false" layout="BoxLayout" boxLayoutAxis="Y" >
+      <component type="Container" name="Container4" cloudDestinationProperty="Container4" uiid="ContainerCalendarDay" layout="BoxLayout" boxLayoutAxis="Y" >
+        <component type="Label" name="Label3" cloudDestinationProperty="Label3" uiid="Label" text="Card Details" >
+        </component>
+      </component>
+      <component type="Container" name="Container5" cloudDestinationProperty="Container5" uiid="CalendarDay" layout="BoxLayout" boxLayoutAxis="Y" >
+        <component type="Label" name="Label4" cloudDestinationProperty="Label4" text="Card Number" >
+        </component>
+        <component type="Container" name="Container1" cloudDestinationProperty="Container1" >
+          <component type="TextField" name="txtStep1a" cloudBoundProperty="text" cloudDestinationProperty="TextField" text="" maxSize="4" columns="4" >
+          </component>
+          <component type="TextField" name="txtStep1a2" cloudBoundProperty="text" cloudDestinationProperty="TextField" text="" constraint="2" maxSize="4" hint="" columns="4" >
+          </component>
+          <component type="TextField" name="txtStep1a3" cloudBoundProperty="text" cloudDestinationProperty="TextField" text="" constraint="2" maxSize="4" hint="" columns="4" >
+          </component>
+          <component type="TextField" name="txtStep1a4" cloudBoundProperty="text" cloudDestinationProperty="TextField" text="" constraint="2" maxSize="4" hint="" columns="4" >
+          </component>
+        </component>
+      </component>
+      <component type="Container" name="Container51" cloudDestinationProperty="Container5" uiid="CalendarDay" layout="BoxLayout" boxLayoutAxis="Y" >
+        <component type="Label" name="Label4" cloudDestinationProperty="Label4" text="Expiry Date" >
+        </component>
+        <component type="Container" name="Container9" cloudDestinationProperty="Container9" >
+          <component type="TextField" name="txtStep1a" cloudBoundProperty="text" cloudDestinationProperty="TextField" text="" constraint="2" maxSize="2" hint="MM" columns="2" >
+          </component>
+          <component type="TextField" name="txtStep1a1" cloudBoundProperty="text" cloudDestinationProperty="TextField" text="" constraint="2" maxSize="4" hint="YYYY" columns="4" >
+          </component>
+        </component>
+      </component>
+      <component type="Container" name="Container10" cloudDestinationProperty="Container10" layout="GridLayout" gridLayoutRows="1" gridLayoutColumns="2" >
+        <component type="Button" name="btnPayNow" cloudDestinationProperty="Button2" uiid="ButtonNameSearch" text="PAY NOW" >
+        </component>
+      </component>
+      <component type="Container" name="Container6" cloudDestinationProperty="Container6" uiid="ContainerCalendarDay" layout="BoxLayout" boxLayoutAxis="Y" >
+        <component type="Label" name="Label5" cloudDestinationProperty="Label5" text="" icon="CreditCardPayment.PNG" >
+        </component>
+      </component>
+    </component>
+  </component>
+</component>

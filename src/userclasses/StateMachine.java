@@ -149,8 +149,6 @@ public class StateMachine extends StateMachineBase {
     }
 
     protected void initVars(Resources res) {
-        
-        
 
 //        String d = "1976-06-16T00:00:00+02:00";
 //        d = StringUtil.replaceAll(d, "T", "_");
@@ -257,7 +255,6 @@ public class StateMachine extends StateMachineBase {
 //            //uw.get_cust_MOBI_2(tmpUser);
 //            //uw.get_app_version(tmpUser);
 //            uw.update_app_version("0.17");
-            
 //
 //            //step2
 //            tmpUser.setFirst_name("Blessing");
@@ -366,11 +363,11 @@ public class StateMachine extends StateMachineBase {
         if (logout != null) {
             logout.setCommandName("");
             logout.setEnabled(false);
-        
+
         }
     }
-    
-      public void showLogout() {
+
+    public void showLogout() {
         if (logout != null) {
             logout.setCommandName("Logout");
             logout.setEnabled(true);
@@ -380,7 +377,7 @@ public class StateMachine extends StateMachineBase {
     public void showNameReservation(Form f, String taskType) {
 
         hideLogout();
-        
+
         if (arrayListNameReservation != null) {
             arrayListNameReservation.clear();
         }
@@ -571,7 +568,7 @@ public class StateMachine extends StateMachineBase {
     ActionListener orientationListener = null;
 
     public void showDashboard(final Form f) {
-                
+
         f.removeAllCommands();
 
         Command back = new Command("") {
@@ -607,8 +604,7 @@ public class StateMachine extends StateMachineBase {
 //        }
 //        else if(logout != null){
 //             showLogout();
-
-            logout = new Command("Logout") {
+        logout = new Command("Logout") {
             @Override
             public void actionPerformed(ActionEvent evt) {
                 super.actionPerformed(evt); //To change body of generated methods, choose Tools | Templates.
@@ -642,7 +638,7 @@ public class StateMachine extends StateMachineBase {
 
         updateLayoutRegistration(f, cont);
 
-        MultiButton mbTasks = (MultiButton) findByName("mbTasks", cont);
+        Button mbTasks = (Button) findByName("mbTasks", cont);
 
         mbTasks.addActionListener(new ActionListener() {
             @Override
@@ -652,7 +648,7 @@ public class StateMachine extends StateMachineBase {
             }
         });
 
-        MultiButton mbCurrency = (MultiButton) findByName("mbCurrency", cont);
+        Button mbCurrency = (Button) findByName("mbCurrency", cont);
         mbCurrency.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
@@ -661,8 +657,8 @@ public class StateMachine extends StateMachineBase {
             }
         });
 
-        MultiButton mbCart = (MultiButton) findByName("mbCart", cont);
-        mbCart.addActionListener(new ActionListener() {
+        Button mbButton = (Button) findByName("mbButton", cont);
+        mbButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
                 //formProgress = new FormProgress(f);
@@ -670,17 +666,21 @@ public class StateMachine extends StateMachineBase {
             }
         });
 
-        mbTasks.setTextLine1("Name Reservations");
-        mbTasks.setTextLine2("Submit Proposed Name (s)");
-
-        mbCurrency.setTextLine1("Annual Returns");
-        mbCurrency.setTextLine2("Submit Enterprise Annual Returns");
-
-        mbCart.setTextLine1("Shopping Cart");
-        mbCart.setTextLine2("Pay Now for CIPC Services");
+//        mbTasks.setTextLine1("Name Reservations");
+//        mbTasks.setTextLine2("Submit Proposed Name (s)");
+//
+//        mbCurrency.setTextLine1("Annual Returns");
+//        mbCurrency.setTextLine2("Submit Enterprise Annual Returns");
+//
+//        mbCart.setTextLine1("Shopping Cart");
+//        mbCart.setTextLine2("Pay Now for CIPC Services");
 
         if (!Display.getInstance().isTablet()) {
-            f.add(cont);
+
+            TableLayout layout = new TableLayout(2, 1);
+            f.setLayout(layout);
+            f.addComponent(layout.createConstraint().heightPercentage(15).widthPercentage(100), new Label(" "));
+            f.addComponent(layout.createConstraint().heightPercentage(85).widthPercentage(100), cont);
         }
         if (formProgress != null) {
             formProgress.removeProgress();
@@ -709,7 +709,7 @@ public class StateMachine extends StateMachineBase {
     }
 
     public void showAnnualReturns(final Form f) {
-        
+
         hideLogout();
 
         isARStep1Passed = false;
@@ -843,8 +843,8 @@ public class StateMachine extends StateMachineBase {
 
         if (Display.getInstance().isSimulator()) {//2011100088 & K2013064531 & 2014 004548 07
             //Not allowed: 1999/028585/07
-            txtStep1a.setText("2011");
-            txtStep1b.setText("100088");
+            txtStep1a.setText("2012");
+            txtStep1b.setText("128721");
             txtStep1c.setText("07");
         }
 
@@ -1141,7 +1141,7 @@ public class StateMachine extends StateMachineBase {
     static boolean isCartStep4 = false;
 
     public void showCart(final Form f) {
-        
+
         hideLogout();
 
         BrowserComponent browser = new BrowserComponent();
@@ -1152,7 +1152,6 @@ public class StateMachine extends StateMachineBase {
         contStep1EServices.removeAll();
         Label lblTotal = (Label) findByName("lblTotal", cont);
         lblTotal.setText("");
-        
 
         Container contStep1 = (Container) findByName("contStep1", cont);
         //contStep1.removeAll();
@@ -1823,6 +1822,8 @@ public class StateMachine extends StateMachineBase {
     @Override
     protected void beforeLogin(final Form f) {
 
+        f.setUIID("Background", "BackgroundLandscape");
+
         if (Display.getInstance().isTablet()) {
             f.setLayout(new GridLayout(1, 3));
             f.addComponent(0, new Label(" "));
@@ -1855,7 +1856,7 @@ public class StateMachine extends StateMachineBase {
         contentPane.setScrollVisible(false);
         containerParent.setScrollVisible(false);
 
-        f.repaint();
+        f.revalidate();
 
         if (Display.getInstance().isSimulator()) {
             TextField txtCustomerCode = (TextField) findByName("txtCustomerCode", f);
@@ -2497,29 +2498,28 @@ public class StateMachine extends StateMachineBase {
     protected void postLogin(Form f) {
         height = Display.getInstance().getDisplayHeight();
         width = Display.getInstance().getDisplayWidth();
-        
+
         UserWebServices u = new UserWebServices();
         User user = new User();
         String serverVersion = u.get_app_version(user);
         Log.p("serverVersion=" + serverVersion, Log.DEBUG);
-        
+
         String currentAppVersion = Display.getInstance().getProperty("AppVersion", "Unknown");
-        
+
         double server = Double.parseDouble(serverVersion);
         double device = Double.parseDouble(currentAppVersion);
-        
-        if(server == device){
+
+        if (server == device) {
             Log.p("equal", Log.DEBUG);
-            
+
+        } else {
+            Dialog.show("App Version", "The current CIPC App Version is: " + serverVersion + " and "
+                    + "your  app version is " + currentAppVersion + " Please update your CIPC App to the latest version in order to use the CIPC App.", "Ok", null);
+            Display.getInstance().exitApplication();
+            //System.exit(0);
+            Log.p("server=" + server + " device=" + device, Log.DEBUG);
         }
-        else{
-            Dialog.show("App Version","The current CIPC App Version is: " + serverVersion + " and "
-                    + "your  app version is " + currentAppVersion +" Please update your CIPC App to the latest version in order to use the CIPC App.", "Ok", null);
-            System.exit(0);
-            Log.p("server=" + server + " device=" + device, Log.DEBUG); 
-        }
-        
-        
+
     }
 
     @Override
