@@ -323,7 +323,6 @@ public class StateMachine extends StateMachineBase {
             title.setUIID("LabelWhiteCenter");
             toolbar.setTitle(screenName);
             toolbar.setUIID("LabelWhiteCenter");
-            title.setIcon(null);
 
         }
 
@@ -638,6 +637,24 @@ public class StateMachine extends StateMachineBase {
 
         updateLayoutRegistration(f, cont);
 
+        Style labelForm = UIManager.getInstance().getComponentStyle("LabelWhite");
+        labelForm.setMargin(0, 0, 0, 0);
+        labelForm.setPadding(0, 0, 0, 0);
+        int sizeLabel = 8;
+        
+        Label lblIcon1 = (Label)findByName("lblIcon1", cont);
+        Label lblIcon2 = (Label)findByName("lblIcon2", cont);
+        Label lblIcon3 = (Label)findByName("lblIcon3", cont);
+        
+        Image img1 = FontImage.createMaterial(FontImage.MATERIAL_STORE, labelForm, sizeLabel);
+        Image img2 = FontImage.createMaterial(FontImage.MATERIAL_CREDIT_CARD, labelForm, sizeLabel);
+        Image img3 = FontImage.createMaterial(FontImage.MATERIAL_SHOPPING_CART, labelForm, sizeLabel);
+        
+        lblIcon1.setIcon(img1);
+        lblIcon2.setIcon(img2);
+        lblIcon3.setIcon(img3);
+                
+
         Button mbTasks = (Button) findByName("mbTasks", cont);
 
         mbTasks.addActionListener(new ActionListener() {
@@ -674,7 +691,6 @@ public class StateMachine extends StateMachineBase {
 //
 //        mbCart.setTextLine1("Shopping Cart");
 //        mbCart.setTextLine2("Pay Now for CIPC Services");
-
         if (!Display.getInstance().isTablet()) {
 
             TableLayout layout = new TableLayout(2, 1);

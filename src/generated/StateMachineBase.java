@@ -702,6 +702,42 @@ public abstract class StateMachineBase extends UIBuilder {
         return cmp;
     }
 
+    public com.codename1.ui.Label findLblIcon1(Component root) {
+        return (com.codename1.ui.Label)findByName("lblIcon1", root);
+    }
+
+    public com.codename1.ui.Label findLblIcon1() {
+        com.codename1.ui.Label cmp = (com.codename1.ui.Label)findByName("lblIcon1", Display.getInstance().getCurrent());
+        if(cmp == null && aboutToShowThisContainer != null) {
+            cmp = (com.codename1.ui.Label)findByName("lblIcon1", aboutToShowThisContainer);
+        }
+        return cmp;
+    }
+
+    public com.codename1.ui.Label findLblIcon2(Component root) {
+        return (com.codename1.ui.Label)findByName("lblIcon2", root);
+    }
+
+    public com.codename1.ui.Label findLblIcon2() {
+        com.codename1.ui.Label cmp = (com.codename1.ui.Label)findByName("lblIcon2", Display.getInstance().getCurrent());
+        if(cmp == null && aboutToShowThisContainer != null) {
+            cmp = (com.codename1.ui.Label)findByName("lblIcon2", aboutToShowThisContainer);
+        }
+        return cmp;
+    }
+
+    public com.codename1.ui.Label findLblIcon3(Component root) {
+        return (com.codename1.ui.Label)findByName("lblIcon3", root);
+    }
+
+    public com.codename1.ui.Label findLblIcon3() {
+        com.codename1.ui.Label cmp = (com.codename1.ui.Label)findByName("lblIcon3", Display.getInstance().getCurrent());
+        if(cmp == null && aboutToShowThisContainer != null) {
+            cmp = (com.codename1.ui.Label)findByName("lblIcon3", aboutToShowThisContainer);
+        }
+        return cmp;
+    }
+
     public com.codename1.ui.Container findContTasks(Component root) {
         return (com.codename1.ui.Container)findByName("ContTasks", root);
     }
