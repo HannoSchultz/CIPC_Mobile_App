@@ -149,7 +149,7 @@ public class StateMachine extends StateMachineBase {
     }
 
     protected void initVars(Resources res) {
-         Display.getInstance().setProperty("l10n.currency", "ZAR");//force only rand currency when using Localisation Manager. Don't remove this!
+        Display.getInstance().setProperty("l10n.currency", "ZAR");//force only rand currency when using Localisation Manager. Don't remove this!
 
 //        String d = "1976-06-16T00:00:00+02:00";
 //        d = StringUtil.replaceAll(d, "T", "_");
@@ -375,8 +375,6 @@ public class StateMachine extends StateMachineBase {
     }
 
     public void showNameReservation(Form f, String taskType) {
-        
-        
 
         hideLogout();
 
@@ -407,7 +405,7 @@ public class StateMachine extends StateMachineBase {
         Container contentPane = f.getContentPane();
         contentPane.removeAll();
         Container contTasks = (Container) createContainer("/theme", "ContTasks");
-         f.setScrollableX(false);
+        f.setScrollableX(false);
         f.setScrollableX(false);
         contentPane.setScrollableX(false);
         contentPane.setScrollableX(false);
@@ -445,7 +443,7 @@ public class StateMachine extends StateMachineBase {
         Button btnLodge = (Button) findByName("btnLodge", contTasks);
         btnLodge.setUIID("ButtonNameSearchDisabled");
         btnLodge.repaint();
-        
+
         if (Display.getInstance().isSimulator()) {
             txtName1.setText(getRandomString(10));
             //txtName1.setText("Croatia");
@@ -477,8 +475,8 @@ public class StateMachine extends StateMachineBase {
                     Label lblResponse = (Label) findByName("lblName" + count + "Response", contTasks);
                     NameSearchObject n = arrayListNameReservation.get(i);
                     if (n.isIsValid()) {
-                         btnLodge.setUIID("ButtonNameSearch");
-                         btnLodge.repaint();
+                        btnLodge.setUIID("ButtonNameSearch");
+                        btnLodge.repaint();
                         lblResponse.setText("Might be available");
                         lblResponse.setUIID("LabelGreen");
                     } else {
@@ -654,19 +652,19 @@ public class StateMachine extends StateMachineBase {
         labelForm.setMargin(0, 0, 0, 0);
         labelForm.setPadding(0, 0, 0, 0);
         int sizeLabel = 6;
-        
-        Label lblIcon1 = (Label)findByName("lblIcon1", cont);
-        Label lblIcon2 = (Label)findByName("lblIcon2", cont);
-        Label lblIcon3 = (Label)findByName("lblIcon3", cont);
-        
+
+        Label lblIcon1 = (Label) findByName("lblIcon1", cont);
+        Label lblIcon2 = (Label) findByName("lblIcon2", cont);
+        Label lblIcon3 = (Label) findByName("lblIcon3", cont);
+
         Image img1 = FontImage.createMaterial(FontImage.MATERIAL_STORE, labelForm, sizeLabel);
         Image img2 = FontImage.createMaterial(FontImage.MATERIAL_CREDIT_CARD, labelForm, sizeLabel);
         Image img3 = FontImage.createMaterial(FontImage.MATERIAL_SHOPPING_CART, labelForm, sizeLabel);
-        
+
         lblIcon1.setIcon(img1);
         lblIcon2.setIcon(img2);
         lblIcon3.setIcon(img3);
-           
+
         Button mbTasks = (Button) findByName("mbTasks", cont);
 
         mbTasks.addActionListener(new ActionListener() {
@@ -709,15 +707,12 @@ public class StateMachine extends StateMachineBase {
 //            f.setLayout(layout);
 //            f.addComponent(layout.createConstraint().heightPercentage(15).widthPercentage(100), new Label(" "));
 //            f.addComponent(layout.createConstraint().heightPercentage(85).widthPercentage(100), cont);
-    
-             f.setLayout(new BorderLayout());
-             Container north = new Container(BoxLayout.y());
-             north.add(" ").add(" ").add(" ");
-             f.add(BorderLayout.NORTH, north);
-             f.add(BorderLayout.CENTER, cont);
+            f.setLayout(new BorderLayout());
+            Container north = new Container(BoxLayout.y());
+            north.add(" ").add(" ").add(" ");
+            f.add(BorderLayout.NORTH, north);
+            f.add(BorderLayout.CENTER, cont);
 
-
-            
         }
         if (formProgress != null) {
             formProgress.removeProgress();
@@ -801,14 +796,40 @@ public class StateMachine extends StateMachineBase {
         f.removeAllCommands();
         f.getToolbar().setBackCommand(back);
 
-        Button btn1 = new Button("1");
-        Button btn2 = new Button("2");
-        Button btn3 = new Button("3");
-        Button btn4 = new Button("4");
+        Style labelForm = UIManager.getInstance().getComponentStyle("CIPC_DARK");
+        labelForm.setMargin(0, 0, 0, 0);
+        labelForm.setPadding(0, 0, 0, 0);
+        int sizeLabel = 6;
+
+        Image img1 = FontImage.createMaterial(FontImage.MATERIAL_PERSON, labelForm, sizeLabel);
+        Image img2 = FontImage.createMaterial(FontImage.MATERIAL_BUSINESS, labelForm, sizeLabel);
+        Image img3 = FontImage.createMaterial(FontImage.MATERIAL_PAYMENT, labelForm, sizeLabel);
+        Image img4 = FontImage.createMaterial(FontImage.MATERIAL_DETAILS, labelForm, sizeLabel);
+
+        Button btn1 = new Button("");
+        Button btn2 = new Button("");
+        Button btn3 = new Button("");
+        Button btn4 = new Button("");
+
+        btn1.setUIID("CIPC_DARK_SELECTED");
+        btn2.setUIID("CIPC_DARK");
+        btn3.setUIID("CIPC_DARK");
+        btn4.setUIID("CIPC_DARK");
+
+        btn1.setIcon(img1);
+        btn2.setIcon(img2);
+        btn3.setIcon(img3);
+        btn4.setIcon(img4);
 
         btn1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
+                if (isARStep1Passed == true) {
+                    btn1.setUIID("CIPC_DARK_SELECTED");
+                    btn2.setUIID("CIPC_DARK");
+                    btn3.setUIID("CIPC_DARK");
+                    btn4.setUIID("CIPC_DARK");
+                }
                 //Log.p("clicked btn1", Log.DEBUG);
                 tabs.setSelectedIndex(0);
                 isARStep1Passed = false;
@@ -820,6 +841,12 @@ public class StateMachine extends StateMachineBase {
         btn2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
+                  if (isARStep2Passed == true) {
+                    btn1.setUIID("CIPC_DARK");
+                    btn2.setUIID("CIPC_DARK_SELECTED");
+                    btn3.setUIID("CIPC_DARK");
+                    btn4.setUIID("CIPC_DARK");
+                }
                 //Log.p("clicked btn2, isRegStep1Passed=" + isRegStep1Passed
                 //   + ", isRegStep2Passed=" + isRegStep2Passed, Log.DEBUG);
                 isARStep2Passed = false;
@@ -837,6 +864,12 @@ public class StateMachine extends StateMachineBase {
             @Override
             public void actionPerformed(ActionEvent evt) {
                 //Log.p("clicked btn3", Log.DEBUG);
+                if (isARStep3Passed == true) {
+                    btn1.setUIID("CIPC_DARK");
+                    btn2.setUIID("CIPC_DARK");
+                    btn3.setUIID("CIPC_DARK_SELECTED");
+                    btn4.setUIID("CIPC_DARK");
+                }
 
                 isARStep3Passed = false;
                 if (isARStep1Passed == true && isARStep2Passed == true) {
@@ -851,6 +884,14 @@ public class StateMachine extends StateMachineBase {
             @Override
             public void actionPerformed(ActionEvent evt) {
                 //Log.p("clicked btn4", Log.DEBUG);
+                
+//                   if (isARStep4Passed == true) {
+//                    btn1.setUIID("CIPC_DARK");
+//                    btn2.setUIID("CIPC_DARK");
+//                    btn3.setUIID("CIPC_DARK");
+//                    btn4.setUIID("CIPC_DARK_SELECTED");
+//                }
+                
                 if (isARStep1Passed == true && isARStep2Passed == true
                         && isARStep3Passed == true) {
                     tabs.setSelectedIndex(3);
@@ -888,6 +929,16 @@ public class StateMachine extends StateMachineBase {
         txtStep1a.getParent().repaint();
 
         Button btnStep1RetrieveDetails = (Button) findByName("btnStep1RetrieveDetails", tabs);
+
+        labelForm = UIManager.getInstance().getComponentStyle("Button");
+        labelForm.setMargin(0, 0, 0, 0);
+        labelForm.setPadding(0, 0, 0, 0);
+        sizeLabel = 6;
+
+        Image imgForward = FontImage.createMaterial(FontImage.MATERIAL_FORWARD, labelForm, sizeLabel);
+        btnStep1RetrieveDetails.setIcon(imgForward);
+        btnStep1RetrieveDetails.setText("");
+
         Button btnStep2Confirm = (Button) findByName("btnStep2Confirm", tabs);
         Button btnStep3CalcOutAmount = (Button) findByName("btnStep3CalcOutAmount", tabs);
         Button btnStep4AddToCart = (Button) findByName("btnStep4AddToCart", tabs);
@@ -951,6 +1002,10 @@ public class StateMachine extends StateMachineBase {
                         lblStep2RegistrationDate.setText(enterpriseDetails.getReg_date());
 
                         tabs.setSelectedIndex(1);
+                        btn1.setUIID("CIPC_DARK");
+                        btn2.setUIID("CIPC_DARK_SELECTED");
+                        btn3.setUIID("CIPC_DARK");
+                        btn4.setUIID("CIPC_DARK");
                         isARStep1Passed = true;
                         btnStep2Confirm.setEnabled(true);
 
@@ -1013,6 +1068,10 @@ public class StateMachine extends StateMachineBase {
                 contStep3Turnovers.repaint();
 
                 tabs.setSelectedIndex(2);
+                btn1.setUIID("CIPC_DARK");
+                btn2.setUIID("CIPC_DARK");
+                btn3.setUIID("CIPC_DARK_SELECTED");
+                btn4.setUIID("CIPC_DARK");
                 isARStep2Passed = true;
                 btnStep3CalcOutAmount.setEnabled(true);
 
@@ -1094,6 +1153,10 @@ public class StateMachine extends StateMachineBase {
                 contStep4AnnualReturns.repaint();
 
                 tabs.setSelectedIndex(3);
+                btn1.setUIID("CIPC_DARK");
+                btn2.setUIID("CIPC_DARK");
+                btn3.setUIID("CIPC_DARK");
+                btn4.setUIID("CIPC_DARK_SELECTED");
                 isARStep3Passed = true;
                 btnStep4AddToCart.setEnabled(true);
             }
@@ -1137,7 +1200,7 @@ public class StateMachine extends StateMachineBase {
         });
 
         Container contTop = new Container();
-        contTop.setUIID("LabelWhite");
+        contTop.setUIID("ContainerWhite");
         contTop.setLayout(new GridLayout(1, 4));
         contTop.add(btn1).add(btn2).add(btn3).add(btn4);
 
@@ -1446,25 +1509,21 @@ public class StateMachine extends StateMachineBase {
 
                     mb.setTextLine1("Reference No: " + ReferenceNumber);
                     mb.setTextLine2("Enterprise No: " + EnterpriseNumber);
-                    //mb.setTextLine3("Service: " + ItemType);
                     Log.p("TotalAmountItemType=" + TotalAmountItemType, Log.DEBUG);
                     String strTotalAmountItemType = L10NManager.getInstance().formatCurrency(TotalAmountItemType);
                     Log.p("strTotalAmountItemType=" + strTotalAmountItemType, Log.DEBUG);
-                    mb.setTextLine3("Item Cost: " + strTotalAmountItemType);
-                    
-                    
-                
-                    Button btnEServiceItemCost  = new Button("Item Cost: " + strTotalAmountItemType);
+                    //mb.setTextLine3("Item Cost: " + strTotalAmountItemType);
+
+                    Button btnEServiceItemCost = new Button("Item Cost: " + strTotalAmountItemType);
                     btnEServiceItemCost.setUIID("ButtonItemCost");
                     Container contEServiceItemCost = FlowLayout.encloseIn(btnEServiceItemCost);
                     contEServiceItemCost.setUIID("ContButtonItemCost");
 
-                    
-                     Button btnRemove0 = new Button("REMOVE");
-                     btnRemove0.setUIID("ButtonRemove");
+                    Button btnRemove0 = new Button("REMOVE");
+                    btnRemove0.setUIID("ButtonRemove");
                     Container c0 = FlowLayout.encloseRight(btnRemove0);
                     c0.setUIID("DeleteButtonCont");
-                   
+
                     btnRemove0.setName(ReferenceNumber);//ensure we have correct button
                     btnRemove0.addActionListener(new ActionListener() {
                         @Override
@@ -1490,8 +1549,8 @@ public class StateMachine extends StateMachineBase {
                     });
                     //c0.add(btnRemove0);
 
-                      contItem.add(BorderLayout.CENTER, mb).add(BorderLayout.SOUTH, contEServiceItemCost).add(BorderLayout.EAST, c0);
-                    contStep1EServices.add(contItem).add(" ");
+                    contItem.add(BorderLayout.CENTER, mb).add(BorderLayout.SOUTH, contEServiceItemCost).add(BorderLayout.EAST, c0);
+                    contStep1EServices.add(contItem);
 
                 }
             }
@@ -1540,7 +1599,7 @@ public class StateMachine extends StateMachineBase {
                     mb.setTextLine2("Service: " + ItemType);
                     String strTotalAmountItemType = L10NManager.getInstance().formatCurrency(TotalAmountItemType);
                     Log.p("strTotalAmountItemType=" + strTotalAmountItemType, Log.DEBUG);
-                    Button btnEServiceItemCost  = new Button("Item Cost: " + strTotalAmountItemType);
+                    Button btnEServiceItemCost = new Button("Item Cost: " + strTotalAmountItemType);
                     btnEServiceItemCost.setUIID("ButtonItemCost");
                     Container contEServiceItemCost = FlowLayout.encloseIn(btnEServiceItemCost);
                     contEServiceItemCost.setUIID("ContButtonItemCost");
@@ -1578,7 +1637,7 @@ public class StateMachine extends StateMachineBase {
 
                     //c0.add(btnRemove0);
                     contItem.add(BorderLayout.CENTER, mb).add(BorderLayout.SOUTH, contEServiceItemCost).add(BorderLayout.EAST, c0);
-                    contStep1EServices.add(contItem).add(" ");
+                    contStep1EServices.add(contItem);
 
                 }
             }
