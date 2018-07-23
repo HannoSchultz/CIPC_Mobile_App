@@ -149,6 +149,7 @@ public class StateMachine extends StateMachineBase {
     }
 
     protected void initVars(Resources res) {
+         Display.getInstance().setProperty("l10n.currency", "ZAR");//force only rand currency when using Localisation Manager. Don't remove this!
 
 //        String d = "1976-06-16T00:00:00+02:00";
 //        d = StringUtil.replaceAll(d, "T", "_");
@@ -374,6 +375,8 @@ public class StateMachine extends StateMachineBase {
     }
 
     public void showNameReservation(Form f, String taskType) {
+        
+        
 
         hideLogout();
 
@@ -404,6 +407,12 @@ public class StateMachine extends StateMachineBase {
         Container contentPane = f.getContentPane();
         contentPane.removeAll();
         Container contTasks = (Container) createContainer("/theme", "ContTasks");
+         f.setScrollableX(false);
+        f.setScrollableX(false);
+        contentPane.setScrollableX(false);
+        contentPane.setScrollableX(false);
+        contTasks.setScrollableX(false);
+        contTasks.setScrollableX(false);
 
         if (orientationListener != null) {
             f.removeOrientationListener(orientationListener);
@@ -434,7 +443,9 @@ public class StateMachine extends StateMachineBase {
 
         Button btnVerify = (Button) findByName("btnVerify", contTasks);
         Button btnLodge = (Button) findByName("btnLodge", contTasks);
-
+        btnLodge.setUIID("ButtonNameSearchDisabled");
+        btnLodge.repaint();
+        
         if (Display.getInstance().isSimulator()) {
             txtName1.setText(getRandomString(10));
             //txtName1.setText("Croatia");
@@ -466,6 +477,8 @@ public class StateMachine extends StateMachineBase {
                     Label lblResponse = (Label) findByName("lblName" + count + "Response", contTasks);
                     NameSearchObject n = arrayListNameReservation.get(i);
                     if (n.isIsValid()) {
+                         btnLodge.setUIID("ButtonNameSearch");
+                         btnLodge.repaint();
                         lblResponse.setText("Might be available");
                         lblResponse.setUIID("LabelGreen");
                     } else {
@@ -556,7 +569,7 @@ public class StateMachine extends StateMachineBase {
         });
 
         if (!Display.getInstance().isTablet()) {
-            f.add(contTasks);
+            f.add(BorderLayout.CENTER, contTasks);
         }
 
         if (formProgress != null) {
@@ -640,7 +653,7 @@ public class StateMachine extends StateMachineBase {
         Style labelForm = UIManager.getInstance().getComponentStyle("LabelWhite");
         labelForm.setMargin(0, 0, 0, 0);
         labelForm.setPadding(0, 0, 0, 0);
-        int sizeLabel = 8;
+        int sizeLabel = 6;
         
         Label lblIcon1 = (Label)findByName("lblIcon1", cont);
         Label lblIcon2 = (Label)findByName("lblIcon2", cont);
@@ -653,8 +666,7 @@ public class StateMachine extends StateMachineBase {
         lblIcon1.setIcon(img1);
         lblIcon2.setIcon(img2);
         lblIcon3.setIcon(img3);
-                
-
+           
         Button mbTasks = (Button) findByName("mbTasks", cont);
 
         mbTasks.addActionListener(new ActionListener() {
@@ -693,10 +705,19 @@ public class StateMachine extends StateMachineBase {
 //        mbCart.setTextLine2("Pay Now for CIPC Services");
         if (!Display.getInstance().isTablet()) {
 
-            TableLayout layout = new TableLayout(2, 1);
-            f.setLayout(layout);
-            f.addComponent(layout.createConstraint().heightPercentage(15).widthPercentage(100), new Label(" "));
-            f.addComponent(layout.createConstraint().heightPercentage(85).widthPercentage(100), cont);
+//            TableLayout layout = new TableLayout(2, 1);
+//            f.setLayout(layout);
+//            f.addComponent(layout.createConstraint().heightPercentage(15).widthPercentage(100), new Label(" "));
+//            f.addComponent(layout.createConstraint().heightPercentage(85).widthPercentage(100), cont);
+    
+             f.setLayout(new BorderLayout());
+             Container north = new Container(BoxLayout.y());
+             north.add(" ").add(" ").add(" ");
+             f.add(BorderLayout.NORTH, north);
+             f.add(BorderLayout.CENTER, cont);
+
+
+            
         }
         if (formProgress != null) {
             formProgress.removeProgress();
@@ -860,7 +881,7 @@ public class StateMachine extends StateMachineBase {
         if (Display.getInstance().isSimulator()) {//2011100088 & K2013064531 & 2014 004548 07
             //Not allowed: 1999/028585/07
             txtStep1a.setText("2012");
-            txtStep1b.setText("128721");
+            txtStep1b.setText("128722");
             txtStep1c.setText("07");
         }
 
@@ -1401,8 +1422,8 @@ public class StateMachine extends StateMachineBase {
                 //Annual Returns
                 for (Object o : AnnualReturns) {
 
-                    Container contItem = new Container(BoxLayout.y());
-                    contItem.setUIID("CalendarDay");
+                    Container contItem = new Container(new BorderLayout());
+                    contItem.setUIID("ContainerBox");
                     Map m = (Map) o;
                     //String ItemType = m.get("ItemType").toString();
                     //String StatusDate = m.get("StatusDate").toString();
@@ -1430,10 +1451,20 @@ public class StateMachine extends StateMachineBase {
                     String strTotalAmountItemType = L10NManager.getInstance().formatCurrency(TotalAmountItemType);
                     Log.p("strTotalAmountItemType=" + strTotalAmountItemType, Log.DEBUG);
                     mb.setTextLine3("Item Cost: " + strTotalAmountItemType);
+                    
+                    
+                
+                    Button btnEServiceItemCost  = new Button("Item Cost: " + strTotalAmountItemType);
+                    btnEServiceItemCost.setUIID("ButtonItemCost");
+                    Container contEServiceItemCost = FlowLayout.encloseIn(btnEServiceItemCost);
+                    contEServiceItemCost.setUIID("ContButtonItemCost");
 
-                    Container c0 = new Container();
+                    
+                     Button btnRemove0 = new Button("REMOVE");
+                     btnRemove0.setUIID("ButtonRemove");
+                    Container c0 = FlowLayout.encloseRight(btnRemove0);
                     c0.setUIID("DeleteButtonCont");
-                    Button btnRemove0 = new Button("REMOVE");
+                   
                     btnRemove0.setName(ReferenceNumber);//ensure we have correct button
                     btnRemove0.addActionListener(new ActionListener() {
                         @Override
@@ -1457,11 +1488,10 @@ public class StateMachine extends StateMachineBase {
                             }
                         }
                     });
-                    c0.add(btnRemove0);
+                    //c0.add(btnRemove0);
 
-                    contItem.add(mb)
-                            .add(c0);
-                    contStep1EServices.add(contItem);
+                      contItem.add(BorderLayout.CENTER, mb).add(BorderLayout.SOUTH, contEServiceItemCost).add(BorderLayout.EAST, c0);
+                    contStep1EServices.add(contItem).add(" ");
 
                 }
             }
@@ -1477,8 +1507,8 @@ public class StateMachine extends StateMachineBase {
                 //CartItems
                 for (j = 0; j < CartItems.size(); j++) {
                     Object o = CartItems.get(j);
-                    Container contItem = new Container(BoxLayout.y());
-                    contItem.setUIID("CalendarDay");
+                    Container contItem = new Container(new BorderLayout());
+                    contItem.setUIID("ContainerBox");
                     Map m = (Map) o;
                     String ItemType = m.get("ItemType").toString();
                     //String Status = m.get("Status").toString();
@@ -1510,11 +1540,16 @@ public class StateMachine extends StateMachineBase {
                     mb.setTextLine2("Service: " + ItemType);
                     String strTotalAmountItemType = L10NManager.getInstance().formatCurrency(TotalAmountItemType);
                     Log.p("strTotalAmountItemType=" + strTotalAmountItemType, Log.DEBUG);
-                    mb.setTextLine3("Item Cost: " + strTotalAmountItemType);
+                    Button btnEServiceItemCost  = new Button("Item Cost: " + strTotalAmountItemType);
+                    btnEServiceItemCost.setUIID("ButtonItemCost");
+                    Container contEServiceItemCost = FlowLayout.encloseIn(btnEServiceItemCost);
+                    contEServiceItemCost.setUIID("ContButtonItemCost");
 
-                    Container c0 = new Container();
-                    c0.setUIID("DeleteButtonCont");
                     Button btnRemove0 = new Button("REMOVE");
+                    btnRemove0.setUIID("ButtonRemove");
+
+                    Container c0 = FlowLayout.encloseRight(btnRemove0);
+                    c0.setUIID("DeleteButtonCont");
                     btnRemove0.setName(ReferenceNumber);//ensure we have correct reference
                     //btnRemove0.setUIID("CalendarDay");
 
@@ -1541,9 +1576,9 @@ public class StateMachine extends StateMachineBase {
                         //contStep1EServices.repaint();
                     });
 
-                    c0.add(btnRemove0);
-                    contItem.add(mb).add(c0);
-                    contStep1EServices.add(contItem);
+                    //c0.add(btnRemove0);
+                    contItem.add(BorderLayout.CENTER, mb).add(BorderLayout.SOUTH, contEServiceItemCost).add(BorderLayout.EAST, c0);
+                    contStep1EServices.add(contItem).add(" ");
 
                 }
             }
