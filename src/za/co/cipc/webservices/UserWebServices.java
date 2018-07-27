@@ -35,12 +35,14 @@ import java.util.Hashtable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
+import userclasses.Const;
 import userclasses.Constants;
 import userclasses.EnterpriseDetails;
 import userclasses.NameReservation;
 import userclasses.NameSearchObject;
 import za.co.cipc.pojos.AuthObject;
 import za.co.cipc.pojos.Country;
+import za.co.cipc.pojos.FormattedCode;
 import za.co.cipc.pojos.User;
 
 /**
@@ -50,6 +52,105 @@ import za.co.cipc.pojos.User;
 public class UserWebServices {
 
     String AR_BODY;
+
+    public FormattedCode format_ent_no_mobi(String enterpriseName) {
+
+        FormattedCode f = null;
+        
+        final String SOAP_BODY = "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:cipc=\"CIPC_WEB_SERVICES\">\n"
+                + "\n"
+                + "   <soap:Header/>\n"
+                + "\n"
+                + "   <soap:Body>\n"
+                + "\n"
+                + "      <cipc:format_ent_no_mobi>\n"
+                + "\n"
+                + "                 <cipc:sUserName>"+Const.sUserName+"</cipc:sUserName>\n"
+                + "\n"
+                + "         <cipc:sPassword>"+Const.sPassword+"</cipc:sPassword>\n"
+                + "\n"
+                + "         <cipc:sBankID>"+Const.sBankID+"</cipc:sBankID>\n"
+                + "\n"
+                + "         <cipc:sCust_Code></cipc:sCust_Code>\n"
+                + "\n"
+                + "         <cipc:Sent_no>"+enterpriseName+"</cipc:Sent_no>\n"
+                + "\n"
+                + "      </cipc:format_ent_no_mobi>\n"
+                + "\n"
+                + "   </soap:Body>\n"
+                + "\n"
+                + "</soap:Envelope>";
+
+        ConnectionRequest httpRequest = new ConnectionRequest() {
+            Element h;
+
+            @Override
+            protected void buildRequestBody(OutputStream os) throws IOException {
+                super.buildRequestBody(os);
+                os.write(SOAP_BODY.getBytes("utf-8"));
+
+            }
+
+            protected void postResponse() {
+
+                super.postResponse();
+            }
+
+            protected void readResponse(InputStream input) throws IOException {
+                super.readResponse(input);
+
+            }
+
+            @Override
+            protected void handleException(Exception err) {
+                Log.p("Exception: " + err.toString());
+                Dialog.show("No Internet", "There is no internet connection. Please switch your connection on.", "Okay", null);
+
+            }
+        };
+
+        httpRequest.setUrl("https://testwebservices4.cipc.co.za/enterprise.asmx");
+        httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
+        httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
+        httpRequest.setPost(true);
+
+//        InfiniteProgress prog = new InfiniteProgress();
+//        Dialog dlg = prog.showInifiniteBlocking();
+//        httpRequest.setDisposeOnCompletion(dlg);
+        NetworkManager.getInstance().addToQueueAndWait(httpRequest);
+        String data = new String(httpRequest.getResponseData());
+        Log.p("format_ent_no_mobi=" + data, Log.DEBUG);
+
+        try {
+
+            Result result = Result.fromContent(data, Result.XML);
+
+            Log.p("Element e: " + result, Log.DEBUG);
+
+            XMLParser parser = new XMLParser();
+            parser.setCaseSensitive(true);
+            Element element = parser.parse(convertStringtoInputStreamReader(result.getAsString("//DataSet")));
+            
+            f = new FormattedCode();
+            f.setYear(result.getAsString("//year"));
+            f.setBody(result.getAsString("//body"));
+            f.setType(result.getAsString("//type"));
+            f.setFull(result.getAsString("//New_Sent_No"));
+            
+//            RSM(((Element) child.getTextChildren(null, true).get(0)).toString());
+//            RSM(((Element) child.getTextChildren(null, true).get(0)).toString());
+//            RSM(((Element) child.getTextChildren(null, true).get(0)).toString());
+//            RSM(((Element) child.getTextChildren(null, true).get(0)).toString());
+
+           
+
+        } catch (IllegalArgumentException e) {
+            Log.p(e.toString());
+        }
+
+        return f;
+
+    }//end format_ent_no_mobi
 
     public ArrayList Get_AR_ent_type_mobi(String dataset) {
 
@@ -671,21 +772,20 @@ public class UserWebServices {
 
             for (int i = 1; i < listCalculateARTran.size(); i++) {
                 ent = listCalculateARTran.get(i);//this can fail
-                
-               // if(i == listCalculateARTran.size() - 1){
-                        AR_BODY += ",{\\\"ReferenceNumber\\\":" + ReferenceNumber + ",\\\"EnterpriseNumber\\\":\\\" " + ent.getEnt_no() + " \\\",\\\"Year\\\":" + ent.getAr_year() + ",\\\"Turnover\\\":" + ent.getTurnover() + ",\\\"Amount\\\":" + ent.getAr_amount() + ",\\\"PenaltyFee\\\":" + ent.getAr_penalty() + ",\\\"TotalAmount\\\": " + ent.getAr_total() + " ,\\\"Status\\\":null,\\\"StatusDate\\\":\\\" " + getAnnualReturnsDateNow() + "  \\\"}";
+
+                // if(i == listCalculateARTran.size() - 1){
+                AR_BODY += ",{\\\"ReferenceNumber\\\":" + ReferenceNumber + ",\\\"EnterpriseNumber\\\":\\\" " + ent.getEnt_no() + " \\\",\\\"Year\\\":" + ent.getAr_year() + ",\\\"Turnover\\\":" + ent.getTurnover() + ",\\\"Amount\\\":" + ent.getAr_amount() + ",\\\"PenaltyFee\\\":" + ent.getAr_penalty() + ",\\\"TotalAmount\\\": " + ent.getAr_total() + " ,\\\"Status\\\":null,\\\"StatusDate\\\":\\\" " + getAnnualReturnsDateNow() + "  \\\"}";
                 //}
                 //else{
-                 //                           AR_BODY += "{\\\"ReferenceNumber\\\":" + ReferenceNumber + ",\\\"EnterpriseNumber\\\":\\\" " + ent.getEnt_no() + " \\\",\\\"Year\\\":" + ent.getAr_year() + ",\\\"Turnover\\\":" + ent.getTurnover() + ",\\\"Amount\\\":" + ent.getAr_amount() + ",\\\"PenaltyFee\\\":" + ent.getAr_penalty() + ",\\\"TotalAmount\\\": " + ent.getAr_total() + " ,\\\"Status\\\":null,\\\"StatusDate\\\":\\\" " + getAnnualReturnsDateNow() + "  \\\"},";
+                //                           AR_BODY += "{\\\"ReferenceNumber\\\":" + ReferenceNumber + ",\\\"EnterpriseNumber\\\":\\\" " + ent.getEnt_no() + " \\\",\\\"Year\\\":" + ent.getAr_year() + ",\\\"Turnover\\\":" + ent.getTurnover() + ",\\\"Amount\\\":" + ent.getAr_amount() + ",\\\"PenaltyFee\\\":" + ent.getAr_penalty() + ",\\\"TotalAmount\\\": " + ent.getAr_total() + " ,\\\"Status\\\":null,\\\"StatusDate\\\":\\\" " + getAnnualReturnsDateNow() + "  \\\"},";
 
                 //}
-                        
             }
 
         }
 
         AR_BODY += "],\\\"ItemsCount\\\":" + listCalculateARTran.size() + "}\",\n"
-                + "\"Amount\":"+total+"\n"
+                + "\"Amount\":" + total + "\n"
                 + "}";
 
 //        working sample
@@ -1526,7 +1626,7 @@ public class UserWebServices {
                 + "\n"
                 + "         <cipc:sBankID>wBAA7LAkWIs=</cipc:sBankID>\n"
                 + "\n"
-                + "         <cipc:ver> "+newVersion+"  </cipc:ver>\n"
+                + "         <cipc:ver> " + newVersion + "  </cipc:ver>\n"
                 + "\n"
                 + "         <cipc:sCust_Code>NEWLNE</cipc:sCust_Code>\n"
                 + "\n"

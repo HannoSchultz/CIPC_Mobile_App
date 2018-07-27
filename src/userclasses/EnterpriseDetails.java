@@ -15,6 +15,7 @@ public class EnterpriseDetails {
 
     private String customerCode;
     private String ent_no;
+    private String ent_no_user_format;
     private int ar_year;
     private String trak_no;
     private double turnover;
@@ -39,6 +40,14 @@ public class EnterpriseDetails {
 
     private boolean isAllowed;
 
+    public String getEnt_no_user_format() {
+        return ent_no_user_format;
+    }
+
+    public void setEnt_no_user_format(String ent_no_user_format) {
+        this.ent_no_user_format = ent_no_user_format;
+    }
+    
     public String getEnt_no() {
         return ent_no;
     }
