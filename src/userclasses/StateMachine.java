@@ -209,10 +209,7 @@ public class StateMachine extends StateMachineBase {
             User user = new User();
             user.setAgent_code("KD7788");
             u.format_ent_no_mobi("K2012123456");
-        
-    
 
-  
 //            boolean isPending = u.pendingAnnualReturns(user, entNo);
 //            Log.p("isPending=" + isPending, Log.DEBUG);
 //            Map mapCart = u.getCart(user);
@@ -743,6 +740,15 @@ public class StateMachine extends StateMachineBase {
         return flow;
     }
 
+    //validate ar
+    static String ar2EmailAddress;
+    static String ar2TelCode;
+    static String ar2TelNumber;
+    static String ar2CellNumber;
+    static String ar2WebAddress;
+    static String ar2BusinessDescription;
+    static String ar2PlaceOfBusiness;
+
     public void showAnnualReturns(final Form f) {
 
         Style labelForm = UIManager.getInstance().getComponentStyle("CIPC_DARK");
@@ -934,12 +940,7 @@ public class StateMachine extends StateMachineBase {
             }
         });
 
-        if (Display.getInstance().isSimulator()) {//2011100088 & K2013064531 & 2014 004548 07
-            //Not allowed: 1999/028585/07
-            txtStep1a.setText("2012");
-            txtStep1b.setText("123456");
-            txtStep1c.setText("07");
-        }
+      
 
         txtStep1a.getParent().repaint();
 
@@ -954,6 +955,29 @@ public class StateMachine extends StateMachineBase {
         Label lblStep2EnterpriseType = (Label) findByName("lblStep2EnterpriseType", contStep2);
         Label lblStep2EnterpriseStatus = (Label) findByName("lblStep2EnterpriseStatus", contStep2);
         Label lblStep2RegistrationDate = (Label) findByName("lblStep2RegistrationDate", contStep2);
+
+        TextField txtARStep2EmailAddress = (TextField) findByName("txtARStep2EmailAddress", contStep2);
+        TextField txtARStep2TelCode = (TextField) findByName("txtARStep2TelCode", contStep2);
+        TextField txtARStep2TelNo = (TextField) findByName("txtARStep2TelNo", contStep2);
+        TextField txtARStep2CellNumber = (TextField) findByName("txtARStep2CellNumber", contStep2);
+        TextArea txtARStep2WebAddress = (TextArea) findByName("txtARStep2WebAddress", contStep2);
+        TextArea txtARStep2BusinessDescription = (TextArea) findByName("txtARStep2BusinessDescription", contStep2);
+        TextArea txtARStep2PrincipalPlace = (TextArea) findByName("txtARStep2PrincipalPlace", contStep2);
+        
+          if (Display.getInstance().isSimulator()) {//2011100088 & K2013064531 & 2014 004548 07
+            //Not allowed: 1999/028585/07
+            txtStep1a.setText("2012");
+            txtStep1b.setText("123458");
+            txtStep1c.setText("07");
+            
+            txtARStep2EmailAddress.setText("blessing@mfactory.mobi");
+            txtARStep2TelCode.setText("012");
+            txtARStep2TelNo.setText("3598094");
+            txtARStep2CellNumber.setText("0761111111");
+            txtARStep2WebAddress.setText("www.mfactory.mobi");
+            txtARStep2BusinessDescription.setText("description");
+            txtARStep2PrincipalPlace.setText("pretoria");
+        }
 
         btnStep1RetrieveDetails.addActionListener(new ActionListener() {
             @Override
@@ -1047,6 +1071,60 @@ public class StateMachine extends StateMachineBase {
         contStep3Turnovers = (Container) findByName("contStep3Turnovers", tabs);
 
         btnStep2Confirm.addActionListener((ActionListener) (ActionEvent evt) -> {
+
+            if (txtARStep2EmailAddress != null
+                    && txtARStep2TelCode != null
+                    && txtARStep2TelNo != null
+                    && txtARStep2CellNumber != null
+                    && txtARStep2WebAddress != null
+                    && txtARStep2BusinessDescription != null
+                    && txtARStep2PrincipalPlace != null) {
+                ar2EmailAddress = txtARStep2EmailAddress.getText();
+                ar2TelCode = txtARStep2TelCode.getText();
+                ar2TelNumber = txtARStep2TelNo.getText();
+                ar2CellNumber = txtARStep2CellNumber.getText();
+                ar2WebAddress = txtARStep2WebAddress.getText();
+                ar2BusinessDescription = txtARStep2BusinessDescription.getText();
+                ar2PlaceOfBusiness = txtARStep2PrincipalPlace.getText();
+            } else {
+                ar2EmailAddress = "";
+                ar2TelCode = "";
+                ar2TelNumber = "";
+                ar2CellNumber = "";
+                ar2WebAddress = "";
+                ar2BusinessDescription = "";
+                ar2PlaceOfBusiness = "";
+            }
+
+            boolean flag = false;
+
+            if (ar2EmailAddress.length() == 0) {
+                flag = true;
+            }
+            if (ar2TelCode.length() == 0) {
+                flag = true;
+            }
+            if (ar2TelNumber.length() == 0) {
+                flag = true;
+            }
+            if (ar2CellNumber.length() == 0) {
+                flag = true;
+            }
+            if (ar2WebAddress.length() == 0) {
+                flag = true;
+            }
+            if (ar2BusinessDescription.length() == 0) {
+                flag = true;
+            }
+            if (ar2PlaceOfBusiness.length() == 0) {
+                flag = true;
+            }
+
+            if (flag == true) {
+                Dialog.show("Error", "Please complete all fields.", "Ok", null);
+                return;
+            }
+
             contStep3Turnovers.removeAll();
             listEnterpriseDetails = u.GetAREntTranDetails(ENT_NUMBER, AGENT_CODE);
 
@@ -1191,8 +1269,16 @@ public class StateMachine extends StateMachineBase {
             boolean arFlag = Dialog.show("Compliance Notice", "Annual Return (s) added to shopping cart", "Accept", "I do not Accept");
 
             if (arFlag == true) {
+                EnterpriseDetails enterpriseDetails = new EnterpriseDetails();
+                enterpriseDetails.setEmailAddress(ar2EmailAddress);
+                enterpriseDetails.setTelephoneCode(ar2TelCode);
+                enterpriseDetails.setTelephoneNumber(ar2TelNumber);
+                enterpriseDetails.setCellphoneNumber(ar2CellNumber);
+                enterpriseDetails.setWebsiteAddress(ar2WebAddress);
+                enterpriseDetails.setBusinessDescription(ar2BusinessDescription);
+                enterpriseDetails.setPrincipalPlaceOfBusiness(ar2PlaceOfBusiness);
 
-                u.insertCartItemAR(responseUser, listCalculateARTran);
+                u.insertCartItemAR(responseUser, listCalculateARTran, enterpriseDetails);
 
                 isARStep1Passed = false;
                 isARStep2Passed = false;
@@ -1435,6 +1521,7 @@ public class StateMachine extends StateMachineBase {
                             isCartStep3 = false;
                             isCartStep4 = false;
                             Dialog.show("Error", "Payment error. Please contact CIPC.", "Ok", null);
+                            showCart(f);
                         }
                     });
                     //showDashboard(f);
@@ -2476,7 +2563,7 @@ public class StateMachine extends StateMachineBase {
                 tmpUser.setCell_no(txtStep2CellPhone.getText());
                 tmpUser.setEmail(txtStep2Email.getText());
                 tmpUser.setTel_code("");
-                tmpUser.setTel_no(txtStep2FaxNumber.getText());
+                tmpUser.setTel_no(txtStep2TelephoneNumber.getText());
                 tmpUser.setFax_code("");
                 tmpUser.setFax_no(txtStep2FaxNumber.getText());
 
@@ -2700,7 +2787,7 @@ public class StateMachine extends StateMachineBase {
 
         updateLayoutRegistration(f, null);
 
-        Toolbar bar = analytics(f, "Forgot Login Details");
+        Toolbar bar = analytics(f, "Forgot Password");
 
         isTableInputForm(f);
 

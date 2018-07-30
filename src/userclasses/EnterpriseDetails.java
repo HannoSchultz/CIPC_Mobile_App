@@ -13,6 +13,14 @@ import com.codename1.xml.Element;
  */
 public class EnterpriseDetails {
 
+    private String EmailAddress;
+    private String TelephoneCode;
+    private String TelephoneNumber;
+    private String CellphoneNumber;
+    private String WebsiteAddress;
+    private String BusinessDescription;
+    private String PrincipalPlaceOfBusiness;
+
     private String customerCode;
     private String ent_no;
     private String ent_no_user_format;
@@ -47,7 +55,7 @@ public class EnterpriseDetails {
     public void setEnt_no_user_format(String ent_no_user_format) {
         this.ent_no_user_format = ent_no_user_format;
     }
-    
+
     public String getEnt_no() {
         return ent_no;
     }
@@ -223,5 +231,63 @@ public class EnterpriseDetails {
     public void setCustomerCode(String customerCode) {
         this.customerCode = customerCode;
     }
+
+    public String getEmailAddress() {
+        return EmailAddress;
+    }
+
+    public void setEmailAddress(String EmailAddress) {
+        this.EmailAddress = EmailAddress;
+    }
+
+    public String getTelephoneCode() {
+        return TelephoneCode;
+    }
+
+    public void setTelephoneCode(String TelephoneCode) {
+        this.TelephoneCode = TelephoneCode;
+    }
+
+    public String getTelephoneNumber() {
+        return TelephoneNumber;
+    }
+
+    public void setTelephoneNumber(String TelephoneNumber) {
+        this.TelephoneNumber = TelephoneNumber;
+    }
+
+    public String getCellphoneNumber() {
+        return CellphoneNumber;
+    }
+
+    public void setCellphoneNumber(String CellphoneNumber) {
+        this.CellphoneNumber = CellphoneNumber;
+    }
+
+    public String getWebsiteAddress() {
+        return WebsiteAddress;
+    }
+
+    public void setWebsiteAddress(String WebsiteAddress) {
+        this.WebsiteAddress = WebsiteAddress;
+    }
+
+    public String getBusinessDescription() {
+        return BusinessDescription;
+    }
+
+    public void setBusinessDescription(String BusinessDescription) {
+        this.BusinessDescription = BusinessDescription;
+    }
+
+    public String getPrincipalPlaceOfBusiness() {
+        return PrincipalPlaceOfBusiness;
+    }
+
+    public void setPrincipalPlaceOfBusiness(String PrincipalPlaceOfBusiness) {
+        this.PrincipalPlaceOfBusiness = PrincipalPlaceOfBusiness;
+    }
+    
+    
 
 }

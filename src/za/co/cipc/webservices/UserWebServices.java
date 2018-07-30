@@ -21,6 +21,7 @@ import com.codename1.l10n.SimpleDateFormat;
 import com.codename1.processing.Result;
 import com.codename1.ui.Dialog;
 import com.codename1.ui.Display;
+import com.codename1.ui.html.HTMLUtils;
 import com.codename1.util.StringUtil;
 import com.codename1.xml.Element;
 import com.codename1.xml.XMLParser;
@@ -56,7 +57,7 @@ public class UserWebServices {
     public FormattedCode format_ent_no_mobi(String enterpriseName) {
 
         FormattedCode f = null;
-        
+
         final String SOAP_BODY = "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:cipc=\"CIPC_WEB_SERVICES\">\n"
                 + "\n"
                 + "   <soap:Header/>\n"
@@ -65,15 +66,15 @@ public class UserWebServices {
                 + "\n"
                 + "      <cipc:format_ent_no_mobi>\n"
                 + "\n"
-                + "                 <cipc:sUserName>"+Const.sUserName+"</cipc:sUserName>\n"
+                + "                 <cipc:sUserName>" + Const.sUserName + "</cipc:sUserName>\n"
                 + "\n"
-                + "         <cipc:sPassword>"+Const.sPassword+"</cipc:sPassword>\n"
+                + "         <cipc:sPassword>" + Const.sPassword + "</cipc:sPassword>\n"
                 + "\n"
-                + "         <cipc:sBankID>"+Const.sBankID+"</cipc:sBankID>\n"
+                + "         <cipc:sBankID>" + Const.sBankID + "</cipc:sBankID>\n"
                 + "\n"
                 + "         <cipc:sCust_Code></cipc:sCust_Code>\n"
                 + "\n"
-                + "         <cipc:Sent_no>"+enterpriseName+"</cipc:Sent_no>\n"
+                + "         <cipc:Sent_no>" + enterpriseName + "</cipc:Sent_no>\n"
                 + "\n"
                 + "      </cipc:format_ent_no_mobi>\n"
                 + "\n"
@@ -130,20 +131,17 @@ public class UserWebServices {
             XMLParser parser = new XMLParser();
             parser.setCaseSensitive(true);
             Element element = parser.parse(convertStringtoInputStreamReader(result.getAsString("//DataSet")));
-            
+
             f = new FormattedCode();
             f.setYear(result.getAsString("//year"));
             f.setBody(result.getAsString("//body"));
             f.setType(result.getAsString("//type"));
             f.setFull(result.getAsString("//New_Sent_No"));
-            
-//            RSM(((Element) child.getTextChildren(null, true).get(0)).toString());
-//            RSM(((Element) child.getTextChildren(null, true).get(0)).toString());
-//            RSM(((Element) child.getTextChildren(null, true).get(0)).toString());
-//            RSM(((Element) child.getTextChildren(null, true).get(0)).toString());
 
-           
-
+//            RSM(((Element) child.getTextChildren(null, true).get(0)).toString());
+//            RSM(((Element) child.getTextChildren(null, true).get(0)).toString());
+//            RSM(((Element) child.getTextChildren(null, true).get(0)).toString());
+//            RSM(((Element) child.getTextChildren(null, true).get(0)).toString());
         } catch (IllegalArgumentException e) {
             Log.p(e.toString());
         }
@@ -727,7 +725,9 @@ public class UserWebServices {
         return null;
     }
 
-    public String insertCartItemAR(User user, ArrayList<EnterpriseDetails> listCalculateARTran) {
+    public String insertCartItemAR(User user, ArrayList<EnterpriseDetails> listCalculateARTran, EnterpriseDetails enterpriseDetails) {
+        
+        //"+enterpriseDetails.+"
 
         EnterpriseDetails ent = listCalculateARTran.get(0);//this can fail
 
@@ -753,7 +753,7 @@ public class UserWebServices {
                     + "                \"CustomerCode\":\"" + user.getAgent_code() + "\",\n"
                     + "                \"ItemType\":1,\n"
                     + "                \"ItemData\":\""
-                    + "{\\\"ReferenceNumber\\\":" + ReferenceNumber + ",\\\"FormCode\\\":\\\"CK2B\\\",\\\"EnterpriseNumber\\\":\\\"" + ent.getEnt_no() + "\\\",\\\"EnterpriseType\\\":\\\"  " + ent.getEnt_type_code() + " \\\",\\\"EnterpriseStatus\\\":\\\"28\\\",\\\"EmailAddress\\\":\\\"  \\\",\\\"TelephoneCode\\\":\\\"" + user.getTel_code() + "\\\",\\\"TelephoneNumber\\\":\\\"" + user.getTel_no() + "\\\",\\\"CellphoneNumber\\\":\\\"" + user.getCell_no() + "\\\",\\\"WebsiteAddress\\\":\\\"\\\",\\\"BusinessDescription\\\":\\\"CARD PAYMENT\\\",\\\"PrincipalPlaceOfBusiness\\\":\\\"\\\",\\\"EnterpriseNameChanged\\\":0,\\\"FinancialYearEndChanged\\\":0,\\\"RegisteredOfficeChanged\\\":0,\\\"LocationOfRecordsChanged\\\":0,\\\"DirectorsChanged\\\":0,\\\"CompanySecretaryChanged\\\":0,\\\"AuditorsChanged\\\":0,\\\"TotalAmount\\\":" + total + ",\\\"YearData\\\":[";
+                    + "{\\\"ReferenceNumber\\\":" + ReferenceNumber + ",\\\"FormCode\\\":\\\"CK2B\\\",\\\"EnterpriseNumber\\\":\\\"" + ent.getEnt_no() + "\\\",\\\"EnterpriseType\\\":\\\"  " + ent.getEnt_type_code() + " \\\",\\\"EnterpriseStatus\\\":\\\"28\\\",\\\"EmailAddress\\\" "+enterpriseDetails.getEmailAddress()+":\\\"  \\\",\\\"TelephoneCode\\\":\\\" "+enterpriseDetails.getTelephoneCode()+" \\\",\\\"TelephoneNumber\\\":\\\" "+enterpriseDetails.getTelephoneNumber()+" \\\",\\\"CellphoneNumber\\\":\\\"" + enterpriseDetails.getCellphoneNumber()+ "\\\",\\\"WebsiteAddress\\\":\\\" "+enterpriseDetails.getWebsiteAddress()+"  \\\",\\\"BusinessDescription\\\":\\\" "+enterpriseDetails.getBusinessDescription()+"  \\\",\\\"PrincipalPlaceOfBusiness\\\":\\\" "+enterpriseDetails.getPrincipalPlaceOfBusiness()+"  \\\",\\\"EnterpriseNameChanged\\\":0,\\\"FinancialYearEndChanged\\\":0,\\\"RegisteredOfficeChanged\\\":0,\\\"LocationOfRecordsChanged\\\":0,\\\"DirectorsChanged\\\":0,\\\"CompanySecretaryChanged\\\":0,\\\"AuditorsChanged\\\":0,\\\"TotalAmount\\\":" + total + ",\\\"YearData\\\":[";
 
             AR_BODY += "{\\\"ReferenceNumber\\\":" + ReferenceNumber + ",\\\"EnterpriseNumber\\\":\\\" " + ent.getEnt_no() + " \\\",\\\"Year\\\":" + ent.getAr_year() + ",\\\"Turnover\\\":" + ent.getTurnover() + ",\\\"Amount\\\":" + ent.getAr_amount() + ",\\\"PenaltyFee\\\":" + ent.getAr_penalty() + ",\\\"TotalAmount\\\": " + ent.getAr_total() + " ,\\\"Status\\\":null,\\\"StatusDate\\\":\\\" " + getAnnualReturnsDateNow() + "  \\\"}";
 
@@ -766,7 +766,7 @@ public class UserWebServices {
                     + "                \"CustomerCode\":\"" + user.getAgent_code() + "\",\n"
                     + "                \"ItemType\":1,\n"
                     + "                \"ItemData\":\""
-                    + "{\\\"ReferenceNumber\\\":" + ReferenceNumber + ",\\\"FormCode\\\":\\\"CK2B\\\",\\\"EnterpriseNumber\\\":\\\"" + ent.getEnt_no() + "\\\",\\\"EnterpriseType\\\":\\\"  " + ent.getEnt_type_code() + " \\\",\\\"EnterpriseStatus\\\":\\\"28\\\",\\\"EmailAddress\\\":\\\"" + user.getEmail() + "\\\",\\\"TelephoneCode\\\":\\\"" + user.getTel_code() + "\\\",\\\"TelephoneNumber\\\":\\\"" + user.getTel_no() + "\\\",\\\"CellphoneNumber\\\":\\\"" + user.getCell_no() + "\\\",\\\"WebsiteAddress\\\":\\\"\\\",\\\"BusinessDescription\\\":\\\"CARD PAYMENT\\\",\\\"PrincipalPlaceOfBusiness\\\":\\\"\\\",\\\"EnterpriseNameChanged\\\":0,\\\"FinancialYearEndChanged\\\":0,\\\"RegisteredOfficeChanged\\\":0,\\\"LocationOfRecordsChanged\\\":0,\\\"DirectorsChanged\\\":0,\\\"CompanySecretaryChanged\\\":0,\\\"AuditorsChanged\\\":0,\\\"TotalAmount\\\":" + total + ",\\\"YearData\\\":[";
+                    + "{\\\"ReferenceNumber\\\":" + ReferenceNumber + ",\\\"FormCode\\\":\\\"CK2B\\\",\\\"EnterpriseNumber\\\":\\\"" + ent.getEnt_no() + "\\\",\\\"EnterpriseType\\\":\\\"  " + ent.getEnt_type_code() + " \\\",\\\"EnterpriseStatus\\\":\\\"28\\\",\\\"EmailAddress\\\":\\\"" + enterpriseDetails.getEmailAddress()+ "\\\",\\\"TelephoneCode\\\":\\\"" + enterpriseDetails.getTelephoneCode()+ "\\\",\\\"TelephoneNumber\\\":\\\"" + enterpriseDetails.getTelephoneNumber()+ "\\\",\\\"CellphoneNumber\\\":\\\"" + enterpriseDetails.getCellphoneNumber()+ "\\\",\\\"WebsiteAddress\\\":\\\"  "+enterpriseDetails.getWebsiteAddress()+" \\\",\\\"BusinessDescription\\\":\\\" "+enterpriseDetails.getBusinessDescription()+" \\\",\\\"PrincipalPlaceOfBusiness\\\":\\\" "+enterpriseDetails.getPrincipalPlaceOfBusiness()+"  \\\",\\\"EnterpriseNameChanged\\\":0,\\\"FinancialYearEndChanged\\\":0,\\\"RegisteredOfficeChanged\\\":0,\\\"LocationOfRecordsChanged\\\":0,\\\"DirectorsChanged\\\":0,\\\"CompanySecretaryChanged\\\":0,\\\"AuditorsChanged\\\":0,\\\"TotalAmount\\\":" + total + ",\\\"YearData\\\":[";
 
             AR_BODY += "{\\\"ReferenceNumber\\\":" + ReferenceNumber + ",\\\"EnterpriseNumber\\\":\\\" " + ent.getEnt_no() + " \\\",\\\"Year\\\":" + ent.getAr_year() + ",\\\"Turnover\\\":" + ent.getTurnover() + ",\\\"Amount\\\":" + ent.getAr_amount() + ",\\\"PenaltyFee\\\":" + ent.getAr_penalty() + ",\\\"TotalAmount\\\": " + ent.getAr_total() + " ,\\\"Status\\\":null,\\\"StatusDate\\\":\\\" " + getAnnualReturnsDateNow() + "  \\\"}";
 
@@ -935,8 +935,8 @@ public class UserWebServices {
                 JSONParser parser = new JSONParser();
                 parser.setIncludeNulls(true);
                 map = parser.parseJSON(convertStringtoInputStreamReader(data));
-                Log.p("data=" + data, Log.DEBUG);
-                Log.p("map=" + map, Log.DEBUG);
+               //Log.p("data=" + data, Log.DEBUG);
+                Log.p("cart=" + map, Log.DEBUG);
 
             } catch (IOException e) {
                 Log.e(e);
@@ -2798,6 +2798,11 @@ public class UserWebServices {
 
     public NameReservation Namereservation_MOBI2(String customerCode, String name1, String name2, String name3, String name4) {
 
+        name1 = HTMLUtils.encodeString(name1);
+        name2 = HTMLUtils.encodeString(name2);
+        name3 = HTMLUtils.encodeString(name3);
+        name4 = HTMLUtils.encodeString(name4);
+
         //customerCode = "INKE01";
         //name = "CRO"
         String response = "";
@@ -2980,153 +2985,157 @@ public class UserWebServices {
 
     NameReservation nameReservation = null;
 
-    public NameReservation Namereservation_MOBI(String customerCode, String name1, String name2, String name3, String name4) {
-
-        customerCode = customerCode.toUpperCase();
-        name1 = name1.toUpperCase();
-        name2 = name2.toUpperCase();
-        name3 = name3.toUpperCase();
-        name4 = name4.toUpperCase();
-
-        String response = "";
-
-        final String SOAP_BODY
-                = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cipc=\"CIPC_WEB_SERVICES\">\n"
-                + "\n"
-                + "   <soapenv:Header/>\n"
-                + "\n"
-                + "   <soapenv:Body>\n"
-                + "\n"
-                + "      <cipc:Namereservation_MOBI>\n"
-                + "\n"
-                + "        <cipc:sUserName>ImJbvgnMVO0=</cipc:sUserName>       \n"
-                + "\n"
-                + "         <cipc:sPassword>WViQlFqcunA=</cipc:sPassword>\n"
-                + "\n"
-                + "         <cipc:sBankID>WViQlFqcunA=</cipc:sBankID>\n"
-                + "\n"
-                + "         <cipc:S_name1>" + name1 + "</cipc:S_name1>\n"
-                + "\n"
-                + "         <!--Optional:-->\n"
-                + "\n"
-                + "         <cipc:S_name2>" + name2 + "</cipc:S_name2>\n"
-                + "\n"
-                + "         <!--Optional:-->\n"
-                + "\n"
-                + "         <cipc:S_name3>" + name3 + "</cipc:S_name3>\n"
-                + "\n"
-                + "         <!--Optional:-->\n"
-                + "\n"
-                + "         <cipc:S_name4>" + name4 + "</cipc:S_name4>\n"
-                + "\n"
-                + "         <!--Optional:-->\n"
-                + "\n"
-                + "         <cipc:sCust_Code>" + customerCode + "</cipc:sCust_Code>\n"
-                + "\n"
-                + "      </cipc:Namereservation_MOBI>\n"
-                + "\n"
-                + "   </soapenv:Body>\n"
-                + "\n"
-                + "</soapenv:Envelope>";
-
-        ConnectionRequest httpRequest = new ConnectionRequest() {
-            Element h;
-
-            @Override
-            protected void handleErrorResponseCode(int code, String message) {
-                super.handleErrorResponseCode(code, message); //To change body of generated methods, choose Tools | Templates.
-                if (500 == code) {
-                    nameReservation.setResponseMessage("Error 500. Please contact CIPC.");
-                    //Dialog.show("Error", "Duplicate Name Reservation Error. Please try different names.", "Ok", null);
-                }
-            }
-
-            @Override
-            protected void handleIOException(IOException err) {
-                //    super.handleIOException(err); //To change body of generated methods, choose Tools | Templates.
-            }
-
-            @Override
-            protected void handleRuntimeException(RuntimeException err) {
-                //super.handleRuntimeException(err); //To change body of generated methods, choose Tools | Templates.
-            }
-
-            @Override
-            protected void buildRequestBody(OutputStream os) throws IOException {
-                super.buildRequestBody(os);
-                os.write(SOAP_BODY.getBytes("utf-8"));
-
-            }
-
-            protected void postResponse() {
-
-                super.postResponse();
-            }
-
-            protected void readResponse(InputStream input) throws IOException {
-                super.readResponse(input);
-
-            }
-
-            @Override
-            protected void handleException(Exception err) {
-                Log.p("Exception: " + err.toString());
-                Dialog.show("No Internet", "There is no internet connection. Please switch your connection on.", "Okay", null);
-
-            }
-        };
-
-        httpRequest.setUrl("https://testwebservices4.cipc.co.za/enterprise.asmx");
-        httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
-        httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
-        httpRequest.setPost(true);
-        httpRequest.setFailSilently(true);
-
-        InfiniteProgress prog = new InfiniteProgress();
-        Dialog dlg = prog.showInifiniteBlocking();
-        httpRequest.setDisposeOnCompletion(dlg);
-
-        NetworkManager.getInstance().addToQueueAndWait(httpRequest);
-        String data = new String(httpRequest.getResponseData());
-        Log.p("Data d: " + data, Log.DEBUG);
-
-        try {
-
-            Result result = Result.fromContent(data, Result.XML);
-            //Dialog.show("Result", result.toString(), "Ok", null);
-            //String namereservation_mobiresult = result.getAsString("//namereservation_mobiresult");
-
-            String namereservation_mobiresult = result.getAsString("//Namereservation_MOBI_traknoresult");
-
-            if (namereservation_mobiresult != null && namereservation_mobiresult.indexOf("Reference No:") > -1) {
-
-                namereservation_mobiresult = namereservation_mobiresult.trim();
-                String ReferenceNo = getNameReservationReferenceNo(namereservation_mobiresult);
-                int intReferenceNo = Integer.parseInt(ReferenceNo);
-                double Amount = 50.0;
-                double Total = 50.0;
-                String StatusDate = getNameReservationDateNow();
-
-                //n = new NameReservation();
-                nameReservation.setReferenceNumber(intReferenceNo);
-                nameReservation.setAmount(Amount);
-                nameReservation.setTotalAmount(Total);
-                nameReservation.setCustomerCode(customerCode);
-                nameReservation.setStatusDate(StatusDate);
-                nameReservation.setResponseMessage(namereservation_mobiresult);
-
-            }
-
-            //Log.p("result: " + result, Log.DEBUG);
-            //Log.p("namereservation_mobiresult: " + namereservation_mobiresult, Log.DEBUG);
-        } catch (IllegalArgumentException e) {
-            Log.p(e.toString());
-        }
-
-        return nameReservation;
-    }//end name reservation
-
+//    public NameReservation Namereservation_MOBI(String customerCode, String name1, String name2, String name3, String name4) {
+//
+//        customerCode = customerCode.toUpperCase();
+//        name1 = name1.toUpperCase();
+//        name2 = name2.toUpperCase();
+//        name3 = name3.toUpperCase();
+//        name4 = name4.toUpperCase();
+//
+//        String response = "";
+//
+//        final String SOAP_BODY
+//                = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cipc=\"CIPC_WEB_SERVICES\">\n"
+//                + "\n"
+//                + "   <soapenv:Header/>\n"
+//                + "\n"
+//                + "   <soapenv:Body>\n"
+//                + "\n"
+//                + "      <cipc:Namereservation_MOBI>\n"
+//                + "\n"
+//                + "        <cipc:sUserName>ImJbvgnMVO0=</cipc:sUserName>       \n"
+//                + "\n"
+//                + "         <cipc:sPassword>WViQlFqcunA=</cipc:sPassword>\n"
+//                + "\n"
+//                + "         <cipc:sBankID>WViQlFqcunA=</cipc:sBankID>\n"
+//                + "\n"
+//                + "         <cipc:S_name1>" + name1 + "</cipc:S_name1>\n"
+//                + "\n"
+//                + "         <!--Optional:-->\n"
+//                + "\n"
+//                + "         <cipc:S_name2>" + name2 + "</cipc:S_name2>\n"
+//                + "\n"
+//                + "         <!--Optional:-->\n"
+//                + "\n"
+//                + "         <cipc:S_name3>" + name3 + "</cipc:S_name3>\n"
+//                + "\n"
+//                + "         <!--Optional:-->\n"
+//                + "\n"
+//                + "         <cipc:S_name4>" + name4 + "</cipc:S_name4>\n"
+//                + "\n"
+//                + "         <!--Optional:-->\n"
+//                + "\n"
+//                + "         <cipc:sCust_Code>" + customerCode + "</cipc:sCust_Code>\n"
+//                + "\n"
+//                + "      </cipc:Namereservation_MOBI>\n"
+//                + "\n"
+//                + "   </soapenv:Body>\n"
+//                + "\n"
+//                + "</soapenv:Envelope>";
+//
+//        ConnectionRequest httpRequest = new ConnectionRequest() {
+//            Element h;
+//
+//            @Override
+//            protected void handleErrorResponseCode(int code, String message) {
+//                super.handleErrorResponseCode(code, message); //To change body of generated methods, choose Tools | Templates.
+//                if (500 == code) {
+//                    nameReservation.setResponseMessage("Error 500. Please contact CIPC.");
+//                    //Dialog.show("Error", "Duplicate Name Reservation Error. Please try different names.", "Ok", null);
+//                }
+//            }
+//
+//            @Override
+//            protected void handleIOException(IOException err) {
+//                //    super.handleIOException(err); //To change body of generated methods, choose Tools | Templates.
+//            }
+//
+//            @Override
+//            protected void handleRuntimeException(RuntimeException err) {
+//                //super.handleRuntimeException(err); //To change body of generated methods, choose Tools | Templates.
+//            }
+//
+//            @Override
+//            protected void buildRequestBody(OutputStream os) throws IOException {
+//                super.buildRequestBody(os);
+//                os.write(SOAP_BODY.getBytes("utf-8"));
+//
+//            }
+//
+//            protected void postResponse() {
+//
+//                super.postResponse();
+//            }
+//
+//            protected void readResponse(InputStream input) throws IOException {
+//                super.readResponse(input);
+//
+//            }
+//
+//            @Override
+//            protected void handleException(Exception err) {
+//                Log.p("Exception: " + err.toString());
+//                Dialog.show("No Internet", "There is no internet connection. Please switch your connection on.", "Okay", null);
+//
+//            }
+//        };
+//
+//        httpRequest.setUrl("https://testwebservices4.cipc.co.za/enterprise.asmx");
+//        httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
+//        httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
+//        httpRequest.setPost(true);
+//        httpRequest.setFailSilently(true);
+//
+//        InfiniteProgress prog = new InfiniteProgress();
+//        Dialog dlg = prog.showInifiniteBlocking();
+//        httpRequest.setDisposeOnCompletion(dlg);
+//
+//        NetworkManager.getInstance().addToQueueAndWait(httpRequest);
+//        String data = new String(httpRequest.getResponseData());
+//        Log.p("Data d: " + data, Log.DEBUG);
+//
+//        try {
+//
+//            Result result = Result.fromContent(data, Result.XML);
+//            //Dialog.show("Result", result.toString(), "Ok", null);
+//            //String namereservation_mobiresult = result.getAsString("//namereservation_mobiresult");
+//
+//            String namereservation_mobiresult = result.getAsString("//Namereservation_MOBI_traknoresult");
+//
+//            if (namereservation_mobiresult != null && namereservation_mobiresult.indexOf("Reference No:") > -1) {
+//
+//                namereservation_mobiresult = namereservation_mobiresult.trim();
+//                String ReferenceNo = getNameReservationReferenceNo(namereservation_mobiresult);
+//                int intReferenceNo = Integer.parseInt(ReferenceNo);
+//                double Amount = 50.0;
+//                double Total = 50.0;
+//                String StatusDate = getNameReservationDateNow();
+//
+//                //n = new NameReservation();
+//                nameReservation.setReferenceNumber(intReferenceNo);
+//                nameReservation.setAmount(Amount);
+//                nameReservation.setTotalAmount(Total);
+//                nameReservation.setCustomerCode(customerCode);
+//                nameReservation.setStatusDate(StatusDate);
+//                nameReservation.setResponseMessage(namereservation_mobiresult);
+//
+//            }
+//
+//            //Log.p("result: " + result, Log.DEBUG);
+//            //Log.p("namereservation_mobiresult: " + namereservation_mobiresult, Log.DEBUG);
+//        } catch (IllegalArgumentException e) {
+//            Log.p(e.toString());
+//        }
+//
+//        return nameReservation;
+//    }//end name reservation
     public ArrayList search_name_MOBI(String customerCode, String name1, String name2, String name3, String name4) {
+
+        name1 = HTMLUtils.encodeString(name1);
+        name2 = HTMLUtils.encodeString(name2);
+        name3 = HTMLUtils.encodeString(name3);
+        name4 = HTMLUtils.encodeString(name4);
 
         ArrayList arrayList = new ArrayList();
 

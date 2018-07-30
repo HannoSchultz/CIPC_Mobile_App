@@ -138,6 +138,18 @@ public abstract class StateMachineBase extends UIBuilder {
         return cmp;
     }
 
+    public com.codename1.ui.TextField findTxtARStep2TelCode(Component root) {
+        return (com.codename1.ui.TextField)findByName("txtARStep2TelCode", root);
+    }
+
+    public com.codename1.ui.TextField findTxtARStep2TelCode() {
+        com.codename1.ui.TextField cmp = (com.codename1.ui.TextField)findByName("txtARStep2TelCode", Display.getInstance().getCurrent());
+        if(cmp == null && aboutToShowThisContainer != null) {
+            cmp = (com.codename1.ui.TextField)findByName("txtARStep2TelCode", aboutToShowThisContainer);
+        }
+        return cmp;
+    }
+
     public com.codename1.ui.TextField findTxtStep4Password(Component root) {
         return (com.codename1.ui.TextField)findByName("txtStep4Password", root);
     }
@@ -146,6 +158,18 @@ public abstract class StateMachineBase extends UIBuilder {
         com.codename1.ui.TextField cmp = (com.codename1.ui.TextField)findByName("txtStep4Password", Display.getInstance().getCurrent());
         if(cmp == null && aboutToShowThisContainer != null) {
             cmp = (com.codename1.ui.TextField)findByName("txtStep4Password", aboutToShowThisContainer);
+        }
+        return cmp;
+    }
+
+    public com.codename1.ui.TextField findTxtARStep2CellNumber(Component root) {
+        return (com.codename1.ui.TextField)findByName("txtARStep2CellNumber", root);
+    }
+
+    public com.codename1.ui.TextField findTxtARStep2CellNumber() {
+        com.codename1.ui.TextField cmp = (com.codename1.ui.TextField)findByName("txtARStep2CellNumber", Display.getInstance().getCurrent());
+        if(cmp == null && aboutToShowThisContainer != null) {
+            cmp = (com.codename1.ui.TextField)findByName("txtARStep2CellNumber", aboutToShowThisContainer);
         }
         return cmp;
     }
@@ -282,6 +306,18 @@ public abstract class StateMachineBase extends UIBuilder {
         return cmp;
     }
 
+    public com.codename1.ui.Container findContainer134(Component root) {
+        return (com.codename1.ui.Container)findByName("Container134", root);
+    }
+
+    public com.codename1.ui.Container findContainer134() {
+        com.codename1.ui.Container cmp = (com.codename1.ui.Container)findByName("Container134", Display.getInstance().getCurrent());
+        if(cmp == null && aboutToShowThisContainer != null) {
+            cmp = (com.codename1.ui.Container)findByName("Container134", aboutToShowThisContainer);
+        }
+        return cmp;
+    }
+
     public com.codename1.ui.RadioButton findRdYes(Component root) {
         return (com.codename1.ui.RadioButton)findByName("rdYes", root);
     }
@@ -290,6 +326,30 @@ public abstract class StateMachineBase extends UIBuilder {
         com.codename1.ui.RadioButton cmp = (com.codename1.ui.RadioButton)findByName("rdYes", Display.getInstance().getCurrent());
         if(cmp == null && aboutToShowThisContainer != null) {
             cmp = (com.codename1.ui.RadioButton)findByName("rdYes", aboutToShowThisContainer);
+        }
+        return cmp;
+    }
+
+    public com.codename1.ui.Container findContainer133(Component root) {
+        return (com.codename1.ui.Container)findByName("Container133", root);
+    }
+
+    public com.codename1.ui.Container findContainer133() {
+        com.codename1.ui.Container cmp = (com.codename1.ui.Container)findByName("Container133", Display.getInstance().getCurrent());
+        if(cmp == null && aboutToShowThisContainer != null) {
+            cmp = (com.codename1.ui.Container)findByName("Container133", aboutToShowThisContainer);
+        }
+        return cmp;
+    }
+
+    public com.codename1.ui.Container findContainer135(Component root) {
+        return (com.codename1.ui.Container)findByName("Container135", root);
+    }
+
+    public com.codename1.ui.Container findContainer135() {
+        com.codename1.ui.Container cmp = (com.codename1.ui.Container)findByName("Container135", Display.getInstance().getCurrent());
+        if(cmp == null && aboutToShowThisContainer != null) {
+            cmp = (com.codename1.ui.Container)findByName("Container135", aboutToShowThisContainer);
         }
         return cmp;
     }
@@ -470,6 +530,30 @@ public abstract class StateMachineBase extends UIBuilder {
         com.codename1.ui.TextField cmp = (com.codename1.ui.TextField)findByName("txtStep2CellPhone", Display.getInstance().getCurrent());
         if(cmp == null && aboutToShowThisContainer != null) {
             cmp = (com.codename1.ui.TextField)findByName("txtStep2CellPhone", aboutToShowThisContainer);
+        }
+        return cmp;
+    }
+
+    public com.codename1.ui.Container findContainer132(Component root) {
+        return (com.codename1.ui.Container)findByName("Container132", root);
+    }
+
+    public com.codename1.ui.Container findContainer132() {
+        com.codename1.ui.Container cmp = (com.codename1.ui.Container)findByName("Container132", Display.getInstance().getCurrent());
+        if(cmp == null && aboutToShowThisContainer != null) {
+            cmp = (com.codename1.ui.Container)findByName("Container132", aboutToShowThisContainer);
+        }
+        return cmp;
+    }
+
+    public com.codename1.ui.Container findContainer131(Component root) {
+        return (com.codename1.ui.Container)findByName("Container131", root);
+    }
+
+    public com.codename1.ui.Container findContainer131() {
+        com.codename1.ui.Container cmp = (com.codename1.ui.Container)findByName("Container131", Display.getInstance().getCurrent());
+        if(cmp == null && aboutToShowThisContainer != null) {
+            cmp = (com.codename1.ui.Container)findByName("Container131", aboutToShowThisContainer);
         }
         return cmp;
     }
@@ -930,6 +1014,18 @@ public abstract class StateMachineBase extends UIBuilder {
         return cmp;
     }
 
+    public com.codename1.ui.TextArea findTxtARStep2WebAddress(Component root) {
+        return (com.codename1.ui.TextArea)findByName("txtARStep2WebAddress", root);
+    }
+
+    public com.codename1.ui.TextArea findTxtARStep2WebAddress() {
+        com.codename1.ui.TextArea cmp = (com.codename1.ui.TextArea)findByName("txtARStep2WebAddress", Display.getInstance().getCurrent());
+        if(cmp == null && aboutToShowThisContainer != null) {
+            cmp = (com.codename1.ui.TextArea)findByName("txtARStep2WebAddress", aboutToShowThisContainer);
+        }
+        return cmp;
+    }
+
     public com.codename1.ui.Button findBtnLodge(Component root) {
         return (com.codename1.ui.Button)findByName("btnLodge", root);
     }
@@ -1170,18 +1266,6 @@ public abstract class StateMachineBase extends UIBuilder {
         return cmp;
     }
 
-    public com.codename1.ui.Label findLabel15(Component root) {
-        return (com.codename1.ui.Label)findByName("Label15", root);
-    }
-
-    public com.codename1.ui.Label findLabel15() {
-        com.codename1.ui.Label cmp = (com.codename1.ui.Label)findByName("Label15", Display.getInstance().getCurrent());
-        if(cmp == null && aboutToShowThisContainer != null) {
-            cmp = (com.codename1.ui.Label)findByName("Label15", aboutToShowThisContainer);
-        }
-        return cmp;
-    }
-
     public com.codename1.ui.Container findContainer15(Component root) {
         return (com.codename1.ui.Container)findByName("Container15", root);
     }
@@ -1190,6 +1274,18 @@ public abstract class StateMachineBase extends UIBuilder {
         com.codename1.ui.Container cmp = (com.codename1.ui.Container)findByName("Container15", Display.getInstance().getCurrent());
         if(cmp == null && aboutToShowThisContainer != null) {
             cmp = (com.codename1.ui.Container)findByName("Container15", aboutToShowThisContainer);
+        }
+        return cmp;
+    }
+
+    public com.codename1.ui.Label findLabel15(Component root) {
+        return (com.codename1.ui.Label)findByName("Label15", root);
+    }
+
+    public com.codename1.ui.Label findLabel15() {
+        com.codename1.ui.Label cmp = (com.codename1.ui.Label)findByName("Label15", Display.getInstance().getCurrent());
+        if(cmp == null && aboutToShowThisContainer != null) {
+            cmp = (com.codename1.ui.Label)findByName("Label15", aboutToShowThisContainer);
         }
         return cmp;
     }
@@ -1458,6 +1554,18 @@ public abstract class StateMachineBase extends UIBuilder {
         return cmp;
     }
 
+    public com.codename1.ui.TextArea findTxtARStep2BusinessDescription(Component root) {
+        return (com.codename1.ui.TextArea)findByName("txtARStep2BusinessDescription", root);
+    }
+
+    public com.codename1.ui.TextArea findTxtARStep2BusinessDescription() {
+        com.codename1.ui.TextArea cmp = (com.codename1.ui.TextArea)findByName("txtARStep2BusinessDescription", Display.getInstance().getCurrent());
+        if(cmp == null && aboutToShowThisContainer != null) {
+            cmp = (com.codename1.ui.TextArea)findByName("txtARStep2BusinessDescription", aboutToShowThisContainer);
+        }
+        return cmp;
+    }
+
     public com.codename1.ui.TextField findTxtStep1a4(Component root) {
         return (com.codename1.ui.TextField)findByName("txtStep1a4", root);
     }
@@ -1478,6 +1586,18 @@ public abstract class StateMachineBase extends UIBuilder {
         com.codename1.ui.Button cmp = (com.codename1.ui.Button)findByName("btnDashboard", Display.getInstance().getCurrent());
         if(cmp == null && aboutToShowThisContainer != null) {
             cmp = (com.codename1.ui.Button)findByName("btnDashboard", aboutToShowThisContainer);
+        }
+        return cmp;
+    }
+
+    public com.codename1.ui.TextArea findTxtARStep2PrincipalPlace(Component root) {
+        return (com.codename1.ui.TextArea)findByName("txtARStep2PrincipalPlace", root);
+    }
+
+    public com.codename1.ui.TextArea findTxtARStep2PrincipalPlace() {
+        com.codename1.ui.TextArea cmp = (com.codename1.ui.TextArea)findByName("txtARStep2PrincipalPlace", Display.getInstance().getCurrent());
+        if(cmp == null && aboutToShowThisContainer != null) {
+            cmp = (com.codename1.ui.TextArea)findByName("txtARStep2PrincipalPlace", aboutToShowThisContainer);
         }
         return cmp;
     }
@@ -1722,6 +1842,18 @@ public abstract class StateMachineBase extends UIBuilder {
         return cmp;
     }
 
+    public com.codename1.ui.TextField findTxtARStep2TelNo(Component root) {
+        return (com.codename1.ui.TextField)findByName("txtARStep2TelNo", root);
+    }
+
+    public com.codename1.ui.TextField findTxtARStep2TelNo() {
+        com.codename1.ui.TextField cmp = (com.codename1.ui.TextField)findByName("txtARStep2TelNo", Display.getInstance().getCurrent());
+        if(cmp == null && aboutToShowThisContainer != null) {
+            cmp = (com.codename1.ui.TextField)findByName("txtARStep2TelNo", aboutToShowThisContainer);
+        }
+        return cmp;
+    }
+
     public com.codename1.ui.Label findLabel4(Component root) {
         return (com.codename1.ui.Label)findByName("Label4", root);
     }
@@ -1842,6 +1974,18 @@ public abstract class StateMachineBase extends UIBuilder {
         return cmp;
     }
 
+    public com.codename1.ui.TextField findTxtARStep2EmailAddress(Component root) {
+        return (com.codename1.ui.TextField)findByName("txtARStep2EmailAddress", root);
+    }
+
+    public com.codename1.ui.TextField findTxtARStep2EmailAddress() {
+        com.codename1.ui.TextField cmp = (com.codename1.ui.TextField)findByName("txtARStep2EmailAddress", Display.getInstance().getCurrent());
+        if(cmp == null && aboutToShowThisContainer != null) {
+            cmp = (com.codename1.ui.TextField)findByName("txtARStep2EmailAddress", aboutToShowThisContainer);
+        }
+        return cmp;
+    }
+
     public com.codename1.ui.Button findBtnRegister(Component root) {
         return (com.codename1.ui.Button)findByName("btnRegister", root);
     }
@@ -1930,7 +2074,7 @@ public abstract class StateMachineBase extends UIBuilder {
     public static final int COMMAND_ForgotPasswordRequest = 13;
     public static final int COMMAND_LoginRegisterAsAUser = 12;
     public static final int COMMAND_LoginLogin = 5;
-    public static final int COMMAND_LoginForgotLoginDetails = 14;
+    public static final int COMMAND_LoginForgotPassword = 14;
 
     protected boolean onContProfileUpdate() {
         return false;
@@ -1948,7 +2092,7 @@ public abstract class StateMachineBase extends UIBuilder {
         return false;
     }
 
-    protected boolean onLoginForgotLoginDetails() {
+    protected boolean onLoginForgotPassword() {
         return false;
     }
 
@@ -1982,8 +2126,8 @@ public abstract class StateMachineBase extends UIBuilder {
                 }
                 break;
 
-            case COMMAND_LoginForgotLoginDetails:
-                if(onLoginForgotLoginDetails()) {
+            case COMMAND_LoginForgotPassword:
+                if(onLoginForgotPassword()) {
                     ev.consume();
                     return;
                 }
@@ -3061,6 +3205,34 @@ public abstract class StateMachineBase extends UIBuilder {
                 onContProjects_BtnStep1RetrieveDetailsAction(c, event);
                 return;
             }
+            if("txtARStep2EmailAddress".equals(c.getName())) {
+                onContProjects_TxtARStep2EmailAddressAction(c, event);
+                return;
+            }
+            if("txtARStep2TelCode".equals(c.getName())) {
+                onContProjects_TxtARStep2TelCodeAction(c, event);
+                return;
+            }
+            if("txtARStep2TelNo".equals(c.getName())) {
+                onContProjects_TxtARStep2TelNoAction(c, event);
+                return;
+            }
+            if("txtARStep2CellNumber".equals(c.getName())) {
+                onContProjects_TxtARStep2CellNumberAction(c, event);
+                return;
+            }
+            if("txtARStep2WebAddress".equals(c.getName())) {
+                onContProjects_TxtARStep2WebAddressAction(c, event);
+                return;
+            }
+            if("txtARStep2BusinessDescription".equals(c.getName())) {
+                onContProjects_TxtARStep2BusinessDescriptionAction(c, event);
+                return;
+            }
+            if("txtARStep2PrincipalPlace".equals(c.getName())) {
+                onContProjects_TxtARStep2PrincipalPlaceAction(c, event);
+                return;
+            }
             if("btnStep2Confirm".equals(c.getName())) {
                 onContProjects_BtnStep2ConfirmAction(c, event);
                 return;
@@ -3185,8 +3357,8 @@ public abstract class StateMachineBase extends UIBuilder {
             }
         }
         if(rootContainerName.equals("ContTasks")) {
-            if("txtLine1".equals(c.getName())) {
-                onContTasks_TxtLine1Action(c, event);
+            if("TextArea1".equals(c.getName())) {
+                onContTasks_TextArea1Action(c, event);
                 return;
             }
             if("txtName1".equals(c.getName())) {
@@ -3205,8 +3377,8 @@ public abstract class StateMachineBase extends UIBuilder {
                 onContTasks_TxtName4Action(c, event);
                 return;
             }
-            if("TextArea1".equals(c.getName())) {
-                onContTasks_TextArea1Action(c, event);
+            if("TextArea".equals(c.getName())) {
+                onContTasks_TextAreaAction(c, event);
                 return;
             }
             if("btnVerify".equals(c.getName())) {
@@ -3356,6 +3528,27 @@ public abstract class StateMachineBase extends UIBuilder {
       protected void onContProjects_BtnStep1RetrieveDetailsAction(Component c, ActionEvent event) {
       }
 
+      protected void onContProjects_TxtARStep2EmailAddressAction(Component c, ActionEvent event) {
+      }
+
+      protected void onContProjects_TxtARStep2TelCodeAction(Component c, ActionEvent event) {
+      }
+
+      protected void onContProjects_TxtARStep2TelNoAction(Component c, ActionEvent event) {
+      }
+
+      protected void onContProjects_TxtARStep2CellNumberAction(Component c, ActionEvent event) {
+      }
+
+      protected void onContProjects_TxtARStep2WebAddressAction(Component c, ActionEvent event) {
+      }
+
+      protected void onContProjects_TxtARStep2BusinessDescriptionAction(Component c, ActionEvent event) {
+      }
+
+      protected void onContProjects_TxtARStep2PrincipalPlaceAction(Component c, ActionEvent event) {
+      }
+
       protected void onContProjects_BtnStep2ConfirmAction(Component c, ActionEvent event) {
       }
 
@@ -3440,7 +3633,7 @@ public abstract class StateMachineBase extends UIBuilder {
       protected void onForgotPassword_BtnRecoverPasswordAction(Component c, ActionEvent event) {
       }
 
-      protected void onContTasks_TxtLine1Action(Component c, ActionEvent event) {
+      protected void onContTasks_TextArea1Action(Component c, ActionEvent event) {
       }
 
       protected void onContTasks_TxtName1Action(Component c, ActionEvent event) {
@@ -3455,7 +3648,7 @@ public abstract class StateMachineBase extends UIBuilder {
       protected void onContTasks_TxtName4Action(Component c, ActionEvent event) {
       }
 
-      protected void onContTasks_TextArea1Action(Component c, ActionEvent event) {
+      protected void onContTasks_TextAreaAction(Component c, ActionEvent event) {
       }
 
       protected void onContTasks_BtnVerifyAction(Component c, ActionEvent event) {
