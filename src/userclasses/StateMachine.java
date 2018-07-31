@@ -146,6 +146,28 @@ public class StateMachine extends StateMachineBase {
     EnterpriseDetails enterpriseDetails;
     ArrayList<NameSearchObject> arrayListNameReservation;
 
+    public boolean isEmailValid(String text) {
+        String expression = "(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])";
+
+        RE r = new RE(expression); // Create new pattern 
+        if (r.match(text)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean isUrlValid(String text) {
+        String expression = "(https?:\\/\\/)?([\\w\\d]+\\.)?[\\w\\d]+\\.\\w+\\/?.+";
+
+        RE r = new RE(expression); // Create new pattern 
+        if (r.match(text)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public StateMachine(String resFile) {
         super(resFile);
         // do not modify, write code in initVars and initialize class members there,
@@ -187,6 +209,8 @@ public class StateMachine extends StateMachineBase {
 //            }
 //        });
         if (Display.getInstance().isSimulator()) {
+            
+            
 
             AGENT_CODE = "BLE076";
 
@@ -1117,6 +1141,14 @@ public class StateMachine extends StateMachineBase {
             if (flag == true) {
                 message += "Please complete all fields. ";
             }
+            
+            if(isUrlValid(ar2WebAddress) == false){
+                message += "Please enter a valid website URL.";
+            }
+            
+            if(isEmailValid(ar2EmailAddress) == false){
+                message += "Please enter a valid email address.";
+            }
 
             if (isAlpha(ar2BusinessDescription) == false && isAlpha(ar2PlaceOfBusiness) == false) {
                 message += "Business description and Principal place of business must contain alphabetical characters. ";
@@ -1443,14 +1475,14 @@ public class StateMachine extends StateMachineBase {
             Log.e(ex);
         }
 
-        String URL = Constants.paymentEndPoint+"Pay.aspx?custCode=" + encodedCustCode + "&custId=" + encodedCustCode + "&appId=6"
+        String URL = Constants.paymentEndPoint + "Pay.aspx?custCode=" + encodedCustCode + "&custId=" + encodedCustCode + "&appId=6"
                 + "&width=" + width + "&height=" + height;
         Log.p(URL, Log.DEBUG);
 
         hasGonePastACS = false;
 
-        String directURL = Constants.paymentEndPoint+"ACSRedirect.aspx";
-        String errorURL = Constants.paymentEndPoint+"PaymentError.aspx?error=1EwiapDpld0GrXoBVjnhEC52%2fRVCNKIi9Xsi%2fs9YpzA%3d&ref=T9122961860";
+        String directURL = Constants.paymentEndPoint + "ACSRedirect.aspx";
+        String errorURL = Constants.paymentEndPoint + "PaymentError.aspx?error=1EwiapDpld0GrXoBVjnhEC52%2fRVCNKIi9Xsi%2fs9YpzA%3d&ref=T9122961860";
 
         browser.setURL(URL);
         browser.setScrollableX(false);
@@ -2453,6 +2485,9 @@ public class StateMachine extends StateMachineBase {
             }
             if (txtStep2Email.getText().length() == 0) {
                 msg += "Please enter Email. ";
+            }
+            else if(isEmailValid(txtStep2Email.getText()) == false){
+                msg += "Please enter a valid Email Address. ";
             }
 
             if (txtStep2EmailRetype.getText().length() == 0) {
