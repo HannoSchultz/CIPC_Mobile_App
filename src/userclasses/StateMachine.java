@@ -20,6 +20,7 @@ import com.codename1.io.FileSystemStorage;
 import com.codename1.io.Log;
 import com.codename1.io.NetworkEvent;
 import com.codename1.io.NetworkManager;
+import com.codename1.io.Storage;
 import com.codename1.io.Util;
 import com.codename1.io.services.TwitterRESTService;
 import com.codename1.l10n.DateFormat;
@@ -89,6 +90,9 @@ import za.co.cipc.pojos.User;
  * @author Your name here
  */
 public class StateMachine extends StateMachineBase {
+
+    final String KEY_FOR_T_AND_CS = "CIPC_T_AND_Cs";
+    final String KEY_FOR_T_AND_CS_Accepted = "CIPC_T_AND_Cs_Accepted";
 
     static za.co.cipc.pojos.User responseUser;
 
@@ -163,26 +167,25 @@ public class StateMachine extends StateMachineBase {
 
         NetworkManager.getInstance().setTimeout(30000);
 
-        Display.getInstance().addEdtErrorHandler(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                evt.consume();
-                if (Display.getInstance().isSimulator()) {
-                    Log.p("Environment is Simulator");
-                } else {
-                    Log.p("Environment is Device");
-                }
-                Log.p("User " + AGENT_CODE);
-                Log.p("Exception in AppName version " + Display.getInstance().getProperty("AppVersion", "Unknown"));
-                Log.p("OS " + Display.getInstance().getPlatformName());
-                Log.p("Error " + evt.getSource());
-                Log.p("Current Form " + Display.getInstance().getCurrent().getName());
-                Log.e((Throwable) evt.getSource());
-                if (!Display.getInstance().isSimulator()) {
-                    Log.sendLog();
-                }
-            }
-        });
-
+//        Display.getInstance().addEdtErrorHandler(new ActionListener() {
+//            public void actionPerformed(ActionEvent evt) {
+//                evt.consume();
+//                if (Display.getInstance().isSimulator()) {
+//                    Log.p("Environment is Simulator");
+//                } else {
+//                    Log.p("Environment is Device");
+//                }
+//                Log.p("User " + AGENT_CODE);
+//                Log.p("Exception in AppName version " + Display.getInstance().getProperty("AppVersion", "Unknown"));
+//                Log.p("OS " + Display.getInstance().getPlatformName());
+//                Log.p("Error " + evt.getSource());
+//                Log.p("Current Form " + Display.getInstance().getCurrent().getName());
+//                Log.e((Throwable) evt.getSource());
+//                if (!Display.getInstance().isSimulator()) {
+//                    Log.sendLog();
+//                }
+//            }
+//        });
         if (Display.getInstance().isSimulator()) {
 
             AGENT_CODE = "BLE076";
@@ -206,9 +209,8 @@ public class StateMachine extends StateMachineBase {
 //            System.out.println("enta=" + entNo);
 //            AGENT_CODE = "NEWLNE";
             UserWebServices u = new UserWebServices();
-            User user = new User();
-            user.setAgent_code("KD7788");
-            u.format_ent_no_mobi("K2012123456");
+            //u.update_terms("http://www.cipc.co.za/files/6914/1102/7352/Step_by_step_guide_-_Private_company_registration_v1_0.pdf");
+            u.get_terms(null);
 
 //            boolean isPending = u.pendingAnnualReturns(user, entNo);
 //            Log.p("isPending=" + isPending, Log.DEBUG);
@@ -940,8 +942,6 @@ public class StateMachine extends StateMachineBase {
             }
         });
 
-      
-
         txtStep1a.getParent().repaint();
 
         Button btnStep1RetrieveDetails = (Button) findByName("btnStep1RetrieveDetails", tabs);
@@ -959,24 +959,27 @@ public class StateMachine extends StateMachineBase {
         TextField txtARStep2EmailAddress = (TextField) findByName("txtARStep2EmailAddress", contStep2);
         TextField txtARStep2TelCode = (TextField) findByName("txtARStep2TelCode", contStep2);
         TextField txtARStep2TelNo = (TextField) findByName("txtARStep2TelNo", contStep2);
+
+        automoveToNext(txtARStep2TelCode, txtARStep2TelNo, 3);
+
         TextField txtARStep2CellNumber = (TextField) findByName("txtARStep2CellNumber", contStep2);
         TextArea txtARStep2WebAddress = (TextArea) findByName("txtARStep2WebAddress", contStep2);
         TextArea txtARStep2BusinessDescription = (TextArea) findByName("txtARStep2BusinessDescription", contStep2);
         TextArea txtARStep2PrincipalPlace = (TextArea) findByName("txtARStep2PrincipalPlace", contStep2);
-        
-          if (Display.getInstance().isSimulator()) {//2011100088 & K2013064531 & 2014 004548 07
+
+        if (Display.getInstance().isSimulator()) {//2011100088 & K2013064531 & 2014 004548 07
             //Not allowed: 1999/028585/07
             txtStep1a.setText("2012");
-            txtStep1b.setText("123458");
+            txtStep1b.setText("123460");
             txtStep1c.setText("07");
-            
+
             txtARStep2EmailAddress.setText("blessing@mfactory.mobi");
             txtARStep2TelCode.setText("012");
             txtARStep2TelNo.setText("3598094");
             txtARStep2CellNumber.setText("0761111111");
             txtARStep2WebAddress.setText("www.mfactory.mobi");
-            txtARStep2BusinessDescription.setText("description");
-            txtARStep2PrincipalPlace.setText("pretoria");
+            txtARStep2BusinessDescription.setText("1111");
+            txtARStep2PrincipalPlace.setText("1111");
         }
 
         btnStep1RetrieveDetails.addActionListener(new ActionListener() {
@@ -1075,10 +1078,7 @@ public class StateMachine extends StateMachineBase {
             if (txtARStep2EmailAddress != null
                     && txtARStep2TelCode != null
                     && txtARStep2TelNo != null
-                    && txtARStep2CellNumber != null
-                    && txtARStep2WebAddress != null
-                    && txtARStep2BusinessDescription != null
-                    && txtARStep2PrincipalPlace != null) {
+                    && txtARStep2BusinessDescription != null) {
                 ar2EmailAddress = txtARStep2EmailAddress.getText();
                 ar2TelCode = txtARStep2TelCode.getText();
                 ar2TelNumber = txtARStep2TelNo.getText();
@@ -1107,21 +1107,27 @@ public class StateMachine extends StateMachineBase {
             if (ar2TelNumber.length() == 0) {
                 flag = true;
             }
-            if (ar2CellNumber.length() == 0) {
-                flag = true;
-            }
-            if (ar2WebAddress.length() == 0) {
-                flag = true;
-            }
+
             if (ar2BusinessDescription.length() == 0) {
                 flag = true;
             }
-            if (ar2PlaceOfBusiness.length() == 0) {
-                flag = true;
-            }
+
+            String message = "";
 
             if (flag == true) {
-                Dialog.show("Error", "Please complete all fields.", "Ok", null);
+                message += "Please complete all fields. ";
+            }
+
+            if (isAlpha(ar2BusinessDescription) == false && isAlpha(ar2PlaceOfBusiness) == false) {
+                message += "Business description and Principal place of business must contain alphabetical characters. ";
+            } else if (isAlpha(ar2BusinessDescription) == true && isAlpha(ar2PlaceOfBusiness) == false) {
+                message += "Principal place of business must contain alphabetical characters. ";
+            } else if (isAlpha(ar2BusinessDescription) == false && isAlpha(ar2PlaceOfBusiness) == true) {
+                message += "Business description must contain alphabetical characters. ";
+            }
+
+            if (message.length() > 0) {
+                Dialog.show("Error", message, "Ok", null);
                 return;
             }
 
@@ -1222,8 +1228,16 @@ public class StateMachine extends StateMachineBase {
                     //mb.setTextLine1("Enterprise No: " + e.getEnt_no()); ENT_NUMBER
                     mb.setTextLine1("Enterprise No: " + ENT_NUMBER);
                     mb.setTextLine2("Reference No: " + e.getReference_no());
-                    mb.setTextLine3("AR Year: " + e.getAr_year() + ", Turnover: R" + e.getTurnover());
-                    mb.setTextLine4("AR Amount: R" + e.getAr_amount() + ", Penalty: R" + e.getAr_penalty());
+                    String arYear = e.getAr_year() + "";
+                    String arTurnover = L10NManager.getInstance().formatCurrency(e.getTurnover());
+                    arTurnover = changeComma(arTurnover);
+                    String arArAmount = L10NManager.getInstance().formatCurrency(e.getAr_amount());
+                    arArAmount = changeComma(arArAmount);
+                    String arArPenalty = L10NManager.getInstance().formatCurrency(e.getAr_penalty());
+                    arArPenalty = changeComma(arArPenalty);
+
+                    mb.setTextLine3("AR Year: " + arYear + " Turnover: " + arTurnover);
+                    mb.setTextLine4("AR Amount: " + arArAmount + " Penalty: " + arArPenalty);
 
                     contStep4AnnualReturns.add(mb);
 
@@ -1231,7 +1245,9 @@ public class StateMachine extends StateMachineBase {
 
                 if (listCalculateARTran.size() > 0) {
                     EnterpriseDetails lastObject = listCalculateARTran.get(listCalculateARTran.size() - 1);
-                    lblTotalDue.setText("Total Due: R" + lastObject.getAr_total());
+                    String totalDue = L10NManager.getInstance().formatCurrency(lastObject.getAr_total());
+                    totalDue = changeComma(totalDue);
+                    lblTotalDue.setText("Total Due: " + totalDue);
                     lblTotalDue.repaint();
                 }
 
@@ -1266,7 +1282,7 @@ public class StateMachine extends StateMachineBase {
                     + "Please note that the requirements to submit either FASs or AFSs together with ARs as referenced above don\'t apply to external companies.\n\n\n"
                     + "Please go to the CIPC website after completing this AR payment for more details on both AFS and FAS.";
 
-            boolean arFlag = Dialog.show("Compliance Notice", "Annual Return (s) added to shopping cart", "Accept", "I do not Accept");
+            boolean arFlag = Dialog.show("Compliance Notice", message, "Accept", "I do not Accept");
 
             if (arFlag == true) {
                 EnterpriseDetails enterpriseDetails = new EnterpriseDetails();
@@ -1404,7 +1420,6 @@ public class StateMachine extends StateMachineBase {
         Log.p("width=" + width + ", height=" + height, Log.DEBUG);
         //Dialog.show("", "width=" + width + ", height=" + height, "Ok", null);
 
-        //String URL = "http://www.google.com";
         String encodedCustCode = "";
         String filePath = FileSystemStorage.getInstance().getAppHomePath() + "/a.txt";
         String home = FileSystemStorage.getInstance().getAppHomePath();
@@ -1428,14 +1443,14 @@ public class StateMachine extends StateMachineBase {
             Log.e(ex);
         }
 
-        String URL = "https://paymenttest.cipc.co.za/Pay.aspx?custCode=" + encodedCustCode + "&custId=" + encodedCustCode + "&appId=6"
+        String URL = Constants.paymentEndPoint+"Pay.aspx?custCode=" + encodedCustCode + "&custId=" + encodedCustCode + "&appId=6"
                 + "&width=" + width + "&height=" + height;
         Log.p(URL, Log.DEBUG);
 
         hasGonePastACS = false;
 
-        String directURL = "https://paymenttest.cipc.co.za/ACSRedirect.aspx";
-        String errorURL = "https://paymenttest.cipc.co.za/PaymentError.aspx?error=1EwiapDpld0GrXoBVjnhEC52%2fRVCNKIi9Xsi%2fs9YpzA%3d&ref=T9122961860";
+        String directURL = Constants.paymentEndPoint+"ACSRedirect.aspx";
+        String errorURL = Constants.paymentEndPoint+"PaymentError.aspx?error=1EwiapDpld0GrXoBVjnhEC52%2fRVCNKIi9Xsi%2fs9YpzA%3d&ref=T9122961860";
 
         browser.setURL(URL);
         browser.setScrollableX(false);
@@ -1609,6 +1624,7 @@ public class StateMachine extends StateMachineBase {
                     mb.setTextLine2("Enterprise No: " + formattedEnterpriseNumber);
                     Log.p("TotalAmountItemType=" + TotalAmountItemType, Log.DEBUG);
                     String strTotalAmountItemType = L10NManager.getInstance().formatCurrency(TotalAmountItemType);
+                    strTotalAmountItemType = changeComma(strTotalAmountItemType);
                     Log.p("strTotalAmountItemType=" + strTotalAmountItemType, Log.DEBUG);
                     //mb.setTextLine3("Item Cost: " + strTotalAmountItemType);
 
@@ -1696,6 +1712,7 @@ public class StateMachine extends StateMachineBase {
                     //mb.setTextLine2("Enterprise No: " + EnterpriseNumber);
                     mb.setTextLine2("Service: " + ItemType);
                     String strTotalAmountItemType = L10NManager.getInstance().formatCurrency(TotalAmountItemType);
+                    strTotalAmountItemType = changeComma(strTotalAmountItemType);
                     Log.p("strTotalAmountItemType=" + strTotalAmountItemType, Log.DEBUG);
                     Button btnEServiceItemCost = new Button("Transaction Cost: " + strTotalAmountItemType);
                     btnEServiceItemCost.setUIID("ButtonItemCost");
@@ -1741,6 +1758,7 @@ public class StateMachine extends StateMachineBase {
             }
 
             String strEserviceTotal = L10NManager.getInstance().formatCurrency(eserviceTotal);
+            strEserviceTotal = changeComma(strEserviceTotal);
             Log.p("strTotalAmountItemType=" + strEserviceTotal, Log.DEBUG);
             lblTotal.setText("Total: " + strEserviceTotal);
             lblTotal.repaint();
@@ -2807,12 +2825,91 @@ public class StateMachine extends StateMachineBase {
     @Override
     protected void beforeSplash(Form f) {
 
+        String currentAppVersion = Display.getInstance().getProperty("AppVersion", "Unknown");
+
+        Label lblVersion = (Label) findByName("lblVersion", f);
+        lblVersion.setText("v" + currentAppVersion);
+        lblVersion.repaint();
+
+    }
+
+    public String getDateNowString() {
+        long dateNow = System.currentTimeMillis();
+        Date newDate = new Date(dateNow);
+        String dateString = new SimpleDateFormat("yyyy-MM-dd_HH").format(newDate);
+        return dateString;
     }
 
     @Override
     protected void postLogin(Form f) {
         height = Display.getInstance().getDisplayHeight();
         width = Display.getInstance().getDisplayWidth();
+
+        Object hasViewedTaCs_Accepted = Storage.getInstance().readObject(KEY_FOR_T_AND_CS_Accepted);
+
+        if (hasViewedTaCs_Accepted == null) {
+            Dialog d = (Dialog) createContainer("/theme", "TermsAndConditions");
+            Button btnViewTerms = (Button) findByName("btnViewTerms", d);
+            btnViewTerms.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent evt) {
+
+                    UserWebServices u = new UserWebServices();
+                    String url = u.get_terms(null);
+
+                    Storage.getInstance().writeObject(KEY_FOR_T_AND_CS, "Viewed on_" + getDateNowString());
+                    //url = "https://drive.google.com/file/d/1XKmFRBcgEn0iY1vV18jRgpbgfXfQbQBy/view?usp=sharing";
+                    //String url = "http://www.cipc.co.za/files/6914/1102/7352/Step_by_step_guide_-_Private_company_registration_v1_0.pdf";
+                    FileSystemStorage fs = FileSystemStorage.getInstance();
+                    String fileName = fs.getAppHomePath() + "cipcterms.pdf";
+                    if (!fs.exists(fileName)) {
+                        Util.downloadUrlToFile(url, fileName, true);
+                    }
+                    Display.getInstance().execute(fileName);
+
+                }
+
+            });
+
+            CheckBox chkTerms = (CheckBox) findByName("chkTerms", d);
+            Button btnAcceptTerms = (Button) findByName("btnAcceptTerms", d);
+
+            btnAcceptTerms.addActionListener(
+                    new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent evt) {
+
+                    Object hasViewedTaCs = Storage.getInstance().readObject(KEY_FOR_T_AND_CS);
+
+                    if (chkTerms.isSelected()) {
+                        Storage.getInstance().writeObject(KEY_FOR_T_AND_CS_Accepted, "Accepted_on_" + getDateNowString());
+                        d.dispose();
+                    } else if (hasViewedTaCs == null) {
+                        Dialog.show("Notice", "Please view CIPC\'s Terms and Conditions.", "Ok", null);
+
+                    } else if (!chkTerms.isSelected()) {
+                        Dialog.show("Notice", "Please accept CIPC\'s Terms and Conditions.", "Ok", null);
+                    }
+                }
+            }
+            );
+
+            Button btnDoNotAccept = (Button) findByName("btnDoNotAccept", d);
+
+            btnDoNotAccept.addActionListener(
+                    new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent evt) {
+                    Display.getInstance().exitApplication();
+
+                }
+            }
+            );
+
+            d.show();
+//                                
+
+        }
 
         UserWebServices u = new UserWebServices();
         User user = new User();
@@ -2824,15 +2921,17 @@ public class StateMachine extends StateMachineBase {
         double server = Double.parseDouble(serverVersion);
         double device = Double.parseDouble(currentAppVersion);
 
-        if (server == device) {
-            Log.p("equal", Log.DEBUG);
+        Log.p("server=" + server + " device=" + device, Log.DEBUG);
+
+        if (server <= device) {
+            Log.p("app version is fine", Log.DEBUG);
 
         } else {
             Dialog.show("App Version", "The current CIPC App Version is: " + serverVersion + " and "
                     + "your  app version is " + currentAppVersion + " Please update your CIPC App to the latest version in order to use the CIPC App.", "Ok", null);
             Display.getInstance().exitApplication();
             //System.exit(0);
-            Log.p("server=" + server + " device=" + device, Log.DEBUG);
+
         }
 
     }
@@ -2938,6 +3037,31 @@ public class StateMachine extends StateMachineBase {
         String dateString = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss.SSS").format(newDate);
         dateString = StringUtil.replaceAll(dateString, "_", "T");
         return dateString;
+    }
+
+    public static boolean isAlpha(String letters) {
+        boolean flag = false;
+        for (int i = 0; i < letters.length(); i++) {
+            char c = letters.charAt(i);
+            if ((c >= 'A' && c <= 'Z')
+                    || (c >= 'a' && c <= 'z')) {
+
+                flag = true;
+
+            }
+        }
+
+        return flag;
+    }
+
+    public static String changeComma(String s) {
+        String original = s.substring(0, s.length() - 3);
+        s = s.substring(s.length() - 3, s.length());
+        if (s.indexOf(",") > -1) {
+            s = StringUtil.replaceAll(s, ",", ".");
+        }
+        s = original + s;
+        return s;
     }
 
 }

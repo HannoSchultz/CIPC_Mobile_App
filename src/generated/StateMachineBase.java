@@ -33,16 +33,18 @@ public abstract class StateMachineBase extends UIBuilder {
 
     public Container startApp(Resources res, String resPath, boolean loadTheme) {
         initVars();
-        UIBuilder.registerCustomComponent("Container", com.codename1.ui.Container.class);
-        UIBuilder.registerCustomComponent("Button", com.codename1.ui.Button.class);
         UIBuilder.registerCustomComponent("TextArea", com.codename1.ui.TextArea.class);
         UIBuilder.registerCustomComponent("Form", com.codename1.ui.Form.class);
-        UIBuilder.registerCustomComponent("Picker", com.codename1.ui.spinner.Picker.class);
         UIBuilder.registerCustomComponent("Label", com.codename1.ui.Label.class);
-        UIBuilder.registerCustomComponent("TextField", com.codename1.ui.TextField.class);
-        UIBuilder.registerCustomComponent("Tabs", com.codename1.ui.Tabs.class);
         UIBuilder.registerCustomComponent("SpanLabel", com.codename1.components.SpanLabel.class);
         UIBuilder.registerCustomComponent("RadioButton", com.codename1.ui.RadioButton.class);
+        UIBuilder.registerCustomComponent("Container", com.codename1.ui.Container.class);
+        UIBuilder.registerCustomComponent("Button", com.codename1.ui.Button.class);
+        UIBuilder.registerCustomComponent("Dialog", com.codename1.ui.Dialog.class);
+        UIBuilder.registerCustomComponent("CheckBox", com.codename1.ui.CheckBox.class);
+        UIBuilder.registerCustomComponent("Picker", com.codename1.ui.spinner.Picker.class);
+        UIBuilder.registerCustomComponent("TextField", com.codename1.ui.TextField.class);
+        UIBuilder.registerCustomComponent("Tabs", com.codename1.ui.Tabs.class);
         UIBuilder.registerCustomComponent("MultiButton", com.codename1.components.MultiButton.class);
         if(loadTheme) {
             if(res == null) {
@@ -78,16 +80,18 @@ public abstract class StateMachineBase extends UIBuilder {
 
     public Container createWidget(Resources res, String resPath, boolean loadTheme) {
         initVars();
-        UIBuilder.registerCustomComponent("Container", com.codename1.ui.Container.class);
-        UIBuilder.registerCustomComponent("Button", com.codename1.ui.Button.class);
         UIBuilder.registerCustomComponent("TextArea", com.codename1.ui.TextArea.class);
         UIBuilder.registerCustomComponent("Form", com.codename1.ui.Form.class);
-        UIBuilder.registerCustomComponent("Picker", com.codename1.ui.spinner.Picker.class);
         UIBuilder.registerCustomComponent("Label", com.codename1.ui.Label.class);
-        UIBuilder.registerCustomComponent("TextField", com.codename1.ui.TextField.class);
-        UIBuilder.registerCustomComponent("Tabs", com.codename1.ui.Tabs.class);
         UIBuilder.registerCustomComponent("SpanLabel", com.codename1.components.SpanLabel.class);
         UIBuilder.registerCustomComponent("RadioButton", com.codename1.ui.RadioButton.class);
+        UIBuilder.registerCustomComponent("Container", com.codename1.ui.Container.class);
+        UIBuilder.registerCustomComponent("Button", com.codename1.ui.Button.class);
+        UIBuilder.registerCustomComponent("Dialog", com.codename1.ui.Dialog.class);
+        UIBuilder.registerCustomComponent("CheckBox", com.codename1.ui.CheckBox.class);
+        UIBuilder.registerCustomComponent("Picker", com.codename1.ui.spinner.Picker.class);
+        UIBuilder.registerCustomComponent("TextField", com.codename1.ui.TextField.class);
+        UIBuilder.registerCustomComponent("Tabs", com.codename1.ui.Tabs.class);
         UIBuilder.registerCustomComponent("MultiButton", com.codename1.components.MultiButton.class);
         if(loadTheme) {
             if(res == null) {
@@ -242,6 +246,18 @@ public abstract class StateMachineBase extends UIBuilder {
         com.codename1.ui.Container cmp = (com.codename1.ui.Container)findByName("contStep2", Display.getInstance().getCurrent());
         if(cmp == null && aboutToShowThisContainer != null) {
             cmp = (com.codename1.ui.Container)findByName("contStep2", aboutToShowThisContainer);
+        }
+        return cmp;
+    }
+
+    public com.codename1.ui.Label findLblVersion(Component root) {
+        return (com.codename1.ui.Label)findByName("lblVersion", root);
+    }
+
+    public com.codename1.ui.Label findLblVersion() {
+        com.codename1.ui.Label cmp = (com.codename1.ui.Label)findByName("lblVersion", Display.getInstance().getCurrent());
+        if(cmp == null && aboutToShowThisContainer != null) {
+            cmp = (com.codename1.ui.Label)findByName("lblVersion", aboutToShowThisContainer);
         }
         return cmp;
     }
@@ -1098,6 +1114,18 @@ public abstract class StateMachineBase extends UIBuilder {
         return cmp;
     }
 
+    public com.codename1.ui.CheckBox findChkTerms(Component root) {
+        return (com.codename1.ui.CheckBox)findByName("chkTerms", root);
+    }
+
+    public com.codename1.ui.CheckBox findChkTerms() {
+        com.codename1.ui.CheckBox cmp = (com.codename1.ui.CheckBox)findByName("chkTerms", Display.getInstance().getCurrent());
+        if(cmp == null && aboutToShowThisContainer != null) {
+            cmp = (com.codename1.ui.CheckBox)findByName("chkTerms", aboutToShowThisContainer);
+        }
+        return cmp;
+    }
+
     public com.codename1.ui.Label findLabel14(Component root) {
         return (com.codename1.ui.Label)findByName("Label14", root);
     }
@@ -1734,6 +1762,18 @@ public abstract class StateMachineBase extends UIBuilder {
         return cmp;
     }
 
+    public com.codename1.ui.Button findBtnAcceptTerms(Component root) {
+        return (com.codename1.ui.Button)findByName("btnAcceptTerms", root);
+    }
+
+    public com.codename1.ui.Button findBtnAcceptTerms() {
+        com.codename1.ui.Button cmp = (com.codename1.ui.Button)findByName("btnAcceptTerms", Display.getInstance().getCurrent());
+        if(cmp == null && aboutToShowThisContainer != null) {
+            cmp = (com.codename1.ui.Button)findByName("btnAcceptTerms", aboutToShowThisContainer);
+        }
+        return cmp;
+    }
+
     public com.codename1.ui.Button findBtnItemCost(Component root) {
         return (com.codename1.ui.Button)findByName("btnItemCost", root);
     }
@@ -1886,6 +1926,18 @@ public abstract class StateMachineBase extends UIBuilder {
         com.codename1.ui.Label cmp = (com.codename1.ui.Label)findByName("Label6", Display.getInstance().getCurrent());
         if(cmp == null && aboutToShowThisContainer != null) {
             cmp = (com.codename1.ui.Label)findByName("Label6", aboutToShowThisContainer);
+        }
+        return cmp;
+    }
+
+    public com.codename1.ui.Button findBtnViewTerms(Component root) {
+        return (com.codename1.ui.Button)findByName("btnViewTerms", root);
+    }
+
+    public com.codename1.ui.Button findBtnViewTerms() {
+        com.codename1.ui.Button cmp = (com.codename1.ui.Button)findByName("btnViewTerms", Display.getInstance().getCurrent());
+        if(cmp == null && aboutToShowThisContainer != null) {
+            cmp = (com.codename1.ui.Button)findByName("btnViewTerms", aboutToShowThisContainer);
         }
         return cmp;
     }
@@ -2046,6 +2098,18 @@ public abstract class StateMachineBase extends UIBuilder {
         return cmp;
     }
 
+    public com.codename1.ui.Button findBtnDoNotAccept(Component root) {
+        return (com.codename1.ui.Button)findByName("btnDoNotAccept", root);
+    }
+
+    public com.codename1.ui.Button findBtnDoNotAccept() {
+        com.codename1.ui.Button cmp = (com.codename1.ui.Button)findByName("btnDoNotAccept", Display.getInstance().getCurrent());
+        if(cmp == null && aboutToShowThisContainer != null) {
+            cmp = (com.codename1.ui.Button)findByName("btnDoNotAccept", aboutToShowThisContainer);
+        }
+        return cmp;
+    }
+
     public com.codename1.ui.Label findLabel61(Component root) {
         return (com.codename1.ui.Label)findByName("Label61", root);
     }
@@ -2170,6 +2234,12 @@ public abstract class StateMachineBase extends UIBuilder {
             return;
         }
 
+        if("TermsAndConditions".equals(f.getName())) {
+            exitTermsAndConditions(f);
+            aboutToShowThisContainer = null;
+            return;
+        }
+
         if("ContSettings".equals(f.getName())) {
             exitContSettings(f);
             aboutToShowThisContainer = null;
@@ -2236,6 +2306,10 @@ public abstract class StateMachineBase extends UIBuilder {
     }
 
 
+    protected void exitTermsAndConditions(Form f) {
+    }
+
+
     protected void exitContSettings(Form f) {
     }
 
@@ -2291,6 +2365,12 @@ public abstract class StateMachineBase extends UIBuilder {
 
         if("ContSideMenu".equals(f.getName())) {
             beforeContSideMenu(f);
+            aboutToShowThisContainer = null;
+            return;
+        }
+
+        if("TermsAndConditions".equals(f.getName())) {
+            beforeTermsAndConditions(f);
             aboutToShowThisContainer = null;
             return;
         }
@@ -2361,6 +2441,10 @@ public abstract class StateMachineBase extends UIBuilder {
     }
 
 
+    protected void beforeTermsAndConditions(Form f) {
+    }
+
+
     protected void beforeContSettings(Form f) {
     }
 
@@ -2416,6 +2500,12 @@ public abstract class StateMachineBase extends UIBuilder {
 
         if("ContSideMenu".equals(c.getName())) {
             beforeContainerContSideMenu(c);
+            aboutToShowThisContainer = null;
+            return;
+        }
+
+        if("TermsAndConditions".equals(c.getName())) {
+            beforeContainerTermsAndConditions(c);
             aboutToShowThisContainer = null;
             return;
         }
@@ -2486,6 +2576,10 @@ public abstract class StateMachineBase extends UIBuilder {
     }
 
 
+    protected void beforeContainerTermsAndConditions(Container c) {
+    }
+
+
     protected void beforeContainerContSettings(Container c) {
     }
 
@@ -2540,6 +2634,12 @@ public abstract class StateMachineBase extends UIBuilder {
 
         if("ContSideMenu".equals(f.getName())) {
             postContSideMenu(f);
+            aboutToShowThisContainer = null;
+            return;
+        }
+
+        if("TermsAndConditions".equals(f.getName())) {
+            postTermsAndConditions(f);
             aboutToShowThisContainer = null;
             return;
         }
@@ -2610,6 +2710,10 @@ public abstract class StateMachineBase extends UIBuilder {
     }
 
 
+    protected void postTermsAndConditions(Form f) {
+    }
+
+
     protected void postContSettings(Form f) {
     }
 
@@ -2664,6 +2768,12 @@ public abstract class StateMachineBase extends UIBuilder {
 
         if("ContSideMenu".equals(c.getName())) {
             postContainerContSideMenu(c);
+            aboutToShowThisContainer = null;
+            return;
+        }
+
+        if("TermsAndConditions".equals(c.getName())) {
+            postContainerTermsAndConditions(c);
             aboutToShowThisContainer = null;
             return;
         }
@@ -2734,6 +2844,10 @@ public abstract class StateMachineBase extends UIBuilder {
     }
 
 
+    protected void postContainerTermsAndConditions(Container c) {
+    }
+
+
     protected void postContainerContSettings(Container c) {
     }
 
@@ -2788,6 +2902,12 @@ public abstract class StateMachineBase extends UIBuilder {
 
         if("ContSideMenu".equals(rootName)) {
             onCreateContSideMenu();
+            aboutToShowThisContainer = null;
+            return;
+        }
+
+        if("TermsAndConditions".equals(rootName)) {
+            onCreateTermsAndConditions();
             aboutToShowThisContainer = null;
             return;
         }
@@ -2858,6 +2978,10 @@ public abstract class StateMachineBase extends UIBuilder {
     }
 
 
+    protected void onCreateTermsAndConditions() {
+    }
+
+
     protected void onCreateContSettings() {
     }
 
@@ -2913,6 +3037,12 @@ public abstract class StateMachineBase extends UIBuilder {
 
         if("ContSideMenu".equals(f.getName())) {
             getStateContSideMenu(f, h);
+            aboutToShowThisContainer = null;
+            return h;
+        }
+
+        if("TermsAndConditions".equals(f.getName())) {
+            getStateTermsAndConditions(f, h);
             aboutToShowThisContainer = null;
             return h;
         }
@@ -2983,6 +3113,10 @@ public abstract class StateMachineBase extends UIBuilder {
     }
 
 
+    protected void getStateTermsAndConditions(Form f, Hashtable h) {
+    }
+
+
     protected void getStateContSettings(Form f, Hashtable h) {
     }
 
@@ -3038,6 +3172,12 @@ public abstract class StateMachineBase extends UIBuilder {
 
         if("ContSideMenu".equals(f.getName())) {
             setStateContSideMenu(f, state);
+            aboutToShowThisContainer = null;
+            return;
+        }
+
+        if("TermsAndConditions".equals(f.getName())) {
+            setStateTermsAndConditions(f, state);
             aboutToShowThisContainer = null;
             return;
         }
@@ -3105,6 +3245,10 @@ public abstract class StateMachineBase extends UIBuilder {
 
 
     protected void setStateContSideMenu(Form f, Hashtable state) {
+    }
+
+
+    protected void setStateTermsAndConditions(Form f, Hashtable state) {
     }
 
 
@@ -3217,16 +3361,16 @@ public abstract class StateMachineBase extends UIBuilder {
                 onContProjects_TxtARStep2TelNoAction(c, event);
                 return;
             }
-            if("txtARStep2CellNumber".equals(c.getName())) {
-                onContProjects_TxtARStep2CellNumberAction(c, event);
+            if("txtARStep2BusinessDescription".equals(c.getName())) {
+                onContProjects_TxtARStep2BusinessDescriptionAction(c, event);
                 return;
             }
             if("txtARStep2WebAddress".equals(c.getName())) {
                 onContProjects_TxtARStep2WebAddressAction(c, event);
                 return;
             }
-            if("txtARStep2BusinessDescription".equals(c.getName())) {
-                onContProjects_TxtARStep2BusinessDescriptionAction(c, event);
+            if("txtARStep2CellNumber".equals(c.getName())) {
+                onContProjects_TxtARStep2CellNumberAction(c, event);
                 return;
             }
             if("txtARStep2PrincipalPlace".equals(c.getName())) {
@@ -3311,6 +3455,24 @@ public abstract class StateMachineBase extends UIBuilder {
             }
             if("btnLogout".equals(c.getName())) {
                 onContSideMenu_BtnLogoutAction(c, event);
+                return;
+            }
+        }
+        if(rootContainerName.equals("TermsAndConditions")) {
+            if("btnViewTerms".equals(c.getName())) {
+                onTermsAndConditions_BtnViewTermsAction(c, event);
+                return;
+            }
+            if("chkTerms".equals(c.getName())) {
+                onTermsAndConditions_ChkTermsAction(c, event);
+                return;
+            }
+            if("btnAcceptTerms".equals(c.getName())) {
+                onTermsAndConditions_BtnAcceptTermsAction(c, event);
+                return;
+            }
+            if("btnDoNotAccept".equals(c.getName())) {
+                onTermsAndConditions_BtnDoNotAcceptAction(c, event);
                 return;
             }
         }
@@ -3537,13 +3699,13 @@ public abstract class StateMachineBase extends UIBuilder {
       protected void onContProjects_TxtARStep2TelNoAction(Component c, ActionEvent event) {
       }
 
-      protected void onContProjects_TxtARStep2CellNumberAction(Component c, ActionEvent event) {
+      protected void onContProjects_TxtARStep2BusinessDescriptionAction(Component c, ActionEvent event) {
       }
 
       protected void onContProjects_TxtARStep2WebAddressAction(Component c, ActionEvent event) {
       }
 
-      protected void onContProjects_TxtARStep2BusinessDescriptionAction(Component c, ActionEvent event) {
+      protected void onContProjects_TxtARStep2CellNumberAction(Component c, ActionEvent event) {
       }
 
       protected void onContProjects_TxtARStep2PrincipalPlaceAction(Component c, ActionEvent event) {
@@ -3604,6 +3766,18 @@ public abstract class StateMachineBase extends UIBuilder {
       }
 
       protected void onContSideMenu_BtnLogoutAction(Component c, ActionEvent event) {
+      }
+
+      protected void onTermsAndConditions_BtnViewTermsAction(Component c, ActionEvent event) {
+      }
+
+      protected void onTermsAndConditions_ChkTermsAction(Component c, ActionEvent event) {
+      }
+
+      protected void onTermsAndConditions_BtnAcceptTermsAction(Component c, ActionEvent event) {
+      }
+
+      protected void onTermsAndConditions_BtnDoNotAcceptAction(Component c, ActionEvent event) {
       }
 
       protected void onContSettings_TxtHandleAction(Component c, ActionEvent event) {

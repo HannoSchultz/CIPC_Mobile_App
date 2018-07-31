@@ -54,6 +54,217 @@ public class UserWebServices {
 
     String AR_BODY;
 
+    public void insert_terms(String link) {
+
+        final String SOAP_BODY = "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:cipc=\"CIPC_WEB_SERVICES\">\n"
+                + "\n"
+                + "   <soap:Header/>\n"
+                + "\n"
+                + "   <soap:Body>\n"
+                + "\n"
+                + "      <cipc:insert_terms>\n"
+                + "\n"
+                + "        <cipc:sUserName>wBAA7LAkWIs=</cipc:sUserName>\n"
+                + "\n"
+                + "         <cipc:sPassword>6EGQAUzYJlhvffhZ+gUFfg==</cipc:sPassword>\n"
+                + "\n"
+                + "         <cipc:sBankID>wBAA7LAkWIs=</cipc:sBankID>\n"
+                + "\n"
+                + "         <cipc:term_desc>" + link + "</cipc:term_desc>\n"
+                + "\n"
+                + "      </cipc:insert_terms>\n"
+                + "\n"
+                + "   </soap:Body>\n"
+                + "\n"
+                + "</soap:Envelope>";
+
+        ConnectionRequest httpRequest = new ConnectionRequest() {
+            Element h;
+
+            @Override
+            protected void buildRequestBody(OutputStream os) throws IOException {
+                super.buildRequestBody(os);
+                os.write(SOAP_BODY.getBytes("utf-8"));
+
+            }
+
+            protected void postResponse() {
+
+                super.postResponse();
+            }
+
+            protected void readResponse(InputStream input) throws IOException {
+                super.readResponse(input);
+
+            }
+
+            @Override
+            protected void handleException(Exception err) {
+                Log.p("Exception: " + err.toString());
+                Dialog.show("No Internet", "There is no internet connection. Please switch your connection on.", "Okay", null);
+
+            }
+        };
+
+        httpRequest.setUrl(Constants.soapServicesEndPoint+"enterprise.asmx");
+        httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
+        httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
+        httpRequest.setPost(true);
+
+        NetworkManager.getInstance().addToQueueAndWait(httpRequest);
+        String data = new String(httpRequest.getResponseData());
+        Log.p("insert_terms=" + data, Log.DEBUG);
+
+    }//end format_ent_no_mobi
+
+    public String get_terms(String link) {
+
+        String terms_desc = "";
+
+        final String SOAP_BODY = "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:cipc=\"CIPC_WEB_SERVICES\">\n"
+                + "\n"
+                + "   <soap:Header/>\n"
+                + "\n"
+                + "   <soap:Body>\n"
+                + "\n"
+                + "      <cipc:get_terms>\n"
+                + "\n"
+                + "        <cipc:sUserName>wBAA7LAkWIs=</cipc:sUserName>\n"
+                + "\n"
+                + "         <cipc:sPassword>6EGQAUzYJlhvffhZ+gUFfg==</cipc:sPassword>\n"
+                + "\n"
+                + "         <cipc:sBankID>wBAA7LAkWIs=</cipc:sBankID>\n"
+                + "\n"
+                + "         <cipc:sCust_Code></cipc:sCust_Code>\n"
+                + "\n"
+                + "      </cipc:get_terms>\n"
+                + "\n"
+                + "   </soap:Body>\n"
+                + "\n"
+                + "</soap:Envelope>";
+
+        ConnectionRequest httpRequest = new ConnectionRequest() {
+            Element h;
+
+            @Override
+            protected void buildRequestBody(OutputStream os) throws IOException {
+                super.buildRequestBody(os);
+                os.write(SOAP_BODY.getBytes("utf-8"));
+
+            }
+
+            protected void postResponse() {
+
+                super.postResponse();
+            }
+
+            protected void readResponse(InputStream input) throws IOException {
+                super.readResponse(input);
+
+            }
+
+            @Override
+            protected void handleException(Exception err) {
+                Log.p("Exception: " + err.toString());
+                Dialog.show("No Internet", "There is no internet connection. Please switch your connection on.", "Okay", null);
+
+            }
+        };
+
+        httpRequest.setUrl(Constants.soapServicesEndPoint+"enterprise.asmx");
+        httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
+        httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
+        httpRequest.setPost(true);
+
+        NetworkManager.getInstance().addToQueueAndWait(httpRequest);
+        String data = new String(httpRequest.getResponseData());
+        Log.p("get_terms=" + data, Log.DEBUG);
+
+        try {
+
+            Result result = Result.fromContent(data, Result.XML);
+
+            Log.p("Element e: " + result, Log.DEBUG);
+
+            XMLParser parser = new XMLParser();
+            parser.setCaseSensitive(true);
+
+            //Element element = parser.parse(convertStringtoInputStreamReader(result.getAsString("//DataSet")));
+            terms_desc = result.getAsString("//terms_desc");
+            Log.p("terms_desc=" + terms_desc, Log.DEBUG);
+
+        } catch (IllegalArgumentException e) {
+            Log.p(e.toString());
+        }
+
+        return terms_desc;
+    }//end format_ent_no_mobi
+
+    public void update_terms(String link) {
+
+        final String SOAP_BODY = "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:cipc=\"CIPC_WEB_SERVICES\">\n"
+                + "\n"
+                + "   <soap:Header/>\n"
+                + "\n"
+                + "   <soap:Body>\n"
+                + "\n"
+                + "      <cipc:update_terms>\n"
+                + "\n"
+                + "       <cipc:sUserName>wBAA7LAkWIs=</cipc:sUserName>\n"
+                + "\n"
+                + "         <cipc:sPassword>6EGQAUzYJlhvffhZ+gUFfg==</cipc:sPassword>\n"
+                + "\n"
+                + "         <cipc:sBankID>wBAA7LAkWIs=</cipc:sBankID>\n"
+                + "\n"
+                + "         <cipc:term_desc>" + link + "</cipc:term_desc>\n"
+                + "\n"
+                + "         <cipc:term_id>2</cipc:term_id>\n"
+                + "\n"
+                + "      </cipc:update_terms>\n"
+                + "\n"
+                + "   </soap:Body>\n"
+                + "\n"
+                + "</soap:Envelope>";
+
+        ConnectionRequest httpRequest = new ConnectionRequest() {
+            Element h;
+
+            @Override
+            protected void buildRequestBody(OutputStream os) throws IOException {
+                super.buildRequestBody(os);
+                os.write(SOAP_BODY.getBytes("utf-8"));
+
+            }
+
+            protected void postResponse() {
+
+                super.postResponse();
+            }
+
+            protected void readResponse(InputStream input) throws IOException {
+                super.readResponse(input);
+
+            }
+
+            @Override
+            protected void handleException(Exception err) {
+                Log.p("Exception: " + err.toString());
+                Dialog.show("No Internet", "There is no internet connection. Please switch your connection on.", "Okay", null);
+
+            }
+        };
+
+        httpRequest.setUrl(Constants.soapServicesEndPoint+"enterprise.asmx");
+        httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
+        httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
+        httpRequest.setPost(true);
+
+        NetworkManager.getInstance().addToQueueAndWait(httpRequest);
+        String data = new String(httpRequest.getResponseData());
+        Log.p("update_terms=" + data, Log.DEBUG);
+
+    }//end format_ent_no_mobi
+
     public FormattedCode format_ent_no_mobi(String enterpriseName) {
 
         FormattedCode f = null;
@@ -110,7 +321,7 @@ public class UserWebServices {
             }
         };
 
-        httpRequest.setUrl("https://testwebservices4.cipc.co.za/enterprise.asmx");
+        httpRequest.setUrl(Constants.soapServicesEndPoint+"enterprise.asmx");
         httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
         httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
         httpRequest.setPost(true);
@@ -206,7 +417,7 @@ public class UserWebServices {
             }
         };
 
-        httpRequest.setUrl("https://testwebservices4.cipc.co.za/enterprise.asmx");
+        httpRequest.setUrl(Constants.soapServicesEndPoint+"enterprise.asmx");
         httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
         httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
         httpRequest.setPost(true);
@@ -292,7 +503,7 @@ public class UserWebServices {
             }
         };
 
-        httpRequest.setUrl("https://testwebservices4.cipc.co.za/enterprise.asmx");
+        httpRequest.setUrl(Constants.soapServicesEndPoint+"enterprise.asmx");
         httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
         httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
         httpRequest.setPost(true);
@@ -396,7 +607,7 @@ public class UserWebServices {
             }
         };
 
-        httpRequest.setUrl("https://testwebservices4.cipc.co.za/enterprise.asmx");
+        httpRequest.setUrl(Constants.soapServicesEndPoint+"enterprise.asmx");
         httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
         httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
         httpRequest.setPost(true);
@@ -562,7 +773,7 @@ public class UserWebServices {
             }
         };
 
-        httpRequest.setUrl("https://testwebservices4.cipc.co.za/enterprise.asmx");
+        httpRequest.setUrl(Constants.soapServicesEndPoint+"enterprise.asmx");
         httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
         httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
         httpRequest.setPost(true);
@@ -726,9 +937,8 @@ public class UserWebServices {
     }
 
     public String insertCartItemAR(User user, ArrayList<EnterpriseDetails> listCalculateARTran, EnterpriseDetails enterpriseDetails) {
-        
-        //"+enterpriseDetails.+"
 
+        //"+enterpriseDetails.+"
         EnterpriseDetails ent = listCalculateARTran.get(0);//this can fail
 
         String END_POINT = Constants.cartAPIEndPoint + "v1/payment/cartitem";
@@ -737,11 +947,18 @@ public class UserWebServices {
         Log.p("insertCartItemAR ReferenceNumber=" + ReferenceNumber, Log.DEBUG);
         String dateNow = getAnnualReturnsDateNow();
         Log.p("insertCartItemAR dateNow=" + dateNow, Log.DEBUG);
-
+//
         double total = 0.0;
-        //refactor tot calc
-        for (int i = 0; i < listCalculateARTran.size(); i++) {
-            total += listCalculateARTran.get(i).getAr_total();
+//        //refactor tot calc
+//        for (int i = 0; i < listCalculateARTran.size(); i++) {
+//            EnterpriseDetails tempEnterprise = listCalculateARTran.get(i);
+//            total += tempEnterprise.getAr_total();
+//             Log.p("Total=" + total + " getAr_total=" + tempEnterprise.getAr_total(), Log.DEBUG);
+//        } 
+
+        if (!listCalculateARTran.isEmpty()) {
+            EnterpriseDetails lastObject = listCalculateARTran.get(listCalculateARTran.size() - 1);
+            total = lastObject.getAr_total();
         }
 
         if (listCalculateARTran.size() == 1) {
@@ -753,9 +970,9 @@ public class UserWebServices {
                     + "                \"CustomerCode\":\"" + user.getAgent_code() + "\",\n"
                     + "                \"ItemType\":1,\n"
                     + "                \"ItemData\":\""
-                    + "{\\\"ReferenceNumber\\\":" + ReferenceNumber + ",\\\"FormCode\\\":\\\"CK2B\\\",\\\"EnterpriseNumber\\\":\\\"" + ent.getEnt_no() + "\\\",\\\"EnterpriseType\\\":\\\"  " + ent.getEnt_type_code() + " \\\",\\\"EnterpriseStatus\\\":\\\"28\\\",\\\"EmailAddress\\\" "+enterpriseDetails.getEmailAddress()+":\\\"  \\\",\\\"TelephoneCode\\\":\\\" "+enterpriseDetails.getTelephoneCode()+" \\\",\\\"TelephoneNumber\\\":\\\" "+enterpriseDetails.getTelephoneNumber()+" \\\",\\\"CellphoneNumber\\\":\\\"" + enterpriseDetails.getCellphoneNumber()+ "\\\",\\\"WebsiteAddress\\\":\\\" "+enterpriseDetails.getWebsiteAddress()+"  \\\",\\\"BusinessDescription\\\":\\\" "+enterpriseDetails.getBusinessDescription()+"  \\\",\\\"PrincipalPlaceOfBusiness\\\":\\\" "+enterpriseDetails.getPrincipalPlaceOfBusiness()+"  \\\",\\\"EnterpriseNameChanged\\\":0,\\\"FinancialYearEndChanged\\\":0,\\\"RegisteredOfficeChanged\\\":0,\\\"LocationOfRecordsChanged\\\":0,\\\"DirectorsChanged\\\":0,\\\"CompanySecretaryChanged\\\":0,\\\"AuditorsChanged\\\":0,\\\"TotalAmount\\\":" + total + ",\\\"YearData\\\":[";
+                    + "{\\\"ReferenceNumber\\\":" + ReferenceNumber + ",\\\"FormCode\\\":\\\"CK2B\\\",\\\"EnterpriseNumber\\\":\\\"" + ent.getEnt_no() + "\\\",\\\"EnterpriseType\\\":\\\"" + ent.getEnt_type_code() + "\\\",\\\"EnterpriseStatus\\\":\\\"28\\\",\\\"EmailAddress\\\":\\\"" + enterpriseDetails.getEmailAddress() + "\\\",\\\"TelephoneCode\\\":\\\"" + enterpriseDetails.getTelephoneCode() + "\\\",\\\"TelephoneNumber\\\":\\\"" + enterpriseDetails.getTelephoneNumber() + "\\\",\\\"CellphoneNumber\\\":\\\"" + enterpriseDetails.getCellphoneNumber() + "\\\",\\\"WebsiteAddress\\\":\\\" " + enterpriseDetails.getWebsiteAddress() + "\\\",\\\"BusinessDescription\\\":\\\" " + enterpriseDetails.getBusinessDescription() + "\\\",\\\"PrincipalPlaceOfBusiness\\\":\\\" " + enterpriseDetails.getPrincipalPlaceOfBusiness() + "\\\",\\\"EnterpriseNameChanged\\\":0,\\\"FinancialYearEndChanged\\\":0,\\\"RegisteredOfficeChanged\\\":0,\\\"LocationOfRecordsChanged\\\":0,\\\"DirectorsChanged\\\":0,\\\"CompanySecretaryChanged\\\":0,\\\"AuditorsChanged\\\":0,\\\"TotalAmount\\\":" + total + ",\\\"YearData\\\":[";
 
-            AR_BODY += "{\\\"ReferenceNumber\\\":" + ReferenceNumber + ",\\\"EnterpriseNumber\\\":\\\" " + ent.getEnt_no() + " \\\",\\\"Year\\\":" + ent.getAr_year() + ",\\\"Turnover\\\":" + ent.getTurnover() + ",\\\"Amount\\\":" + ent.getAr_amount() + ",\\\"PenaltyFee\\\":" + ent.getAr_penalty() + ",\\\"TotalAmount\\\": " + ent.getAr_total() + " ,\\\"Status\\\":null,\\\"StatusDate\\\":\\\" " + getAnnualReturnsDateNow() + "  \\\"}";
+            AR_BODY += "{\\\"ReferenceNumber\\\":" + ReferenceNumber + ",\\\"EnterpriseNumber\\\":\\\"" + ent.getEnt_no() + "\\\",\\\"Year\\\":" + ent.getAr_year() + ",\\\"Turnover\\\":" + ent.getTurnover() + ",\\\"Amount\\\":" + ent.getAr_amount() + ",\\\"PenaltyFee\\\":" + ent.getAr_penalty() + ",\\\"TotalAmount\\\":" + ent.getAr_total() + ",\\\"Status\\\":null,\\\"StatusDate\\\":\\\"" + getAnnualReturnsDateNow() + "\\\"}";
 
         } else {
             AR_BODY
@@ -766,15 +983,15 @@ public class UserWebServices {
                     + "                \"CustomerCode\":\"" + user.getAgent_code() + "\",\n"
                     + "                \"ItemType\":1,\n"
                     + "                \"ItemData\":\""
-                    + "{\\\"ReferenceNumber\\\":" + ReferenceNumber + ",\\\"FormCode\\\":\\\"CK2B\\\",\\\"EnterpriseNumber\\\":\\\"" + ent.getEnt_no() + "\\\",\\\"EnterpriseType\\\":\\\"  " + ent.getEnt_type_code() + " \\\",\\\"EnterpriseStatus\\\":\\\"28\\\",\\\"EmailAddress\\\":\\\"" + enterpriseDetails.getEmailAddress()+ "\\\",\\\"TelephoneCode\\\":\\\"" + enterpriseDetails.getTelephoneCode()+ "\\\",\\\"TelephoneNumber\\\":\\\"" + enterpriseDetails.getTelephoneNumber()+ "\\\",\\\"CellphoneNumber\\\":\\\"" + enterpriseDetails.getCellphoneNumber()+ "\\\",\\\"WebsiteAddress\\\":\\\"  "+enterpriseDetails.getWebsiteAddress()+" \\\",\\\"BusinessDescription\\\":\\\" "+enterpriseDetails.getBusinessDescription()+" \\\",\\\"PrincipalPlaceOfBusiness\\\":\\\" "+enterpriseDetails.getPrincipalPlaceOfBusiness()+"  \\\",\\\"EnterpriseNameChanged\\\":0,\\\"FinancialYearEndChanged\\\":0,\\\"RegisteredOfficeChanged\\\":0,\\\"LocationOfRecordsChanged\\\":0,\\\"DirectorsChanged\\\":0,\\\"CompanySecretaryChanged\\\":0,\\\"AuditorsChanged\\\":0,\\\"TotalAmount\\\":" + total + ",\\\"YearData\\\":[";
+                    + "{\\\"ReferenceNumber\\\":" + ReferenceNumber + ",\\\"FormCode\\\":\\\"CK2B\\\",\\\"EnterpriseNumber\\\":\\\"" + ent.getEnt_no() + "\\\",\\\"EnterpriseType\\\":\\\"" + ent.getEnt_type_code() + "\\\",\\\"EnterpriseStatus\\\":\\\"28\\\",\\\"EmailAddress\\\":\\\"" + enterpriseDetails.getEmailAddress() + "\\\",\\\"TelephoneCode\\\":\\\"" + enterpriseDetails.getTelephoneCode() + "\\\",\\\"TelephoneNumber\\\":\\\"" + enterpriseDetails.getTelephoneNumber() + "\\\",\\\"CellphoneNumber\\\":\\\"" + enterpriseDetails.getCellphoneNumber() + "\\\",\\\"WebsiteAddress\\\":\\\"" + enterpriseDetails.getWebsiteAddress() + "\\\",\\\"BusinessDescription\\\":\\\"" + enterpriseDetails.getBusinessDescription() + "\\\",\\\"PrincipalPlaceOfBusiness\\\":\\\"" + enterpriseDetails.getPrincipalPlaceOfBusiness() + "\\\",\\\"EnterpriseNameChanged\\\":0,\\\"FinancialYearEndChanged\\\":0,\\\"RegisteredOfficeChanged\\\":0,\\\"LocationOfRecordsChanged\\\":0,\\\"DirectorsChanged\\\":0,\\\"CompanySecretaryChanged\\\":0,\\\"AuditorsChanged\\\":0,\\\"TotalAmount\\\":" + total + ",\\\"YearData\\\":[";
 
-            AR_BODY += "{\\\"ReferenceNumber\\\":" + ReferenceNumber + ",\\\"EnterpriseNumber\\\":\\\" " + ent.getEnt_no() + " \\\",\\\"Year\\\":" + ent.getAr_year() + ",\\\"Turnover\\\":" + ent.getTurnover() + ",\\\"Amount\\\":" + ent.getAr_amount() + ",\\\"PenaltyFee\\\":" + ent.getAr_penalty() + ",\\\"TotalAmount\\\": " + ent.getAr_total() + " ,\\\"Status\\\":null,\\\"StatusDate\\\":\\\" " + getAnnualReturnsDateNow() + "  \\\"}";
+            AR_BODY += "{\\\"ReferenceNumber\\\":" + ReferenceNumber + ",\\\"EnterpriseNumber\\\":\\\"" + ent.getEnt_no() + "\\\",\\\"Year\\\":" + ent.getAr_year() + ",\\\"Turnover\\\":" + ent.getTurnover() + ",\\\"Amount\\\":" + ent.getAr_amount() + ",\\\"PenaltyFee\\\":" + ent.getAr_penalty() + ",\\\"TotalAmount\\\": " + ent.getAr_total() + " ,\\\"Status\\\":null,\\\"StatusDate\\\":\\\" " + getAnnualReturnsDateNow() + "\\\"}";
 
             for (int i = 1; i < listCalculateARTran.size(); i++) {
                 ent = listCalculateARTran.get(i);//this can fail
 
                 // if(i == listCalculateARTran.size() - 1){
-                AR_BODY += ",{\\\"ReferenceNumber\\\":" + ReferenceNumber + ",\\\"EnterpriseNumber\\\":\\\" " + ent.getEnt_no() + " \\\",\\\"Year\\\":" + ent.getAr_year() + ",\\\"Turnover\\\":" + ent.getTurnover() + ",\\\"Amount\\\":" + ent.getAr_amount() + ",\\\"PenaltyFee\\\":" + ent.getAr_penalty() + ",\\\"TotalAmount\\\": " + ent.getAr_total() + " ,\\\"Status\\\":null,\\\"StatusDate\\\":\\\" " + getAnnualReturnsDateNow() + "  \\\"}";
+                AR_BODY += ",{\\\"ReferenceNumber\\\":" + ReferenceNumber + ",\\\"EnterpriseNumber\\\":\\\"" + ent.getEnt_no() + "\\\",\\\"Year\\\":" + ent.getAr_year() + ",\\\"Turnover\\\":" + ent.getTurnover() + ",\\\"Amount\\\":" + ent.getAr_amount() + ",\\\"PenaltyFee\\\":" + ent.getAr_penalty() + ",\\\"TotalAmount\\\":" + ent.getAr_total() + ",\\\"Status\\\":null,\\\"StatusDate\\\":\\\"" + getAnnualReturnsDateNow() + "\\\"}";
                 //}
                 //else{
                 //                           AR_BODY += "{\\\"ReferenceNumber\\\":" + ReferenceNumber + ",\\\"EnterpriseNumber\\\":\\\" " + ent.getEnt_no() + " \\\",\\\"Year\\\":" + ent.getAr_year() + ",\\\"Turnover\\\":" + ent.getTurnover() + ",\\\"Amount\\\":" + ent.getAr_amount() + ",\\\"PenaltyFee\\\":" + ent.getAr_penalty() + ",\\\"TotalAmount\\\": " + ent.getAr_total() + " ,\\\"Status\\\":null,\\\"StatusDate\\\":\\\" " + getAnnualReturnsDateNow() + "  \\\"},";
@@ -935,7 +1152,7 @@ public class UserWebServices {
                 JSONParser parser = new JSONParser();
                 parser.setIncludeNulls(true);
                 map = parser.parseJSON(convertStringtoInputStreamReader(data));
-               //Log.p("data=" + data, Log.DEBUG);
+                //Log.p("data=" + data, Log.DEBUG);
                 Log.p("cart=" + map, Log.DEBUG);
 
             } catch (IOException e) {
@@ -1092,7 +1309,7 @@ public class UserWebServices {
             }
         };
 
-        httpRequest.setUrl("http://testwebservices4.cipc.co.za/enterprise.asmx?wsdl");
+        httpRequest.setUrl(Constants.soapServicesEndPoint+"enterprise.asmx?wsdl");
         httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
         httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
         httpRequest.setPost(true);
@@ -1236,7 +1453,7 @@ public class UserWebServices {
             }
         };
 
-        httpRequest.setUrl("https://testwebservices4.cipc.co.za/customer.asmx?wsdl");
+        httpRequest.setUrl(Constants.soapServicesEndPoint+"customer.asmx?wsdl");
         httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
         httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
         httpRequest.setPost(true);
@@ -1398,7 +1615,7 @@ public class UserWebServices {
             }
         };
 
-        httpRequest.setUrl("https://testwebservices4.cipc.co.za/customer.asmx?wsdl");
+        httpRequest.setUrl(Constants.soapServicesEndPoint+"customer.asmx?wsdl");
         httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
         httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
         httpRequest.setPost(true);
@@ -1542,7 +1759,7 @@ public class UserWebServices {
             }
         };
 
-        httpRequest.setUrl("https://testwebservices4.cipc.co.za/enterprise.asmx?wsdl");
+        httpRequest.setUrl(Constants.soapServicesEndPoint+"enterprise.asmx?wsdl");
         httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
         httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
         httpRequest.setPost(true);
@@ -1689,7 +1906,7 @@ public class UserWebServices {
             }
         };
 
-        httpRequest.setUrl("https://testwebservices4.cipc.co.za/enterprise.asmx?wsdl");
+        httpRequest.setUrl(Constants.soapServicesEndPoint+"enterprise.asmx?wsdl");
         httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
         httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
         httpRequest.setPost(true);
@@ -1809,7 +2026,7 @@ public class UserWebServices {
             }
         };
 
-        httpRequest.setUrl("https://testwebservices4.cipc.co.za/customer.asmx?wsdl");
+        httpRequest.setUrl(Constants.soapServicesEndPoint+"customer.asmx?wsdl");
         httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
         httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
         httpRequest.setPost(true);
@@ -1902,7 +2119,7 @@ public class UserWebServices {
             }
         };
 
-        httpRequest.setUrl("https://testwebservices4.cipc.co.za/customer.asmx?wsdl");
+        httpRequest.setUrl(Constants.soapServicesEndPoint+"customer.asmx?wsdl");
         httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
         httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
         httpRequest.setPost(true);
@@ -2007,7 +2224,7 @@ public class UserWebServices {
             }
         };
 
-        httpRequest.setUrl("https://testwebservices4.cipc.co.za/customer.asmx?wsdl");
+        httpRequest.setUrl(Constants.soapServicesEndPoint+"customer.asmx?wsdl");
         httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
         httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
         httpRequest.setPost(true);
@@ -2261,7 +2478,7 @@ public class UserWebServices {
             }
         };
 
-        httpRequest.setUrl("https://testwebservices4.cipc.co.za/customer.asmx?wsdl");
+        httpRequest.setUrl(Constants.soapServicesEndPoint+"customer.asmx?wsdl");
         httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
         httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
         httpRequest.setPost(true);
@@ -2372,7 +2589,7 @@ public class UserWebServices {
             }
         };
 
-        httpRequest.setUrl("https://testwebservices4.cipc.co.za/customer.asmx?wsdl");
+        httpRequest.setUrl(Constants.soapServicesEndPoint+"customer.asmx?wsdl");
         httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
         httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
         httpRequest.setPost(true);
@@ -2482,7 +2699,7 @@ public class UserWebServices {
             }
         };
 
-        httpRequest.setUrl("https://testwebservices4.cipc.co.za/customer.asmx?wsdl");
+        httpRequest.setUrl(Constants.soapServicesEndPoint+"customer.asmx?wsdl");
         httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
         httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
         httpRequest.setPost(true);
@@ -2685,7 +2902,7 @@ public class UserWebServices {
             }
         };
 
-        httpRequest.setUrl("https://testwebservices4.cipc.co.za/customer.asmx?wsdl");
+        httpRequest.setUrl(Constants.soapServicesEndPoint+"customer.asmx?wsdl");
         httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
         httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
         httpRequest.setPost(true);
@@ -2762,7 +2979,7 @@ public class UserWebServices {
             }
         };
 
-        httpRequest.setUrl("https://testwebservices4.cipc.co.za/enterprise.asmx");
+        httpRequest.setUrl(Constants.soapServicesEndPoint+"enterprise.asmx");
         httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
         httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
         httpRequest.setPost(true);
@@ -2912,7 +3129,7 @@ public class UserWebServices {
 
         };
 
-        httpRequest.setUrl("https://testwebservices4.cipc.co.za/enterprise.asmx");
+        httpRequest.setUrl(Constants.soapServicesEndPoint+"enterprise.asmx");
 
         httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
 
@@ -3081,7 +3298,7 @@ public class UserWebServices {
 //            }
 //        };
 //
-//        httpRequest.setUrl("https://testwebservices4.cipc.co.za/enterprise.asmx");
+//        httpRequest.setUrl(Constants.soapServicesEndPoint+"enterprise.asmx");
 //        httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
 //        httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
 //        httpRequest.setPost(true);
@@ -3206,7 +3423,7 @@ public class UserWebServices {
             }
         };
 
-        httpRequest.setUrl("https://testwebservices4.cipc.co.za/enterprise.asmx");
+        httpRequest.setUrl(Constants.soapServicesEndPoint+"enterprise.asmx");
         httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
         httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
         httpRequest.setPost(true);
@@ -3316,7 +3533,7 @@ public class UserWebServices {
             }
         };
 
-        httpRequest.setUrl("https://testwebservices4.cipc.co.za/customer.asmx?wsdl");
+        httpRequest.setUrl(Constants.soapServicesEndPoint+"customer.asmx?wsdl");
         httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
         httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
         httpRequest.setPost(true);
@@ -3582,7 +3799,7 @@ public class UserWebServices {
             }
         };
 
-        httpRequest.setUrl("https://testwebservices4.cipc.co.za/customer.asmx");
+        httpRequest.setUrl(Constants.soapServicesEndPoint+"customer.asmx");
         httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
         httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
         httpRequest.setPost(true);
