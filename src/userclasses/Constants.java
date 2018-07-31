@@ -18,8 +18,8 @@ public class Constants {
     
     public static String soapServicesEndPoint = "https://testwebservices4.cipc.co.za/";
     public static String cartAPIEndPoint = "https://apitest.cipc.co.za/"; //apidev
-    public static String paymentEndPoint = "https://paymenttest.cipc.co.za/";
-    //public static String paymentEndPoint = "https://paymenttest.cipc.co.za:9443/";
+    //public static String paymentEndPoint = "https://paymenttest.cipc.co.za/";
+    public static String paymentEndPoint = "https://paymenttest.cipc.co.za:9443/";
     public static String cartAPIUsername = "CipcMobile";
     public static String cartAPIPassword = "q3CWRG!*WsW9mYae";
 

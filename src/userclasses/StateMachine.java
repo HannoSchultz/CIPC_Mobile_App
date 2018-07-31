@@ -1329,6 +1329,9 @@ public class StateMachine extends StateMachineBase {
             boolean arFlag = Dialog.show("Compliance Notice", message, "Accept", "I do not Accept");
 
             if (arFlag == true) {
+                
+                formProgress = new FormProgress(f);
+                
                 EnterpriseDetails enterpriseDetails = new EnterpriseDetails();
                 enterpriseDetails.setEmailAddress(ar2EmailAddress);
                 enterpriseDetails.setTelephoneCode(ar2TelCode);
@@ -1343,6 +1346,10 @@ public class StateMachine extends StateMachineBase {
                 isARStep1Passed = false;
                 isARStep2Passed = false;
                 isARStep3Passed = false;
+
+                if (formProgress != null) {
+                    formProgress.removeProgress();
+                }
 
                 Dialog.show("Success", "Annual Return (s) added to shopping cart", "Ok", null);
                 showCart(f);
@@ -2908,7 +2915,7 @@ public class StateMachine extends StateMachineBase {
                     //url = "https://www.dropbox.com/s/shsokeklu20gwc8/TermsandConditions_version_Final%203.0.pdf?dl=0";
                     FileSystemStorage fs = FileSystemStorage.getInstance();
                     String currentAppVersion = "app_version_" + Display.getInstance().getProperty("AppVersion", "Unknown");
-                    String fileName = fs.getAppHomePath() + "cipcterms"+currentAppVersion+".pdf";
+                    String fileName = fs.getAppHomePath() + "cipcterms" + currentAppVersion + ".pdf";
                     if (!fs.exists(fileName)) {
                         Util.downloadUrlToFile(url, fileName, true);
                     }
