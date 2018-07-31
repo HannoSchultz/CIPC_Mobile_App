@@ -209,10 +209,10 @@ public class StateMachine extends StateMachineBase {
 //            }
 //        });
         if (Display.getInstance().isSimulator()) {
-            
-            
 
             AGENT_CODE = "BLE076";
+
+            Log.p("isAlphaNumeric=" + isAlphaNumeric("abc3#$@de"), Log.DEBUG);
 
             //Log.p("dateString = " + dateString, Log.DEBUG);
             //Test Name Service
@@ -233,8 +233,8 @@ public class StateMachine extends StateMachineBase {
 //            System.out.println("enta=" + entNo);
 //            AGENT_CODE = "NEWLNE";
             UserWebServices u = new UserWebServices();
-            //u.update_terms("http://www.cipc.co.za/files/6914/1102/7352/Step_by_step_guide_-_Private_company_registration_v1_0.pdf");
-            u.get_terms(null);
+            //u.update_terms("http://139.162.223.194:8080/CIPC2/TermsandConditions_version_Final_3.0.pdf");
+            //u.get_terms(null);
 
 //            boolean isPending = u.pendingAnnualReturns(user, entNo);
 //            Log.p("isPending=" + isPending, Log.DEBUG);
@@ -489,6 +489,12 @@ public class StateMachine extends StateMachineBase {
                 msg += "Please submit at least one Name. ";
             }
 
+            if (isAlphaNumeric(name1) == false
+                    || isAlphaNumeric(name2) == false
+                    || isAlphaNumeric(name3) == false || isAlphaNumeric(name4) == false) {
+                msg += "Names may only contain alphabetical letters and numbers. ";
+            }
+
             if (msg.length() > 0) {
                 Dialog.show("Error", msg, "Ok", null);
             } else {
@@ -544,6 +550,12 @@ public class StateMachine extends StateMachineBase {
                 if (atleastOneNameAvailable == false) {
                     msg += "Please validate Names before clicking on Add to Cart and ensure you have at least one name that might be available. ";
                 }
+            }
+
+            if (isAlphaNumeric(name1) == false
+                    || isAlphaNumeric(name2) == false
+                    || isAlphaNumeric(name3) == false || isAlphaNumeric(name4) == false) {
+                msg += "Names may only contain alphabetical letters and numbers. ";
             }
 
             if (msg.length() > 0) {
@@ -1141,12 +1153,12 @@ public class StateMachine extends StateMachineBase {
             if (flag == true) {
                 message += "Please complete all fields. ";
             }
-            
-            if(isUrlValid(ar2WebAddress) == false){
+
+            if (isUrlValid(ar2WebAddress) == false) {
                 message += "Please enter a valid website URL.";
             }
-            
-            if(isEmailValid(ar2EmailAddress) == false){
+
+            if (isEmailValid(ar2EmailAddress) == false) {
                 message += "Please enter a valid email address.";
             }
 
@@ -2485,8 +2497,7 @@ public class StateMachine extends StateMachineBase {
             }
             if (txtStep2Email.getText().length() == 0) {
                 msg += "Please enter Email. ";
-            }
-            else if(isEmailValid(txtStep2Email.getText()) == false){
+            } else if (isEmailValid(txtStep2Email.getText()) == false) {
                 msg += "Please enter a valid Email Address. ";
             }
 
@@ -2894,9 +2905,10 @@ public class StateMachine extends StateMachineBase {
 
                     Storage.getInstance().writeObject(KEY_FOR_T_AND_CS, "Viewed on_" + getDateNowString());
                     //url = "https://drive.google.com/file/d/1XKmFRBcgEn0iY1vV18jRgpbgfXfQbQBy/view?usp=sharing";
-                    //String url = "http://www.cipc.co.za/files/6914/1102/7352/Step_by_step_guide_-_Private_company_registration_v1_0.pdf";
+                    //url = "https://www.dropbox.com/s/shsokeklu20gwc8/TermsandConditions_version_Final%203.0.pdf?dl=0";
                     FileSystemStorage fs = FileSystemStorage.getInstance();
-                    String fileName = fs.getAppHomePath() + "cipcterms.pdf";
+                    String currentAppVersion = "app_version_" + Display.getInstance().getProperty("AppVersion", "Unknown");
+                    String fileName = fs.getAppHomePath() + "cipcterms"+currentAppVersion+".pdf";
                     if (!fs.exists(fileName)) {
                         Util.downloadUrlToFile(url, fileName, true);
                     }
@@ -3082,6 +3094,25 @@ public class StateMachine extends StateMachineBase {
                     || (c >= 'a' && c <= 'z')) {
 
                 flag = true;
+
+            }
+        }
+
+        return flag;
+    }
+
+    public static boolean isAlphaNumeric(String letters) {
+        boolean flag = true;
+        if (letters == null || letters.length() == 0) {
+            return true;
+        }
+        for (int i = 0; i < letters.length(); i++) {
+            char c = letters.charAt(i);
+            if ((c >= 'A' && c <= 'Z') == false
+                    && (c >= 'a' && c <= 'z') == false
+                    && c >= '0' && c <= '9' == false) {
+
+                flag = false;
 
             }
         }
