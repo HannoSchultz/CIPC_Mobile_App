@@ -579,7 +579,7 @@ public class StateMachine extends StateMachineBase {
 
                     String ref = responseCall.getResponseMessage().substring(indexStart, indexEnd);
 
-                    Dialog.show("Success", "Dear Customer, Name Reservation Lodged successfully. Reference No: " + ref, "Ok", null);
+                    Dialog.show("Success", "Dear Customer, Name Reservation Lodged successfully. Payment Reference No: " + ref, "Ok", null);
 
                     //Dialog.show("Success", responseCall.getResponseMessage(), "Ok", null); do not remove
                     Log.p("Name reservation responseCall=" + responseCall, Log.DEBUG);
