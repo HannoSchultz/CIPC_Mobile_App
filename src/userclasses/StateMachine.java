@@ -276,11 +276,11 @@ public class StateMachine extends StateMachineBase {
 //
 ////
 //            User tmpUser = new User();
-//            tmpUser.setAgent_code("KD7788");
+//            tmpUser.setAgent_code("NEWLNE");
 //            UserWebServices uw = new UserWebServices();
 //            //uw.get_cust_MOBI_2(tmpUser);
 //            
-//            uw.update_app_version("0.17");
+//            uw.update_app_version("0.22");
 //            uw.get_app_version(tmpUser);
 //
 //            //step2
@@ -1081,6 +1081,8 @@ public class StateMachine extends StateMachineBase {
                         Log.p("code=" + enterpriseDetails.getEnt_status_code(), Log.DEBUG);
 
                         if (enterpriseDetails.getEnt_status_code().equals("03")
+                                 || enterpriseDetails.getEnt_status_code().equals("10")
+                                 || enterpriseDetails.getEnt_status_code().equals("28")
                                 || enterpriseDetails.getEnt_status_code().equals("38")) {
 
                             btnStep2Confirm.setVisible(true);
@@ -1329,9 +1331,9 @@ public class StateMachine extends StateMachineBase {
             boolean arFlag = Dialog.show("Compliance Notice", message, "Accept", "I do not Accept");
 
             if (arFlag == true) {
-                
+
                 formProgress = new FormProgress(f);
-                
+
                 EnterpriseDetails enterpriseDetails = new EnterpriseDetails();
                 enterpriseDetails.setEmailAddress(ar2EmailAddress);
                 enterpriseDetails.setTelephoneCode(ar2TelCode);
@@ -1496,13 +1498,16 @@ public class StateMachine extends StateMachineBase {
 
         String URL = Constants.paymentEndPoint + "Pay.aspx?custCode=" + encodedCustCode + "&custId=" + encodedCustCode + "&appId=6"
                 + "&width=" + width + "&height=" + height;
+
+        /*
+              String URL = "https://paymenttest.cipc.co.za:9443/MobileACSRedirect.aspx?custCode=" + encodedCustCode + "&custId=" + encodedCustCode + "&appId=6"
+               + "&width=" + width + "&height=" + height;*/
         Log.p(URL, Log.DEBUG);
 
         hasGonePastACS = false;
 
-        String directURL = Constants.paymentEndPoint + "ACSRedirect.aspx";
-        String errorURL = Constants.paymentEndPoint + "PaymentError.aspx?error=1EwiapDpld0GrXoBVjnhEC52%2fRVCNKIi9Xsi%2fs9YpzA%3d&ref=T9122961860";
-
+        //String directURL = Constants.paymentEndPoint + "ACSRedirect.aspx";
+        //String errorURL = Constants.paymentEndPoint + "PaymentError.aspx?error=1EwiapDpld0GrXoBVjnhEC52%2fRVCNKIi9Xsi%2fs9YpzA%3d&ref=T9122961860";
         browser.setURL(URL);
         browser.setScrollableX(false);
         browser.setScrollableY(false);
@@ -2910,16 +2915,30 @@ public class StateMachine extends StateMachineBase {
                     UserWebServices u = new UserWebServices();
                     String url = u.get_terms(null);
 
-                    Storage.getInstance().writeObject(KEY_FOR_T_AND_CS, "Viewed on_" + getDateNowString());
                     //url = "https://drive.google.com/file/d/1XKmFRBcgEn0iY1vV18jRgpbgfXfQbQBy/view?usp=sharing";
                     //url = "https://www.dropbox.com/s/shsokeklu20gwc8/TermsandConditions_version_Final%203.0.pdf?dl=0";
                     FileSystemStorage fs = FileSystemStorage.getInstance();
                     String currentAppVersion = "app_version_" + Display.getInstance().getProperty("AppVersion", "Unknown");
                     String fileName = fs.getAppHomePath() + "cipcterms" + currentAppVersion + ".pdf";
                     if (!fs.exists(fileName)) {
-                        Util.downloadUrlToFile(url, fileName, true);
+                        try {
+                            Util.downloadUrlToFile(url, fileName, true);
+
+                            if (fs.exists(fileName)) {
+                                Display.getInstance().execute(fileName);
+                                Storage.getInstance().writeObject(KEY_FOR_T_AND_CS, "Viewed on_" + getDateNowString());
+
+                            } else {
+                                Dialog.show("Error", "File is currently not available. Please contact CIPC.", "Ok", null);
+                            }
+                        } catch (Exception e) {
+                            Dialog.show("Error", "File is currently not available. Please contact CIPC.", "Ok", null);
+                            //Log.e(e);
+
+                        }
+                    } else {
+                        Display.getInstance().execute(fileName);
                     }
-                    Display.getInstance().execute(fileName);
 
                 }
 
