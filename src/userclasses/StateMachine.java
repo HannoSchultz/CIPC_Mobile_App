@@ -579,7 +579,7 @@ public class StateMachine extends StateMachineBase {
 
                     String ref = responseCall.getResponseMessage().substring(indexStart, indexEnd);
 
-                    Dialog.show("Success", "Dear Customer, Name Reservation Lodged successfully. Payment Reference No: " + ref, "Ok", null);
+                    Dialog.show("Success", "Dear Customer, Name Reservation Lodged successfully. Payment Reference No: " + ref +".", "Ok", null);
 
                     //Dialog.show("Success", responseCall.getResponseMessage(), "Ok", null); do not remove
                     Log.p("Name reservation responseCall=" + responseCall, Log.DEBUG);
@@ -1014,8 +1014,8 @@ public class StateMachine extends StateMachineBase {
             txtARStep2TelNo.setText("3598094");
             txtARStep2CellNumber.setText("0761111111");
             txtARStep2WebAddress.setText("www.mfactory.mobi");
-            txtARStep2BusinessDescription.setText("1111");
-            txtARStep2PrincipalPlace.setText("1111");
+            txtARStep2BusinessDescription.setText("1111a");
+            txtARStep2PrincipalPlace.setText("1111a");
         }
 
         btnStep1RetrieveDetails.addActionListener(new ActionListener() {
@@ -1027,7 +1027,7 @@ public class StateMachine extends StateMachineBase {
                 if (txtStep1a.getText().length() != 4
                         || txtStep1b.getText().length() != 6
                         || txtStep1c.getText().length() != 2) {
-                    msg += "Please enter correct Enterprise Number.";
+                    msg += "Please enter correct Enterprise Number. ";
                 }
 
                 if (msg.length() > 0) {
@@ -1054,8 +1054,8 @@ public class StateMachine extends StateMachineBase {
                         if (formProgress != null) {
                             formProgress.removeProgress();
                         }
-                        Dialog.show("Error", "There is already a Annual Return in the Cart for enterprise.\n\n"
-                                + "If this is incorrect please remove from the cart and try again.", "Ok", null);
+                        Dialog.show("Error", "There is already an Annual Return in the Cart for Enterprise.\n\n"
+                                + "If this is incorrect please remove from the Cart and try again. ", "Ok", null);
                         return; //TODO better way to exit
                     }
 
@@ -1100,7 +1100,7 @@ public class StateMachine extends StateMachineBase {
                         }
 
                     } else {
-                        Dialog.show("Error", "Could not obtain enterprise details. Please ensure that your Enterprise number is valid", "Ok", null);
+                        Dialog.show("Error", "Could not obtain enterprise details. Please ensure that your Enterprise number is valid. ", "Ok", null);
                     }
 
                 }
@@ -1157,11 +1157,11 @@ public class StateMachine extends StateMachineBase {
             }
 
             if (isUrlValid(ar2WebAddress) == false) {
-                message += "Please enter a valid website URL.";
+                message += "Please enter a valid website URL. ";
             }
 
             if (isEmailValid(ar2EmailAddress) == false) {
-                message += "Please enter a valid email address.";
+                message += "Please enter a valid email address. ";
             }
 
             if (isAlpha(ar2BusinessDescription) == false && isAlpha(ar2PlaceOfBusiness) == false) {
@@ -1212,7 +1212,7 @@ public class StateMachine extends StateMachineBase {
                 btnStep3CalcOutAmount.setEnabled(true);
 
             } else {
-                Dialog.show("No Annual Returns", "The Enterprise " + ENT_NUMBER + " has no pending Annual Returns.", "Ok", null);
+                Dialog.show("No Annual Returns", "The Enterprise " + ENT_NUMBER + " has no pending Annual Returns. ", "Ok", null);
             }
 
         });
@@ -1320,11 +1320,11 @@ public class StateMachine extends StateMachineBase {
             String message = "In terms of Section 33 of the Companies Act 71 of 2008, and regulations 28, 29 and 30 of the Companies Regulations of 2011, a set of criteria is defined for entities to submit Annual Financial Statements (AFSs) together with Annual Returns (ARs). Alternatively, if the set of criteria is not met, entities must submit Financial Accountability Supplements (FASs) together with Annual Returns, as prescribed by Regulation 33 of the Companies Act.\n"
                     + "\n"
                     + " \n"
-                    + "\n"
+                
                     + "By law you are therefore required to either submit AFSs via XBRL or FASs. By clicking \"Accept\" below, you declare that you understand these requirements of the Companies Act. Failure to file either an AFS or FAS will attract an investigation process which can lead to an administrative fine or prosecution. See Section 168(2) and 214 of the Companies Act.\n"
                     + "\n"
                     + " \n"
-                    + "\n"
+                  
                     + "Please note that the requirements to submit either FASs or AFSs together with ARs as referenced above don\'t apply to external companies.\n\n\n"
                     + "Please go to the CIPC website after completing this AR payment for more details on both AFS and FAS.";
 
@@ -1353,7 +1353,7 @@ public class StateMachine extends StateMachineBase {
                     formProgress.removeProgress();
                 }
 
-                Dialog.show("Success", "Annual Return (s) added to shopping cart", "Ok", null);
+                Dialog.show("Success", "Annual Return (s) added to Shopping Cart. ", "Ok", null);
                 showCart(f);
             } else {
                 //do nothing
@@ -1578,7 +1578,7 @@ public class StateMachine extends StateMachineBase {
                             isCartStep3 = false;
                             isCartStep4 = false;
                             showDashboard(f);
-                            Dialog.show("Success", "Payment processed. Transaction Number " + trans, "Ok", null);
+                            Dialog.show("Success", "Payment processed. Transaction Number " + trans + ". ", "Ok", null);
 
                         }
                     });
@@ -2166,11 +2166,11 @@ public class StateMachine extends StateMachineBase {
         String msg = "";
 
         if (isRegStep1Passed == false) {
-            msg = "Please complete step 1 first.";
+            msg = "Please complete step 1 first. ";
         } else if (isRegStep2Passed == false) {
-            msg = "Please complete step 2 first.";
+            msg = "Please complete step 2 first. ";
         } else if (isRegStep3Passed == false) {
-            msg = "Please complete step 3 first.";
+            msg = "Please complete step 3 first. ";
         }
 
         Dialog.show("Error", msg, "Ok", null);
@@ -2182,11 +2182,11 @@ public class StateMachine extends StateMachineBase {
         String msg = "";
 
         if (isARStep1Passed == false) {
-            msg = "Please complete step 1 first.";
+            msg = "Please complete step 1 first. ";
         } else if (isARStep2Passed == false) {
-            msg = "Please complete step 2 first.";
+            msg = "Please complete step 2 first. ";
         } else if (isARStep3Passed == false) {
-            msg = "Please complete step 3 first.";
+            msg = "Please complete step 3 first. ";
         }
 
         Dialog.show("Error", msg, "Ok", null);
@@ -2408,7 +2408,7 @@ public class StateMachine extends StateMachineBase {
         btnStep1NoID.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
-                Dialog.show("ID Number", "The CIPC App is only available to users that have valid South African IDs", "Ok", null);
+                Dialog.show("ID Number", "The CIPC App is only available to users that have valid South African IDs. ", "Ok", null);
             }
         });
 
@@ -2519,7 +2519,7 @@ public class StateMachine extends StateMachineBase {
 
             if (txtStep2Email.getText()
                     .indexOf(txtStep2EmailRetype.getText()) < 0) {
-                msg += "Emails are not the same.";
+                msg += "Emails are not the same. ";
 
             }
 
@@ -2958,10 +2958,10 @@ public class StateMachine extends StateMachineBase {
                         Storage.getInstance().writeObject(KEY_FOR_T_AND_CS_Accepted, "Accepted_on_" + getDateNowString());
                         d.dispose();
                     } else if (hasViewedTaCs == null) {
-                        Dialog.show("Notice", "Please view CIPC\'s Terms and Conditions.", "Ok", null);
+                        Dialog.show("Notice", "Please view CIPC\'s Terms and Conditions. ", "Ok", null);
 
                     } else if (!chkTerms.isSelected()) {
-                        Dialog.show("Notice", "Please accept CIPC\'s Terms and Conditions.", "Ok", null);
+                        Dialog.show("Notice", "Please accept CIPC\'s Terms and Conditions. ", "Ok", null);
                     }
                 }
             }
