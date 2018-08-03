@@ -11,7 +11,8 @@ package userclasses;
  */
 public class Constants {
 
-    public static String soapServicesEndPoint = "https://testwebservices4.cipc.co.za/";
+    //public static String soapServicesEndPoint = "https://testwebservices4.cipc.co.za/";
+    public static String soapServicesEndPoint = "https://testwebservices1.cipc.co.za/";
     public static String sUserName = "wBAA7LAkWIs=";
     public static String sPassword = "6EGQAUzYJlhvffhZ+gUFfg==";
     public static String sBankID = "wBAA7LAkWIs=";

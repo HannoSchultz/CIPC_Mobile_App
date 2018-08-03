@@ -41,6 +41,7 @@ import userclasses.Constants;
 import userclasses.EnterpriseDetails;
 import userclasses.NameReservation;
 import userclasses.NameSearchObject;
+import za.co.cipc.pojos.AnnualReturns;
 import za.co.cipc.pojos.AuthObject;
 import za.co.cipc.pojos.Country;
 import za.co.cipc.pojos.FormattedCode;
@@ -54,6 +55,168 @@ public class UserWebServices {
 
     String AR_BODY;
 
+    public AnnualReturns get_ar_info_mobi(String customerCode, String company) {
+        AnnualReturns annualReturns = null;
+
+        final String SOAP_BODY
+                = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cipc=\"CIPC_WEB_SERVICES\">\n"
+                + "\n"
+                + "   <soapenv:Header/>\n"
+                + "\n"
+                + "   <soapenv:Body>\n"
+                + "\n"
+                + "      <cipc:get_ar_info_mobi>\n"
+                + "\n"
+                + "         <!--Optional:-->\n"
+                + "\n"
+                + "         <cipc:sUserName>"+Constants.sUserName+"</cipc:sUserName>\n"
+                + "\n"
+                + "         <!--Optional:-->\n"
+                + "\n"
+                + "         <cipc:sPassword>"+Constants.sPassword+"</cipc:sPassword>\n"
+                + "\n"
+                + "         <!--Optional:-->\n"
+                + "\n"
+                + "         <cipc:sBankID>"+Constants.sBankID+"</cipc:sBankID>\n"
+                + "\n"
+                + "         <!--Optional:-->\n"
+                + "\n"
+                + "         <cipc:sCust_Code>"+customerCode+"</cipc:sCust_Code>\n"
+                + "\n"
+                + "         <!--Optional:-->\n"
+                + "\n"
+                + "         <cipc:entNo>"+company+"</cipc:entNo>\n"
+                + "\n"
+                + "      </cipc:get_ar_info_mobi>\n"
+                + "\n"
+                + "   </soapenv:Body>\n"
+                + "\n"
+                + "</soapenv:Envelope>";
+
+        ConnectionRequest httpRequest = new ConnectionRequest() {
+            Element h;
+
+            @Override
+            protected void buildRequestBody(OutputStream os) throws IOException {
+                super.buildRequestBody(os);
+                os.write(SOAP_BODY.getBytes("utf-8"));
+
+            }
+
+            protected void postResponse() {
+
+                super.postResponse();
+            }
+
+            protected void readResponse(InputStream input) throws IOException {
+                super.readResponse(input);
+
+            }
+
+            @Override
+            protected void handleIOException(IOException err) {
+                super.handleIOException(err); //To change body of generated methods, choose Tools | Templates.
+                Log.p("handleIOException: " + err.toString());
+                Dialog.show("Connection Error", "Error connecting to CIPC.", "Ok", null);
+
+//                if (Connectivity.isConnected()) {
+//                    Dialog.show("isConnected", "", "Ok", null);
+//
+//                } else {
+//                    //no connection
+//                    Dialog.show("no connection", "", "Ok", null);
+//
+//                }
+//                Dialog.show("44444444444no connection", "", "Ok", null);
+            }
+
+            @Override
+            protected void handleRuntimeException(RuntimeException err) {
+                super.handleRuntimeException(err); //To change body of generated methods, choose Tools | Templates.
+                Log.p("Exception: " + err.toString());
+                Dialog.show("handleRuntimeException", "", "Ok", null);
+
+            }
+
+            @Override
+            protected void handleException(Exception err) {
+                Log.p("Exception: " + err.toString());
+                //Dialog.show("No Internet", "There is no internet connection. Please switch your connection on.", "Okay", null);
+
+            }
+        };
+
+        httpRequest.setUrl(Constants.soapServicesEndPoint + "enterprise.asmx?wsdl");
+        httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
+        httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
+        httpRequest.setPost(true);
+
+//        InfiniteProgress prog = new InfiniteProgress();
+//        Dialog dlg = prog.showInifiniteBlocking();
+//        httpRequest.setDisposeOnCompletion(dlg);
+        NetworkManager.getInstance().addToQueueAndWait(httpRequest);
+        if (httpRequest.getResponseData() != null) {
+            String data = new String(httpRequest.getResponseData());//TODO do null check
+
+            try {
+
+                Result result = Result.fromContent(data, Result.XML);
+                annualReturns = new AnnualReturns();
+
+                Log.p("get_ar_info_mobi: " + result, Log.DEBUG);
+ 
+                annualReturns.setBus_desc(result.getAsString("//bus_desc"));
+                annualReturns.setEnt_cell(result.getAsString("//ent_cell"));
+                annualReturns.setEnt_email(result.getAsString("//ent_email"));
+                annualReturns.setEnt_tel_code(result.getAsString("//ent_tel_code"));
+                annualReturns.setEnt_tel_no(result.getAsString("//ent_tel_no"));
+                annualReturns.setEnt_website(result.getAsString("//ent_website"));
+                annualReturns.setPrinc_bus_place(result.getAsString("//princ_bus_place"));
+             
+//                responseUser.setPassword(result.getAsString("//password"));
+//                responseUser.setAgent_name(result.getAsString("//agent_name"));
+//
+//                responseUser.setTel_code(result.getAsString("//tel_code"));
+//                responseUser.setTel_no(result.getAsString("//tel_no"));
+//
+//                responseUser.setFax_code(result.getAsString("//fax_code"));
+//                responseUser.setFax_no(result.getAsString("//fax_no"));
+//
+//                responseUser.setEmail(result.getAsString("//email"));
+//
+//                responseUser.setStatus(result.getAsString("//status"));
+//
+//                responseUser.setStatus_desc(result.getAsString("//status_desc"));
+//                responseUser.setCell_no(result.getAsString("//cell_no"));
+                //Log.p("get_countries: " + result, Log.DEBUG);
+//                XMLParser parser = new XMLParser();
+//                parser.setCaseSensitive(true);
+//                Element element = parser.parse(convertStringtoInputStreamReader(result.getAsString("//dataset")));
+//
+//                for (int i = 0; i < element.getNumChildren(); i++) {
+//                    Element child = element.getChildAt(i);
+                // if (child.getTextChildren(null, true).size() == 9) {
+//                    String country = RSM(((Element) child.getTextChildren(null, true).get(0)).toString());
+//                    String countr_code = RSM(((Element) child.getTextChildren(null, true).get(1)).toString());
+//
+//                    //Log.p("country=" + country + ", countr_code=" + countr_code, Log.DEBUG);
+//                    Country c = new Country();
+//                    c.setCountr_code(countr_code);
+//                    c.setCountry(country);
+//                    list.add(c);
+                // }
+                //responseUser.setAgent_code(user.getAgent_code());
+                //responseUser.setPassword(result.getAsString("//get_cust_mobiresult"));
+
+            } catch (IllegalArgumentException e) {
+                Log.p(e.toString());
+            }
+        }
+
+        return annualReturns;
+
+    }//end login
+
     public void insert_terms(String link) {
 
         final String SOAP_BODY = "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:cipc=\"CIPC_WEB_SERVICES\">\n"
@@ -64,11 +227,11 @@ public class UserWebServices {
                 + "\n"
                 + "      <cipc:insert_terms>\n"
                 + "\n"
-                + "        <cipc:sUserName>"+Constants.sUserName+"</cipc:sUserName>\n"
+                + "        <cipc:sUserName>" + Constants.sUserName + "</cipc:sUserName>\n"
                 + "\n"
-                + "         <cipc:sPassword>"+Constants.sPassword+"</cipc:sPassword>\n"
+                + "         <cipc:sPassword>" + Constants.sPassword + "</cipc:sPassword>\n"
                 + "\n"
-                + "         <cipc:sBankID>"+Constants.sBankID+"</cipc:sBankID>\n"
+                + "         <cipc:sBankID>" + Constants.sBankID + "</cipc:sBankID>\n"
                 + "\n"
                 + "         <cipc:term_desc>" + link + "</cipc:term_desc>\n"
                 + "\n"
@@ -106,7 +269,7 @@ public class UserWebServices {
             }
         };
 
-        httpRequest.setUrl(Constants.soapServicesEndPoint+"enterprise.asmx");
+        httpRequest.setUrl(Constants.soapServicesEndPoint + "enterprise.asmx");
         httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
         httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
         httpRequest.setPost(true);
@@ -129,11 +292,11 @@ public class UserWebServices {
                 + "\n"
                 + "      <cipc:get_terms>\n"
                 + "\n"
-                + "        <cipc:sUserName>"+Constants.sUserName+"</cipc:sUserName>\n"
+                + "        <cipc:sUserName>" + Constants.sUserName + "</cipc:sUserName>\n"
                 + "\n"
-                + "         <cipc:sPassword>"+Constants.sPassword+"</cipc:sPassword>\n"
+                + "         <cipc:sPassword>" + Constants.sPassword + "</cipc:sPassword>\n"
                 + "\n"
-                + "         <cipc:sBankID>"+Constants.sBankID+"</cipc:sBankID>\n"
+                + "         <cipc:sBankID>" + Constants.sBankID + "</cipc:sBankID>\n"
                 + "\n"
                 + "         <cipc:sCust_Code></cipc:sCust_Code>\n"
                 + "\n"
@@ -171,7 +334,7 @@ public class UserWebServices {
             }
         };
 
-        httpRequest.setUrl(Constants.soapServicesEndPoint+"enterprise.asmx");
+        httpRequest.setUrl(Constants.soapServicesEndPoint + "enterprise.asmx");
         httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
         httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
         httpRequest.setPost(true);
@@ -210,11 +373,11 @@ public class UserWebServices {
                 + "\n"
                 + "      <cipc:update_terms>\n"
                 + "\n"
-                + "       <cipc:sUserName>"+Constants.sUserName+"</cipc:sUserName>\n"
+                + "       <cipc:sUserName>" + Constants.sUserName + "</cipc:sUserName>\n"
                 + "\n"
-                + "         <cipc:sPassword>"+Constants.sPassword+"</cipc:sPassword>\n"
+                + "         <cipc:sPassword>" + Constants.sPassword + "</cipc:sPassword>\n"
                 + "\n"
-                + "         <cipc:sBankID>"+Constants.sBankID+"</cipc:sBankID>\n"
+                + "         <cipc:sBankID>" + Constants.sBankID + "</cipc:sBankID>\n"
                 + "\n"
                 + "         <cipc:term_desc>" + link + "</cipc:term_desc>\n"
                 + "\n"
@@ -254,7 +417,7 @@ public class UserWebServices {
             }
         };
 
-        httpRequest.setUrl(Constants.soapServicesEndPoint+"enterprise.asmx");
+        httpRequest.setUrl(Constants.soapServicesEndPoint + "enterprise.asmx");
         httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
         httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
         httpRequest.setPost(true);
@@ -321,7 +484,7 @@ public class UserWebServices {
             }
         };
 
-        httpRequest.setUrl(Constants.soapServicesEndPoint+"enterprise.asmx");
+        httpRequest.setUrl(Constants.soapServicesEndPoint + "enterprise.asmx");
         httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
         httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
         httpRequest.setPost(true);
@@ -375,11 +538,11 @@ public class UserWebServices {
                 + "\n"
                 + "         <!--Optional:-->\n"
                 + "\n"
-                + "          <cipc:sUserName>"+Constants.sUserName+"</cipc:sUserName>\n"
+                + "          <cipc:sUserName>" + Constants.sUserName + "</cipc:sUserName>\n"
                 + "\n"
-                + "         <cipc:sPassword>"+Constants.sPassword+"</cipc:sPassword>\n"
+                + "         <cipc:sPassword>" + Constants.sPassword + "</cipc:sPassword>\n"
                 + "\n"
-                + "         <cipc:sBankID>"+Constants.sBankID+"</cipc:sBankID>\n"
+                + "         <cipc:sBankID>" + Constants.sBankID + "</cipc:sBankID>\n"
                 + "\n"
                 + "         <cipc:Sent_Type></cipc:Sent_Type>\n"
                 + "\n"
@@ -417,7 +580,7 @@ public class UserWebServices {
             }
         };
 
-        httpRequest.setUrl(Constants.soapServicesEndPoint+"enterprise.asmx");
+        httpRequest.setUrl(Constants.soapServicesEndPoint + "enterprise.asmx");
         httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
         httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
         httpRequest.setPost(true);
@@ -467,9 +630,9 @@ public class UserWebServices {
                 + "   <soapenv:Header/>\n"
                 + "   <soapenv:Body>\n"
                 + "      <cipc:GetEnterpriseDetails_ent_no_mobi>\n"
-                + "       <cipc:sUserName>"+Constants.sUserName+"</cipc:sUserName>\n"
-                + "         <cipc:sPassword>"+Constants.sPassword+"</cipc:sPassword>\n"
-                + "         <cipc:sBankID>"+Constants.sBankID+"</cipc:sBankID>\n"
+                + "       <cipc:sUserName>" + Constants.sUserName + "</cipc:sUserName>\n"
+                + "         <cipc:sPassword>" + Constants.sPassword + "</cipc:sPassword>\n"
+                + "         <cipc:sBankID>" + Constants.sBankID + "</cipc:sBankID>\n"
                 + "         <cipc:Sent_no>" + entNumber + "</cipc:Sent_no>\n"
                 + "      </cipc:GetEnterpriseDetails_ent_no_mobi>\n"
                 + "   </soapenv:Body>\n"
@@ -503,7 +666,7 @@ public class UserWebServices {
             }
         };
 
-        httpRequest.setUrl(Constants.soapServicesEndPoint+"enterprise.asmx");
+        httpRequest.setUrl(Constants.soapServicesEndPoint + "enterprise.asmx");
         httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
         httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
         httpRequest.setPost(true);
@@ -568,9 +731,9 @@ public class UserWebServices {
                 + "   <soapenv:Header/>\n"
                 + "   <soapenv:Body>\n"
                 + "      <cipc:GetAREntTranDetails>\n"
-                + "<cipc:sUserName>"+Constants.sUserName+"</cipc:sUserName>\n"
-                + "         <cipc:sPassword>"+Constants.sPassword+"</cipc:sPassword>\n"
-                + "         <cipc:sBankID>"+Constants.sBankID+"</cipc:sBankID>\n"
+                + "<cipc:sUserName>" + Constants.sUserName + "</cipc:sUserName>\n"
+                + "         <cipc:sPassword>" + Constants.sPassword + "</cipc:sPassword>\n"
+                + "         <cipc:sBankID>" + Constants.sBankID + "</cipc:sBankID>\n"
                 + "         <cipc:sEntNo>" + enterpriseNumber + "</cipc:sEntNo>\n"
                 + "         <!--Optional:-->\n"
                 + "         <cipc:sCust_Code>" + agentCode + "</cipc:sCust_Code>\n"
@@ -607,7 +770,7 @@ public class UserWebServices {
             }
         };
 
-        httpRequest.setUrl(Constants.soapServicesEndPoint+"enterprise.asmx");
+        httpRequest.setUrl(Constants.soapServicesEndPoint + "enterprise.asmx");
         httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
         httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
         httpRequest.setPost(true);
@@ -685,9 +848,9 @@ public class UserWebServices {
                 + "   <soapenv:Header/>\n"
                 + "   <soapenv:Body>\n"
                 + "      <cipc:CalculateARTranData>\n"
-                + "   <cipc:sUserName>"+Constants.sUserName+"</cipc:sUserName>\n"
-                + "         <cipc:sPassword>"+Constants.sPassword+"</cipc:sPassword>\n"
-                + "         <cipc:sBankID>"+Constants.sBankID+"</cipc:sBankID>\n"
+                + "   <cipc:sUserName>" + Constants.sUserName + "</cipc:sUserName>\n"
+                + "         <cipc:sPassword>" + Constants.sPassword + "</cipc:sPassword>\n"
+                + "         <cipc:sBankID>" + Constants.sBankID + "</cipc:sBankID>\n"
                 + "         <!--Optional:-->\n"
                 + "         <cipc:ds>\n"
                 + "            <xs:schema id=\"NewDataSet\" xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" xmlns:msdata=\"urn:schemas-microsoft-com:xml-msdata\">\n"
@@ -773,7 +936,7 @@ public class UserWebServices {
             }
         };
 
-        httpRequest.setUrl(Constants.soapServicesEndPoint+"enterprise.asmx");
+        httpRequest.setUrl(Constants.soapServicesEndPoint + "enterprise.asmx");
         httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
         httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
         httpRequest.setPost(true);
@@ -1272,9 +1435,9 @@ public class UserWebServices {
                 + "   <soapenv:Header/>\n"
                 + "   <soapenv:Body>\n"
                 + "      <cipc:get_otp_info_MOBI>\n"
-                + "           <cipc:sUserName>"+Constants.sUserName+"</cipc:sUserName>\n"
-                + "         <cipc:sPassword>"+Constants.sPassword+"</cipc:sPassword>\n"
-                + "         <cipc:sBankID>"+Constants.sBankID+"</cipc:sBankID>\n"
+                + "           <cipc:sUserName>" + Constants.sUserName + "</cipc:sUserName>\n"
+                + "         <cipc:sPassword>" + Constants.sPassword + "</cipc:sPassword>\n"
+                + "         <cipc:sBankID>" + Constants.sBankID + "</cipc:sBankID>\n"
                 + "         <cipc:Sent_no>K2016186748</cipc:Sent_no>\n"
                 + "         <cipc:track_no>934388861</cipc:track_no>\n"
                 + "      </cipc:get_otp_info_MOBI>\n"
@@ -1309,7 +1472,7 @@ public class UserWebServices {
             }
         };
 
-        httpRequest.setUrl(Constants.soapServicesEndPoint+"enterprise.asmx?wsdl");
+        httpRequest.setUrl(Constants.soapServicesEndPoint + "enterprise.asmx?wsdl");
         httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
         httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
         httpRequest.setPost(true);
@@ -1453,7 +1616,7 @@ public class UserWebServices {
             }
         };
 
-        httpRequest.setUrl(Constants.soapServicesEndPoint+"customer.asmx?wsdl");
+        httpRequest.setUrl(Constants.soapServicesEndPoint + "customer.asmx?wsdl");
         httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
         httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
         httpRequest.setPost(true);
@@ -1532,11 +1695,11 @@ public class UserWebServices {
                 + "\n"
                 + "         <!--Optional:-->\n"
                 + "\n"
-                + "                <cipc:sUserName>"+Constants.sUserName+"</cipc:sUserName>\n"
+                + "                <cipc:sUserName>" + Constants.sUserName + "</cipc:sUserName>\n"
                 + "\n"
-                + "         <cipc:sPassword>"+Constants.sPassword+"</cipc:sPassword>\n"
+                + "         <cipc:sPassword>" + Constants.sPassword + "</cipc:sPassword>\n"
                 + "\n"
-                + "         <cipc:sBankID>"+Constants.sBankID+"</cipc:sBankID>\n"
+                + "         <cipc:sBankID>" + Constants.sBankID + "</cipc:sBankID>\n"
                 + "\n"
                 + "         <!--Optional:-->\n"
                 + "\n"
@@ -1615,7 +1778,7 @@ public class UserWebServices {
             }
         };
 
-        httpRequest.setUrl(Constants.soapServicesEndPoint+"customer.asmx?wsdl");
+        httpRequest.setUrl(Constants.soapServicesEndPoint + "customer.asmx?wsdl");
         httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
         httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
         httpRequest.setPost(true);
@@ -1692,11 +1855,11 @@ public class UserWebServices {
                 + "\n"
                 + "      <cipc:get_app_version>\n"
                 + "\n"
-                + "            <cipc:sUserName>"+Constants.sUserName+"</cipc:sUserName>\n"
+                + "            <cipc:sUserName>" + Constants.sUserName + "</cipc:sUserName>\n"
                 + "\n"
-                + "         <cipc:sPassword>"+Constants.sPassword+"</cipc:sPassword>\n"
+                + "         <cipc:sPassword>" + Constants.sPassword + "</cipc:sPassword>\n"
                 + "\n"
-                + "         <cipc:sBankID>"+Constants.sBankID+"</cipc:sBankID>\n"
+                + "         <cipc:sBankID>" + Constants.sBankID + "</cipc:sBankID>\n"
                 + "\n"
                 + "         <cipc:sCust_Code>INKE01</cipc:sCust_Code>\n"
                 + "\n"
@@ -1759,7 +1922,7 @@ public class UserWebServices {
             }
         };
 
-        httpRequest.setUrl(Constants.soapServicesEndPoint+"enterprise.asmx?wsdl");
+        httpRequest.setUrl(Constants.soapServicesEndPoint + "enterprise.asmx?wsdl");
         httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
         httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
         httpRequest.setPost(true);
@@ -1837,11 +2000,11 @@ public class UserWebServices {
                 + "\n"
                 + "      <cipc:update_app_version>\n"
                 + "\n"
-                + "        <cipc:sUserName>"+Constants.sUserName+"</cipc:sUserName>\n"
+                + "        <cipc:sUserName>" + Constants.sUserName + "</cipc:sUserName>\n"
                 + "\n"
-                + "         <cipc:sPassword>"+Constants.sPassword+"</cipc:sPassword>\n"
+                + "         <cipc:sPassword>" + Constants.sPassword + "</cipc:sPassword>\n"
                 + "\n"
-                + "         <cipc:sBankID>"+Constants.sBankID+"</cipc:sBankID>\n"
+                + "         <cipc:sBankID>" + Constants.sBankID + "</cipc:sBankID>\n"
                 + "\n"
                 + "         <cipc:ver> " + newVersion + "  </cipc:ver>\n"
                 + "\n"
@@ -1906,7 +2069,7 @@ public class UserWebServices {
             }
         };
 
-        httpRequest.setUrl(Constants.soapServicesEndPoint+"enterprise.asmx?wsdl");
+        httpRequest.setUrl(Constants.soapServicesEndPoint + "enterprise.asmx?wsdl");
         httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
         httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
         httpRequest.setPost(true);
@@ -1984,11 +2147,11 @@ public class UserWebServices {
                 + "\n"
                 + "      <cipc:forget_password_MOBI>\n"
                 + "\n"
-                + "         <cipc:sUserName>"+Constants.sUserName+"</cipc:sUserName>\n"
+                + "         <cipc:sUserName>" + Constants.sUserName + "</cipc:sUserName>\n"
                 + "\n"
-                + "          <cipc:sPassword>"+Constants.sPassword+"</cipc:sPassword>\n"
+                + "          <cipc:sPassword>" + Constants.sPassword + "</cipc:sPassword>\n"
                 + "\n"
-                + "          <cipc:sBankID>"+Constants.sBankID+"</cipc:sBankID>\n"
+                + "          <cipc:sBankID>" + Constants.sBankID + "</cipc:sBankID>\n"
                 + "\n"
                 + "         <cipc:sCust_Code>" + customerCode + "</cipc:sCust_Code>\n"
                 + "\n"
@@ -2026,7 +2189,7 @@ public class UserWebServices {
             }
         };
 
-        httpRequest.setUrl(Constants.soapServicesEndPoint+"customer.asmx?wsdl");
+        httpRequest.setUrl(Constants.soapServicesEndPoint + "customer.asmx?wsdl");
         httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
         httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
         httpRequest.setPost(true);
@@ -2071,11 +2234,11 @@ public class UserWebServices {
                 + "\n"
                 + "         <!--Optional:-->\n"
                 + "\n"
-                + "          <cipc:sUserName>"+Constants.sUserName+"</cipc:sUserName>\n"
+                + "          <cipc:sUserName>" + Constants.sUserName + "</cipc:sUserName>\n"
                 + "\n"
-                + "          <cipc:sPassword>"+Constants.sPassword+"</cipc:sPassword>\n"
+                + "          <cipc:sPassword>" + Constants.sPassword + "</cipc:sPassword>\n"
                 + "\n"
-                + "          <cipc:sBankID>"+Constants.sBankID+"</cipc:sBankID>\n"
+                + "          <cipc:sBankID>" + Constants.sBankID + "</cipc:sBankID>\n"
                 + "\n"
                 + "         <!--Optional:-->\n"
                 + "\n"
@@ -2119,7 +2282,7 @@ public class UserWebServices {
             }
         };
 
-        httpRequest.setUrl(Constants.soapServicesEndPoint+"customer.asmx?wsdl");
+        httpRequest.setUrl(Constants.soapServicesEndPoint + "customer.asmx?wsdl");
         httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
         httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
         httpRequest.setPost(true);
@@ -2182,11 +2345,11 @@ public class UserWebServices {
                 + "\n"
                 + "      <cipc:Get_Cust_code_id_MOBI>\n"
                 + "\n"
-                + "         <cipc:sUserName>"+Constants.sUserName+"</cipc:sUserName>\n"
+                + "         <cipc:sUserName>" + Constants.sUserName + "</cipc:sUserName>\n"
                 + "\n"
-                + "         <cipc:sPassword>"+Constants.sPassword+"</cipc:sPassword>\n"
+                + "         <cipc:sPassword>" + Constants.sPassword + "</cipc:sPassword>\n"
                 + "\n"
-                + "         <cipc:sBankID>"+Constants.sBankID+"</cipc:sBankID>\n"
+                + "         <cipc:sBankID>" + Constants.sBankID + "</cipc:sBankID>\n"
                 + "\n"
                 + "         <cipc:sid_no>" + id + "</cipc:sid_no>\n"
                 + "\n"
@@ -2224,7 +2387,7 @@ public class UserWebServices {
             }
         };
 
-        httpRequest.setUrl(Constants.soapServicesEndPoint+"customer.asmx?wsdl");
+        httpRequest.setUrl(Constants.soapServicesEndPoint + "customer.asmx?wsdl");
         httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
         httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
         httpRequest.setPost(true);
@@ -2266,11 +2429,11 @@ public class UserWebServices {
                 + "\n"
                 + "            <cipc:ReceiveNewCustData_UPDATE_MOBI>\n"
                 + "\n"
-                + "        <cipc:sUserName>"+Constants.sUserName+"</cipc:sUserName>\n"
+                + "        <cipc:sUserName>" + Constants.sUserName + "</cipc:sUserName>\n"
                 + "\n"
-                + "          <cipc:sPassword>"+Constants.sPassword+"</cipc:sPassword>\n"
+                + "          <cipc:sPassword>" + Constants.sPassword + "</cipc:sPassword>\n"
                 + "\n"
-                + "          <cipc:sBankID>"+Constants.sBankID+"</cipc:sBankID>\n"
+                + "          <cipc:sBankID>" + Constants.sBankID + "</cipc:sBankID>\n"
                 + "\n"
                 + "         <cipc:ds>\n"
                 + "\n"
@@ -2478,7 +2641,7 @@ public class UserWebServices {
             }
         };
 
-        httpRequest.setUrl(Constants.soapServicesEndPoint+"customer.asmx?wsdl");
+        httpRequest.setUrl(Constants.soapServicesEndPoint + "customer.asmx?wsdl");
         httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
         httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
         httpRequest.setPost(true);
@@ -2589,7 +2752,7 @@ public class UserWebServices {
             }
         };
 
-        httpRequest.setUrl(Constants.soapServicesEndPoint+"customer.asmx?wsdl");
+        httpRequest.setUrl(Constants.soapServicesEndPoint + "customer.asmx?wsdl");
         httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
         httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
         httpRequest.setPost(true);
@@ -2699,7 +2862,7 @@ public class UserWebServices {
             }
         };
 
-        httpRequest.setUrl(Constants.soapServicesEndPoint+"customer.asmx?wsdl");
+        httpRequest.setUrl(Constants.soapServicesEndPoint + "customer.asmx?wsdl");
         httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
         httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
         httpRequest.setPost(true);
@@ -2902,7 +3065,7 @@ public class UserWebServices {
             }
         };
 
-        httpRequest.setUrl(Constants.soapServicesEndPoint+"customer.asmx?wsdl");
+        httpRequest.setUrl(Constants.soapServicesEndPoint + "customer.asmx?wsdl");
         httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
         httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
         httpRequest.setPost(true);
@@ -2940,9 +3103,9 @@ public class UserWebServices {
                 + "   <soapenv:Header/>\n"
                 + "   <soapenv:Body>\n"
                 + "      <cipc:Change_name_MOBI>\n"
-                + "         <cipc:sUserName>"+Constants.sUserName+"</cipc:sUserName>\n"
-                + "         <cipc:sPassword>"+Constants.sPassword+"</cipc:sPassword>\n"
-                + "         <cipc:sBankID>"+Constants.sBankID+"</cipc:sBankID>\n"
+                + "         <cipc:sUserName>" + Constants.sUserName + "</cipc:sUserName>\n"
+                + "         <cipc:sPassword>" + Constants.sPassword + "</cipc:sPassword>\n"
+                + "         <cipc:sBankID>" + Constants.sBankID + "</cipc:sBankID>\n"
                 + "         <cipc:Sent_no>K201422876</cipc:Sent_no>\n"
                 + "         <cipc:Apllication_no>982326767</cipc:Apllication_no>\n"
                 + "         <cipc:resolution_date>01/05/2018</cipc:resolution_date>\n"
@@ -2979,7 +3142,7 @@ public class UserWebServices {
             }
         };
 
-        httpRequest.setUrl(Constants.soapServicesEndPoint+"enterprise.asmx");
+        httpRequest.setUrl(Constants.soapServicesEndPoint + "enterprise.asmx");
         httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
         httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
         httpRequest.setPost(true);
@@ -3035,9 +3198,9 @@ public class UserWebServices {
                 + "\n"
                 + "      <cipc:Namereservation_MOBI_trakno>\n"
                 + "\n"
-                + "         <cipc:sUserName>"+Constants.sUserName+"</cipc:sUserName>\n"
-                + "         <cipc:sPassword>"+Constants.sPassword+"</cipc:sPassword>\n"
-                + "         <cipc:sBankID>"+Constants.sBankID+"</cipc:sBankID>\n"
+                + "         <cipc:sUserName>" + Constants.sUserName + "</cipc:sUserName>\n"
+                + "         <cipc:sPassword>" + Constants.sPassword + "</cipc:sPassword>\n"
+                + "         <cipc:sBankID>" + Constants.sBankID + "</cipc:sBankID>\n"
                 + "\n"
                 + "         <cipc:S_name1>" + name1 + "</cipc:S_name1>\n"
                 + "\n"
@@ -3129,7 +3292,7 @@ public class UserWebServices {
 
         };
 
-        httpRequest.setUrl(Constants.soapServicesEndPoint+"enterprise.asmx");
+        httpRequest.setUrl(Constants.soapServicesEndPoint + "enterprise.asmx");
 
         httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
 
@@ -3365,11 +3528,11 @@ public class UserWebServices {
                 + "\n"
                 + "      <cipc:search_name_MOBI>\n"
                 + "\n"
-                + "          <cipc:sUserName>"+Constants.sUserName+"</cipc:sUserName>\n"
+                + "          <cipc:sUserName>" + Constants.sUserName + "</cipc:sUserName>\n"
                 + "\n"
-                + "          <cipc:sPassword>"+Constants.sPassword+"</cipc:sPassword>\n"
+                + "          <cipc:sPassword>" + Constants.sPassword + "</cipc:sPassword>\n"
                 + "\n"
-                + "          <cipc:sBankID>"+Constants.sBankID+"</cipc:sBankID>\n"
+                + "          <cipc:sBankID>" + Constants.sBankID + "</cipc:sBankID>\n"
                 + "\n"
                 + "         <cipc:sCust_Code>" + customerCode + "</cipc:sCust_Code>\n"
                 + "\n"
@@ -3423,7 +3586,7 @@ public class UserWebServices {
             }
         };
 
-        httpRequest.setUrl(Constants.soapServicesEndPoint+"enterprise.asmx");
+        httpRequest.setUrl(Constants.soapServicesEndPoint + "enterprise.asmx");
         httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
         httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
         httpRequest.setPost(true);
@@ -3497,7 +3660,7 @@ public class UserWebServices {
                 + "   <soapenv:Body>\n"
                 + "      <cipc:GetInternalRefNo>\n"
                 + "         <!--Optional:-->\n"
-                + "          <cipc:sUserName>" + Constants.sUserName+ "</cipc:sUserName>\n"
+                + "          <cipc:sUserName>" + Constants.sUserName + "</cipc:sUserName>\n"
                 + "         <cipc:sPassword>" + Constants.sPassword + "</cipc:sPassword>\n"
                 + "         <cipc:sBankID>" + Constants.sBankID + "</cipc:sBankID>\n"
                 + "         <cipc:sCust_Code></cipc:sCust_Code>\n"
@@ -3533,7 +3696,7 @@ public class UserWebServices {
             }
         };
 
-        httpRequest.setUrl(Constants.soapServicesEndPoint+"customer.asmx?wsdl");
+        httpRequest.setUrl(Constants.soapServicesEndPoint + "customer.asmx?wsdl");
         httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
         httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
         httpRequest.setPost(true);
@@ -3587,11 +3750,11 @@ public class UserWebServices {
                 + "\n"
                 + "      <cipc:ReceiveNewCustData_Reg_MOBI>\n"
                 + "\n"
-                + "        <cipc:sUserName>"+Constants.sUserName+"</cipc:sUserName>\n"
+                + "        <cipc:sUserName>" + Constants.sUserName + "</cipc:sUserName>\n"
                 + "\n"
-                + "          <cipc:sPassword>"+Constants.sPassword+"</cipc:sPassword>\n"
+                + "          <cipc:sPassword>" + Constants.sPassword + "</cipc:sPassword>\n"
                 + "\n"
-                + "          <cipc:sBankID>"+Constants.sBankID+"</cipc:sBankID>\n"
+                + "          <cipc:sBankID>" + Constants.sBankID + "</cipc:sBankID>\n"
                 + "\n"
                 + "         <cipc:ds>\n"
                 + "\n"
@@ -3799,7 +3962,7 @@ public class UserWebServices {
             }
         };
 
-        httpRequest.setUrl(Constants.soapServicesEndPoint+"customer.asmx");
+        httpRequest.setUrl(Constants.soapServicesEndPoint + "customer.asmx");
         httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
         httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
         httpRequest.setPost(true);

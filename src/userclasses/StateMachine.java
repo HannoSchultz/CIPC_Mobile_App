@@ -82,6 +82,7 @@ import org.bouncycastle.crypto.InvalidCipherTextException;
 import services.Utility;
 import za.co.cipc.webservices.UserWebServices;
 import ui.FormProgress;
+import za.co.cipc.pojos.AnnualReturns;
 import za.co.cipc.pojos.User;
 //TESTING UPLOAD
 
@@ -147,8 +148,8 @@ public class StateMachine extends StateMachineBase {
     ArrayList<NameSearchObject> arrayListNameReservation;
 
     public boolean isEmailValid(String text) {
-        String expression = "(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])";
-
+        //String expression = "(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])";
+        String expression = "^([a-zA-Z0-9_\\-\\.]+)@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.)|(([a-zA-Z0-9\\-]+\\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\\]?)$";
         RE r = new RE(expression); // Create new pattern 
         if (r.match(text)) {
             return true;
@@ -158,7 +159,18 @@ public class StateMachine extends StateMachineBase {
     }
 
     public boolean isUrlValid(String text) {
-        String expression = "(https?:\\/\\/)?([\\w\\d]+\\.)?[\\w\\d]+\\.\\w+\\/?.+";
+        String expression = "^((ht|f)tp(s?)\\:\\/\\/|~/|/)?([\\w]+:\\w+@)?([a-zA-Z]{1}([\\w\\-]+\\.)+([\\w]{2,5}))(:[\\d]{1,5})?((/?\\w+/)+|/?)(\\w+\\.[\\w]{3,4})?((\\?\\w+=\\w+)?(&\\w+=\\w+)*)?";
+
+        RE r = new RE(expression); // Create new pattern 
+        if (r.match(text)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+        public boolean isCellPhoneValid(String text) {
+        String expression = "^((?:\\+27|27)|0)(=72|82|73|83|74|84|81|78|79|71|72|61|60|62|63|64|65|66|67|68|69|72|61|76)(\\d{7})$";
 
         RE r = new RE(expression); // Create new pattern 
         if (r.match(text)) {
@@ -213,6 +225,10 @@ public class StateMachine extends StateMachineBase {
             AGENT_CODE = "BLE076";
 
             Log.p("isAlphaNumeric=" + isAlphaNumeric("abc3#$@de"), Log.DEBUG);
+            
+            UserWebServices u = new UserWebServices();
+            AnnualReturns annualReturns = u.get_ar_info_mobi("kd7788", "2015/185120/07");
+            Log.p(annualReturns.toString(), Log.DEBUG);
 
             //Log.p("dateString = " + dateString, Log.DEBUG);
             //Test Name Service
@@ -232,7 +248,7 @@ public class StateMachine extends StateMachineBase {
 //            String entNo = getShortEnterpriseName("2011", "100088", "07");
 //            System.out.println("enta=" + entNo);
 //            AGENT_CODE = "NEWLNE";
-            UserWebServices u = new UserWebServices();
+   //         UserWebServices u = new UserWebServices();
             //u.update_terms("http://139.162.223.194:8080/CIPC2/TermsandConditions_version_Final_3.0.pdf");
             //u.get_terms(null);
 
