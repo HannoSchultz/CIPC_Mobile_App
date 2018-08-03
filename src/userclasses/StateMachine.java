@@ -160,7 +160,7 @@ public class StateMachine extends StateMachineBase {
     }
 
     public boolean isUrlValid(String text) {
-        String expression = "^((ht|f)tp(s?)\\:\\/\\/|~/|/)?([\\w]+:\\w+@)?([a-zA-Z]{1}([\\w\\-]+\\.)+([\\w]{2,5}))(:[\\d]{1,5})?((/?\\w+/)+|/?)(\\w+\\.[\\w]{3,4})?((\\?\\w+=\\w+)?(&\\w+=\\w+)*)?";
+        String expression = "^(?:http(s)?:\\/\\/)?[\\w.-]+(?:\\.[\\w\\.-]+)+[\\w\\-\\._~:/?#[\\]@!\\$&'\\(\\)\\*\\+,;=.]+$";
 
         RE r = new RE(expression); // Create new pattern 
         if (r.match(text)) {
@@ -225,7 +225,10 @@ public class StateMachine extends StateMachineBase {
 
             AGENT_CODE = "NEWLNE";
 
-            // Log.p("isAlphaNumeric=" + isAlphaNumeric("AZ az 09    &"), Log.DEBUG);
+            Log.p("isCellPhoneValid=" + isCellPhoneValid("0833598094"), Log.DEBUG);
+            Log.p("isEmailValid=" + isEmailValid("blessing@mfactory.mobi"), Log.DEBUG);
+            Log.p("isUrlValid=" + isUrlValid("www.mfactory.mobi"), Log.DEBUG);
+
             //Log.p("dateString = " + dateString, Log.DEBUG);
             //Test Name Service
             //Log.p("table=" + table, Log.DEBUG);
@@ -517,6 +520,7 @@ public class StateMachine extends StateMachineBase {
                 for (int i = 0; i < arrayListNameReservation.size(); i++) {
                     int count = i + 1;
                     Label lblResponse = (Label) findByName("lblName" + count + "Response", contTasks);
+                    Container parent = lblResponse.getParent();
                     NameSearchObject n = arrayListNameReservation.get(i);
                     if (n.isIsValid()) {
                         btnLodge.setUIID("ButtonNameSearch");
@@ -528,11 +532,13 @@ public class StateMachine extends StateMachineBase {
                         lblResponse.setUIID("LabelRed");
 
                     }
-                    //lblResponse.repaint();
+                    
                 }
 
+               // contTasks.revalidate();
                 lblLine1.scrollRectToVisible(0, 0, 0, 0, lblLine1);
-                contTasks.repaint();
+                f.revalidate();
+                
             }
         });
 
@@ -798,6 +804,7 @@ public class StateMachine extends StateMachineBase {
         if (formProgress != null) {
             formProgress.removeProgress();
         }
+        f.revalidate();
         closeMenu(f, true);
 
     }
@@ -1085,10 +1092,9 @@ public class StateMachine extends StateMachineBase {
 
                     User user = new User();
                     user.setAgent_code(AGENT_CODE);
+                    formProgress = new FormProgress(f);
                     String entNo = getShortEnterpriseName(txtStep1a.getText(), txtStep1b.getText(),
                             txtStep1c.getText());
-
-                    formProgress = new FormProgress(f);
 
                     boolean isPending = u.pendingAnnualReturns(user, entNo);
                     Log.p("isPending=" + isPending, Log.DEBUG);
@@ -1115,6 +1121,10 @@ public class StateMachine extends StateMachineBase {
                         AnnualReturns annualReturns = u.get_ar_info_mobi(AGENT_CODE, ENT_NUMBER);
                         Log.p(annualReturns.toString(), Log.DEBUG);
 
+                        formProgress.removeProgress();
+                       // formProgress.removeProgress();
+                        Log.p("refresh", Log.DEBUG);
+
                         txtARStep2EmailAddress.setText(annualReturns.getEnt_email());
                         txtARStep2TelCode.setText(annualReturns.getEnt_tel_code());
                         txtARStep2TelNo.setText(annualReturns.getEnt_tel_no());
@@ -1123,9 +1133,8 @@ public class StateMachine extends StateMachineBase {
                         txtARStep2BusinessDescription.setText(annualReturns.getBus_desc());
                         txtARStep2PrincipalPlace.setText(annualReturns.getPrinc_bus_place());
 
-                        formProgress.removeProgress();
+                       tabs.repaint();
 
-                        tabs.setSelectedIndex(1);
                         btn1.setUIID("CIPC_DARK");
                         btn2.setUIID("CIPC_DARK_SELECTED");
                         btn3.setUIID("CIPC_DARK");
@@ -1147,6 +1156,9 @@ public class StateMachine extends StateMachineBase {
                         } else {
                             showDialog("Invalid Enterprise Status \"" + enterpriseDetails.getEnt_status_descr() + "\". Not allowed to file Annual Returns.");
 
+                            if (formProgress != null) {
+                                formProgress.removeProgress();
+                            }
                             btnStep2Confirm.setVisible(false);
                             btnStep2Confirm.repaint();
                         }
@@ -1154,14 +1166,23 @@ public class StateMachine extends StateMachineBase {
                         if (formProgress != null) {
                             formProgress.removeProgress();
                         }
+                        
+                         tabs.setSelectedIndex(1);
 
                     } else {
+
+                        if (formProgress != null) {
+                            formProgress.removeProgress();
+                        }
                         Dialog.show("Error", "Could not obtain enterprise details. Please ensure that your Enterprise number is valid. ", "Ok", null);
                     }
 
                 }
-
+                f.revalidate();
             }
+            
+        
+            
         });
 
         //Step 3//Please enter Annual Turnover for the current filing year, 2018:
@@ -1216,15 +1237,20 @@ public class StateMachine extends StateMachineBase {
                 message += "Please enter a valid website URL. ";
             }
 
-            if (isEmailValid(ar2EmailAddress) == false) {
+            if ((ar2CellNumber.length() > 0 && isCellPhoneValid(ar2CellNumber))
+                    || ar2CellNumber.length() > 0 && ar2CellNumber.length() == 10) {
+                message += "Please enter a valid cell phone number. ";
+            }
+
+            if (ar2EmailAddress.length() > 0 && isEmailValid(ar2EmailAddress) == false) {
                 message += "Please enter a valid email address. ";
             }
-            
-             if (ar2BusinessDescription.length() > 0 && isAlpha(ar2BusinessDescription) == false) {
+
+            if (ar2BusinessDescription.length() > 0 && isAlpha(ar2BusinessDescription) == false) {
                 message += "Business description must contain alphabetical characters. ";
             } else if (ar2PlaceOfBusiness.length() > 0 && isAlpha(ar2PlaceOfBusiness) == false) {
                 message += "Principal place of business must contain alphabetical characters. ";
-            } 
+            }
 
 //            if (isAlpha(ar2BusinessDescription) == false && isAlpha(ar2PlaceOfBusiness) == false) {
 //                message += "Business description and Principal place of business must contain alphabetical characters. ";
@@ -1233,7 +1259,6 @@ public class StateMachine extends StateMachineBase {
 //            } else if (isAlpha(ar2BusinessDescription) == false && isAlpha(ar2PlaceOfBusiness) == true) {
 //                message += "Business description must contain alphabetical characters. ";
 //            }
-
             if (message.length() > 0) {
                 Dialog.show("Error", message, "Ok", null);
                 return;
@@ -1607,7 +1632,9 @@ public class StateMachine extends StateMachineBase {
                 Log.p("onStart: " + browser.getURL(), Log.DEBUG);
 
                 if (browser.getURL().indexOf("Pay.aspx") > -1) {
-                    isCartStep3 = true;
+                    if(isCartStep2 == true){
+                        isCartStep3 = true;
+                    }
                     formProgress = new FormProgress(f);
 
                 }
@@ -1630,11 +1657,15 @@ public class StateMachine extends StateMachineBase {
                 }
 
                 if (browser != null && browser.getURL() != null && browser.getURL().indexOf("Pay.aspx") > -1) {
-                    isCartStep3 = true;
+                    if(isCartStep2 == true){
+                        isCartStep3 = true;
+                    }
                 }
 
                 if (browser != null && browser.getURL() != null && browser.getURL().indexOf("ACSRedirect.aspx") > -1) {
-                    isCartStep4 = true;
+                    if(isCartStep3 == true){
+                        isCartStep4 = true;
+                    }
                 }
 
             }
@@ -3222,7 +3253,7 @@ public class StateMachine extends StateMachineBase {
 
             char c = letters.charAt(i);
             int ci = (int) c;
-            Log.p("c=" + c + " and ci=" + ci, Log.DEBUG);
+            //Log.p("c=" + c + " and ci=" + ci, Log.DEBUG);
 
             if ((ci >= 65 && ci <= 90)
                     || (ci >= 97 && ci <= 122)
