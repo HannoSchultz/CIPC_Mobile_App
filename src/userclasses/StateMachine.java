@@ -83,6 +83,7 @@ import services.Utility;
 import za.co.cipc.webservices.UserWebServices;
 import ui.FormProgress;
 import za.co.cipc.pojos.AnnualReturns;
+import za.co.cipc.pojos.Dashboard;
 import za.co.cipc.pojos.User;
 //TESTING UPLOAD
 
@@ -168,8 +169,8 @@ public class StateMachine extends StateMachineBase {
             return false;
         }
     }
-    
-        public boolean isCellPhoneValid(String text) {
+
+    public boolean isCellPhoneValid(String text) {
         String expression = "^((?:\\+27|27)|0)(=72|82|73|83|74|84|81|78|79|71|72|61|60|62|63|64|65|66|67|68|69|72|61|76)(\\d{7})$";
 
         RE r = new RE(expression); // Create new pattern 
@@ -222,19 +223,13 @@ public class StateMachine extends StateMachineBase {
 //        });
         if (Display.getInstance().isSimulator()) {
 
-            AGENT_CODE = "BLE076";
+            AGENT_CODE = "NEWLNE";
 
-            Log.p("isAlphaNumeric=" + isAlphaNumeric("abc3#$@de"), Log.DEBUG);
-            
-            UserWebServices u = new UserWebServices();
-            AnnualReturns annualReturns = u.get_ar_info_mobi("kd7788", "2015/185120/07");
-            Log.p(annualReturns.toString(), Log.DEBUG);
-
+            // Log.p("isAlphaNumeric=" + isAlphaNumeric("AZ az 09    &"), Log.DEBUG);
             //Log.p("dateString = " + dateString, Log.DEBUG);
             //Test Name Service
-//            UserWebServices u = new UserWebServices();
-//            String randomName = getRandomString(10);
-//
+            //Log.p("table=" + table, Log.DEBUG);
+//  
 //            NameReservation n = u.Namereservation_MOBI(AGENT_CODE, randomName, "", "", "");
 //            Log.p("randomName=" + randomName, Log.DEBUG);
 //            User user = new User();
@@ -248,10 +243,9 @@ public class StateMachine extends StateMachineBase {
 //            String entNo = getShortEnterpriseName("2011", "100088", "07");
 //            System.out.println("enta=" + entNo);
 //            AGENT_CODE = "NEWLNE";
-   //         UserWebServices u = new UserWebServices();
+            //         UserWebServices u = new UserWebServices();
             //u.update_terms("http://139.162.223.194:8080/CIPC2/TermsandConditions_version_Final_3.0.pdf");
             //u.get_terms(null);
-
 //            boolean isPending = u.pendingAnnualReturns(user, entNo);
 //            Log.p("isPending=" + isPending, Log.DEBUG);
 //            Map mapCart = u.getCart(user);
@@ -337,6 +331,8 @@ public class StateMachine extends StateMachineBase {
 
             defaultEmail = "NEWLNE";
             defaultPassword = "PleaseWork1!";
+            //defaultEmail = "SARBIA";
+            //defaultPassword = "barend";
 
             Log.setLevel(Log.DEBUG);
             Log.p("issimulator", Log.DEBUG);
@@ -595,7 +591,7 @@ public class StateMachine extends StateMachineBase {
 
                     String ref = responseCall.getResponseMessage().substring(indexStart, indexEnd);
 
-                    Dialog.show("Success", "Dear Customer, Name Reservation Lodged successfully. Payment Reference No: " + ref +".", "Ok", null);
+                    Dialog.show("Success", "Dear Customer, Name Reservation Lodged successfully. Payment Reference No: " + ref + ".", "Ok", null);
 
                     //Dialog.show("Success", responseCall.getResponseMessage(), "Ok", null); do not remove
                     Log.p("Name reservation responseCall=" + responseCall, Log.DEBUG);
@@ -719,9 +715,9 @@ public class StateMachine extends StateMachineBase {
         lblIcon2.setIcon(img2);
         lblIcon3.setIcon(img3);
 
-        Button mbTasks = (Button) findByName("mbTasks", cont);
+        Button mbNameReservations = (Button) findByName("mbTasks", cont);
 
-        mbTasks.addActionListener(new ActionListener() {
+        mbNameReservations.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
                 //formProgress = new FormProgress(f);
@@ -729,8 +725,8 @@ public class StateMachine extends StateMachineBase {
             }
         });
 
-        Button mbCurrency = (Button) findByName("mbCurrency", cont);
-        mbCurrency.addActionListener(new ActionListener() {
+        Button mbAnnualReturns = (Button) findByName("mbCurrency", cont);
+        mbAnnualReturns.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
                 //formProgress = new FormProgress(f);
@@ -738,14 +734,45 @@ public class StateMachine extends StateMachineBase {
             }
         });
 
-        Button mbButton = (Button) findByName("mbButton", cont);
-        mbButton.addActionListener(new ActionListener() {
+        Button mbCardPayments = (Button) findByName("mbButton", cont);
+        mbCardPayments.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
                 //formProgress = new FormProgress(f);
                 showCart(f);
             }
         });
+
+        UserWebServices u = new UserWebServices();
+        Hashtable<String, Dashboard> table = u.get_mobi_permissions(AGENT_CODE);
+
+        if (table == null || table.size() == 0) {
+            //cont.remove();
+            //f.reva
+        } else {
+            String[] names = {"AR", "NR", "CP"};
+
+            for (int i = 0; i < names.length; i++) {
+                String key = names[i];
+
+                Dashboard d = table.get(key);
+                //key = key.toLowerCase();
+                if (d != null) {
+                    ;
+                    Container dynamicCont = (Container) findByName(key, cont);
+                    Log.p("dynamicCont=" + dynamicCont, Log.DEBUG);
+                    Log.p("key=" + key + " visbile=" + d.getB_visible(), Log.DEBUG);
+                    if (d.getB_visible() != null && d.getB_visible().indexOf("true") > -1) {
+                        dynamicCont.setVisible(true);
+                    } else {
+                        dynamicCont.remove();
+                    }
+                } else {
+                    Container dynamicCont = (Container) findByName(key, cont);
+                    dynamicCont.remove();
+                }
+            }
+        }
 
 //        mbTasks.setTextLine1("Name Reservations");
 //        mbTasks.setTextLine2("Submit Proposed Name (s)");
@@ -1025,13 +1052,13 @@ public class StateMachine extends StateMachineBase {
             txtStep1b.setText("123460");
             txtStep1c.setText("07");
 
-            txtARStep2EmailAddress.setText("blessing@mfactory.mobi");
-            txtARStep2TelCode.setText("012");
-            txtARStep2TelNo.setText("3598094");
-            txtARStep2CellNumber.setText("0761111111");
-            txtARStep2WebAddress.setText("www.mfactory.mobi");
-            txtARStep2BusinessDescription.setText("1111a");
-            txtARStep2PrincipalPlace.setText("1111a");
+//            txtARStep2EmailAddress.setText("blessing@mfactory.mobi");
+//            txtARStep2TelCode.setText("012");
+//            txtARStep2TelNo.setText("3598094");
+//            txtARStep2CellNumber.setText("0761111111");
+//            txtARStep2WebAddress.setText("www.mfactory.mobi");
+//            txtARStep2BusinessDescription.setText("1111a");
+//            txtARStep2PrincipalPlace.setText("1111a");
         }
 
         btnStep1RetrieveDetails.addActionListener(new ActionListener() {
@@ -1085,6 +1112,19 @@ public class StateMachine extends StateMachineBase {
                         lblStep2EnterpriseStatus.setText(enterpriseDetails.getEnt_status_descr());
                         lblStep2RegistrationDate.setText(enterpriseDetails.getReg_date());
 
+                        AnnualReturns annualReturns = u.get_ar_info_mobi(AGENT_CODE, ENT_NUMBER);
+                        Log.p(annualReturns.toString(), Log.DEBUG);
+
+                        txtARStep2EmailAddress.setText(annualReturns.getEnt_email());
+                        txtARStep2TelCode.setText(annualReturns.getEnt_tel_code());
+                        txtARStep2TelNo.setText(annualReturns.getEnt_tel_no());
+                        txtARStep2CellNumber.setText(annualReturns.getEnt_cell());
+                        txtARStep2WebAddress.setText(annualReturns.getEnt_website());
+                        txtARStep2BusinessDescription.setText(annualReturns.getBus_desc());
+                        txtARStep2PrincipalPlace.setText(annualReturns.getPrinc_bus_place());
+
+                        formProgress.removeProgress();
+
                         tabs.setSelectedIndex(1);
                         btn1.setUIID("CIPC_DARK");
                         btn2.setUIID("CIPC_DARK_SELECTED");
@@ -1097,8 +1137,8 @@ public class StateMachine extends StateMachineBase {
                         Log.p("code=" + enterpriseDetails.getEnt_status_code(), Log.DEBUG);
 
                         if (enterpriseDetails.getEnt_status_code().equals("03")
-                                 || enterpriseDetails.getEnt_status_code().equals("10")
-                                 || enterpriseDetails.getEnt_status_code().equals("28")
+                                || enterpriseDetails.getEnt_status_code().equals("10")
+                                || enterpriseDetails.getEnt_status_code().equals("28")
                                 || enterpriseDetails.getEnt_status_code().equals("38")) {
 
                             btnStep2Confirm.setVisible(true);
@@ -1169,29 +1209,37 @@ public class StateMachine extends StateMachineBase {
             String message = "";
 
             if (flag == true) {
-                message += "Please complete all fields. ";
+                message += "Please complete Email, Telephone and Business Description. ";
             }
 
-            if (isUrlValid(ar2WebAddress) == false) {
+            if (ar2WebAddress.length() > 0 && isUrlValid(ar2WebAddress) == false) {
                 message += "Please enter a valid website URL. ";
             }
 
             if (isEmailValid(ar2EmailAddress) == false) {
                 message += "Please enter a valid email address. ";
             }
-
-            if (isAlpha(ar2BusinessDescription) == false && isAlpha(ar2PlaceOfBusiness) == false) {
-                message += "Business description and Principal place of business must contain alphabetical characters. ";
-            } else if (isAlpha(ar2BusinessDescription) == true && isAlpha(ar2PlaceOfBusiness) == false) {
-                message += "Principal place of business must contain alphabetical characters. ";
-            } else if (isAlpha(ar2BusinessDescription) == false && isAlpha(ar2PlaceOfBusiness) == true) {
+            
+             if (ar2BusinessDescription.length() > 0 && isAlpha(ar2BusinessDescription) == false) {
                 message += "Business description must contain alphabetical characters. ";
-            }
+            } else if (ar2PlaceOfBusiness.length() > 0 && isAlpha(ar2PlaceOfBusiness) == false) {
+                message += "Principal place of business must contain alphabetical characters. ";
+            } 
+
+//            if (isAlpha(ar2BusinessDescription) == false && isAlpha(ar2PlaceOfBusiness) == false) {
+//                message += "Business description and Principal place of business must contain alphabetical characters. ";
+//            } else if (isAlpha(ar2BusinessDescription) == true && isAlpha(ar2PlaceOfBusiness) == false) {
+//                message += "Principal place of business must contain alphabetical characters. ";
+//            } else if (isAlpha(ar2BusinessDescription) == false && isAlpha(ar2PlaceOfBusiness) == true) {
+//                message += "Business description must contain alphabetical characters. ";
+//            }
 
             if (message.length() > 0) {
                 Dialog.show("Error", message, "Ok", null);
                 return;
             }
+
+            formProgress = new FormProgress(f);
 
             contStep3Turnovers.removeAll();
             listEnterpriseDetails = u.GetAREntTranDetails(ENT_NUMBER, AGENT_CODE);
@@ -1219,15 +1267,39 @@ public class StateMachine extends StateMachineBase {
                 }
                 contStep3Turnovers.repaint();
 
-                tabs.setSelectedIndex(2);
-                btn1.setUIID("CIPC_DARK");
-                btn2.setUIID("CIPC_DARK");
-                btn3.setUIID("CIPC_DARK_SELECTED");
-                btn4.setUIID("CIPC_DARK");
-                isARStep2Passed = true;
-                btnStep3CalcOutAmount.setEnabled(true);
+                String messageForDialog = "\"I confirm that the information remains as shown on the Companies Registry, in terms of:\n"
+                        + "\n"
+                        + "o   Registered Office\n"
+                        + "\n"
+                        + "o   Location of Records (if applicable)\n"
+                        + "\n"
+                        + "o   Directors of Company or members of Close Corporation\n"
+                        + "\n"
+                        + "o   Company Secretary (if applicable)\n"
+                        + "\n"
+                        + "o   Auditors and Audit Committees (if applicable)\n"
+                        + "\n"
+                        + "o   Financial Year End\n"
+                        + "\nAt completion of filing you will also receive the latest web disclosure with current details as per the Companies Registry.\"\n";
+                boolean answer = Dialog.show("Notice", messageForDialog, "Confirm", "Decline");
+
+                if (answer) {
+
+                    tabs.setSelectedIndex(2);
+                    btn1.setUIID("CIPC_DARK");
+                    btn2.setUIID("CIPC_DARK");
+                    btn3.setUIID("CIPC_DARK_SELECTED");
+                    btn4.setUIID("CIPC_DARK");
+                    isARStep2Passed = true;
+                    btnStep3CalcOutAmount.setEnabled(true);
+                    formProgress.removeProgress();
+                } else {
+                    formProgress.removeProgress();
+                    return;
+                }
 
             } else {
+                formProgress.removeProgress();
                 Dialog.show("No Annual Returns", "The Enterprise " + ENT_NUMBER + " has no pending Annual Returns. ", "Ok", null);
             }
 
@@ -1336,11 +1408,9 @@ public class StateMachine extends StateMachineBase {
             String message = "In terms of Section 33 of the Companies Act 71 of 2008, and regulations 28, 29 and 30 of the Companies Regulations of 2011, a set of criteria is defined for entities to submit Annual Financial Statements (AFSs) together with Annual Returns (ARs). Alternatively, if the set of criteria is not met, entities must submit Financial Accountability Supplements (FASs) together with Annual Returns, as prescribed by Regulation 33 of the Companies Act.\n"
                     + "\n"
                     + " \n"
-                
                     + "By law you are therefore required to either submit AFSs via XBRL or FASs. By clicking \"Accept\" below, you declare that you understand these requirements of the Companies Act. Failure to file either an AFS or FAS will attract an investigation process which can lead to an administrative fine or prosecution. See Section 168(2) and 214 of the Companies Act.\n"
                     + "\n"
                     + " \n"
-                  
                     + "Please note that the requirements to submit either FASs or AFSs together with ARs as referenced above don\'t apply to external companies.\n\n\n"
                     + "Please go to the CIPC website after completing this AR payment for more details on both AFS and FAS.";
 
@@ -1866,7 +1936,7 @@ public class StateMachine extends StateMachineBase {
             }
 
         } else {
-            Dialog.show("No Items", "You do not have any cart items. Please perform a transaction first.", "Ok", null);
+            Dialog.show("No Items", "You do not have any Cart items. Please perform a transaction first.", "Ok", null);
             showDashboard(f);
         }
 
@@ -3149,14 +3219,20 @@ public class StateMachine extends StateMachineBase {
             return true;
         }
         for (int i = 0; i < letters.length(); i++) {
+
             char c = letters.charAt(i);
-            if ((c >= 'A' && c <= 'Z') == false
-                    && (c >= 'a' && c <= 'z') == false
-                    && c >= '0' && c <= '9' == false) {
+            int ci = (int) c;
+            Log.p("c=" + c + " and ci=" + ci, Log.DEBUG);
 
+            if ((ci >= 65 && ci <= 90)
+                    || (ci >= 97 && ci <= 122)
+                    || (ci >= 48 && ci <= 57)
+                    || (c == 32)) {
+                //do nothing
+            } else {
                 flag = false;
-
             }
+
         }
 
         return flag;

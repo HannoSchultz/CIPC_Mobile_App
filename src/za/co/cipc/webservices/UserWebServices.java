@@ -44,6 +44,7 @@ import userclasses.NameSearchObject;
 import za.co.cipc.pojos.AnnualReturns;
 import za.co.cipc.pojos.AuthObject;
 import za.co.cipc.pojos.Country;
+import za.co.cipc.pojos.Dashboard;
 import za.co.cipc.pojos.FormattedCode;
 import za.co.cipc.pojos.User;
 
@@ -54,6 +55,111 @@ import za.co.cipc.pojos.User;
 public class UserWebServices {
 
     String AR_BODY;
+
+    public Hashtable<String, Dashboard> get_mobi_permissions(String customerCode) {
+
+        Hashtable<String, Dashboard> dataStructure = null;
+
+        final String SOAP_BODY
+                = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cipc=\"CIPC_WEB_SERVICES\">\n"
+                + "\n"
+                + "   <soapenv:Header/>\n"
+                + "\n"
+                + "   <soapenv:Body>\n"
+                + "\n"
+                + "      <cipc:get_mobi_permissions>\n"
+                + "\n"
+                + "                 <cipc:sUserName>wBAA7LAkWIs=</cipc:sUserName>\n"
+                + "\n"
+                + "         <cipc:sPassword>6EGQAUzYJlhvffhZ+gUFfg==</cipc:sPassword>\n"
+                + "\n"
+                + "         <cipc:sBankID>wBAA7LAkWIs=</cipc:sBankID>\n"
+                + "\n"
+                + "         <cipc:scustcode>" + customerCode + "</cipc:scustcode>\n"
+                + "\n"
+                + "      </cipc:get_mobi_permissions>\n"
+                + "\n"
+                + "   </soapenv:Body>\n"
+                + "\n"
+                + "</soapenv:Envelope>";
+
+        ConnectionRequest httpRequest = new ConnectionRequest() {
+            Element h;
+
+            @Override
+            protected void buildRequestBody(OutputStream os) throws IOException {
+                super.buildRequestBody(os);
+                os.write(SOAP_BODY.getBytes("utf-8"));
+
+            }
+
+            protected void postResponse() {
+
+                super.postResponse();
+            }
+
+            protected void readResponse(InputStream input) throws IOException {
+                super.readResponse(input);
+
+            }
+
+            @Override
+            protected void handleException(Exception err) {
+                Log.p("Exception: " + err.toString());
+                Dialog.show("No Internet", "There is no internet connection. Please switch your connection on.", "Okay", null);
+
+            }
+        };
+
+        httpRequest.setUrl(Constants.soapServicesEndPoint + "enterprise.asmx");
+        httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
+        httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
+        httpRequest.setPost(true);
+
+        InfiniteProgress prog = new InfiniteProgress();
+        Dialog dlg = prog.showInifiniteBlocking();
+        httpRequest.setDisposeOnCompletion(dlg);
+
+        NetworkManager.getInstance().addToQueueAndWait(httpRequest);
+        String data = new String(httpRequest.getResponseData());
+        Log.p("get_mobi_permissions" + data, Log.DEBUG);
+
+        try {
+
+            Result result = Result.fromContent(data, Result.XML);
+
+            Log.p("get_mobi_permissions=" + result, Log.DEBUG);
+
+            XMLParser parser = new XMLParser();
+            parser.setCaseSensitive(true);
+            Element element = parser.parse(convertStringtoInputStreamReader(result.getAsString("//dataset")));
+            
+           dataStructure = new  Hashtable<String, Dashboard> ();
+
+            for (int i = 0; i < element.getNumChildren(); i++) {
+                Element child = element.getChildAt(i);
+                Log.p("i=" + i +  "child =" + child, Log.DEBUG);
+
+                String button_name = RSM(((Element) child.getTextChildren(null, true).get(1)).toString());
+                String b_visible = RSM(((Element) child.getTextChildren(null, true).get(3)).toString());
+                
+                Dashboard d = new Dashboard();
+                d.setButton_name(button_name);
+                d.setB_visible(b_visible);
+                
+                dataStructure.put(button_name, d);
+               
+            }
+            
+            return dataStructure;
+
+        } catch (IllegalArgumentException e) {
+            Log.p(e.toString());
+        }
+
+        return dataStructure;
+
+    }//end name reservation
 
     public AnnualReturns get_ar_info_mobi(String customerCode, String company) {
         AnnualReturns annualReturns = null;
@@ -69,23 +175,23 @@ public class UserWebServices {
                 + "\n"
                 + "         <!--Optional:-->\n"
                 + "\n"
-                + "         <cipc:sUserName>"+Constants.sUserName+"</cipc:sUserName>\n"
+                + "         <cipc:sUserName>" + Constants.sUserName + "</cipc:sUserName>\n"
                 + "\n"
                 + "         <!--Optional:-->\n"
                 + "\n"
-                + "         <cipc:sPassword>"+Constants.sPassword+"</cipc:sPassword>\n"
+                + "         <cipc:sPassword>" + Constants.sPassword + "</cipc:sPassword>\n"
                 + "\n"
                 + "         <!--Optional:-->\n"
                 + "\n"
-                + "         <cipc:sBankID>"+Constants.sBankID+"</cipc:sBankID>\n"
+                + "         <cipc:sBankID>" + Constants.sBankID + "</cipc:sBankID>\n"
                 + "\n"
                 + "         <!--Optional:-->\n"
                 + "\n"
-                + "         <cipc:sCust_Code>"+customerCode+"</cipc:sCust_Code>\n"
+                + "         <cipc:sCust_Code>" + customerCode + "</cipc:sCust_Code>\n"
                 + "\n"
                 + "         <!--Optional:-->\n"
                 + "\n"
-                + "         <cipc:entNo>"+company+"</cipc:entNo>\n"
+                + "         <cipc:entNo>" + company + "</cipc:entNo>\n"
                 + "\n"
                 + "      </cipc:get_ar_info_mobi>\n"
                 + "\n"
@@ -164,7 +270,7 @@ public class UserWebServices {
                 annualReturns = new AnnualReturns();
 
                 Log.p("get_ar_info_mobi: " + result, Log.DEBUG);
- 
+
                 annualReturns.setBus_desc(result.getAsString("//bus_desc"));
                 annualReturns.setEnt_cell(result.getAsString("//ent_cell"));
                 annualReturns.setEnt_email(result.getAsString("//ent_email"));
@@ -172,7 +278,7 @@ public class UserWebServices {
                 annualReturns.setEnt_tel_no(result.getAsString("//ent_tel_no"));
                 annualReturns.setEnt_website(result.getAsString("//ent_website"));
                 annualReturns.setPrinc_bus_place(result.getAsString("//princ_bus_place"));
-             
+
 //                responseUser.setPassword(result.getAsString("//password"));
 //                responseUser.setAgent_name(result.getAsString("//agent_name"));
 //
@@ -207,7 +313,6 @@ public class UserWebServices {
                 // }
                 //responseUser.setAgent_code(user.getAgent_code());
                 //responseUser.setPassword(result.getAsString("//get_cust_mobiresult"));
-
             } catch (IllegalArgumentException e) {
                 Log.p(e.toString());
             }
