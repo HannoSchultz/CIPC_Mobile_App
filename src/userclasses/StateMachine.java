@@ -2621,10 +2621,11 @@ public class StateMachine extends StateMachineBase {
                 msg += "Please enter Last Name. ";
             }
 
-            if (txtStep2CellPhone.getText().length() == 0) {
-                msg += "Please enter Cell Phone Number. ";
+            if (  (txtStep2CellPhone.getText().length() >= 0 && txtStep2CellPhone.getText().length() != 10) ||
+                   isCellPhoneValid(txtStep2CellPhone.getText()) == false ) {
+                msg += "Please enter a valid Cell Phone Number. ";
             }
-            if (txtStep2Email.getText().length() == 0) {
+            if (txtStep2Email.getText().length() == 0 || isEmailValid(txtStep2Email.getText()) == false) {
                 msg += "Please enter Email. ";
             } else if (isEmailValid(txtStep2Email.getText()) == false) {
                 msg += "Please enter a valid Email Address. ";
@@ -3123,6 +3124,8 @@ public class StateMachine extends StateMachineBase {
             //System.exit(0);
 
         }
+        
+        //Dialog.show("Title", "Body", "Yes", null);
 
     }
 
