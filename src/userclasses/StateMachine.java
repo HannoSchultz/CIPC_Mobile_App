@@ -685,10 +685,9 @@ public class StateMachine extends StateMachineBase {
         });
 
         btnLodge.addActionListener((ActionListener) (ActionEvent evt) -> {
-         
-                formProgress = new FormProgress(f);
-            
-            
+
+            formProgress = new FormProgress(f);
+
             String name1 = txtName1.getText();
             String name2 = txtName2.getText();
             String name3 = txtName3.getText();
@@ -723,6 +722,9 @@ public class StateMachine extends StateMachineBase {
             }
 
             if (msg.length() > 0) {
+                if (formProgress != null) {
+                    formProgress.removeProgress();
+                }
                 Dialog.show("Error", msg, "Ok", null);
             } else {
                 UserWebServices u = new UserWebServices();
@@ -734,7 +736,7 @@ public class StateMachine extends StateMachineBase {
                 if (responseCall != null
                         && responseCall.getResponseMessage() != null
                         && responseCall.getResponseMessage().indexOf("Error 500") > -1) {
-                    if(formProgress != null){
+                    if (formProgress != null) {
                         formProgress.removeProgress();
                     }
                     Dialog.show("Error", responseCall.getResponseMessage(), "Ok", null);//TODO scroll to top
@@ -746,7 +748,7 @@ public class StateMachine extends StateMachineBase {
 
                     String ref = responseCall.getResponseMessage().substring(indexStart, indexEnd);
 
-                    if(formProgress != null){
+                    if (formProgress != null) {
                         formProgress.removeProgress();
                     }
                     Dialog.show("Success", "Dear Customer, Name Reservation Lodged successfully. Payment Reference No: " + ref + ".", "Ok", null);
@@ -1676,8 +1678,8 @@ public class StateMachine extends StateMachineBase {
     BrowserComponent browser;
 
     public void showCart2(final Form f) {
-        
-        if(formProgress == null){
+
+        if (formProgress == null) {
             formProgress = new FormProgress(f);
         }
 
@@ -1694,6 +1696,16 @@ public class StateMachine extends StateMachineBase {
 
         Container contStep1 = (Container) findByName("contStep1", cont);
         //contStep1.removeAll();
+
+        if (!Display.getInstance().isTablet()) {
+            f.removeAll();
+            if (f.getLayout() instanceof BorderLayout) {
+                f.add(BorderLayout.CENTER, cont);
+            } else {
+                f.add(cont);
+            }
+
+        }
 
         if (orientationListener != null) {
             f.removeOrientationListener(orientationListener);
@@ -2134,11 +2146,6 @@ public class StateMachine extends StateMachineBase {
             //                Dialog.show("Processed", "Payment processed", "Ok", null);
             //            }
             //        });
-            if (!Display.getInstance().isTablet()) {
-                f.add(BorderLayout.CENTER, cont);
-
-            }
-
         } else {
             Dialog.show("No Items", "You do not have any Cart items. Please perform a transaction first.", "Ok", null);
             showDashboard(f);
