@@ -51,6 +51,7 @@ import com.codename1.ui.spinner.DateSpinner;
 import com.codename1.ui.spinner.Picker;
 import com.codename1.ui.table.TableLayout;
 import com.codename1.ui.util.Resources;
+import com.codename1.ui.util.UITimer;
 import com.codename1.ui.validation.Constraint;
 import com.codename1.ui.validation.LengthConstraint;
 import com.codename1.ui.validation.RegexConstraint;
@@ -293,7 +294,7 @@ public class StateMachine extends StateMachineBase {
 //            UserWebServices uw = new UserWebServices();
 //            //uw.get_cust_MOBI_2(tmpUser);
 //            
-//            uw.update_app_version("0.22");
+//            uw.update_app_version("0.24");
 //            uw.get_app_version(tmpUser);
 //
 //            //step2
@@ -787,6 +788,8 @@ public class StateMachine extends StateMachineBase {
 
     }
     ActionListener orientationListener = null;
+    
+    static boolean isFromDash = false;
 
     public void showDashboard(final Form f) {
 
@@ -900,6 +903,7 @@ public class StateMachine extends StateMachineBase {
             @Override
             public void actionPerformed(ActionEvent evt) {
                 //formProgress = new FormProgress(f);
+                isFromDash = true;
                 showCart2(f);
             }
         });
@@ -1679,119 +1683,7 @@ public class StateMachine extends StateMachineBase {
 
     public void showCart2(final Form f) {
 
-        if (formProgress == null) {
-            formProgress = new FormProgress(f);
-        }
-
         hideLogout();
-
-        Container cont = (Container) createContainer("/theme", "ContCart");
-        cont.setName("cont");
-        Container contStep1AnnualReturns = (Container) findByName("contStep1AnnualReturns", cont);
-        contStep1AnnualReturns.removeAll();
-        Container contStep1EServices = (Container) findByName("contStep1EServices", cont);
-        contStep1EServices.removeAll();
-        Label lblTotal = (Label) findByName("lblTotal", cont);
-        lblTotal.setText("");
-
-        Container contStep1 = (Container) findByName("contStep1", cont);
-        //contStep1.removeAll();
-
-        if (!Display.getInstance().isTablet()) {
-            f.removeAll();
-            if (f.getLayout() instanceof BorderLayout) {
-                f.add(BorderLayout.CENTER, cont);
-            } else {
-                f.add(cont);
-            }
-
-        }
-
-        if (orientationListener != null) {
-            f.removeOrientationListener(orientationListener);
-        }
-
-        orientationListener = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                updateLayoutRegistration(f, cont);
-            }
-        };
-
-        f.addOrientationListener(orientationListener);
-
-        updateLayoutRegistration(f, cont);
-
-        Tabs Tabs = (Tabs) findByName("Tabs", cont);
-        Tabs.setSwipeActivated(false);
-        Tabs.hideTabs();
-
-        Command back = new Command("") {
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                super.actionPerformed(evt); //To change body of generated methods, choose Tools | Templates.
-                Log.p("AR back isCartStep2=" + isCartStep2 + " isCartStep3=" + isCartStep3 + "isCartStep4=" + isCartStep4, Log.DEBUG);
-
-                if (isCartStep4 == true) {
-                    browser.back();
-                    isCartStep4 = false;
-                } else if (isCartStep3 == true) {
-                    Tabs.setSelectedIndex(0);
-                    isCartStep3 = false;
-                } else if (isCartStep2 == true) {
-                    Tabs.setSelectedIndex(0);
-                    isCartStep2 = false;
-                } else {
-
-                    showDashboard(f);
-
-                }
-            }
-
-        };
-        f.removeAllCommands();
-        f.getToolbar().setBackCommand(back);
-        Toolbar.setEnableSideMenuSwipe(false);
-
-        Container contStep2 = (Container) findByName("contStep2", cont);
-        contStep2.removeAll();
-        contStep2.setLayout(new BorderLayout());
-
-        Log.p("width=" + width + ", height=" + height, Log.DEBUG);
-        //Dialog.show("", "width=" + width + ", height=" + height, "Ok", null);
-
-        String encodedCustCode = "";
-        String filePath = FileSystemStorage.getInstance().getAppHomePath() + "/a.txt";
-        String home = FileSystemStorage.getInstance().getAppHomePath();
-
-        OutputStream fos = null;
-        InputStream fis = null;
-        try {
-
-            DESede_BC encrypter = new DESede_BC();
-
-            fos = FileSystemStorage.getInstance().openOutputStream(filePath);
-            fis = new ByteArrayInputStream(AGENT_CODE.getBytes());
-            encodedCustCode = encrypter.encrypt(fis, fos);
-            Log.p("encodedCustCode=" + encodedCustCode, Log.DEBUG);
-            fis.close();
-            fos.close();
-
-        } catch (InvalidCipherTextException ex) {
-            Log.e(ex);
-        } catch (IOException ex) {
-            Log.e(ex);
-        }
-
-        String URL = Constants.paymentEndPoint + "Pay.aspx?custCode=" + encodedCustCode + "&custId=" + encodedCustCode + "&appId=6"
-                + "&width=" + width + "&height=" + height;
-
-        /*
-              String URL = "https://paymenttest.cipc.co.za:9443/MobileACSRedirect.aspx?custCode=" + encodedCustCode + "&custId=" + encodedCustCode + "&appId=6"
-               + "&width=" + width + "&height=" + height;*/
-        Log.p(URL, Log.DEBUG);
-
-        hasGonePastACS = false;
 
         //String directURL = Constants.paymentEndPoint + "ACSRedirect.aspx";
         //String errorURL = Constants.paymentEndPoint + "PaymentError.aspx?error=1EwiapDpld0GrXoBVjnhEC52%2fRVCNKIi9Xsi%2fs9YpzA%3d&ref=T9122961860";
@@ -1805,8 +1697,123 @@ public class StateMachine extends StateMachineBase {
         ArrayList CartItems = (ArrayList) map.get("CartItems");
 
         if ((AnnualReturns != null && !AnnualReturns.isEmpty()) || (CartItems != null && !CartItems.isEmpty())) {
+            
+            isFromDash = false;
 
             formProgress = new FormProgress(f);
+
+            if (formProgress == null) {
+                formProgress = new FormProgress(f);
+            }
+
+            Container cont = (Container) createContainer("/theme", "ContCart");
+            cont.setName("cont");
+            Container contStep1AnnualReturns = (Container) findByName("contStep1AnnualReturns", cont);
+            contStep1AnnualReturns.removeAll();
+            Container contStep1EServices = (Container) findByName("contStep1EServices", cont);
+            contStep1EServices.removeAll();
+            Label lblTotal = (Label) findByName("lblTotal", cont);
+            lblTotal.setText("");
+
+            Container contStep1 = (Container) findByName("contStep1", cont);
+            //contStep1.removeAll();
+
+            if (!Display.getInstance().isTablet()) {
+                f.removeAll();
+                if (f.getLayout() instanceof BorderLayout) {
+                    f.add(BorderLayout.CENTER, cont);
+                } else {
+                    f.add(cont);
+                }
+
+            }
+
+            if (orientationListener != null) {
+                f.removeOrientationListener(orientationListener);
+            }
+
+            orientationListener = new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent evt) {
+                    updateLayoutRegistration(f, cont);
+                }
+            };
+
+            f.addOrientationListener(orientationListener);
+
+            updateLayoutRegistration(f, cont);
+
+            Tabs Tabs = (Tabs) findByName("Tabs", cont);
+            Tabs.setSwipeActivated(false);
+            Tabs.hideTabs();
+
+            Command back = new Command("") {
+                @Override
+                public void actionPerformed(ActionEvent evt) {
+                    super.actionPerformed(evt); //To change body of generated methods, choose Tools | Templates.
+                    Log.p("AR back isCartStep2=" + isCartStep2 + " isCartStep3=" + isCartStep3 + "isCartStep4=" + isCartStep4, Log.DEBUG);
+
+                    if (isCartStep4 == true) {
+                        browser.back();
+                        isCartStep4 = false;
+                    } else if (isCartStep3 == true) {
+                        Tabs.setSelectedIndex(0);
+                        isCartStep3 = false;
+                    } else if (isCartStep2 == true) {
+                        Tabs.setSelectedIndex(0);
+                        isCartStep2 = false;
+                    } else {
+
+                        showDashboard(f);
+
+                    }
+                }
+
+            };
+            f.removeAllCommands();
+            f.getToolbar().setBackCommand(back);
+            Toolbar.setEnableSideMenuSwipe(false);
+
+            Container contStep2 = (Container) findByName("contStep2", cont);
+            contStep2.removeAll();
+            contStep2.setLayout(new BorderLayout());
+
+            Log.p("width=" + width + ", height=" + height, Log.DEBUG);
+            //Dialog.show("", "width=" + width + ", height=" + height, "Ok", null);
+
+            String encodedCustCode = "";
+            String filePath = FileSystemStorage.getInstance().getAppHomePath() + "/a.txt";
+            String home = FileSystemStorage.getInstance().getAppHomePath();
+
+            OutputStream fos = null;
+            InputStream fis = null;
+            try {
+
+                DESede_BC encrypter = new DESede_BC();
+
+                fos = FileSystemStorage.getInstance().openOutputStream(filePath);
+                fis = new ByteArrayInputStream(AGENT_CODE.getBytes());
+                encodedCustCode = encrypter.encrypt(fis, fos);
+                Log.p("encodedCustCode=" + encodedCustCode, Log.DEBUG);
+                fis.close();
+                fos.close();
+
+            } catch (InvalidCipherTextException ex) {
+                Log.e(ex);
+            } catch (IOException ex) {
+                Log.e(ex);
+            }
+
+            String URL = Constants.paymentEndPoint + "Pay.aspx?custCode=" + encodedCustCode + "&custId=" + encodedCustCode + "&appId=6"
+                    + "&width=" + width + "&height=" + height;
+
+            /*
+              String URL = "https://paymenttest.cipc.co.za:9443/MobileACSRedirect.aspx?custCode=" + encodedCustCode + "&custId=" + encodedCustCode + "&appId=6"
+               + "&width=" + width + "&height=" + height;*/
+            Log.p(URL, Log.DEBUG);
+
+            hasGonePastACS = false;
+
             closeMenu(f, true);
             analytics(f, "Shopping Cart");
             current = f;
@@ -2032,8 +2039,25 @@ public class StateMachine extends StateMachineBase {
 
                             if (browser.getURL().indexOf("ACSRedirect.aspx") > -1) {
                                 isCartStep4 = true;
+
                                 formProgress = new FormProgress(f);
 
+//                                formProgress = new FormProgress(f);
+//
+//                                Display.getInstance().callSerially(new Runnable() {
+//                                    @Override
+//                                    public void run() {
+//                                        UITimer t = new UITimer(new Runnable() {
+//                                            public void run() {
+//                                                if (formProgress != null) {
+//                                                    formProgress.removeProgress();
+//                                                }
+//
+//                                            }
+//                                        });
+//                                        t.schedule(5000, false, f);
+//                                    }
+//                                });
                             }
                         }
                     });
@@ -2042,29 +2066,26 @@ public class StateMachine extends StateMachineBase {
                         @Override
                         public void actionPerformed(ActionEvent evt) {
                             Log.p("onLoad: " + browser.getURL(), Log.DEBUG);
-                            if (formProgress != null) {
-                                formProgress.removeProgress();
-                                formProgress = null;
-
-                                Display.getInstance().callSerially(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        f.revalidate();
-                                        Log.p("after revalidate", Log.DEBUG);
-
-                                    }
-                                });
-                            }
 
                             if (browser != null && browser.getURL() != null && browser.getURL().indexOf("Pay.aspx") > -1) {
                                 if (isCartStep2 == true) {
                                     isCartStep3 = true;
+                                }
+
+                                if (formProgress != null) {
+                                    formProgress.removeProgress();
+                                    formProgress = null;
                                 }
                             }
 
                             if (browser != null && browser.getURL() != null && browser.getURL().indexOf("ACSRedirect.aspx") > -1) {
                                 if (isCartStep3 == true) {
                                     isCartStep4 = true;
+                                }
+
+                                if (formProgress != null) {
+                                    formProgress.removeProgress();
+                                    formProgress = null;
                                 }
                             }
 
@@ -2108,8 +2129,9 @@ public class StateMachine extends StateMachineBase {
                                         isCartStep2 = false;
                                         isCartStep3 = false;
                                         isCartStep4 = false;
-                                        Dialog.show("Error", "Payment error. Please contact CIPC.", "Ok", null);
                                         showCart2(f);
+                                        Dialog.show("Error", "Payment error. Please contact CIPC.", "Ok", null);
+                                        
                                     }
                                 });
                                 //showDashboard(f);
@@ -2148,7 +2170,12 @@ public class StateMachine extends StateMachineBase {
             //        });
         } else {
             Dialog.show("No Items", "You do not have any Cart items. Please perform a transaction first.", "Ok", null);
-            showDashboard(f);
+            if(isFromDash == false){//avoid reload
+                showDashboard(f);
+            }
+            else{
+                isFromDash = false;
+            }
         }
         f.revalidate();
         Log.p("2046", Log.DEBUG);
@@ -3199,8 +3226,7 @@ public class StateMachine extends StateMachineBase {
 
         Toolbar bar = analytics(f, "Forgot Password");
 
-        isTableInputForm(f);
-
+        //isTableInputForm(f);
         Command back = new Command("") {
 
             @Override

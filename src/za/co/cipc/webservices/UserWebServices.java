@@ -3287,6 +3287,49 @@ public class UserWebServices {
         name2 = HTMLUtils.encodeString(name2);
         name3 = HTMLUtils.encodeString(name3);
         name4 = HTMLUtils.encodeString(name4);
+        
+         ArrayList<String> submission = new ArrayList();
+
+        if (name1.length() > 0) {
+            submission.add(name1);
+        }
+        if (name2.length() > 0) {
+            submission.add(name2);
+        }
+        if (name3.length() > 0) {
+            submission.add(name3);
+        }
+        if (name4.length() > 0) {
+            submission.add(name4);
+        }
+        
+        String toSubmit1 = "";
+        String toSubmit2 = "";
+        String toSubmit3 = "";
+        String toSubmit4 = "";
+
+        if (submission.size() == 1) {
+            toSubmit1 = submission.get(0);
+        }
+        else if (submission.size() == 2) {
+            toSubmit1 = submission.get(0);
+            toSubmit2 = submission.get(1);
+
+        }
+        else if (submission.size() == 3) {
+            toSubmit1 = submission.get(0);
+            toSubmit2 = submission.get(1);
+            toSubmit3 = submission.get(2);
+
+        }
+        else if (submission.size() == 4) {
+            toSubmit1 = submission.get(0);
+            toSubmit2 = submission.get(1);
+            toSubmit3 = submission.get(2);
+            toSubmit4 = submission.get(3);
+
+        }
+
 
         //customerCode = "INKE01";
         //name = "CRO"
@@ -3307,19 +3350,19 @@ public class UserWebServices {
                 + "         <cipc:sPassword>" + Constants.sPassword + "</cipc:sPassword>\n"
                 + "         <cipc:sBankID>" + Constants.sBankID + "</cipc:sBankID>\n"
                 + "\n"
-                + "         <cipc:S_name1>" + name1 + "</cipc:S_name1>\n"
+                + "         <cipc:S_name1>" + toSubmit1 + "</cipc:S_name1>\n"
                 + "\n"
                 + "         <!--Optional:-->\n"
                 + "\n"
-                + "         <cipc:S_name2>" + name2 + "</cipc:S_name2>\n"
+                + "         <cipc:S_name2>" + toSubmit2 + "</cipc:S_name2>\n"
                 + "\n"
                 + "         <!--Optional:-->\n"
                 + "\n"
-                + "         <cipc:S_name3>" + name3 + "</cipc:S_name3>\n"
+                + "         <cipc:S_name3>" + toSubmit3 + "</cipc:S_name3>\n"
                 + "\n"
                 + "         <!--Optional:-->\n"
                 + "\n"
-                + "         <cipc:S_name4>" + name4 + "</cipc:S_name4>\n"
+                + "         <cipc:S_name4>" + toSubmit4 + "</cipc:S_name4>\n"
                 + "\n"
                 + "         <!--Optional:-->\n"
                 + "\n"
@@ -3622,6 +3665,7 @@ public class UserWebServices {
         name3 = HTMLUtils.encodeString(name3);
         name4 = HTMLUtils.encodeString(name4);
 
+       
         ArrayList arrayList = new ArrayList();
 
         final String SOAP_BODY
@@ -3705,8 +3749,8 @@ public class UserWebServices {
         String data = new String(httpRequest.getResponseData());
         Log.p("Data d: " + data, Log.DEBUG);
         Log.p("Index=" + data.indexOf("is no row at position 0"), Log.DEBUG);
-        
-        if(data != null && data.indexOf("is no row at position 0") < 0){
+
+        if (data != null && data.indexOf("is no row at position 0") < 0) {
 
             try {
 
@@ -3723,13 +3767,13 @@ public class UserWebServices {
                     Element child = element.getChildAt(i);
 
                     Log.p("chiled=" + child, Log.DEBUG);
-                    try{
+                    try {
                         Element name = (Element) child.getTextChildren(null, true).get(0);
                         String elemName = RSM(name.toString());
 
                         Log.p("elemName=" + elemName, Log.DEBUG);
 
-                        if(elemName != null && elemName.length() > 2){
+                        if (elemName != null && elemName.length() > 2) {
 
                             StringTokenizer st = new StringTokenizer(elemName, "|");
 
@@ -3743,8 +3787,7 @@ public class UserWebServices {
                             }
                             arrayList.add(n);
                         }
-                    }
-                    catch(Exception e){
+                    } catch (Exception e) {
                         Log.e(e);
                     }
                 }
