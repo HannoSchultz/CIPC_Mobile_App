@@ -452,6 +452,7 @@ public class StateMachine extends StateMachineBase {
         contentPane.setScrollableX(false);
         contTasks.setScrollableX(false);
         contTasks.setScrollableX(false);
+        contTasks.setName("NameReservation");
 
         if (orientationListener != null) {
             f.removeOrientationListener(orientationListener);
@@ -492,13 +493,17 @@ public class StateMachine extends StateMachineBase {
         }
 
         btnVerify.addActionListener((ActionListener) (ActionEvent evt) -> {
-            
-            lblName1Response.setText(" ");
-            lblName2Response.setText(" ");
-            lblName3Response.setText(" ");
-            lblName4Response.setText(" ");
-            
-            
+
+            lblName1Response.setText("");
+            lblName2Response.setText("");
+            lblName3Response.setText("");
+            lblName4Response.setText("");
+
+            lblName1Response.repaint();
+            lblName2Response.repaint();
+            lblName3Response.repaint();
+            lblName4Response.repaint();
+
             String name1 = txtName1.getText();
             String name2 = txtName2.getText();
             String name3 = txtName3.getText();
@@ -524,52 +529,135 @@ public class StateMachine extends StateMachineBase {
                 UserWebServices u = new UserWebServices();
                 arrayListNameReservation = u.search_name_MOBI(AGENT_CODE, name1, name2, name3, name4);
                 Log.p("arrayListNameReservation size: " + arrayListNameReservation.size(), Log.DEBUG);
-                
-                if(arrayListNameReservation.size() == 0){
+
+                if (arrayListNameReservation.size() == 0) {
                     Dialog.show("Error", "Error occurred while processing your request. Please contact CIPC.", "Ok", null);
                 }
 
+                String currentName = "";
+
+                //Dialog.show("0", "aa", "Ok", null);
                 for (int i = 0; i < arrayListNameReservation.size(); i++) {
                     NameSearchObject n = arrayListNameReservation.get(i);
-                    String name = n.getName().substring(0, n.getName().indexOf("|"));
-                    String currentName = "";
-                    Log.p("name=" + n.getName() +"after name=" + name, Log.DEBUG);
+                    //Dialog.show("1.1", n.getName(), "Ok", null);
+                    String txt = n.getName();
+                    String name = "";
+                    if (txt.indexOf("|") > -1) {
+                        java.util.List<String> list = StringUtil.tokenize(n.getName(), "|");
+                        if (list != null && list.size() > 0) {
+                            txt = list.get(0);
+                        }
+                        name = txt;
+                    } else {
+                        name = n.getName();
+                    }
+                    //Log.p("name=" + n.getName() + "after name=" + name, Log.DEBUG);
 
+                    // Dialog.show("1.2", name, "Ok", null);
+                    //Dialog.show("1.3", "name="+name + " name1" + name1, "Ok", null);
                     Label lblResponse = null;
+
+                    name = name.toLowerCase();
+                    name1 = name1.toLowerCase();
+                    name2 = name2.toLowerCase();
+                    name3 = name3.toLowerCase();
+                    name4 = name4.toLowerCase();
+
                     if (name1.equals(name)) {
-                        currentName = name1;
-                        lblResponse = (Label) findByName("lblResponse1", contTasks);
+                        //Dialog.show("1.6", "name1=" + name1, "Ok", null);
+                        //lblResponse = (Label) findByName("lblResponse1", contTasks);
+
+                        if (n.isIsValid()) {
+                            //Dialog.show("1.7", "name1=" + name1, "Ok", null);
+
+                            btnLodge.setUIID("ButtonNameSearch");
+                            btnLodge.repaint();
+                            lblName1Response.setText("Might be available");
+                            lblName1Response.setUIID("LabelGreen");
+                            lblName1Response.getComponentForm().revalidate();
+
+                        } else if (n.isIsValid() == false) {
+                            //Dialog.show("1.8", "name1=" + name1, "Ok", null);
+
+                            lblName1Response.setText("Is not available");
+                            lblName1Response.setUIID("LabelRed");
+                            lblName1Response.getComponentForm().revalidate();
+
+                        }
+
                     }
                     if (name2.equals(name)) {
-                         currentName = name1;
-                        lblResponse = (Label) findByName("lblResponse2", contTasks);
+                        if (n.isIsValid()) {
+                            //Dialog.show("1.7", "name1=" + name1, "Ok", null);
+
+                            btnLodge.setUIID("ButtonNameSearch");
+                            btnLodge.repaint();
+                            lblName2Response.setText("Might be available");
+                            lblName2Response.setUIID("LabelGreen");
+                            lblName2Response.getComponentForm().revalidate();
+
+                        } else if (n.isIsValid() == false) {
+                            //Dialog.show("1.8", "name1=" + name1, "Ok", null);
+
+                            lblName2Response.setText("Is not available");
+                            lblName2Response.setUIID("LabelRed");
+                            lblName2Response.getComponentForm().revalidate();
+
+                        }
                     }
                     if (name3.equals(name)) {
-                         currentName = name1;
-                        lblResponse = (Label) findByName("lblResponse3", contTasks);
+                        if (n.isIsValid()) {
+                            //Dialog.show("1.7", "name1=" + name1, "Ok", null);
+
+                            btnLodge.setUIID("ButtonNameSearch");
+                            btnLodge.repaint();
+                            lblName3Response.setText("Might be available");
+                            lblName3Response.setUIID("LabelGreen");
+                            lblName3Response.getComponentForm().revalidate();
+
+                        } else if (n.isIsValid() == false) {
+                            //Dialog.show("1.8", "name1=" + name1, "Ok", null);
+
+                            lblName3Response.setText("Is not available");
+                            lblName3Response.setUIID("LabelRed");
+                            lblName3Response.getComponentForm().revalidate();
+
+                        }
                     }
                     if (name4.equals(name)) {
-                         currentName = name1;
-                        lblResponse = (Label) findByName("lblResponse4", contTasks);
-                    }
-                    
-                    Log.p("lblResponse=" + lblResponse, Log.DEBUG);
+                        if (n.isIsValid()) {
+                            //Dialog.show("1.7", "name1=" + name1, "Ok", null);
 
-                    if ( currentName.length() > 0 && n.isIsValid()) {
-                        btnLodge.setUIID("ButtonNameSearch");
-                        btnLodge.repaint();
-                        if (lblResponse != null) {
-                            lblResponse.setText("Might be available");
-                            lblResponse.setUIID("LabelGreen");
-                        }
-                    } else if(currentName.length() > 0 && n.isIsValid() == false) {
-                        if (lblResponse != null) {
-                            lblResponse.setText("Is not available");
-                            lblResponse.setUIID("LabelRed");
+                            btnLodge.setUIID("ButtonNameSearch");
+                            btnLodge.repaint();
+                            lblName4Response.setText("Might be available");
+                            lblName4Response.setUIID("LabelGreen");
+                            lblName4Response.getComponentForm().revalidate();
+
+                        } else if (n.isIsValid() == false) {
+                            //Dialog.show("1.8", "name1=" + name1, "Ok", null);
+
+                            lblName4Response.setText("Is not available");
+                            lblName4Response.setUIID("LabelRed");
+                            lblName4Response.getComponentForm().revalidate();
+
                         }
                     }
+
+                    Log.p("lblResponse=" + lblResponse, Log.DEBUG);
+                    //Dialog.show("2", "lblResponse=" + lblResponse, "Ok", null);
+
+//                    if (lblResponse != null) {
+//                        Container parent = lblResponse.getParent();
+//                        Dialog.show("Updated", "Refresh=" + lblResponse.getText(), "Ok", null);
+//                    } else {
+//                        Dialog.show("Not Updated", "Refresh=" + lblResponse.getText(), "Ok", null);
+//
+//                    }
+                    // Dialog.show("3", "lblResponse=" + lblResponse, "Ok", null);
                 }
 
+                // btnVerify.getComponentForm().revalidate();
 //                for (int i = 0; i < arrayListNameReservation.size(); i++) {
 //                    int count = i + 1;
 //                    Label lblResponse = (Label) findByName("lblName" + count + "Response", contTasks);
@@ -665,7 +753,7 @@ public class StateMachine extends StateMachineBase {
                     //       + referenceNo, "Ok", null);
                     u.insertCartItemService(responseCall);
 
-                    showCart(f);
+                    showCart2(f);
                 } else if (responseCall != null
                         && responseCall.getResponseMessage().indexOf("already filed") != -1) {
                     Dialog.show("Error", responseCall.getResponseMessage(), "Ok", null);//TODO scroll to top
@@ -799,7 +887,7 @@ public class StateMachine extends StateMachineBase {
             @Override
             public void actionPerformed(ActionEvent evt) {
                 //formProgress = new FormProgress(f);
-                showCart(f);
+                showCart2(f);
             }
         });
 
@@ -1343,6 +1431,8 @@ public class StateMachine extends StateMachineBase {
                     if (Display.getInstance().isSimulator()) {
                         txt0b.setText("0");
                     }
+                    txt0a.setUIID("LabelBlackCenter");
+
                     listTextEnterpriseDetails.add(txt0b);
                     cont0.add(txt0a).add(txt0b);
                     contStep3Turnovers.add(cont0);
@@ -1522,7 +1612,7 @@ public class StateMachine extends StateMachineBase {
                 }
 
                 Dialog.show("Success", "Annual Return (s) added to Shopping Cart. ", "Ok", null);
-                showCart(f);
+                showCart2(f);
             } else {
                 //do nothing
             }
@@ -1572,12 +1662,14 @@ public class StateMachine extends StateMachineBase {
     static boolean isCartStep3 = false;
     static boolean isCartStep4 = false;
 
-    public void showCart(final Form f) {
+    BrowserComponent browser;
+
+    public void showCart2(final Form f) {
 
         hideLogout();
 
-        BrowserComponent browser = new BrowserComponent();
         Container cont = (Container) createContainer("/theme", "ContCart");
+        cont.setName("cont");
         Container contStep1AnnualReturns = (Container) findByName("contStep1AnnualReturns", cont);
         contStep1AnnualReturns.removeAll();
         Container contStep1EServices = (Container) findByName("contStep1EServices", cont);
@@ -1676,115 +1768,6 @@ public class StateMachine extends StateMachineBase {
 
         //String directURL = Constants.paymentEndPoint + "ACSRedirect.aspx";
         //String errorURL = Constants.paymentEndPoint + "PaymentError.aspx?error=1EwiapDpld0GrXoBVjnhEC52%2fRVCNKIi9Xsi%2fs9YpzA%3d&ref=T9122961860";
-        browser.setURL(URL);
-        browser.setScrollableX(false);
-        browser.setScrollableY(false);
-        browser.setPinchToZoomEnabled(false);
-
-        InfiniteProgress prog = new InfiniteProgress();
-
-        browser.addWebEventListener("onStart", new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                Log.p("onStart: " + browser.getURL(), Log.DEBUG);
-
-                if (browser.getURL().indexOf("Pay.aspx") > -1) {
-                    if (isCartStep2 == true) {
-                        isCartStep3 = true;
-                    }
-                    formProgress = new FormProgress(f);
-
-                }
-
-                if (browser.getURL().indexOf("ACSRedirect.aspx") > -1) {
-                    isCartStep4 = true;
-                    formProgress = new FormProgress(f);
-
-                }
-            }
-        });
-
-        browser.addWebEventListener("onLoad", new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                Log.p("onLoad: " + browser.getURL(), Log.DEBUG);
-                if (formProgress != null) {
-                    formProgress.removeProgress();
-                    formProgress = null;
-                }
-
-                if (browser != null && browser.getURL() != null && browser.getURL().indexOf("Pay.aspx") > -1) {
-                    if (isCartStep2 == true) {
-                        isCartStep3 = true;
-                    }
-                }
-
-                if (browser != null && browser.getURL() != null && browser.getURL().indexOf("ACSRedirect.aspx") > -1) {
-                    if (isCartStep3 == true) {
-                        isCartStep4 = true;
-                    }
-                }
-
-            }
-        });
-
-        browser.addWebEventListener("onError", new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                Log.p("onError", Log.DEBUG);
-            }
-        });
-
-        browser.addBrowserNavigationCallback(new BrowserNavigationCallback() {
-            @Override
-            public boolean shouldNavigate(String url) {
-
-                Log.p("url=" + url, Log.DEBUG);
-
-                String trans = getPaymentTransNoFromURL(url);
-
-                if (trans.length() > 0) {//trans successful
-
-                    Display.getInstance().callSerially(new Runnable() {
-                        @Override
-                        public void run() {
-                            isCartStep2 = false;
-                            isCartStep3 = false;
-                            isCartStep4 = false;
-                            showDashboard(f);
-                            Dialog.show("Success", "Payment processed. Transaction Number " + trans + ". ", "Ok", null);
-
-                        }
-                    });
-
-                } else if (url.indexOf("PaymentError") > -1) {
-
-                    Display.getInstance().callSerially(new Runnable() {
-                        @Override
-                        public void run() {
-                            isCartStep2 = false;
-                            isCartStep3 = false;
-                            isCartStep4 = false;
-                            Dialog.show("Error", "Payment error. Please contact CIPC.", "Ok", null);
-                            showCart(f);
-                        }
-                    });
-                    //showDashboard(f);
-                }
-
-                return true;
-            }
-        });
-
-        //browser.setProperty("useragent", "Mozilla/5.0 (Linux; Android 4.0.4; Galaxy Nexus Build/IMM76K) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.166 Mobile Safari/535.19");
-        //browser.setProperty("useragent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.45 Safari/535.19");
-        contStep2.add(BorderLayout.CENTER, browser);
-        contStep2.setScrollableX(false);
-        contStep2.setScrollableY(false);
-        f.setScrollableX(false);
-        f.setScrollableY(false);
-        f.revalidate();
-
         UserWebServices u = new UserWebServices();
         User user = new User();
         user.setAgent_code(AGENT_CODE);
@@ -1801,8 +1784,8 @@ public class StateMachine extends StateMachineBase {
             analytics(f, "Shopping Cart");
             current = f;
             Container contentPane = f.getContentPane();
-            contentPane.setLayout(new GridLayout(1, 1));
-            contentPane.removeAll();
+////            contentPane.setLayout(new GridLayout(1, 1));
+////            contentPane.removeAll();
 
             Log.p("Cart agent=" + AGENT_CODE, Log.DEBUG);
 
@@ -1885,7 +1868,7 @@ public class StateMachine extends StateMachineBase {
                                     if (btnRemove0.getName().equals(ReferenceNumberToDelete)) {
                                         Log.p("Delete AR ReferenceNumber=" + ReferenceNumberToDelete, Log.DEBUG);
                                         u.deleteCartItem(user, objectToDelete);
-                                        showCart(f);
+                                        showCart2(f);
                                     }
                                 }
                             }
@@ -1971,7 +1954,7 @@ public class StateMachine extends StateMachineBase {
                                 if (btnRemove0.getName().equals(ReferenceNumberToDelete)) {
                                     Log.p("Delete Name reservation ReferenceNumber=" + ReferenceNumberToDelete, Log.DEBUG);
                                     u.deleteCartItem(user, objectToDelete);
-                                    showCart(f);
+                                    showCart2(f);
                                 }
                             }
                         }
@@ -2000,6 +1983,123 @@ public class StateMachine extends StateMachineBase {
                     Log.p("checkout clicked", Log.DEBUG);
                     isCartStep2 = true;
                     Tabs.setSelectedIndex(1);
+
+                    browser = new BrowserComponent();
+                    browser.setURL(URL);
+                    browser.setScrollableX(false);
+                    browser.setScrollableY(false);
+                    browser.setPinchToZoomEnabled(false);
+
+                    browser.addWebEventListener("onStart", new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent evt) {
+                            Log.p("onStart: " + browser.getURL(), Log.DEBUG);
+
+                            if (browser.getURL().indexOf("Pay.aspx") > -1) {
+                                if (isCartStep2 == true) {
+                                    isCartStep3 = true;
+                                }
+                                formProgress = new FormProgress(f);
+
+                            }
+
+                            if (browser.getURL().indexOf("ACSRedirect.aspx") > -1) {
+                                isCartStep4 = true;
+                                formProgress = new FormProgress(f);
+
+                            }
+                        }
+                    });
+
+                    browser.addWebEventListener("onLoad", new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent evt) {
+                            Log.p("onLoad: " + browser.getURL(), Log.DEBUG);
+                            if (formProgress != null) {
+                                formProgress.removeProgress();
+                                formProgress = null;
+
+                                Display.getInstance().callSerially(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        f.revalidate();
+                                        Log.p("after revalidate", Log.DEBUG);
+
+                                    }
+                                });
+                            }
+
+                            if (browser != null && browser.getURL() != null && browser.getURL().indexOf("Pay.aspx") > -1) {
+                                if (isCartStep2 == true) {
+                                    isCartStep3 = true;
+                                }
+                            }
+
+                            if (browser != null && browser.getURL() != null && browser.getURL().indexOf("ACSRedirect.aspx") > -1) {
+                                if (isCartStep3 == true) {
+                                    isCartStep4 = true;
+                                }
+                            }
+
+                        }
+                    });
+
+                    browser.addWebEventListener("onError", new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent evt) {
+                            Log.p("onError", Log.DEBUG);
+                        }
+                    });
+
+                    browser.addBrowserNavigationCallback(new BrowserNavigationCallback() {
+                        @Override
+                        public boolean shouldNavigate(String url) {
+
+                            Log.p("url=" + url, Log.DEBUG);
+
+                            String trans = getPaymentTransNoFromURL(url);
+
+                            if (trans.length() > 0) {//trans successful
+
+                                Display.getInstance().callSerially(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        isCartStep2 = false;
+                                        isCartStep3 = false;
+                                        isCartStep4 = false;
+                                        showDashboard(f);
+                                        Dialog.show("Success", "Payment processed. Transaction Number " + trans + ". ", "Ok", null);
+
+                                    }
+                                });
+
+                            } else if (url.indexOf("PaymentError") > -1) {
+
+                                Display.getInstance().callSerially(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        isCartStep2 = false;
+                                        isCartStep3 = false;
+                                        isCartStep4 = false;
+                                        Dialog.show("Error", "Payment error. Please contact CIPC.", "Ok", null);
+                                        showCart2(f);
+                                    }
+                                });
+                                //showDashboard(f);
+                            }
+
+                            return true;
+                        }
+                    });
+
+                    //browser.setProperty("useragent", "Mozilla/5.0 (Linux; Android 4.0.4; Galaxy Nexus Build/IMM76K) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.166 Mobile Safari/535.19");
+                    //browser.setProperty("useragent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.45 Safari/535.19");
+                    contStep2.add(BorderLayout.CENTER, browser);
+                    contStep2.setScrollableX(false);
+                    contStep2.setScrollableY(false);
+                    f.setScrollableX(false);
+                    f.setScrollableY(false);
+                    f.revalidate();
                 }
             });
 
@@ -2020,13 +2120,16 @@ public class StateMachine extends StateMachineBase {
             //            }
             //        });
             if (!Display.getInstance().isTablet()) {
-                f.add(cont);
+                f.add(BorderLayout.CENTER, cont);
+
             }
 
         } else {
             Dialog.show("No Items", "You do not have any Cart items. Please perform a transaction first.", "Ok", null);
             showDashboard(f);
         }
+        f.revalidate();
+        Log.p("2046", Log.DEBUG);
 
         if (formProgress != null) {
             formProgress.removeProgress();
@@ -2382,22 +2485,36 @@ public class StateMachine extends StateMachineBase {
                 content = contentParam;
             }
 
+            //content.setUIID("ContainerContentTabletPortrait");
+            if (content != null && content.getName() != null && (content.getName().equals("NameReservation")
+                    || content.getName().equals("Cart"))) {
+                content.setUIID("BackgroundWhiteTabletPortrait", "BackgroundWhiteTabletLandscape");
+            } else {
+                content.setUIID("ContainerContentTabletPortrait", "ContainerContentTabletLandscape");
+
+            }
             f.removeComponent(content);
             f.removeAll();
-            f.setLayout(layout);
+            // f.setLayout(new BorderLayout());
 
-            if (isPotrait) {
-                f.addComponent(layout.createConstraint().widthPercentage(10), new Label(" "));
-                f.addComponent(layout.createConstraint().widthPercentage(80), content);
-                f.addComponent(layout.createConstraint().widthPercentage(10), new Label(" "));
-            } else {
-                f.addComponent(layout.createConstraint().widthPercentage(25), new Label(" "));
-                f.addComponent(layout.createConstraint().widthPercentage(50), content);
-                f.addComponent(layout.createConstraint().widthPercentage(25), new Label(" "));
-            }
+            //f.setUIID("BackgroundTableLandscape");
+            //f.addComponent(BorderLayout.CENTER, content);
+            f.setLayout(new GridLayout(1, 1));
+            f.addComponent(content);
+
+            f.revalidate();
+
+//            if (isPotrait) {
+//                f.addComponent(layout.createConstraint().widthPercentage(10), new Label(" "));
+//                f.addComponent(layout.createConstraint().widthPercentage(80), content);
+//                f.addComponent(layout.createConstraint().widthPercentage(10), new Label(" "));
+//            } else {
+//                f.addComponent(layout.createConstraint().widthPercentage(25), new Label(" "));
+//                f.addComponent(layout.createConstraint().widthPercentage(50), content);
+//                f.addComponent(layout.createConstraint().widthPercentage(25), new Label(" "));
+//            }
         }
 
-        f.repaint();
     }
 
     public void stylePicker(Picker picker) {
