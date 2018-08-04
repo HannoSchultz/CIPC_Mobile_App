@@ -685,6 +685,10 @@ public class StateMachine extends StateMachineBase {
         });
 
         btnLodge.addActionListener((ActionListener) (ActionEvent evt) -> {
+         
+                formProgress = new FormProgress(f);
+            
+            
             String name1 = txtName1.getText();
             String name2 = txtName2.getText();
             String name3 = txtName3.getText();
@@ -730,6 +734,9 @@ public class StateMachine extends StateMachineBase {
                 if (responseCall != null
                         && responseCall.getResponseMessage() != null
                         && responseCall.getResponseMessage().indexOf("Error 500") > -1) {
+                    if(formProgress != null){
+                        formProgress.removeProgress();
+                    }
                     Dialog.show("Error", responseCall.getResponseMessage(), "Ok", null);//TODO scroll to top
                 } else if (responseCall != null
                         && responseCall.getResponseMessage().indexOf("already filed") == -1) {
@@ -739,8 +746,12 @@ public class StateMachine extends StateMachineBase {
 
                     String ref = responseCall.getResponseMessage().substring(indexStart, indexEnd);
 
+                    if(formProgress != null){
+                        formProgress.removeProgress();
+                    }
                     Dialog.show("Success", "Dear Customer, Name Reservation Lodged successfully. Payment Reference No: " + ref + ".", "Ok", null);
 
+                    formProgress = new FormProgress(f);
                     //Dialog.show("Success", responseCall.getResponseMessage(), "Ok", null); do not remove
                     Log.p("Name reservation responseCall=" + responseCall, Log.DEBUG);
 
@@ -1665,6 +1676,10 @@ public class StateMachine extends StateMachineBase {
     BrowserComponent browser;
 
     public void showCart2(final Form f) {
+        
+        if(formProgress == null){
+            formProgress = new FormProgress(f);
+        }
 
         hideLogout();
 
