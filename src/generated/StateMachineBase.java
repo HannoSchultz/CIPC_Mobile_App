@@ -190,18 +190,6 @@ public abstract class StateMachineBase extends UIBuilder {
         return cmp;
     }
 
-    public com.codename1.ui.Label findLblName1Response(Component root) {
-        return (com.codename1.ui.Label)findByName("lblName1Response", root);
-    }
-
-    public com.codename1.ui.Label findLblName1Response() {
-        com.codename1.ui.Label cmp = (com.codename1.ui.Label)findByName("lblName1Response", Display.getInstance().getCurrent());
-        if(cmp == null && aboutToShowThisContainer != null) {
-            cmp = (com.codename1.ui.Label)findByName("lblName1Response", aboutToShowThisContainer);
-        }
-        return cmp;
-    }
-
     public com.codename1.ui.TextArea findTxtStep3Address(Component root) {
         return (com.codename1.ui.TextArea)findByName("txtStep3Address", root);
     }
@@ -970,18 +958,6 @@ public abstract class StateMachineBase extends UIBuilder {
         return cmp;
     }
 
-    public com.codename1.ui.Label findLblName4Response(Component root) {
-        return (com.codename1.ui.Label)findByName("lblName4Response", root);
-    }
-
-    public com.codename1.ui.Label findLblName4Response() {
-        com.codename1.ui.Label cmp = (com.codename1.ui.Label)findByName("lblName4Response", Display.getInstance().getCurrent());
-        if(cmp == null && aboutToShowThisContainer != null) {
-            cmp = (com.codename1.ui.Label)findByName("lblName4Response", aboutToShowThisContainer);
-        }
-        return cmp;
-    }
-
     public com.codename1.ui.Button findBtnCheckout(Component root) {
         return (com.codename1.ui.Button)findByName("btnCheckout", root);
     }
@@ -1594,18 +1570,6 @@ public abstract class StateMachineBase extends UIBuilder {
         return cmp;
     }
 
-    public com.codename1.ui.Label findLblName3Response(Component root) {
-        return (com.codename1.ui.Label)findByName("lblName3Response", root);
-    }
-
-    public com.codename1.ui.Label findLblName3Response() {
-        com.codename1.ui.Label cmp = (com.codename1.ui.Label)findByName("lblName3Response", Display.getInstance().getCurrent());
-        if(cmp == null && aboutToShowThisContainer != null) {
-            cmp = (com.codename1.ui.Label)findByName("lblName3Response", aboutToShowThisContainer);
-        }
-        return cmp;
-    }
-
     public com.codename1.ui.TextArea findTxtARStep2BusinessDescription(Component root) {
         return (com.codename1.ui.TextArea)findByName("txtARStep2BusinessDescription", root);
     }
@@ -1858,18 +1822,6 @@ public abstract class StateMachineBase extends UIBuilder {
         return cmp;
     }
 
-    public com.codename1.ui.Label findLblName2Response(Component root) {
-        return (com.codename1.ui.Label)findByName("lblName2Response", root);
-    }
-
-    public com.codename1.ui.Label findLblName2Response() {
-        com.codename1.ui.Label cmp = (com.codename1.ui.Label)findByName("lblName2Response", Display.getInstance().getCurrent());
-        if(cmp == null && aboutToShowThisContainer != null) {
-            cmp = (com.codename1.ui.Label)findByName("lblName2Response", aboutToShowThisContainer);
-        }
-        return cmp;
-    }
-
     public com.codename1.ui.Label findLabel9(Component root) {
         return (com.codename1.ui.Label)findByName("Label9", root);
     }
@@ -2062,6 +2014,18 @@ public abstract class StateMachineBase extends UIBuilder {
         return cmp;
     }
 
+    public com.codename1.ui.Label findLblResponse4(Component root) {
+        return (com.codename1.ui.Label)findByName("lblResponse4", root);
+    }
+
+    public com.codename1.ui.Label findLblResponse4() {
+        com.codename1.ui.Label cmp = (com.codename1.ui.Label)findByName("lblResponse4", Display.getInstance().getCurrent());
+        if(cmp == null && aboutToShowThisContainer != null) {
+            cmp = (com.codename1.ui.Label)findByName("lblResponse4", aboutToShowThisContainer);
+        }
+        return cmp;
+    }
+
     public com.codename1.ui.Label findLabel2(Component root) {
         return (com.codename1.ui.Label)findByName("Label2", root);
     }
@@ -2074,6 +2038,30 @@ public abstract class StateMachineBase extends UIBuilder {
         return cmp;
     }
 
+    public com.codename1.ui.Label findLblResponse3(Component root) {
+        return (com.codename1.ui.Label)findByName("lblResponse3", root);
+    }
+
+    public com.codename1.ui.Label findLblResponse3() {
+        com.codename1.ui.Label cmp = (com.codename1.ui.Label)findByName("lblResponse3", Display.getInstance().getCurrent());
+        if(cmp == null && aboutToShowThisContainer != null) {
+            cmp = (com.codename1.ui.Label)findByName("lblResponse3", aboutToShowThisContainer);
+        }
+        return cmp;
+    }
+
+    public com.codename1.ui.Label findLblResponse2(Component root) {
+        return (com.codename1.ui.Label)findByName("lblResponse2", root);
+    }
+
+    public com.codename1.ui.Label findLblResponse2() {
+        com.codename1.ui.Label cmp = (com.codename1.ui.Label)findByName("lblResponse2", Display.getInstance().getCurrent());
+        if(cmp == null && aboutToShowThisContainer != null) {
+            cmp = (com.codename1.ui.Label)findByName("lblResponse2", aboutToShowThisContainer);
+        }
+        return cmp;
+    }
+
     public com.codename1.ui.TextField findTxtARStep2EmailAddress(Component root) {
         return (com.codename1.ui.TextField)findByName("txtARStep2EmailAddress", root);
     }
@@ -2082,6 +2070,18 @@ public abstract class StateMachineBase extends UIBuilder {
         com.codename1.ui.TextField cmp = (com.codename1.ui.TextField)findByName("txtARStep2EmailAddress", Display.getInstance().getCurrent());
         if(cmp == null && aboutToShowThisContainer != null) {
             cmp = (com.codename1.ui.TextField)findByName("txtARStep2EmailAddress", aboutToShowThisContainer);
+        }
+        return cmp;
+    }
+
+    public com.codename1.ui.Label findLblResponse1(Component root) {
+        return (com.codename1.ui.Label)findByName("lblResponse1", root);
+    }
+
+    public com.codename1.ui.Label findLblResponse1() {
+        com.codename1.ui.Label cmp = (com.codename1.ui.Label)findByName("lblResponse1", Display.getInstance().getCurrent());
+        if(cmp == null && aboutToShowThisContainer != null) {
+            cmp = (com.codename1.ui.Label)findByName("lblResponse1", aboutToShowThisContainer);
         }
         return cmp;
     }

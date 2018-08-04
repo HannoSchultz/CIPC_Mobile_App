@@ -475,10 +475,10 @@ public class StateMachine extends StateMachineBase {
         TextField txtName3 = (TextField) findByName("txtName3", contTasks);
         TextField txtName4 = (TextField) findByName("txtName4", contTasks);
 
-        Label lblName1Response = (Label) findByName("lblName1Response", contTasks);
-        Label lblName2Response = (Label) findByName("lblName2Response", contTasks);
-        Label lblName3Response = (Label) findByName("lblName3Response", contTasks);
-        Label lblName4Response = (Label) findByName("lblName4Response", contTasks);
+        Label lblName1Response = (Label) findByName("lblResponse1", contTasks);
+        Label lblName2Response = (Label) findByName("lblResponse2", contTasks);
+        Label lblName3Response = (Label) findByName("lblResponse3", contTasks);
+        Label lblName4Response = (Label) findByName("lblResponse4", contTasks);
 
         Button btnVerify = (Button) findByName("btnVerify", contTasks);
         Button btnLodge = (Button) findByName("btnLodge", contTasks);
@@ -492,6 +492,13 @@ public class StateMachine extends StateMachineBase {
         }
 
         btnVerify.addActionListener((ActionListener) (ActionEvent evt) -> {
+            
+            lblName1Response.setText(" ");
+            lblName2Response.setText(" ");
+            lblName3Response.setText(" ");
+            lblName4Response.setText(" ");
+            
+            
             String name1 = txtName1.getText();
             String name2 = txtName2.getText();
             String name3 = txtName3.getText();
@@ -516,29 +523,76 @@ public class StateMachine extends StateMachineBase {
 
                 UserWebServices u = new UserWebServices();
                 arrayListNameReservation = u.search_name_MOBI(AGENT_CODE, name1, name2, name3, name4);
-
-                for (int i = 0; i < arrayListNameReservation.size(); i++) {
-                    int count = i + 1;
-                    Label lblResponse = (Label) findByName("lblName" + count + "Response", contTasks);
-                    Container parent = lblResponse.getParent();
-                    NameSearchObject n = arrayListNameReservation.get(i);
-                    if (n.isIsValid()) {
-                        btnLodge.setUIID("ButtonNameSearch");
-                        btnLodge.repaint();
-                        lblResponse.setText("Might be available");
-                        lblResponse.setUIID("LabelGreen");
-                    } else {
-                        lblResponse.setText("Is not available");
-                        lblResponse.setUIID("LabelRed");
-
-                    }
-                    
+                Log.p("arrayListNameReservation size: " + arrayListNameReservation.size(), Log.DEBUG);
+                
+                if(arrayListNameReservation.size() == 0){
+                    Dialog.show("Error", "Error occurred while processing your request. Please contact CIPC.", "Ok", null);
                 }
 
-               // contTasks.revalidate();
+                for (int i = 0; i < arrayListNameReservation.size(); i++) {
+                    NameSearchObject n = arrayListNameReservation.get(i);
+                    String name = n.getName().substring(0, n.getName().indexOf("|"));
+                    String currentName = "";
+                    Log.p("name=" + n.getName() +"after name=" + name, Log.DEBUG);
+
+                    Label lblResponse = null;
+                    if (name1.equals(name)) {
+                        currentName = name1;
+                        lblResponse = (Label) findByName("lblResponse1", contTasks);
+                    }
+                    if (name2.equals(name)) {
+                         currentName = name1;
+                        lblResponse = (Label) findByName("lblResponse2", contTasks);
+                    }
+                    if (name3.equals(name)) {
+                         currentName = name1;
+                        lblResponse = (Label) findByName("lblResponse3", contTasks);
+                    }
+                    if (name4.equals(name)) {
+                         currentName = name1;
+                        lblResponse = (Label) findByName("lblResponse4", contTasks);
+                    }
+                    
+                    Log.p("lblResponse=" + lblResponse, Log.DEBUG);
+
+                    if ( currentName.length() > 0 && n.isIsValid()) {
+                        btnLodge.setUIID("ButtonNameSearch");
+                        btnLodge.repaint();
+                        if (lblResponse != null) {
+                            lblResponse.setText("Might be available");
+                            lblResponse.setUIID("LabelGreen");
+                        }
+                    } else if(currentName.length() > 0 && n.isIsValid() == false) {
+                        if (lblResponse != null) {
+                            lblResponse.setText("Is not available");
+                            lblResponse.setUIID("LabelRed");
+                        }
+                    }
+                }
+
+//                for (int i = 0; i < arrayListNameReservation.size(); i++) {
+//                    int count = i + 1;
+//                    Label lblResponse = (Label) findByName("lblName" + count + "Response", contTasks);
+//                    Container parent = lblResponse.getParent();
+//                    NameSearchObject n = arrayListNameReservation.get(i);
+//                    Log.p("name=" + n.getName(), Log.DEBUG);
+//                    
+//                    if (n.isIsValid()) {
+//                        btnLodge.setUIID("ButtonNameSearch");
+//                        btnLodge.repaint();
+//                        lblResponse.setText("Might be available");
+//                        lblResponse.setUIID("LabelGreen");
+//                    } else {
+//                        lblResponse.setText("Is not available");
+//                        lblResponse.setUIID("LabelRed");
+//
+//                    }
+//
+//                }
+                // contTasks.revalidate();
                 lblLine1.scrollRectToVisible(0, 0, 0, 0, lblLine1);
                 f.revalidate();
-                
+
             }
         });
 
@@ -796,7 +850,12 @@ public class StateMachine extends StateMachineBase {
 //            f.addComponent(layout.createConstraint().heightPercentage(85).widthPercentage(100), cont);
             f.setLayout(new BorderLayout());
             Container north = new Container(BoxLayout.y());
-            north.add(" ").add(" ").add(" ");
+            if (Display.getInstance().getPlatformName().equals("and")) {
+                north.add(" ").add(" ").add(" ");
+            } else {
+                north.add(" ");
+            }
+
             f.add(BorderLayout.NORTH, north);
             f.add(BorderLayout.CENTER, cont);
 
@@ -1122,7 +1181,7 @@ public class StateMachine extends StateMachineBase {
                         Log.p(annualReturns.toString(), Log.DEBUG);
 
                         formProgress.removeProgress();
-                       // formProgress.removeProgress();
+                        // formProgress.removeProgress();
                         Log.p("refresh", Log.DEBUG);
 
                         txtARStep2EmailAddress.setText(annualReturns.getEnt_email());
@@ -1133,7 +1192,7 @@ public class StateMachine extends StateMachineBase {
                         txtARStep2BusinessDescription.setText(annualReturns.getBus_desc());
                         txtARStep2PrincipalPlace.setText(annualReturns.getPrinc_bus_place());
 
-                       tabs.repaint();
+                        tabs.repaint();
 
                         btn1.setUIID("CIPC_DARK");
                         btn2.setUIID("CIPC_DARK_SELECTED");
@@ -1166,8 +1225,8 @@ public class StateMachine extends StateMachineBase {
                         if (formProgress != null) {
                             formProgress.removeProgress();
                         }
-                        
-                         tabs.setSelectedIndex(1);
+
+                        tabs.setSelectedIndex(1);
 
                     } else {
 
@@ -1180,9 +1239,7 @@ public class StateMachine extends StateMachineBase {
                 }
                 f.revalidate();
             }
-            
-        
-            
+
         });
 
         //Step 3//Please enter Annual Turnover for the current filing year, 2018:
@@ -1632,7 +1689,7 @@ public class StateMachine extends StateMachineBase {
                 Log.p("onStart: " + browser.getURL(), Log.DEBUG);
 
                 if (browser.getURL().indexOf("Pay.aspx") > -1) {
-                    if(isCartStep2 == true){
+                    if (isCartStep2 == true) {
                         isCartStep3 = true;
                     }
                     formProgress = new FormProgress(f);
@@ -1657,13 +1714,13 @@ public class StateMachine extends StateMachineBase {
                 }
 
                 if (browser != null && browser.getURL() != null && browser.getURL().indexOf("Pay.aspx") > -1) {
-                    if(isCartStep2 == true){
+                    if (isCartStep2 == true) {
                         isCartStep3 = true;
                     }
                 }
 
                 if (browser != null && browser.getURL() != null && browser.getURL().indexOf("ACSRedirect.aspx") > -1) {
-                    if(isCartStep3 == true){
+                    if (isCartStep3 == true) {
                         isCartStep4 = true;
                     }
                 }
@@ -2343,6 +2400,23 @@ public class StateMachine extends StateMachineBase {
         f.repaint();
     }
 
+    public void stylePicker(Picker picker) {
+        picker.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                Log.p("picker.getSelectedStringIndex() =" + picker.getSelectedStringIndex(), Log.DEBUG);
+                if (picker.getSelectedStringIndex() == 0) {
+                    picker.setUIID("PickerIcon");
+                    Log.p("PickerIcon", Log.DEBUG);
+                } else {
+                    Log.p("PickerIconBlack", Log.DEBUG);
+                    picker.setUIID("PickerIconBlack");
+                }
+                picker.repaint();
+            }
+        });
+    }
+
     @Override
     protected void beforeRegistration(Form f) {
 
@@ -2405,7 +2479,8 @@ public class StateMachine extends StateMachineBase {
 //        btnStep2Continue.repaint();
 //        btnStep3Next.repaint();
         //btnStep1RetrieveDetails.setIcon(imgForward);
-        Picker pickerCountry = (Picker) findByName("pickerStep2Country", f);
+        final Picker pickerCountry = (Picker) findByName("pickerStep2Country", f);
+        stylePicker(pickerCountry);
 
         pickerCountry.setType(Display.PICKER_TYPE_STRINGS);
         pickerCountry.setStrings(strCoutries);
@@ -2423,6 +2498,7 @@ public class StateMachine extends StateMachineBase {
         TextField txtStep3City = (TextField) findByName("txtStep3City", tabs);
         TextField txtStep3PostalCode = (TextField) findByName("txtStep3PostalCode", tabs);
         Picker step3Province = (Picker) findByName("step3Province", f);
+        stylePicker(step3Province);
         step3Province.setType(Display.PICKER_TYPE_STRINGS);
         String[] strProvinces = {"Select Province",
             "Eastern Cape", "Free State", "Gauteng", "Kwazulu Natal", "Limpopo",
@@ -2432,6 +2508,7 @@ public class StateMachine extends StateMachineBase {
 
         TextArea txtStep3PostalAddress = new TextArea();
         Picker step3PostalProvince = new Picker();
+        stylePicker(step3PostalProvince);
         TextField txtStep3PostalCity = new TextField();
         TextField txtStep3PostalPostalCode = new TextField();
 
@@ -2621,8 +2698,8 @@ public class StateMachine extends StateMachineBase {
                 msg += "Please enter Last Name. ";
             }
 
-            if (  (txtStep2CellPhone.getText().length() >= 0 && txtStep2CellPhone.getText().length() != 10) ||
-                   isCellPhoneValid(txtStep2CellPhone.getText()) == false ) {
+            if ((txtStep2CellPhone.getText().length() >= 0 && txtStep2CellPhone.getText().length() != 10)
+                    || isCellPhoneValid(txtStep2CellPhone.getText()) == false) {
                 msg += "Please enter a valid Cell Phone Number. ";
             }
             if (txtStep2Email.getText().length() == 0 || isEmailValid(txtStep2Email.getText()) == false) {
@@ -3124,9 +3201,8 @@ public class StateMachine extends StateMachineBase {
             //System.exit(0);
 
         }
-        
-        //Dialog.show("Title", "Body", "Yes", null);
 
+        //Dialog.show("Title", "Body", "Yes", null);
     }
 
     @Override

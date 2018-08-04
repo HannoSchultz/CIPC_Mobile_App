@@ -133,24 +133,24 @@ public class UserWebServices {
             XMLParser parser = new XMLParser();
             parser.setCaseSensitive(true);
             Element element = parser.parse(convertStringtoInputStreamReader(result.getAsString("//dataset")));
-            
-           dataStructure = new  Hashtable<String, Dashboard> ();
+
+            dataStructure = new Hashtable<String, Dashboard>();
 
             for (int i = 0; i < element.getNumChildren(); i++) {
                 Element child = element.getChildAt(i);
-                Log.p("i=" + i +  "child =" + child, Log.DEBUG);
+                Log.p("i=" + i + "child =" + child, Log.DEBUG);
 
                 String button_name = RSM(((Element) child.getTextChildren(null, true).get(1)).toString());
                 String b_visible = RSM(((Element) child.getTextChildren(null, true).get(3)).toString());
-                
+
                 Dashboard d = new Dashboard();
                 d.setButton_name(button_name);
                 d.setB_visible(b_visible);
-                
+
                 dataStructure.put(button_name, d);
-               
+
             }
-            
+
             return dataStructure;
 
         } catch (IllegalArgumentException e) {
@@ -3704,41 +3704,54 @@ public class UserWebServices {
         NetworkManager.getInstance().addToQueueAndWait(httpRequest);
         String data = new String(httpRequest.getResponseData());
         Log.p("Data d: " + data, Log.DEBUG);
+        Log.p("Index=" + data.indexOf("is no row at position 0"), Log.DEBUG);
+        
+        if(data != null && data.indexOf("is no row at position 0") < 0){
 
-        try {
+            try {
 
-            Result result = Result.fromContent(data.toLowerCase(), Result.XML);
+                Result result = Result.fromContent(data.toLowerCase(), Result.XML);
 
-            Log.p("Element e: " + result, Log.DEBUG);
+                Log.p("Element e: " + result, Log.DEBUG);
 
-            XMLParser parser = new XMLParser();
-            parser.setCaseSensitive(true);
-            Element element = parser.parse(convertStringtoInputStreamReader(result.getAsString("//dataset")));
+                XMLParser parser = new XMLParser();
+                parser.setCaseSensitive(true);
+                Element element = parser.parse(convertStringtoInputStreamReader(result.getAsString("//dataset")));
 
-            for (int i = 0; i < element.getNumChildren(); i++) {
+                for (int i = 0; i < element.getNumChildren(); i++) {
 
-                Element child = element.getChildAt(i);
+                    Element child = element.getChildAt(i);
 
-                Log.p("chiled=" + child, Log.DEBUG);
-                Element name = (Element) child.getTextChildren(null, true).get(0);
-                String elemName = RSM(name.toString());
-                Log.p("elemName=" + elemName, Log.DEBUG);
+                    Log.p("chiled=" + child, Log.DEBUG);
+                    try{
+                        Element name = (Element) child.getTextChildren(null, true).get(0);
+                        String elemName = RSM(name.toString());
 
-                StringTokenizer st = new StringTokenizer(elemName, "|");
+                        Log.p("elemName=" + elemName, Log.DEBUG);
 
-                NameSearchObject n = new NameSearchObject();
-                n.setName(elemName);
+                        if(elemName != null && elemName.length() > 2){
 
-                if (st != null && st.countTokens() > 1) {
-                    n.setIsValid(false);
-                } else {
-                    n.setIsValid(true);
+                            StringTokenizer st = new StringTokenizer(elemName, "|");
+
+                            NameSearchObject n = new NameSearchObject();
+                            n.setName(elemName);
+
+                            if (st != null && st.countTokens() > 1) {
+                                n.setIsValid(false);
+                            } else {
+                                n.setIsValid(true);
+                            }
+                            arrayList.add(n);
+                        }
+                    }
+                    catch(Exception e){
+                        Log.e(e);
+                    }
                 }
-                arrayList.add(n);
-            }
 
-        } catch (IllegalArgumentException e) {
-            Log.p(e.toString());
+            } catch (IllegalArgumentException e) {
+                Log.p(e.toString());
+            }
         }
 
         return arrayList;
