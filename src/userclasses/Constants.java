@@ -22,5 +22,7 @@ public class Constants {
     public static String cartAPIUsername = "CipcMobile";
     public static String cartAPIPassword = "q3CWRG!*WsW9mYae";
     public static String paymentEndPoint = "https://paymenttest.cipc.co.za:9443/";
+    
+    public static String CONNECTION_ERROR_MESSAGE = "The CIPC App is offline at the moment. Please try again later.";
 
 }

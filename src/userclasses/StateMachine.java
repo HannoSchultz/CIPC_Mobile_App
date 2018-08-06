@@ -294,9 +294,9 @@ public class StateMachine extends StateMachineBase {
 //            UserWebServices uw = new UserWebServices();
 //            //uw.get_cust_MOBI_2(tmpUser);
 //            
-//            uw.update_app_version("0.24");
+//            uw.update_app_version("0.25");
 //            uw.get_app_version(tmpUser);
-//
+////
 //            //step2
 //            tmpUser.setFirst_name("Blessing");
 //            tmpUser.setLast_name("Mahlalela");
@@ -512,9 +512,8 @@ public class StateMachine extends StateMachineBase {
 
             String msg = "";
 
-            if (name1.length() == 0 && name2.length() == 0
-                    && name3.length() == 0 && name4.length() == 0) {
-                msg += "Please submit at least one Name. ";
+            if (name1.length() == 0) {
+                msg += "Please complete Name 1. ";
             }
 
             if (isAlphaNumeric(name1) == false
@@ -716,6 +715,10 @@ public class StateMachine extends StateMachineBase {
                 }
             }
 
+            if (name1.length() == 0) {
+                msg += "Please complete Name 1. ";
+            }
+
             if (isAlphaNumeric(name1) == false
                     || isAlphaNumeric(name2) == false
                     || isAlphaNumeric(name3) == false || isAlphaNumeric(name4) == false) {
@@ -788,7 +791,7 @@ public class StateMachine extends StateMachineBase {
 
     }
     ActionListener orientationListener = null;
-    
+
     static boolean isFromDash = false;
 
     public void showDashboard(final Form f) {
@@ -912,6 +915,9 @@ public class StateMachine extends StateMachineBase {
         Hashtable<String, Dashboard> table = u.get_mobi_permissions(AGENT_CODE);
 
         if (table == null || table.size() == 0) {
+            cont.setUIID("Container");
+            cont.repaint();
+            Dialog.show("Error", "Your Customer Code is not linked to any services available on the mobile app.", "Ok", null);
             //cont.remove();
             //f.reva
         } else {
@@ -1697,7 +1703,7 @@ public class StateMachine extends StateMachineBase {
         ArrayList CartItems = (ArrayList) map.get("CartItems");
 
         if ((AnnualReturns != null && !AnnualReturns.isEmpty()) || (CartItems != null && !CartItems.isEmpty())) {
-            
+
             isFromDash = false;
 
             formProgress = new FormProgress(f);
@@ -2131,7 +2137,7 @@ public class StateMachine extends StateMachineBase {
                                         isCartStep4 = false;
                                         showCart2(f);
                                         Dialog.show("Error", "Payment error. Please contact CIPC.", "Ok", null);
-                                        
+
                                     }
                                 });
                                 //showDashboard(f);
@@ -2170,10 +2176,9 @@ public class StateMachine extends StateMachineBase {
             //        });
         } else {
             Dialog.show("No Items", "You do not have any Cart items. Please perform a transaction first.", "Ok", null);
-            if(isFromDash == false){//avoid reload
+            if (isFromDash == false) {//avoid reload
                 showDashboard(f);
-            }
-            else{
+            } else {
                 isFromDash = false;
             }
         }
@@ -3351,20 +3356,22 @@ public class StateMachine extends StateMachineBase {
 
         String currentAppVersion = Display.getInstance().getProperty("AppVersion", "Unknown");
 
-        double server = Double.parseDouble(serverVersion);
-        double device = Double.parseDouble(currentAppVersion);
+        if(serverVersion != null && currentAppVersion != null){
+            double server = Double.parseDouble(serverVersion);
+            double device = Double.parseDouble(currentAppVersion);
 
-        Log.p("server=" + server + " device=" + device, Log.DEBUG);
+            Log.p("server=" + server + " device=" + device, Log.DEBUG);
 
-        if (server <= device) {
-            Log.p("app version is fine", Log.DEBUG);
+            if (server <= device) {
+                Log.p("app version is fine", Log.DEBUG);
 
-        } else {
-            Dialog.show("App Version", "The current CIPC App Version is: " + serverVersion + " and "
-                    + "your  app version is " + currentAppVersion + " Please update your CIPC App to the latest version in order to use the CIPC App.", "Ok", null);
-            Display.getInstance().exitApplication();
-            //System.exit(0);
+            } else {
+                Dialog.show("App Version", "The current CIPC App Version is: " + serverVersion + " and "
+                        + "your  app version is " + currentAppVersion + " Please update your CIPC App to the latest version in order to use the CIPC App.", "Ok", null);
+                Display.getInstance().exitApplication();
+                //System.exit(0);
 
+            }
         }
 
         //Dialog.show("Title", "Body", "Yes", null);
