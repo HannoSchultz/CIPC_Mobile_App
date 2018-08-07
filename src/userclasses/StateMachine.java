@@ -226,7 +226,7 @@ public class StateMachine extends StateMachineBase {
 
             AGENT_CODE = "NEWLNE";
 
-            Log.p("isCellPhoneValid=" + isCellPhoneValid("0833598094"), Log.DEBUG);
+            Log.p("isCellPhoneValid=" + isCellPhoneValid("0827786881"), Log.DEBUG);
             Log.p("isEmailValid=" + isEmailValid("blessing@mfactory.mobi"), Log.DEBUG);
             Log.p("isUrlValid=" + isUrlValid("www.mfactory.mobi"), Log.DEBUG);
 
@@ -1358,26 +1358,13 @@ public class StateMachine extends StateMachineBase {
 
         btnStep2Confirm.addActionListener((ActionListener) (ActionEvent evt) -> {
 
-            if (txtARStep2EmailAddress != null
-                    && txtARStep2TelCode != null
-                    && txtARStep2TelNo != null
-                    && txtARStep2BusinessDescription != null) {
-                ar2EmailAddress = txtARStep2EmailAddress.getText();
-                ar2TelCode = txtARStep2TelCode.getText();
-                ar2TelNumber = txtARStep2TelNo.getText();
-                ar2CellNumber = txtARStep2CellNumber.getText();
-                ar2WebAddress = txtARStep2WebAddress.getText();
-                ar2BusinessDescription = txtARStep2BusinessDescription.getText();
-                ar2PlaceOfBusiness = txtARStep2PrincipalPlace.getText();
-            } else {
-                ar2EmailAddress = "";
-                ar2TelCode = "";
-                ar2TelNumber = "";
-                ar2CellNumber = "";
-                ar2WebAddress = "";
-                ar2BusinessDescription = "";
-                ar2PlaceOfBusiness = "";
-            }
+            ar2EmailAddress = txtARStep2EmailAddress.getText();
+            ar2TelCode = txtARStep2TelCode.getText();
+            ar2TelNumber = txtARStep2TelNo.getText();
+            ar2CellNumber = txtARStep2CellNumber.getText();
+            ar2WebAddress = txtARStep2WebAddress.getText();
+            ar2BusinessDescription = txtARStep2BusinessDescription.getText();
+            ar2PlaceOfBusiness = txtARStep2PrincipalPlace.getText();
 
             boolean flag = false;
 
@@ -1405,8 +1392,8 @@ public class StateMachine extends StateMachineBase {
                 message += "Please enter a valid website URL. ";
             }
 
-            if ((ar2CellNumber.length() > 0 && isCellPhoneValid(ar2CellNumber))
-                    || ar2CellNumber.length() > 0 && ar2CellNumber.length() == 10) {
+            if ((isCellPhoneValid(ar2CellNumber) == false)
+                    || ar2CellNumber.length() > 0 && ar2CellNumber.length() < 10) {
                 message += "Please enter a valid cell phone number. ";
             }
 
@@ -3356,7 +3343,7 @@ public class StateMachine extends StateMachineBase {
 
         String currentAppVersion = Display.getInstance().getProperty("AppVersion", "Unknown");
 
-        if(serverVersion != null && currentAppVersion != null){
+        if (serverVersion != null && currentAppVersion != null) {
             double server = Double.parseDouble(serverVersion);
             double device = Double.parseDouble(currentAppVersion);
 
