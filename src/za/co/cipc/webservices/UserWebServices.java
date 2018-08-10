@@ -1238,7 +1238,7 @@ public class UserWebServices {
                     + "                \"CustomerCode\":\"" + user.getAgent_code() + "\",\n"
                     + "                \"ItemType\":1,\n"
                     + "                \"ItemData\":\""
-                    + "{\\\"ReferenceNumber\\\":" + ReferenceNumber + ",\\\"FormCode\\\":\\\"CK2B\\\",\\\"EnterpriseNumber\\\":\\\"" + ent.getEnt_no() + "\\\",\\\"EnterpriseType\\\":\\\"" + ent.getEnt_type_code() + "\\\",\\\"EnterpriseStatus\\\":\\\"28\\\",\\\"EmailAddress\\\":\\\"" + enterpriseDetails.getEmailAddress() + "\\\",\\\"TelephoneCode\\\":\\\"" + enterpriseDetails.getTelephoneCode() + "\\\",\\\"TelephoneNumber\\\":\\\"" + enterpriseDetails.getTelephoneNumber() + "\\\",\\\"CellphoneNumber\\\":\\\"" + enterpriseDetails.getCellphoneNumber() + "\\\",\\\"WebsiteAddress\\\":\\\" " + enterpriseDetails.getWebsiteAddress() + "\\\",\\\"BusinessDescription\\\":\\\" " + enterpriseDetails.getBusinessDescription() + "\\\",\\\"PrincipalPlaceOfBusiness\\\":\\\" " + enterpriseDetails.getPrincipalPlaceOfBusiness() + "\\\",\\\"EnterpriseNameChanged\\\":0,\\\"FinancialYearEndChanged\\\":0,\\\"RegisteredOfficeChanged\\\":0,\\\"LocationOfRecordsChanged\\\":0,\\\"DirectorsChanged\\\":0,\\\"CompanySecretaryChanged\\\":0,\\\"AuditorsChanged\\\":0,\\\"TotalAmount\\\":" + total + ",\\\"YearData\\\":[";
+                    + "{\\\"ReferenceNumber\\\":" + ReferenceNumber + ",\\\"FormCode\\\":\\\"CK2B\\\",\\\"EnterpriseNumber\\\":\\\"" + ent.getEnt_no() + "\\\",\\\"EnterpriseType\\\":\\\"" + ent.getEnt_type_code() + "\\\",\\\"EnterpriseStatus\\\":\\\"28\\\",\\\"EmailAddress\\\":\\\"" + enterpriseDetails.getEmailAddress() + "\\\",\\\"TelephoneCode\\\":\\\"" + enterpriseDetails.getTelephoneCode() + "\\\",\\\"TelephoneNumber\\\":\\\"" + enterpriseDetails.getTelephoneNumber() + "\\\",\\\"CellphoneNumber\\\":\\\"" + enterpriseDetails.getCellphoneNumber() + "\\\",\\\"WebsiteAddress\\\":\\\" " + enterpriseDetails.getWebsiteAddress() + "\\\",\\\"BusinessDescription\\\":\\\" " + enterpriseDetails.getBusinessDescription() + "\\\",\\\"PrincipalPlaceOfBusiness\\\":\\\" " + enterpriseDetails.getPrincipalPlaceOfBusiness() + "\\\",\\\"EnterpriseNameChanged\\\":0,\\\"FinancialYearEndChanged\\\":0,\\\"RegisteredOfficeChanged\\\":0,\\\"LocationOfRecordsChanged\\\":0,\\\"DirectorsChanged\\\":0,\\\"BankId\\\":\\\"2222\\\",\\\"CompanySecretaryChanged\\\":0,\\\"AuditorsChanged\\\":0,\\\"TotalAmount\\\":" + total + ",\\\"YearData\\\":[";
 
             AR_BODY += "{\\\"ReferenceNumber\\\":" + ReferenceNumber + ",\\\"EnterpriseNumber\\\":\\\"" + ent.getEnt_no() + "\\\",\\\"Year\\\":" + ent.getAr_year() + ",\\\"Turnover\\\":" + ent.getTurnover() + ",\\\"Amount\\\":" + ent.getAr_amount() + ",\\\"PenaltyFee\\\":" + ent.getAr_penalty() + ",\\\"TotalAmount\\\":" + ent.getAr_total() + ",\\\"Status\\\":null,\\\"StatusDate\\\":\\\"" + getAnnualReturnsDateNow() + "\\\"}";
 
@@ -1251,7 +1251,7 @@ public class UserWebServices {
                     + "                \"CustomerCode\":\"" + user.getAgent_code() + "\",\n"
                     + "                \"ItemType\":1,\n"
                     + "                \"ItemData\":\""
-                    + "{\\\"ReferenceNumber\\\":" + ReferenceNumber + ",\\\"FormCode\\\":\\\"CK2B\\\",\\\"EnterpriseNumber\\\":\\\"" + ent.getEnt_no() + "\\\",\\\"EnterpriseType\\\":\\\"" + ent.getEnt_type_code() + "\\\",\\\"EnterpriseStatus\\\":\\\"28\\\",\\\"EmailAddress\\\":\\\"" + enterpriseDetails.getEmailAddress() + "\\\",\\\"TelephoneCode\\\":\\\"" + enterpriseDetails.getTelephoneCode() + "\\\",\\\"TelephoneNumber\\\":\\\"" + enterpriseDetails.getTelephoneNumber() + "\\\",\\\"CellphoneNumber\\\":\\\"" + enterpriseDetails.getCellphoneNumber() + "\\\",\\\"WebsiteAddress\\\":\\\"" + enterpriseDetails.getWebsiteAddress() + "\\\",\\\"BusinessDescription\\\":\\\"" + enterpriseDetails.getBusinessDescription() + "\\\",\\\"PrincipalPlaceOfBusiness\\\":\\\"" + enterpriseDetails.getPrincipalPlaceOfBusiness() + "\\\",\\\"EnterpriseNameChanged\\\":0,\\\"FinancialYearEndChanged\\\":0,\\\"RegisteredOfficeChanged\\\":0,\\\"LocationOfRecordsChanged\\\":0,\\\"DirectorsChanged\\\":0,\\\"CompanySecretaryChanged\\\":0,\\\"AuditorsChanged\\\":0,\\\"TotalAmount\\\":" + total + ",\\\"YearData\\\":[";
+                    + "{\\\"ReferenceNumber\\\":" + ReferenceNumber + ",\\\"FormCode\\\":\\\"CK2B\\\",\\\"EnterpriseNumber\\\":\\\"" + ent.getEnt_no() + "\\\",\\\"EnterpriseType\\\":\\\"" + ent.getEnt_type_code() + "\\\",\\\"EnterpriseStatus\\\":\\\"28\\\",\\\"EmailAddress\\\":\\\"" + enterpriseDetails.getEmailAddress() + "\\\",\\\"TelephoneCode\\\":\\\"" + enterpriseDetails.getTelephoneCode() + "\\\",\\\"TelephoneNumber\\\":\\\"" + enterpriseDetails.getTelephoneNumber() + "\\\",\\\"CellphoneNumber\\\":\\\"" + enterpriseDetails.getCellphoneNumber() + "\\\",\\\"WebsiteAddress\\\":\\\"" + enterpriseDetails.getWebsiteAddress() + "\\\",\\\"BusinessDescription\\\":\\\"" + enterpriseDetails.getBusinessDescription() + "\\\",\\\"PrincipalPlaceOfBusiness\\\":\\\"" + enterpriseDetails.getPrincipalPlaceOfBusiness() + "\\\",\\\"EnterpriseNameChanged\\\":0,\\\"FinancialYearEndChanged\\\":0,\\\"RegisteredOfficeChanged\\\":0,\\\"LocationOfRecordsChanged\\\":0,\\\"DirectorsChanged\\\":0,\\\"CompanySecretaryChanged\\\":0,\\\"BankId\\\":\\\"2222\\\",\\\"AuditorsChanged\\\":0,\\\"TotalAmount\\\":" + total + ",\\\"YearData\\\":[";
 
             AR_BODY += "{\\\"ReferenceNumber\\\":" + ReferenceNumber + ",\\\"EnterpriseNumber\\\":\\\"" + ent.getEnt_no() + "\\\",\\\"Year\\\":" + ent.getAr_year() + ",\\\"Turnover\\\":" + ent.getTurnover() + ",\\\"Amount\\\":" + ent.getAr_amount() + ",\\\"PenaltyFee\\\":" + ent.getAr_penalty() + ",\\\"TotalAmount\\\": " + ent.getAr_total() + " ,\\\"Status\\\":null,\\\"StatusDate\\\":\\\" " + getAnnualReturnsDateNow() + "\\\"}";
 
@@ -1272,6 +1272,8 @@ public class UserWebServices {
         AR_BODY += "],\\\"ItemsCount\\\":" + listCalculateARTran.size() + "}\",\n"
                 + "\"Amount\":" + total + "\n"
                 + "}";
+        
+        Log.p("AR_BODY=" + AR_BODY, Log.DEBUG);
 
 //        working sample
 //        AR_BODY
@@ -1788,6 +1790,17 @@ public class UserWebServices {
     }//end login
 
     public User get_cust_MOBI_2(User user) {
+        
+        String version = Display.getInstance().getProperty("AppVersion", "Unknown");
+        String os = Display.getInstance().getPlatformName();
+        String screenSize = Display.getInstance().getDisplayWidth() + " by "+  Display.getInstance().getDisplayHeight();
+        String deviceType = "";
+        if(Display.getInstance().isTablet()){
+            deviceType = "Tablet";
+        }
+        else{
+            deviceType = "Phone";
+        }
 
         final String SOAP_BODY
                 = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cipc=\"CIPC_WEB_SERVICES\">\n"
@@ -1808,27 +1821,29 @@ public class UserWebServices {
                 + "\n"
                 + "         <!--Optional:-->\n"
                 + "\n"
-                + "         <cipc:scustcode>INKE01</cipc:scustcode>\n"
+                + "         <cipc:sCust_Code>"+user.getAgent_code().toUpperCase()+"</cipc:sCust_Code>\n"
                 + "\n"
-                + " \n"
-                + "\n"
-                + "         <!--Optional:-->\n"
-                + "\n"
-                + "         <cipc:deviceOperatingSystem>os</cipc:deviceOperatingSystem>\n"
+                + "         <cipc:screenize>"+screenSize+"</cipc:screenize>\n"
                 + "\n"
                 + "         <!--Optional:-->\n"
                 + "\n"
-                + "         <cipc:deviceType>dt</cipc:deviceType>\n"
+                + "         <cipc:os>"+os+"</cipc:os>\n"
                 + "\n"
                 + "         <!--Optional:-->\n"
                 + "\n"
-                + "         <cipc:cipcAppVersion>1.1</cipc:cipcAppVersion>\n"
+                + "         <cipc:devicetype>"+deviceType+"</cipc:devicetype>\n"
+                + "\n"
+                + "         <!--Optional:-->\n"
+                + "\n"
+                + "         <cipc:cipc_app_v>"+version+"</cipc:cipc_app_v>\n"
                 + "\n"
                 + "      </cipc:get_cust_MOBI_2>\n"
                 + "\n"
                 + "   </soapenv:Body>\n"
                 + "\n"
                 + "</soapenv:Envelope>";
+        
+        Log.p("Login body=" + SOAP_BODY, Log.DEBUG);
 
         ConnectionRequest httpRequest = new ConnectionRequest() {
             Element h;
@@ -1901,42 +1916,23 @@ public class UserWebServices {
                 User responseUser = new User();
 
                 Log.p("get_cust_MOBI_2: " + result, Log.DEBUG);
+                responseUser.setAgent_code(result.getAsString("//agent_code"));
+                responseUser.setPassword(result.getAsString("//password"));
+                responseUser.setAgent_name(result.getAsString("//agent_name"));
 
-//                responseUser.setAgent_code(result.getAsString("//agent_code"));
-//                responseUser.setPassword(result.getAsString("//password"));
-//                responseUser.setAgent_name(result.getAsString("//agent_name"));
-//
-//                responseUser.setTel_code(result.getAsString("//tel_code"));
-//                responseUser.setTel_no(result.getAsString("//tel_no"));
-//
-//                responseUser.setFax_code(result.getAsString("//fax_code"));
-//                responseUser.setFax_no(result.getAsString("//fax_no"));
-//
-//                responseUser.setEmail(result.getAsString("//email"));
-//
-//                responseUser.setStatus(result.getAsString("//status"));
-//
-//                responseUser.setStatus_desc(result.getAsString("//status_desc"));
-//                responseUser.setCell_no(result.getAsString("//cell_no"));
-                //Log.p("get_countries: " + result, Log.DEBUG);
-//                XMLParser parser = new XMLParser();
-//                parser.setCaseSensitive(true);
-//                Element element = parser.parse(convertStringtoInputStreamReader(result.getAsString("//dataset")));
-//
-//                for (int i = 0; i < element.getNumChildren(); i++) {
-//                    Element child = element.getChildAt(i);
-                // if (child.getTextChildren(null, true).size() == 9) {
-//                    String country = RSM(((Element) child.getTextChildren(null, true).get(0)).toString());
-//                    String countr_code = RSM(((Element) child.getTextChildren(null, true).get(1)).toString());
-//
-//                    //Log.p("country=" + country + ", countr_code=" + countr_code, Log.DEBUG);
-//                    Country c = new Country();
-//                    c.setCountr_code(countr_code);
-//                    c.setCountry(country);
-//                    list.add(c);
-                // }
-                //responseUser.setAgent_code(user.getAgent_code());
-                //responseUser.setPassword(result.getAsString("//get_cust_mobiresult"));
+                responseUser.setTel_code(result.getAsString("//tel_code"));
+                responseUser.setTel_no(result.getAsString("//tel_no"));
+
+                responseUser.setFax_code(result.getAsString("//fax_code"));
+                responseUser.setFax_no(result.getAsString("//fax_no"));
+
+                responseUser.setEmail(result.getAsString("//email"));
+
+                responseUser.setStatus(result.getAsString("//status"));
+
+                responseUser.setStatus_desc(result.getAsString("//status_desc"));
+                responseUser.setCell_no(result.getAsString("//cell_no"));
+                
                 return responseUser;
 
             } catch (IllegalArgumentException e) {
@@ -4033,7 +4029,7 @@ public class UserWebServices {
                 + "\n"
                 + "                     <ent_no/>\n"
                 + "\n"
-                + "                     <cust_type>N</cust_type>\n"
+                + "                     <cust_type>P</cust_type>\n"
                 + "\n"
                 + "                     <tel_code/>\n"
                 + "\n"
@@ -4055,7 +4051,7 @@ public class UserWebServices {
                 + "\n"
                 + "                     <phys_add3>" + requestUser.getPhys_addr3() + "</phys_add3>\n"
                 + "\n"
-                + "                     <phys_add4>GAUTENG</phys_add4>\n"
+                + "                     <phys_add4>"+requestUser.getPhys_addr4()+"</phys_add4>\n"
                 + "\n"
                 + "                     <phys_code>" + requestUser.getPhys_code() + "</phys_code>\n"
                 + "\n"
@@ -4065,7 +4061,7 @@ public class UserWebServices {
                 + "\n"
                 + "                     <postal_add3>" + requestUser.getPost_addr3() + "</postal_add3>\n"
                 + "\n"
-                + "                     <postal_add4>GAUTENG</postal_add4>\n"
+                + "                     <postal_add4>"+requestUser.getPost_addr4()+"</postal_add4>\n"
                 + "\n"
                 + "                     <postal_code>" + requestUser.getPost_code() + "</postal_code>\n"
                 + "\n"

@@ -152,6 +152,7 @@ public class StateMachine extends StateMachineBase {
     public boolean isEmailValid(String text) {
         //String expression = "(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])";
         String expression = "^([a-zA-Z0-9_\\-\\.]+)@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.)|(([a-zA-Z0-9\\-]+\\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\\]?)$";
+        //String expression = "^(?(\"\")(\"\"[^\"\"]+?\"\"@)|(([0-9a-z]((\\.(?!\\.))|[-!#\\$%&'\\*\\+/=\\?\\^`\\{\\}\\|~\\w])*)(?<=[0-9a-z])@))(?(\\[)(\\[(\\d{1,3}\\.){3}\\d{1,3}\\])|(([0-9a-z][-\\w]*[0-9a-z]*\\.)+[a-z0-9]{2,17}))$";
         RE r = new RE(expression); // Create new pattern 
         if (r.match(text)) {
             return true;
@@ -203,25 +204,26 @@ public class StateMachine extends StateMachineBase {
 
         NetworkManager.getInstance().setTimeout(30000);
 
-//        Display.getInstance().addEdtErrorHandler(new ActionListener() {
-//            public void actionPerformed(ActionEvent evt) {
-//                evt.consume();
-//                if (Display.getInstance().isSimulator()) {
-//                    Log.p("Environment is Simulator");
-//                } else {
-//                    Log.p("Environment is Device");
-//                }
-//                Log.p("User " + AGENT_CODE);
-//                Log.p("Exception in AppName version " + Display.getInstance().getProperty("AppVersion", "Unknown"));
-//                Log.p("OS " + Display.getInstance().getPlatformName());
-//                Log.p("Error " + evt.getSource());
-//                Log.p("Current Form " + Display.getInstance().getCurrent().getName());
-//                Log.e((Throwable) evt.getSource());
-//                if (!Display.getInstance().isSimulator()) {
-//                    Log.sendLog();
-//                }
-//            }
-//        });
+        Display.getInstance().addEdtErrorHandler(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                evt.consume();
+                if (Display.getInstance().isSimulator()) {
+                    Log.p("Environment is Simulator");
+                } else {
+                    Log.p("Environment is Device");
+                }
+                Log.p("User " + AGENT_CODE);
+                Log.p("Exception in AppName version " + Display.getInstance().getProperty("AppVersion", "Unknown"));
+                Log.p("OS " + Display.getInstance().getPlatformName());
+                Log.p("Error " + evt.getSource());
+                Log.p("Current Form " + Display.getInstance().getCurrent().getName());
+                Log.e((Throwable) evt.getSource());
+                if (!Display.getInstance().isSimulator()) {
+                    Log.sendLog();
+                }
+            }
+        });
+        
         if (Display.getInstance().isSimulator()) {
 
             AGENT_CODE = "NEWLNE";
@@ -849,6 +851,7 @@ public class StateMachine extends StateMachineBase {
         Container contentPane = f.getContentPane();
         contentPane.removeAll();
         Container cont = (Container) createContainer("/theme", "ContDashBoard");
+        Container dashContent = (Container) findByName("DashContent", cont);
 
         if (orientationListener != null) {
             f.removeOrientationListener(orientationListener);
@@ -917,7 +920,7 @@ public class StateMachine extends StateMachineBase {
         if (table == null || table.size() == 0) {
             cont.setUIID("Container");
             cont.repaint();
-            Dialog.show("Error", "Your Customer Code is not linked to any services available on the mobile app.", "Ok", null);
+            Dialog.show("Error", "An Error Occured while fetching CIPC Dashboard information.", "Ok", null);
             //cont.remove();
             //f.reva
         } else {
@@ -943,6 +946,13 @@ public class StateMachine extends StateMachineBase {
                     dynamicCont.remove();
                 }
             }
+
+            if (dashContent.getComponentCount() == 0) {
+                cont.setUIID("Container");
+                cont.repaint();
+                Dialog.show("Notice", "Your Customer Code is not linked to any services available on the mobile app", "Ok", null);
+            }
+
         }
 
 //        mbTasks.setTextLine1("Name Reservations");
@@ -1392,8 +1402,10 @@ public class StateMachine extends StateMachineBase {
                 message += "Please enter a valid website URL. ";
             }
 
-            if ((isCellPhoneValid(ar2CellNumber) == false)
-                    || ar2CellNumber.length() > 0 && ar2CellNumber.length() < 10) {
+            if (ar2CellNumber.length() > 0 && ar2CellNumber.length() < 10) {
+                    message += "Please enter a valid cell phone number. ";
+            }
+            else if(ar2CellNumber != null && ar2CellNumber.length() == 10 && (isCellPhoneValid(ar2CellNumber) == false)){
                 message += "Please enter a valid cell phone number. ";
             }
 
@@ -2356,7 +2368,9 @@ public class StateMachine extends StateMachineBase {
 
             UserWebServices userWebServices = new UserWebServices();
 
-            responseUser = userWebServices.get_cust_MOBI(user);
+            responseUser = userWebServices.get_cust_MOBI_2(user);
+            
+            Log.p("responseUser name=" + responseUser.getAgent_code() + " password=" + responseUser.getPassword(), Log.DEBUG);
 
             String errorMessage = "";
 
@@ -2463,6 +2477,8 @@ public class StateMachine extends StateMachineBase {
         Container contentPane = f.getContentPane();
         contentPane.setScrollVisible(false);
         containerParent.setScrollVisible(false);
+        Button btnForgotPassword = (Button)findByName("btnForgotPassword", f);
+        btnForgotPassword.remove();
 
         f.revalidate();
 
@@ -2654,7 +2670,7 @@ public class StateMachine extends StateMachineBase {
 
         TextArea txtStep3Address = (TextArea) findByName("txtStep3Address", tabs);
         TextField txtStep3City = (TextField) findByName("txtStep3City", tabs);
-        TextField txtStep3PostalCode = (TextField) findByName("txtStep3PostalCode", tabs);
+        TextField txtStep3PhysicalPostalCode = (TextField) findByName("txtStep3PostalCode", tabs);
         Picker step3Province = (Picker) findByName("step3Province", f);
         stylePicker(step3Province);
         step3Province.setType(Display.PICKER_TYPE_STRINGS);
@@ -2830,7 +2846,7 @@ public class StateMachine extends StateMachineBase {
             step3Province.setSelectedStringIndex(3);
             txtStep3Address.setText("Address will go here");
             txtStep3City.setText("Pretoria");
-            txtStep3PostalCode.setText("0001");
+            txtStep3PhysicalPostalCode.setText("0001");
             //Step 4
             txtStep4Password.setText("Password12");
             txtStep4PasswordRetype.setText("Password12");
@@ -2909,7 +2925,7 @@ public class StateMachine extends StateMachineBase {
                 msg += "Please enter Physical City. ";
             }
 
-            if (txtStep3PostalCode.getText().length() == 0) {
+            if (txtStep3PhysicalPostalCode.getText().length() == 0) {
                 msg += "Please select Physical Code. ";
             }
 
@@ -3000,7 +3016,7 @@ public class StateMachine extends StateMachineBase {
                 tmpUser.setPhys_addr1(txtStep3Address.getText());//Street
                 tmpUser.setPhys_addr2(txtStep3City.getText());//City
                 tmpUser.setPhys_addr3(step3Province.getSelectedString());//Province
-                tmpUser.setPost_code(txtStep3PostalCode.getText());
+                tmpUser.setPhys_code(txtStep3PhysicalPostalCode.getText());
 
                 if (rdNo.isSelected()) {//only when radio button is selected
                     tmpUser.setPost_addr1(txtStep3PostalAddress.getText());

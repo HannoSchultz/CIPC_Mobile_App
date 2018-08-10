@@ -1,4 +1,4 @@
-package za.co.cipc.cipcmobile;
+package za.co.cipc.app;
 
 import com.codename1.ui.Display;
 import com.codename1.ui.Form;
