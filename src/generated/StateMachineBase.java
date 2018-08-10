@@ -2184,9 +2184,9 @@ public abstract class StateMachineBase extends UIBuilder {
 
     public static final int COMMAND_ContProfileUpdate = 4;
     public static final int COMMAND_ForgotPasswordRequest = 13;
-    public static final int COMMAND_LoginRegisterAsAUser = 12;
     public static final int COMMAND_LoginLogin = 5;
     public static final int COMMAND_LoginForgotPassword = 14;
+    public static final int COMMAND_LoginRegisterACustomer = 12;
 
     protected boolean onContProfileUpdate() {
         return false;
@@ -2196,15 +2196,15 @@ public abstract class StateMachineBase extends UIBuilder {
         return false;
     }
 
-    protected boolean onLoginRegisterAsAUser() {
-        return false;
-    }
-
     protected boolean onLoginLogin() {
         return false;
     }
 
     protected boolean onLoginForgotPassword() {
+        return false;
+    }
+
+    protected boolean onLoginRegisterACustomer() {
         return false;
     }
 
@@ -2224,13 +2224,6 @@ public abstract class StateMachineBase extends UIBuilder {
                 }
                 break;
 
-            case COMMAND_LoginRegisterAsAUser:
-                if(onLoginRegisterAsAUser()) {
-                    ev.consume();
-                    return;
-                }
-                break;
-
             case COMMAND_LoginLogin:
                 if(onLoginLogin()) {
                     ev.consume();
@@ -2240,6 +2233,13 @@ public abstract class StateMachineBase extends UIBuilder {
 
             case COMMAND_LoginForgotPassword:
                 if(onLoginForgotPassword()) {
+                    ev.consume();
+                    return;
+                }
+                break;
+
+            case COMMAND_LoginRegisterACustomer:
+                if(onLoginRegisterACustomer()) {
                     ev.consume();
                     return;
                 }
