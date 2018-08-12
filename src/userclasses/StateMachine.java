@@ -1621,6 +1621,7 @@ public class StateMachine extends StateMachineBase {
                 enterpriseDetails.setWebsiteAddress(ar2WebAddress);
                 enterpriseDetails.setBusinessDescription(ar2BusinessDescription);
                 enterpriseDetails.setPrincipalPlaceOfBusiness(ar2PlaceOfBusiness);
+                enterpriseDetails.setEnt_type_code(txtStep1c.getText());
 
                 u.insertCartItemAR(responseUser, listCalculateARTran, enterpriseDetails);
 
