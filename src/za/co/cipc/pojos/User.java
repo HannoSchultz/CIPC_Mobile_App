@@ -51,6 +51,7 @@ public class User {
     String status_desc;
     private String first_name;
     private String last_name;
+    private String error;
 
     String paramCustomerCode;
     String paramPassword;
@@ -398,6 +399,14 @@ public class User {
 
     public void setLast_name(String last_name) {
         this.last_name = last_name;
+    }
+
+    public String getError() {
+        return error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
     }
 
 }

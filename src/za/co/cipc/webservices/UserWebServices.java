@@ -2435,7 +2435,9 @@ public class UserWebServices {
 
     }//end get_countries
 
-    public String Get_Cust_code_id_MOBI(String id) {
+    public User Get_Cust_code_id_MOBI(String id) {
+        
+        
 
         final String SOAP_BODY
                 = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cipc=\"CIPC_WEB_SERVICES\">\n"
@@ -2459,6 +2461,8 @@ public class UserWebServices {
                 + "   </soapenv:Body>\n"
                 + "\n"
                 + "</soapenv:Envelope>";
+        
+        Log.p("Get_Cust_code_id_MOBI -> " + SOAP_BODY, Log.DEBUG);
 
         ConnectionRequest httpRequest = new ConnectionRequest() {
             Element h;
@@ -2503,13 +2507,18 @@ public class UserWebServices {
         try {
 
             Result result = Result.fromContent(data, Result.XML);
+            
+             Log.p("Get_Cust_code_id_MOBI" + result, Log.DEBUG);
+             
             User responseUser = new User();
 
             String customer_code = result.getAsString("//customer_code");
+            String error = result.getAsString("//error");
+            responseUser.setError(error);
+            responseUser.setAgent_code(customer_code);
+           
 
-            Log.p("Get_Cust_code_id_MOBI -> customer_code= " + customer_code, Log.DEBUG);
-
-            return customer_code;
+            return responseUser;
 
         } catch (IllegalArgumentException e) {
             Log.p(e.toString());
@@ -4015,7 +4024,7 @@ public class UserWebServices {
                 + "\n"
                 + "                     <password>" + requestUser.getPassword() + "</password>>\n"
                 + "\n"
-                + "                     <bank_ID>wBAA7LAkWIs=</bank_ID>\n"
+                + "                     <bank_ID>" + Constants.sBankID + "</bank_ID>\n"
                 + "\n"
                 + "                     <reference_no></reference_no>\n"
                 + "\n"
