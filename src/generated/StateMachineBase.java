@@ -466,6 +466,18 @@ public abstract class StateMachineBase extends UIBuilder {
         return cmp;
     }
 
+    public com.codename1.ui.CheckBox findChkNoShow(Component root) {
+        return (com.codename1.ui.CheckBox)findByName("chkNoShow", root);
+    }
+
+    public com.codename1.ui.CheckBox findChkNoShow() {
+        com.codename1.ui.CheckBox cmp = (com.codename1.ui.CheckBox)findByName("chkNoShow", Display.getInstance().getCurrent());
+        if(cmp == null && aboutToShowThisContainer != null) {
+            cmp = (com.codename1.ui.CheckBox)findByName("chkNoShow", aboutToShowThisContainer);
+        }
+        return cmp;
+    }
+
     public com.codename1.ui.TextField findTxtStep3PostalCode(Component root) {
         return (com.codename1.ui.TextField)findByName("txtStep3PostalCode", root);
     }
@@ -1762,6 +1774,18 @@ public abstract class StateMachineBase extends UIBuilder {
         return cmp;
     }
 
+    public com.codename1.ui.Button findBtnOk(Component root) {
+        return (com.codename1.ui.Button)findByName("btnOk", root);
+    }
+
+    public com.codename1.ui.Button findBtnOk() {
+        com.codename1.ui.Button cmp = (com.codename1.ui.Button)findByName("btnOk", Display.getInstance().getCurrent());
+        if(cmp == null && aboutToShowThisContainer != null) {
+            cmp = (com.codename1.ui.Button)findByName("btnOk", aboutToShowThisContainer);
+        }
+        return cmp;
+    }
+
     public com.codename1.ui.Container findNR(Component root) {
         return (com.codename1.ui.Container)findByName("NR", root);
     }
@@ -2312,6 +2336,12 @@ public abstract class StateMachineBase extends UIBuilder {
             return;
         }
 
+        if("Payment".equals(f.getName())) {
+            exitPayment(f);
+            aboutToShowThisContainer = null;
+            return;
+        }
+
         if("Main".equals(f.getName())) {
             exitMain(f);
             aboutToShowThisContainer = null;
@@ -2367,6 +2397,10 @@ public abstract class StateMachineBase extends UIBuilder {
 
 
     protected void exitRegistration(Form f) {
+    }
+
+
+    protected void exitPayment(Form f) {
     }
 
 
@@ -2447,6 +2481,12 @@ public abstract class StateMachineBase extends UIBuilder {
             return;
         }
 
+        if("Payment".equals(f.getName())) {
+            beforePayment(f);
+            aboutToShowThisContainer = null;
+            return;
+        }
+
         if("Main".equals(f.getName())) {
             beforeMain(f);
             aboutToShowThisContainer = null;
@@ -2502,6 +2542,10 @@ public abstract class StateMachineBase extends UIBuilder {
 
 
     protected void beforeRegistration(Form f) {
+    }
+
+
+    protected void beforePayment(Form f) {
     }
 
 
@@ -2582,6 +2626,12 @@ public abstract class StateMachineBase extends UIBuilder {
             return;
         }
 
+        if("Payment".equals(c.getName())) {
+            beforeContainerPayment(c);
+            aboutToShowThisContainer = null;
+            return;
+        }
+
         if("Main".equals(c.getName())) {
             beforeContainerMain(c);
             aboutToShowThisContainer = null;
@@ -2637,6 +2687,10 @@ public abstract class StateMachineBase extends UIBuilder {
 
 
     protected void beforeContainerRegistration(Container c) {
+    }
+
+
+    protected void beforeContainerPayment(Container c) {
     }
 
 
@@ -2716,6 +2770,12 @@ public abstract class StateMachineBase extends UIBuilder {
             return;
         }
 
+        if("Payment".equals(f.getName())) {
+            postPayment(f);
+            aboutToShowThisContainer = null;
+            return;
+        }
+
         if("Main".equals(f.getName())) {
             postMain(f);
             aboutToShowThisContainer = null;
@@ -2771,6 +2831,10 @@ public abstract class StateMachineBase extends UIBuilder {
 
 
     protected void postRegistration(Form f) {
+    }
+
+
+    protected void postPayment(Form f) {
     }
 
 
@@ -2850,6 +2914,12 @@ public abstract class StateMachineBase extends UIBuilder {
             return;
         }
 
+        if("Payment".equals(c.getName())) {
+            postContainerPayment(c);
+            aboutToShowThisContainer = null;
+            return;
+        }
+
         if("Main".equals(c.getName())) {
             postContainerMain(c);
             aboutToShowThisContainer = null;
@@ -2905,6 +2975,10 @@ public abstract class StateMachineBase extends UIBuilder {
 
 
     protected void postContainerRegistration(Container c) {
+    }
+
+
+    protected void postContainerPayment(Container c) {
     }
 
 
@@ -2984,6 +3058,12 @@ public abstract class StateMachineBase extends UIBuilder {
             return;
         }
 
+        if("Payment".equals(rootName)) {
+            onCreatePayment();
+            aboutToShowThisContainer = null;
+            return;
+        }
+
         if("Main".equals(rootName)) {
             onCreateMain();
             aboutToShowThisContainer = null;
@@ -3039,6 +3119,10 @@ public abstract class StateMachineBase extends UIBuilder {
 
 
     protected void onCreateRegistration() {
+    }
+
+
+    protected void onCreatePayment() {
     }
 
 
@@ -3119,6 +3203,12 @@ public abstract class StateMachineBase extends UIBuilder {
             return h;
         }
 
+        if("Payment".equals(f.getName())) {
+            getStatePayment(f, h);
+            aboutToShowThisContainer = null;
+            return h;
+        }
+
         if("Main".equals(f.getName())) {
             getStateMain(f, h);
             aboutToShowThisContainer = null;
@@ -3174,6 +3264,10 @@ public abstract class StateMachineBase extends UIBuilder {
 
 
     protected void getStateRegistration(Form f, Hashtable h) {
+    }
+
+
+    protected void getStatePayment(Form f, Hashtable h) {
     }
 
 
@@ -3254,6 +3348,12 @@ public abstract class StateMachineBase extends UIBuilder {
             return;
         }
 
+        if("Payment".equals(f.getName())) {
+            setStatePayment(f, state);
+            aboutToShowThisContainer = null;
+            return;
+        }
+
         if("Main".equals(f.getName())) {
             setStateMain(f, state);
             aboutToShowThisContainer = null;
@@ -3309,6 +3409,10 @@ public abstract class StateMachineBase extends UIBuilder {
 
 
     protected void setStateRegistration(Form f, Hashtable state) {
+    }
+
+
+    protected void setStatePayment(Form f, Hashtable state) {
     }
 
 
@@ -3682,6 +3786,20 @@ public abstract class StateMachineBase extends UIBuilder {
                 return;
             }
         }
+        if(rootContainerName.equals("Payment")) {
+            if("TextArea".equals(c.getName())) {
+                onPayment_TextAreaAction(c, event);
+                return;
+            }
+            if("chkNoShow".equals(c.getName())) {
+                onPayment_ChkNoShowAction(c, event);
+                return;
+            }
+            if("btnOk".equals(c.getName())) {
+                onPayment_BtnOkAction(c, event);
+                return;
+            }
+        }
     }
 
       protected void onContProfile_BtnCameraAction(Component c, ActionEvent event) {
@@ -3934,6 +4052,15 @@ public abstract class StateMachineBase extends UIBuilder {
       }
 
       protected void onRegistration_BtnStep4RegisterAction(Component c, ActionEvent event) {
+      }
+
+      protected void onPayment_TextAreaAction(Component c, ActionEvent event) {
+      }
+
+      protected void onPayment_ChkNoShowAction(Component c, ActionEvent event) {
+      }
+
+      protected void onPayment_BtnOkAction(Component c, ActionEvent event) {
       }
 
 }

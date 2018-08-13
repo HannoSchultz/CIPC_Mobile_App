@@ -94,6 +94,9 @@ import za.co.cipc.pojos.User;
  */
 public class StateMachine extends StateMachineBase {
 
+    final String PROCESSING = "Processing...";
+    String PREVTEXT = "";
+
     final String KEY_FOR_T_AND_CS = "CIPC_T_AND_Cs";
     final String KEY_FOR_T_AND_CS_Accepted = "CIPC_T_AND_Cs_Accepted";
 
@@ -497,6 +500,10 @@ public class StateMachine extends StateMachineBase {
 
         btnVerify.addActionListener((ActionListener) (ActionEvent evt) -> {
 
+            PREVTEXT = btnVerify.getText();
+            btnVerify.setEnabled(false);
+            btnVerify.setText(PROCESSING);
+
             lblName1Response.setText("");
             lblName2Response.setText("");
             lblName3Response.setText("");
@@ -525,6 +532,8 @@ public class StateMachine extends StateMachineBase {
             }
 
             if (msg.length() > 0) {
+                btnVerify.setEnabled(true);
+                btnVerify.setText(PREVTEXT);
                 Dialog.show("Error", msg, "Ok", null);
             } else {
 
@@ -533,6 +542,8 @@ public class StateMachine extends StateMachineBase {
                 Log.p("arrayListNameReservation size: " + arrayListNameReservation.size(), Log.DEBUG);
 
                 if (arrayListNameReservation.size() == 0) {
+                    btnVerify.setEnabled(true);
+                    btnVerify.setText(PREVTEXT);
                     Dialog.show("Error", "Error occurred while processing your request. Please contact CIPC.", "Ok", null);
                 }
 
@@ -684,9 +695,16 @@ public class StateMachine extends StateMachineBase {
                 f.revalidate();
 
             }
+
+            btnVerify.setEnabled(true);
+            btnVerify.setText(PREVTEXT);
         });
 
         btnLodge.addActionListener((ActionListener) (ActionEvent evt) -> {
+
+            PREVTEXT = btnLodge.getText();
+            btnLodge.setEnabled(false);
+            btnLodge.setText(PROCESSING);
 
             formProgress = new FormProgress(f);
 
@@ -731,6 +749,8 @@ public class StateMachine extends StateMachineBase {
                 if (formProgress != null) {
                     formProgress.removeProgress();
                 }
+                btnLodge.setText(PREVTEXT);
+                btnLodge.setVisible(true);
                 Dialog.show("Error", msg, "Ok", null);
             } else {
                 UserWebServices u = new UserWebServices();
@@ -745,6 +765,8 @@ public class StateMachine extends StateMachineBase {
                     if (formProgress != null) {
                         formProgress.removeProgress();
                     }
+                    btnLodge.setText(PREVTEXT);
+                    btnLodge.setVisible(true);
                     Dialog.show("Error", responseCall.getResponseMessage(), "Ok", null);//TODO scroll to top
                 } else if (responseCall != null
                         && responseCall.getResponseMessage().indexOf("already filed") == -1) {
@@ -775,11 +797,18 @@ public class StateMachine extends StateMachineBase {
                     showCart2(f);
                 } else if (responseCall != null
                         && responseCall.getResponseMessage().indexOf("already filed") != -1) {
+                    btnLodge.setText(PREVTEXT);
+                    btnLodge.setVisible(true);
                     Dialog.show("Error", responseCall.getResponseMessage(), "Ok", null);//TODO scroll to top
                 } else {
+                    btnLodge.setText(PREVTEXT);
+                    btnLodge.setVisible(true);
                     Dialog.show("Error", "Error occurred while processing your request. Please try again later or contact CIPC.", "Ok", null);
                 }
             }
+
+            btnLodge.setText(PREVTEXT);
+            btnLodge.setVisible(true);
 
         });
 
@@ -890,8 +919,11 @@ public class StateMachine extends StateMachineBase {
         mbNameReservations.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
+                mbNameReservations.setEnabled(false);
+
                 //formProgress = new FormProgress(f);
                 showNameReservation(f, Const.TASK_TODAY);
+                mbNameReservations.setEnabled(true);
             }
         });
 
@@ -899,8 +931,10 @@ public class StateMachine extends StateMachineBase {
         mbAnnualReturns.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
+                mbAnnualReturns.setEnabled(false);
                 //formProgress = new FormProgress(f);
                 showAnnualReturns(f);
+                mbAnnualReturns.setEnabled(true);
             }
         });
 
@@ -908,9 +942,13 @@ public class StateMachine extends StateMachineBase {
         mbCardPayments.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
-                //formProgress = new FormProgress(f);
+                mbCardPayments.setEnabled(false);
+                //formProgress = new FormProgress(f); this does not work
                 isFromDash = true;
+                Log.p("mbCardPayments start", Log.DEBUG);
                 showCart2(f);
+                Log.p("mbCardPayments end", Log.DEBUG);
+                mbCardPayments.setEnabled(true);
             }
         });
 
@@ -1252,6 +1290,10 @@ public class StateMachine extends StateMachineBase {
             @Override
             public void actionPerformed(ActionEvent evt) {
 
+                PREVTEXT = btnStep1RetrieveDetails.getText();
+                btnStep1RetrieveDetails.setText(PROCESSING);
+                btnStep1RetrieveDetails.setEnabled(false);
+
                 String msg = "";
 
                 if (txtStep1a.getText().length() != 4
@@ -1261,6 +1303,8 @@ public class StateMachine extends StateMachineBase {
                 }
 
                 if (msg.length() > 0) {
+                    btnStep1RetrieveDetails.setText(PREVTEXT);
+                    btnStep1RetrieveDetails.setEnabled(true);
                     Dialog.show("Error", msg, "Ok", null);
                 } else {
 
@@ -1283,6 +1327,8 @@ public class StateMachine extends StateMachineBase {
                         if (formProgress != null) {
                             formProgress.removeProgress();
                         }
+                        btnStep1RetrieveDetails.setText(PREVTEXT);
+                        btnStep1RetrieveDetails.setEnabled(true);
                         Dialog.show("Error", "There is already an Annual Return in the Cart for Enterprise.\n\n"
                                 + "If this is incorrect please remove from the Cart and try again. ", "Ok", null);
                         return; //TODO better way to exit
@@ -1334,6 +1380,8 @@ public class StateMachine extends StateMachineBase {
                             btnStep2Confirm.repaint();
 
                         } else {
+                            btnStep1RetrieveDetails.setText(PREVTEXT);
+                            btnStep1RetrieveDetails.setEnabled(true);
                             showDialog("Invalid Enterprise Status \"" + enterpriseDetails.getEnt_status_descr() + "\". Not allowed to file Annual Returns.");
 
                             if (formProgress != null) {
@@ -1354,11 +1402,16 @@ public class StateMachine extends StateMachineBase {
                         if (formProgress != null) {
                             formProgress.removeProgress();
                         }
+                        btnStep1RetrieveDetails.setText(PREVTEXT);
+                        btnStep1RetrieveDetails.setEnabled(true);
                         Dialog.show("Error", "Could not obtain enterprise details. Please ensure that your Enterprise number is valid. ", "Ok", null);
                     }
 
                 }
+                btnStep1RetrieveDetails.setText(PREVTEXT);
+                btnStep1RetrieveDetails.setEnabled(true);
                 f.revalidate();
+
             }
 
         });
@@ -1367,6 +1420,9 @@ public class StateMachine extends StateMachineBase {
         contStep3Turnovers = (Container) findByName("contStep3Turnovers", tabs);
 
         btnStep2Confirm.addActionListener((ActionListener) (ActionEvent evt) -> {
+            PREVTEXT = btnStep2Confirm.getText();
+            btnStep2Confirm.setText(PROCESSING);
+            btnStep2Confirm.setEnabled(false);
 
             ar2EmailAddress = txtARStep2EmailAddress.getText();
             ar2TelCode = txtARStep2TelCode.getText();
@@ -1426,6 +1482,8 @@ public class StateMachine extends StateMachineBase {
 //                message += "Business description must contain alphabetical characters. ";
 //            }
             if (message.length() > 0) {
+                btnStep2Confirm.setText(PREVTEXT);
+                btnStep2Confirm.setEnabled(true);
                 Dialog.show("Error", message, "Ok", null);
                 return;
             }
@@ -1462,17 +1520,17 @@ public class StateMachine extends StateMachineBase {
 
                 String messageForDialog = "\"I confirm that the information remains as shown on the Companies Registry, in terms of:\n"
                         + "\n"
-                        + "o   Registered Office\n"
+                        + "o Registered Office\n"
                         + "\n"
-                        + "o   Location of Records (if applicable)\n"
+                        + "o Location of Records (if applicable)\n"
                         + "\n"
-                        + "o   Directors of Company or members of Close Corporation\n"
+                        + "o Directors of Company or members of Close Corporation\n"
                         + "\n"
-                        + "o   Company Secretary (if applicable)\n"
+                        + "o Company Secretary (if applicable)\n"
                         + "\n"
-                        + "o   Auditors and Audit Committees (if applicable)\n"
+                        + "o Auditors and Audit Committees (if applicable)\n"
                         + "\n"
-                        + "o   Financial Year End\n"
+                        + "o Financial Year End\n"
                         + "\nAt completion of filing you will also receive the latest web disclosure with current details as per the Companies Registry.\"\n";
                 boolean answer = Dialog.show("Notice", messageForDialog, "Confirm", "Decline");
 
@@ -1488,13 +1546,20 @@ public class StateMachine extends StateMachineBase {
                     formProgress.removeProgress();
                 } else {
                     formProgress.removeProgress();
+                    btnStep2Confirm.setText(PREVTEXT);
+                    btnStep2Confirm.setEnabled(true);
                     return;
                 }
 
             } else {
+                btnStep2Confirm.setText(PREVTEXT);
+                btnStep2Confirm.setEnabled(true);
                 formProgress.removeProgress();
                 Dialog.show("No Annual Returns", "The Enterprise " + ENT_NUMBER + " has no pending Annual Returns. ", "Ok", null);
             }
+
+            btnStep2Confirm.setText(PREVTEXT);
+            btnStep2Confirm.setEnabled(true);
 
         });
 
@@ -1503,6 +1568,10 @@ public class StateMachine extends StateMachineBase {
         Label lblTotalDue = (Label) findByName("lblTotalDue", tabs);
 
         btnStep3CalcOutAmount.addActionListener((ActionListener) (ActionEvent evt) -> {
+
+            PREVTEXT = btnStep3CalcOutAmount.getText();
+            btnStep3CalcOutAmount.setText(PROCESSING);
+            btnStep3CalcOutAmount.setEnabled(false);
 
             Log.p("listEnterpriseDetails=" + listEnterpriseDetails.size(), Log.DEBUG);
 
@@ -1529,6 +1598,8 @@ public class StateMachine extends StateMachineBase {
             }
 
             if (flag == true) {
+                btnStep3CalcOutAmount.setText(PREVTEXT);
+                btnStep3CalcOutAmount.setEnabled(true);
                 Dialog.show("Error", "Please complete all fields. ", "Ok", null);
             } else {
 
@@ -1589,10 +1660,17 @@ public class StateMachine extends StateMachineBase {
                 btnStep4AddToCart.setEnabled(true);
             }
 
+            btnStep3CalcOutAmount.setText(PREVTEXT);
+            btnStep3CalcOutAmount.setEnabled(true);
+
         });
 
         //Step 4
         btnStep4AddToCart.addActionListener((ActionListener) (ActionEvent evt) -> {
+
+            PREVTEXT = btnStep4AddToCart.getText();
+            btnStep4AddToCart.setText(PROCESSING);
+            btnStep4AddToCart.setEnabled(false);
 
             EnterpriseDetails tempDetails = listCalculateARTran.get(0);
 
@@ -1636,8 +1714,13 @@ public class StateMachine extends StateMachineBase {
                 Dialog.show("Success", "Annual Return (s) added to Shopping Cart. ", "Ok", null);
                 showCart2(f);
             } else {
+                btnStep4AddToCart.setText(PREVTEXT);
+                btnStep4AddToCart.setEnabled(true);
                 //do nothing
             }
+
+            btnStep4AddToCart.setText(PREVTEXT);
+            btnStep4AddToCart.setEnabled(true);
 
         });
 
@@ -1894,6 +1977,7 @@ public class StateMachine extends StateMachineBase {
                     btnRemove0.addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent evt) {
+                            btnRemove0.setEnabled(false);
                             ArrayList Items = (ArrayList) map.get("Items");
                             if (Items != null && Items.size() > 0) {
                                 for (int k = 0; k < Items.size(); k++) {
@@ -1911,6 +1995,7 @@ public class StateMachine extends StateMachineBase {
                                     }
                                 }
                             }
+                            btnRemove0.setEnabled(true);
                         }
                     });
                     //c0.add(btnRemove0);
@@ -1980,6 +2065,7 @@ public class StateMachine extends StateMachineBase {
                     //btnRemove0.setUIID("CalendarDay");
 
                     btnRemove0.addActionListener((ActionListener) (ActionEvent evt) -> {
+                        btnRemove0.setEnabled(false);
                         ArrayList Items = (ArrayList) map.get("Items");
                         if (Items != null && Items.size() > 0) {
                             for (int k = 0; k < Items.size(); k++) {
@@ -1997,6 +2083,7 @@ public class StateMachine extends StateMachineBase {
                                 }
                             }
                         }
+                        btnRemove0.setEnabled(true);
                         //
                         //contItem.remove();
                         //contStep1EServices.repaint();
@@ -2019,6 +2106,32 @@ public class StateMachine extends StateMachineBase {
             btnCheckout.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent evt) {
+
+                    Object objectCheckout = Storage.getInstance().readObject("objectCheckout");
+
+                    if (objectCheckout == null) {
+                        Dialog d = (Dialog) createContainer("/theme", "Payment");
+                        Button btnOk = (Button) findByName("btnOk", d);
+                        btnOk.addActionListener(new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent evt) {
+                                    Button chkNoShow = (Button) findByName("chkNoShow", d);
+                                    if(chkNoShow.isSelected()){
+                                        Log.p("Check box selected", Log.DEBUG);
+                                        Storage.getInstance().writeObject("objectCheckout", "true");
+                                    }
+                                    else{
+                                        Log.p("Check box is not selected", Log.DEBUG);
+                                    }
+                                    d.dispose();
+                            }
+                        });
+                        d.show();
+                    }
+
+                    PREVTEXT = btnCheckout.getText();
+                    btnCheckout.setEnabled(false);
+                    btnCheckout.setText(PROCESSING);
                     Log.p("checkout clicked", Log.DEBUG);
                     isCartStep2 = true;
                     Tabs.setSelectedIndex(1);
@@ -2154,9 +2267,12 @@ public class StateMachine extends StateMachineBase {
                     f.setScrollableX(false);
                     f.setScrollableY(false);
                     f.revalidate();
-                }
-            });
 
+                    btnCheckout.setEnabled(true);
+                    btnCheckout.setText(PREVTEXT);
+                }
+            }
+            );
             //        Button btnPayNow = (Button) findByName("btnPayNow", tabs);
             //        btnPayNow.addActionListener(new ActionListener() {
             //            @Override
@@ -2347,6 +2463,11 @@ public class StateMachine extends StateMachineBase {
 
         Form f = Display.getInstance().getCurrent();
 
+        Button btnLogin = (Button) findByName("btnLogin", f);
+        PREVTEXT = btnLogin.getText();
+        btnLogin.setEnabled(false);
+        btnLogin.setText(PROCESSING);
+
         Container c = (Container) findByName("containerParent", f);
 
         String txtCustomerCode = ((TextField) findByName("txtCustomerCode", c)).getText();
@@ -2397,6 +2518,8 @@ public class StateMachine extends StateMachineBase {
 
             if (errorMessage != null && errorMessage.length() > 0) {
                 showDialog(errorMessage);
+                btnLogin.setEnabled(true);
+                btnLogin.setText(PREVTEXT);
                 return true;//block
             } else {
                 return false;
@@ -2404,6 +2527,8 @@ public class StateMachine extends StateMachineBase {
 
         } else {
             //error
+            btnLogin.setEnabled(true);
+            btnLogin.setText(PREVTEXT);
             Dialog.show("Error", msg, "Ok", null);
             return true;
         }
@@ -2809,6 +2934,9 @@ public class StateMachine extends StateMachineBase {
         btn4.setIcon(img4);
 
         btnStep1Continue.addActionListener((ActionListener) (ActionEvent evt) -> {
+            btnStep1Continue.setEnabled(false);
+            PREVTEXT = btnStep1Continue.getText();
+            btnStep1Continue.setText("Processing...");
             String msg = "";
             if (txtStep1IDNumber.getText().length() != 13) {
                 msg += "Please enter 13 character ID Number. ";
@@ -2822,9 +2950,9 @@ public class StateMachine extends StateMachineBase {
             if (customer_code != null && customer_code.length() == 6) {
                 msg += "The ID number " + txtStep1IDNumber.getText() + " is already registered with the following Customer Code: " + customer_code;
             }
-            
-            if(error != null && error.length() > 0){
-                msg +=error;
+
+            if (error != null && error.length() > 0) {
+                msg += error;
             }
 
             if (msg.length() == 0) {
@@ -2836,14 +2964,20 @@ public class StateMachine extends StateMachineBase {
                 btn3.setUIID("CIPC_DARK");
                 btn4.setUIID("CIPC_DARK");
             } else {
+                btnStep1Continue.setEnabled(true);
+                btnStep1Continue.setText(PREVTEXT);
                 Dialog.show("Error", msg, "Ok", null);
             }
+
+            btnStep1Continue.setEnabled(true);
+            btnStep1Continue.setText(PREVTEXT);
 
         });
 
         if (Display.getInstance().isSimulator()) {
             //Step 1
-            txtStep1IDNumber.setText("6501045920080");
+            // txtStep1IDNumber.setText("6501045920080"); deceased
+            txtStep1IDNumber.setText("9102195706085"); // not registered
             //Step 2
             pickerCountry.setSelectedStringIndex(1);
             txtStep2FirstName.setText("Blessing");
@@ -2864,6 +2998,10 @@ public class StateMachine extends StateMachineBase {
         }
 
         btnStep2Continue.addActionListener((ActionListener) (ActionEvent evt) -> {
+            PREVTEXT = btnStep2Continue.getText();
+
+            btnStep2Continue.setEnabled(false);
+            btnStep2Continue.setText(PROCESSING);
 
             Log.p("pickerCountry=" + pickerCountry.getSelectedString(), Log.DEBUG);
 
@@ -2912,12 +3050,20 @@ public class StateMachine extends StateMachineBase {
                 btn3.setUIID("CIPC_DARK_SELECTED");
                 btn4.setUIID("CIPC_DARK");
             } else {
+                btnStep2Continue.setEnabled(true);
+                btnStep2Continue.setText(PREVTEXT);
                 Dialog.show("Error", msg, "Ok", null);
             }
+
+            btnStep2Continue.setEnabled(true);
+            btnStep2Continue.setText(PREVTEXT);
 
         });
 
         btnStep3Next.addActionListener((ActionListener) (ActionEvent evt) -> {
+            PREVTEXT = btnStep3Next.getText();
+            btnStep3Next.setEnabled(false);
+            btnStep3Next.setText(PROCESSING);
 
             //Log.p("pickerStep3Province=" + step3Province.getSelectedString(), Log.DEBUG);
             String msg = "";
@@ -2974,12 +3120,20 @@ public class StateMachine extends StateMachineBase {
                 btn3.setUIID("CIPC_DARK");
                 btn4.setUIID("CIPC_DARK_SELECTED");
             } else {
+                btnStep3Next.setEnabled(true);
+                btnStep3Next.setText(PREVTEXT);
                 Dialog.show("Error", msg, "Ok", null);
             }
+
+            btnStep3Next.setEnabled(true);
+            btnStep3Next.setText(PREVTEXT);
 
         });
 
         btnStep4Register.addActionListener((ActionListener) (ActionEvent evt) -> {
+            PREVTEXT = btnStep4Register.getText();
+            btnStep4Register.setEnabled(false);
+            btnStep4Register.setText(PROCESSING);
             String msg = "";
 
             String password = txtStep4Password.getText();
@@ -3058,6 +3212,8 @@ public class StateMachine extends StateMachineBase {
                         || result.indexOf("customer code does not") > -1
                         || result.indexOf("Transaction Rejected") > -1
                         || result.indexOf("existing") > -1) {//error
+                    btnStep4Register.setEnabled(true);
+                    btnStep4Register.setText(PREVTEXT);
                     Dialog.show("Error", result, "Ok", null);
                 } else {
                     Dialog.show("Success", result, "Ok", null);
@@ -3068,8 +3224,13 @@ public class StateMachine extends StateMachineBase {
                 }
 
             } else {
+                btnStep4Register.setEnabled(true);
+                btnStep4Register.setText(PREVTEXT);
                 Dialog.show("Error", msg, "Ok", null);
             }
+
+            btnStep4Register.setEnabled(true);
+            btnStep4Register.setText(PREVTEXT);
 
         });
 
