@@ -1508,7 +1508,7 @@ public class StateMachine extends StateMachineBase {
                     txt0b.setHint("Amount in rands");
                     txt0b.setConstraint(TextField.NUMERIC);
                     if (Display.getInstance().isSimulator()) {
-                        txt0b.setText("0");
+                        txt0b.setText("1000000000000000");
                     }
                     txt0a.setUIID("LabelBlackCenter");
 
@@ -2489,6 +2489,18 @@ public class StateMachine extends StateMachineBase {
             UserWebServices userWebServices = new UserWebServices();
 
             responseUser = userWebServices.get_cust_MOBI_2(user);
+            
+            if(responseUser != null && responseUser.getError() != null
+                    && responseUser.getError().length() > 0){
+                 btnLogin.setEnabled(true);
+                btnLogin.setText(PREVTEXT);
+                if(formProgress != null){
+                    formProgress.removeProgress();
+                }
+                Dialog.show("Error", responseUser.getError(), "Ok", null);
+                
+                return true;
+            }
 
             Log.p("responseUser name=" + responseUser.getAgent_code() + " password=" + responseUser.getPassword(), Log.DEBUG);
 
@@ -2777,12 +2789,12 @@ public class StateMachine extends StateMachineBase {
 //        btnStep2Continue.repaint();
 //        btnStep3Next.repaint();
         //btnStep1RetrieveDetails.setIcon(imgForward);
-        final Picker pickerCountry = (Picker) findByName("pickerStep2Country", f);
-        stylePicker(pickerCountry);
+////        final Picker pickerCountry = (Picker) findByName("pickerStep2Country", f);
+////        stylePicker(pickerCountry);
 
-        pickerCountry.setType(Display.PICKER_TYPE_STRINGS);
-        pickerCountry.setStrings(strCoutries);
-        pickerCountry.setSelectedStringIndex(0);
+//        pickerCountry.setType(Display.PICKER_TYPE_STRINGS);
+//        pickerCountry.setStrings(strCoutries);
+//        pickerCountry.setSelectedStringIndex(0);
 
         TextField txtStep2FirstName = (TextField) findByName("txtStep2FirstName", tabs);
         TextField txtStep2LastName = (TextField) findByName("txtStep2LastName", tabs);
@@ -2983,7 +2995,7 @@ public class StateMachine extends StateMachineBase {
             // txtStep1IDNumber.setText("6501045920080"); deceased
             txtStep1IDNumber.setText("9102195706085"); // not registered
             //Step 2
-            pickerCountry.setSelectedStringIndex(1);
+//            pickerCountry.setSelectedStringIndex(1);
             txtStep2FirstName.setText("Blessing");
             txtStep2LastName.setText("Mahlalela");
             txtStep2CellPhone.setText("0763598094");
@@ -3007,14 +3019,14 @@ public class StateMachine extends StateMachineBase {
             btnStep2Continue.setEnabled(false);
             btnStep2Continue.setText(PROCESSING);
 
-            Log.p("pickerCountry=" + pickerCountry.getSelectedString(), Log.DEBUG);
+//            Log.p("pickerCountry=" + pickerCountry.getSelectedString(), Log.DEBUG);
 
             String msg = "";
-            if (pickerCountry.getSelectedString() == null
-                    || pickerCountry.getSelectedStringIndex() == 0
-                    || pickerCountry.getSelectedString().equals("Select Country")) {
-                msg += "Please select a country. ";
-            }
+//            if (pickerCountry.getSelectedString() == null
+//                    || pickerCountry.getSelectedStringIndex() == 0
+//                    || pickerCountry.getSelectedString().equals("Select Country")) {
+//                msg += "Please select a country. ";
+//            }
 
             if (txtStep2FirstName.getText().length() == 0) {
                 msg += "Please enter First Name. ";

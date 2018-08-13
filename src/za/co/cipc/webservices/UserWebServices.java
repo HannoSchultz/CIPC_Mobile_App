@@ -1888,6 +1888,11 @@ public class UserWebServices {
                 responseUser.setStatus_desc(result.getAsString("//status_desc"));
                 responseUser.setCell_no(result.getAsString("//cell_no"));
                 
+                //Then we have a different data set response
+                if(responseUser.getPassword() == null){
+                    responseUser.setError(result.getAsString("//error"));
+                }
+                
                 return responseUser;
 
             } catch (IllegalArgumentException e) {
