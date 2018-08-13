@@ -2115,15 +2115,14 @@ public class StateMachine extends StateMachineBase {
                         btnOk.addActionListener(new ActionListener() {
                             @Override
                             public void actionPerformed(ActionEvent evt) {
-                                    Button chkNoShow = (Button) findByName("chkNoShow", d);
-                                    if(chkNoShow.isSelected()){
-                                        Log.p("Check box selected", Log.DEBUG);
-                                        Storage.getInstance().writeObject("objectCheckout", "true");
-                                    }
-                                    else{
-                                        Log.p("Check box is not selected", Log.DEBUG);
-                                    }
-                                    d.dispose();
+                                Button chkNoShow = (Button) findByName("chkNoShow", d);
+                                if (chkNoShow.isSelected()) {
+                                    Log.p("Check box selected", Log.DEBUG);
+                                    Storage.getInstance().writeObject("objectCheckout", "true");
+                                } else {
+                                    Log.p("Check box is not selected", Log.DEBUG);
+                                }
+                                d.dispose();
                             }
                         });
                         d.show();
@@ -2940,6 +2939,11 @@ public class StateMachine extends StateMachineBase {
             String msg = "";
             if (txtStep1IDNumber.getText().length() != 13) {
                 msg += "Please enter 13 character ID Number. ";
+                 btnStep1Continue.setEnabled(true);
+                btnStep1Continue.setText(PREVTEXT);
+                Dialog.show("Error", msg, "Ok", null);
+               
+                return;
             }
 
             //verify id
