@@ -1157,7 +1157,7 @@ public class UserWebServices {
                 + "\"StatusDate\":\"" + nameReservation.getStatusDate() + "\","
                 + "\"CustomerCode\":\"" + nameReservation.getCustomerCode() + "\","
                 + "\"ItemType\":4,"
-                + "\"ItemData\":\"{\\\"ReferenceNumber\\\": " + nameReservation.getReferenceNumber() + ",\\\"EnterpriseNumber\\\":\\\"\\\",\\\"FormCode\\\":\\\"COR9.1\\\",\\\"ChangeTypeCode\\\":\\\"30\\\",\\\"Description\\\":null,\\\"TotalAmount\\\":" + nameReservation.getTotalAmount() + "}\","
+                + "\"ItemData\":\"{\\\"ReferenceNumber\\\": " + nameReservation.getReferenceNumber() + ",\\\"EnterpriseNumber\\\":\\\"\\\",\\\"FormCode\\\":\\\"COR9.1\\\",\\\"ChangeTypeCode\\\":\\\"0\\\",\\\"Description\\\":null,\\\"TotalAmount\\\":" + nameReservation.getTotalAmount() + "}\","
                 + "\"Amount\":" + nameReservation.getAmount() + ""
                 + "}";
 

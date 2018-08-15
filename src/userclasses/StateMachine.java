@@ -156,6 +156,28 @@ public class StateMachine extends StateMachineBase {
         //String expression = "(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])";
         String expression = "^([a-zA-Z0-9_\\-\\.]+)@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.)|(([a-zA-Z0-9\\-]+\\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\\]?)$";
         //String expression = "^(?(\"\")(\"\"[^\"\"]+?\"\"@)|(([0-9a-z]((\\.(?!\\.))|[-!#\\$%&'\\*\\+/=\\?\\^`\\{\\}\\|~\\w])*)(?<=[0-9a-z])@))(?(\\[)(\\[(\\d{1,3}\\.){3}\\d{1,3}\\])|(([0-9a-z][-\\w]*[0-9a-z]*\\.)+[a-z0-9]{2,17}))$";
+        //String expression = "/^([\\w-]+(?:.[\\w-]+))@((?:[\\w-]+.)\\w[\\w-]{0,66}).([a-z]{2,10}(?:.[a-z]{2})?)$/i";        
+     
+       int indexOfDot = text.indexOf(".");
+       int indexOfAt = text.indexOf("@");
+       if(indexOfDot == (indexOfAt-1)){// .@ scenario
+           return false;
+       }
+       
+       int countDots = 0;
+       
+       for(int i = indexOfAt; i < text.length(); i++){
+           char c = text.charAt(i);
+           if(c == '.'){
+               countDots++;
+           }
+       }
+     
+       if(countDots == 1){
+           return true;// 
+       }
+        
+        
         RE r = new RE(expression); // Create new pattern 
         if (r.match(text)) {
             return true;
@@ -234,6 +256,10 @@ public class StateMachine extends StateMachineBase {
             Log.p("isCellPhoneValid=" + isCellPhoneValid("0827786881"), Log.DEBUG);
             Log.p("isEmailValid=" + isEmailValid("blessing@mfactory.mobi"), Log.DEBUG);
             Log.p("isUrlValid=" + isUrlValid("www.mfactory.mobi"), Log.DEBUG);
+
+            Log.p("isEmailValid blessing.@mfactory.mobi=" + isEmailValid("blessing.@mfactory.mobi"), Log.DEBUG);
+            Log.p("isEmailValid blessing@mfactory.africa=" + isEmailValid("blessing@mfactory.africa"), Log.DEBUG);
+            Log.p("isEmailValid blessing.mahlala@cipc.co.za=" + isEmailValid("blessing.mahlala@cipc.co.za"), Log.DEBUG);
 
             //Log.p("dateString = " + dateString, Log.DEBUG);
             //Test Name Service
@@ -1382,7 +1408,8 @@ public class StateMachine extends StateMachineBase {
                         } else {
                             btnStep1RetrieveDetails.setText(PREVTEXT);
                             btnStep1RetrieveDetails.setEnabled(true);
-                            showDialog("Invalid Enterprise Status \"" + enterpriseDetails.getEnt_status_descr() + "\". Not allowed to file Annual Returns.");
+                            //showDialog("Invalid Enterprise Status \"" + enterpriseDetails.getEnt_status_descr() + "\". Not allowed to file Annual Returns.");
+                            showDialog("Invalid Enterprise Status. Not allowed to file Annual Returns. Please contact CIPC.");
 
                             if (formProgress != null) {
                                 formProgress.removeProgress();
@@ -2489,16 +2516,16 @@ public class StateMachine extends StateMachineBase {
             UserWebServices userWebServices = new UserWebServices();
 
             responseUser = userWebServices.get_cust_MOBI_2(user);
-            
-            if(responseUser != null && responseUser.getError() != null
-                    && responseUser.getError().length() > 0){
-                 btnLogin.setEnabled(true);
+
+            if (responseUser != null && responseUser.getError() != null
+                    && responseUser.getError().length() > 0) {
+                btnLogin.setEnabled(true);
                 btnLogin.setText(PREVTEXT);
-                if(formProgress != null){
+                if (formProgress != null) {
                     formProgress.removeProgress();
                 }
                 Dialog.show("Error", responseUser.getError(), "Ok", null);
-                
+
                 return true;
             }
 
@@ -2614,7 +2641,7 @@ public class StateMachine extends StateMachineBase {
         contentPane.setScrollVisible(false);
         containerParent.setScrollVisible(false);
         Button btnForgotPassword = (Button) findByName("btnForgotPassword", f);
-        btnForgotPassword.remove();
+        //btnForgotPassword.remove();
 
         f.revalidate();
 
@@ -2791,11 +2818,9 @@ public class StateMachine extends StateMachineBase {
         //btnStep1RetrieveDetails.setIcon(imgForward);
 ////        final Picker pickerCountry = (Picker) findByName("pickerStep2Country", f);
 ////        stylePicker(pickerCountry);
-
 //        pickerCountry.setType(Display.PICKER_TYPE_STRINGS);
 //        pickerCountry.setStrings(strCoutries);
 //        pickerCountry.setSelectedStringIndex(0);
-
         TextField txtStep2FirstName = (TextField) findByName("txtStep2FirstName", tabs);
         TextField txtStep2LastName = (TextField) findByName("txtStep2LastName", tabs);
         TextField txtStep2CellPhone = (TextField) findByName("txtStep2CellPhone", tabs);
@@ -2951,10 +2976,10 @@ public class StateMachine extends StateMachineBase {
             String msg = "";
             if (txtStep1IDNumber.getText().length() != 13) {
                 msg += "Please enter 13 character ID Number. ";
-                 btnStep1Continue.setEnabled(true);
+                btnStep1Continue.setEnabled(true);
                 btnStep1Continue.setText(PREVTEXT);
                 Dialog.show("Error", msg, "Ok", null);
-               
+
                 return;
             }
 
@@ -3020,7 +3045,6 @@ public class StateMachine extends StateMachineBase {
             btnStep2Continue.setText(PROCESSING);
 
 //            Log.p("pickerCountry=" + pickerCountry.getSelectedString(), Log.DEBUG);
-
             String msg = "";
 //            if (pickerCountry.getSelectedString() == null
 //                    || pickerCountry.getSelectedStringIndex() == 0
