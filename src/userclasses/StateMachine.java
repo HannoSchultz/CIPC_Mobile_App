@@ -365,7 +365,7 @@ public class StateMachine extends StateMachineBase {
         if (Display.getInstance().isSimulator()) {//Pre populate with Debug info
 
             defaultEmail = "NEWLNE";
-            defaultPassword = "TheFuture1!";
+            defaultPassword = "";
             //defaultEmail = "SARBIA";
             //defaultPassword = "barend";
 
