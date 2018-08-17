@@ -431,12 +431,16 @@ public class UserWebServices {
 
             }
 
+            
+
             @Override
             protected void handleException(Exception err) {
                 Log.p("Exception: " + err.toString());
                 Dialog.show("No Internet", "There is no internet connection. Please switch your connection on.", "Okay", null);
 
             }
+            
+            
         };
 
         httpRequest.setUrl(Constants.soapServicesEndPoint + "enterprise.asmx");
@@ -1081,7 +1085,7 @@ public class UserWebServices {
                 String ar_total = RSM(((Element) child.getTextChildren(null, true).get(5)).toString());
                 double dblAr_total = Double.parseDouble(ar_total);
                 String reference_no = RSM(((Element) child.getTextChildren(null, true).get(6)).toString());
-                int intReference_no = Integer.parseInt(reference_no);
+                Log.p("reference_no=" + reference_no, Log.DEBUG);
                 String ar_penalty = RSM(((Element) child.getTextChildren(null, true).get(7)).toString());
                 double dblAr_penalty = Double.parseDouble(ar_penalty);
 
@@ -1093,7 +1097,7 @@ public class UserWebServices {
                 e.setTurnover(dblTurnover);
                 e.setAr_amount(dblAr_amount);
                 e.setAr_total(dblAr_total);
-                e.setReference_no(intReference_no);
+                e.setReference_no(reference_no);
                 e.setAr_penalty(dblAr_penalty);
 
                 enterpriseDetailses.add(e);
@@ -1221,7 +1225,7 @@ public class UserWebServices {
 
         String END_POINT = Constants.cartAPIEndPoint + "v1/payment/cartitem";
 
-        int ReferenceNumber = ent.getReference_no();
+        String ReferenceNumber = ent.getReference_no();
         Log.p("insertCartItemAR ReferenceNumber=" + ReferenceNumber, Log.DEBUG);
         String dateNow = getAnnualReturnsDateNow();
         Log.p("insertCartItemAR dateNow=" + dateNow, Log.DEBUG);
@@ -3433,6 +3437,11 @@ public class UserWebServices {
 
             String Namereservation_MOBI_traknoresult = result.getAsString("//Namereservation_MOBI_traknoresult");
 
+            if(Namereservation_MOBI_traknoresult == null){
+               Namereservation_MOBI_traknoresult = result.getAsString("//Namereservation_MOBI_traknoResult"); 
+            }
+            
+            
             response = Namereservation_MOBI_traknoresult;
 
             if (response != null) {
@@ -3449,8 +3458,7 @@ public class UserWebServices {
 
                     if (response.indexOf("Reference No:") > -1) {
                         String ReferenceNo = getNameReservationReferenceNo(response);
-                        int intReferenceNo = Integer.parseInt(ReferenceNo);
-                        n.setReferenceNumber(intReferenceNo);
+                        n.setReferenceNumber(ReferenceNo);
 
                     }
                     n.setAmount(Amount);
@@ -4120,10 +4128,17 @@ public class UserWebServices {
     }//end register
 
     public static String getNameReservationReferenceNo(String responseCall) {
-        int startIndex = responseCall.indexOf("Reference No:") + 13;
-        int endIndex = responseCall.indexOf(". First proposed");
+        //>9135272998|Name reservation lodged. Reference No: 9135272998. First proposed name : c91089ecef. Kind Regards CIPC
+//        int startIndex = responseCall.indexOf("Reference No:") + 13;
+//        int endIndex = responseCall.indexOf(". First proposed");
+//
+//        String newString = responseCall.substring(startIndex, endIndex).trim();
 
-        String newString = responseCall.substring(startIndex, endIndex).trim();
+        String newString = "";
+        
+        StringTokenizer st = new StringTokenizer(responseCall, "|");
+        newString = st.nextElement().toString();
+
         return newString;
     }
 

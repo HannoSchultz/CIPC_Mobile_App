@@ -13,7 +13,7 @@ import java.util.Date;
  */
 public class NameReservation {
 
-    private int ReferenceNumber;
+    private String ReferenceNumber;
     private String StatusDate;
     private String CustomerCode;
     private double Amount;
@@ -23,11 +23,11 @@ public class NameReservation {
     public NameReservation() {
     }
 
-    public int getReferenceNumber() {
+    public String getReferenceNumber() {
         return ReferenceNumber;
     }
 
-    public void setReferenceNumber(int ReferenceNumber) {
+    public void setReferenceNumber(String ReferenceNumber) {
         this.ReferenceNumber = ReferenceNumber;
     }
 

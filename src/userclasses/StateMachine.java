@@ -278,7 +278,7 @@ public class StateMachine extends StateMachineBase {
 //            String entNo = getShortEnterpriseName("2011", "100088", "07");
 //            System.out.println("enta=" + entNo);
 //            AGENT_CODE = "NEWLNE";
-            //         UserWebServices u = new UserWebServices();
+                //     UserWebServices u = new UserWebServices();
             //u.update_terms("http://139.162.223.194:8080/CIPC2/TermsandConditions_version_Final_3.0.pdf");
             //u.get_terms(null);
 //            boolean isPending = u.pendingAnnualReturns(user, entNo);
@@ -325,9 +325,9 @@ public class StateMachine extends StateMachineBase {
 //            UserWebServices uw = new UserWebServices();
 //            //uw.get_cust_MOBI_2(tmpUser);
 //            
-//            uw.update_app_version("0.25");
+//            uw.update_app_version("0.31");
 //            uw.get_app_version(tmpUser);
-////
+//
 //            //step2
 //            tmpUser.setFirst_name("Blessing");
 //            tmpUser.setLast_name("Mahlalela");
@@ -364,10 +364,10 @@ public class StateMachine extends StateMachineBase {
 
         if (Display.getInstance().isSimulator()) {//Pre populate with Debug info
 
-            //defaultEmail = "NEWLNE";
-            //defaultPassword = "PleaseWork1!";
-            defaultEmail = "SARBIA";
-            defaultPassword = "barend";
+            defaultEmail = "NEWLNE";
+            defaultPassword = "TheFuture1!";
+            //defaultEmail = "SARBIA";
+            //defaultPassword = "barend";
 
             Log.setLevel(Log.DEBUG);
             Log.p("issimulator", Log.DEBUG);
@@ -744,7 +744,8 @@ public class StateMachine extends StateMachineBase {
             if (arrayListNameReservation == null || arrayListNameReservation.size() == 0) {
 
                 msg += "Please validate Names before clicking on Add to Cart and ensure you have at least one name that might be available. ";
-
+                  btnLodge.setEnabled(true);
+                btnLodge.setText(PREVTEXT);
             } else {
 
                 boolean atleastOneNameAvailable = false;
@@ -794,7 +795,7 @@ public class StateMachine extends StateMachineBase {
                     btnLodge.setText(PREVTEXT);
                     btnLodge.setVisible(true);
                     Dialog.show("Error", responseCall.getResponseMessage(), "Ok", null);//TODO scroll to top
-                } else if (responseCall != null
+                } else if (responseCall != null && responseCall.getResponseMessage() != null
                         && responseCall.getResponseMessage().indexOf("already filed") == -1) {
 
                     int indexStart = responseCall.getResponseMessage().indexOf("Reference No: ") + 14;
@@ -821,7 +822,7 @@ public class StateMachine extends StateMachineBase {
                     u.insertCartItemService(responseCall);
 
                     showCart2(f);
-                } else if (responseCall != null
+                } else if (responseCall != null && responseCall.getResponseMessage() != null
                         && responseCall.getResponseMessage().indexOf("already filed") != -1) {
                     btnLodge.setText(PREVTEXT);
                     btnLodge.setVisible(true);
@@ -1299,8 +1300,8 @@ public class StateMachine extends StateMachineBase {
 
         if (Display.getInstance().isSimulator()) {//2011100088 & K2013064531 & 2014 004548 07
             //Not allowed: 1999/028585/07
-            txtStep1a.setText("2012");
-            txtStep1b.setText("123460");
+            txtStep1a.setText("2016");
+            txtStep1b.setText("282743");
             txtStep1c.setText("07");
 
 //            txtARStep2EmailAddress.setText("blessing@mfactory.mobi");
@@ -1535,7 +1536,7 @@ public class StateMachine extends StateMachineBase {
                     txt0b.setHint("Amount in rands");
                     txt0b.setConstraint(TextField.NUMERIC);
                     if (Display.getInstance().isSimulator()) {
-                        txt0b.setText("1000000000000000");
+                        txt0b.setText("0");
                     }
                     txt0a.setUIID("LabelBlackCenter");
 
@@ -2784,7 +2785,7 @@ public class StateMachine extends StateMachineBase {
 //        f.setBackCommand(back);
 
         UserWebServices u = new UserWebServices();
-        String strCoutries[] = u.get_countries(null);
+        //String strCoutries[] = u.get_countries(null);
 
         Tabs tabs = (Tabs) findByName("Tabs", f);
         tabs.setSwipeActivated(false);
@@ -3018,7 +3019,7 @@ public class StateMachine extends StateMachineBase {
         if (Display.getInstance().isSimulator()) {
             //Step 1
             // txtStep1IDNumber.setText("6501045920080"); deceased
-            txtStep1IDNumber.setText("9102195706085"); // not registered
+            txtStep1IDNumber.setText("9212260612082"); // not registered
             //Step 2
 //            pickerCountry.setSelectedStringIndex(1);
             txtStep2FirstName.setText("Blessing");
@@ -3503,12 +3504,23 @@ public class StateMachine extends StateMachineBase {
                 public void actionPerformed(ActionEvent evt) {
 
                     UserWebServices u = new UserWebServices();
-                    String url = u.get_terms(null);
-
+                    String url = null;
+//                    try{
+//                       url =  u.get_terms(null);
+//                    }
+//                    catch(Exception e){
+//                        //do nothing
+//                    }
+                    
+                    if(url == null){
+                      url =  "http://139.162.223.194:8080/CIPC2/TermsandConditions_version_Final_3.0.pdf";
+                    }
+                    
                     //url = "https://drive.google.com/file/d/1XKmFRBcgEn0iY1vV18jRgpbgfXfQbQBy/view?usp=sharing";
                     //url = "https://www.dropbox.com/s/shsokeklu20gwc8/TermsandConditions_version_Final%203.0.pdf?dl=0";
                     FileSystemStorage fs = FileSystemStorage.getInstance();
                     String currentAppVersion = "app_version_" + Display.getInstance().getProperty("AppVersion", "Unknown");
+                    String name = "TermsandConditions_version_Final_3.0.pdf";
                     String fileName = fs.getAppHomePath() + "cipcterms" + currentAppVersion + ".pdf";
                     if (!fs.exists(fileName)) {
                         try {

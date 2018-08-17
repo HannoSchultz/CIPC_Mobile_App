@@ -37,7 +37,7 @@ public class EnterpriseDetails {
     private String cust_code_old;
     private double ar_amount;
     private double ar_total;
-    private int reference_no;
+    private String reference_no;
     private double ar_penalty;
 
     private String ent_status_descr;
@@ -192,11 +192,11 @@ public class EnterpriseDetails {
         this.ar_total = ar_total;
     }
 
-    public int getReference_no() {
+    public String getReference_no() {
         return reference_no;
     }
 
-    public void setReference_no(int reference_no) {
+    public void setReference_no(String reference_no) {
         this.reference_no = reference_no;
     }
 
