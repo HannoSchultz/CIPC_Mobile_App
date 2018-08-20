@@ -2466,7 +2466,11 @@ public class UserWebServices {
         httpRequest.setDisposeOnCompletion(dlg);
 
         NetworkManager.getInstance().addToQueueAndWait(httpRequest);
-        String data = new String(httpRequest.getResponseData());
+        byte byteArray[] = httpRequest.getResponseData();
+        if(byteArray == null || byteArray.length == 0){
+            return null;
+        }
+        String data = new String(byteArray);
 
         try {
 

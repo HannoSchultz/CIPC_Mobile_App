@@ -157,27 +157,26 @@ public class StateMachine extends StateMachineBase {
         String expression = "^([a-zA-Z0-9_\\-\\.]+)@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.)|(([a-zA-Z0-9\\-]+\\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\\]?)$";
         //String expression = "^(?(\"\")(\"\"[^\"\"]+?\"\"@)|(([0-9a-z]((\\.(?!\\.))|[-!#\\$%&'\\*\\+/=\\?\\^`\\{\\}\\|~\\w])*)(?<=[0-9a-z])@))(?(\\[)(\\[(\\d{1,3}\\.){3}\\d{1,3}\\])|(([0-9a-z][-\\w]*[0-9a-z]*\\.)+[a-z0-9]{2,17}))$";
         //String expression = "/^([\\w-]+(?:.[\\w-]+))@((?:[\\w-]+.)\\w[\\w-]{0,66}).([a-z]{2,10}(?:.[a-z]{2})?)$/i";        
-     
-       int indexOfDot = text.indexOf(".");
-       int indexOfAt = text.indexOf("@");
-       if(indexOfDot == (indexOfAt-1)){// .@ scenario
-           return false;
-       }
-       
-       int countDots = 0;
-       
-       for(int i = indexOfAt; i < text.length(); i++){
-           char c = text.charAt(i);
-           if(c == '.'){
-               countDots++;
-           }
-       }
-     
-       if(countDots == 1){
-           return true;// 
-       }
-        
-        
+
+        int indexOfDot = text.indexOf(".");
+        int indexOfAt = text.indexOf("@");
+        if (indexOfDot == (indexOfAt - 1)) {// .@ scenario
+            return false;
+        }
+
+        int countDots = 0;
+
+        for (int i = indexOfAt; i < text.length(); i++) {
+            char c = text.charAt(i);
+            if (c == '.') {
+                countDots++;
+            }
+        }
+
+        if (countDots == 1) {
+            return true;// 
+        }
+
         RE r = new RE(expression); // Create new pattern 
         if (r.match(text)) {
             return true;
@@ -278,7 +277,7 @@ public class StateMachine extends StateMachineBase {
 //            String entNo = getShortEnterpriseName("2011", "100088", "07");
 //            System.out.println("enta=" + entNo);
 //            AGENT_CODE = "NEWLNE";
-                //     UserWebServices u = new UserWebServices();
+            //     UserWebServices u = new UserWebServices();
             //u.update_terms("http://139.162.223.194:8080/CIPC2/TermsandConditions_version_Final_3.0.pdf");
             //u.get_terms(null);
 //            boolean isPending = u.pendingAnnualReturns(user, entNo);
@@ -372,13 +371,12 @@ public class StateMachine extends StateMachineBase {
             Log.setLevel(Log.DEBUG);
             Log.p("issimulator", Log.DEBUG);
 
-            return "Login";
+            return "Splash";
             //return "Splash";
 
         } else {
             Log.setLevel(Log.REPORTING_PRODUCTION);//To disable debug information
             return "Splash";
-
         }
 
     }
@@ -744,7 +742,7 @@ public class StateMachine extends StateMachineBase {
             if (arrayListNameReservation == null || arrayListNameReservation.size() == 0) {
 
                 msg += "Please validate Names before clicking on Add to Cart and ensure you have at least one name that might be available. ";
-                  btnLodge.setEnabled(true);
+                btnLodge.setEnabled(true);
                 btnLodge.setText(PREVTEXT);
             } else {
 
@@ -908,6 +906,12 @@ public class StateMachine extends StateMachineBase {
         contentPane.removeAll();
         Container cont = (Container) createContainer("/theme", "ContDashBoard");
         Container dashContent = (Container) findByName("DashContent", cont);
+
+        String currentAppVersion = Display.getInstance().getProperty("AppVersion", "Unknown");
+
+        Label lblVersion = (Label) findByName("appVersion", cont);
+        lblVersion.setText("v" + currentAppVersion);
+        lblVersion.repaint();
 
         if (orientationListener != null) {
             f.removeOrientationListener(orientationListener);
@@ -2530,8 +2534,7 @@ public class StateMachine extends StateMachineBase {
                 return true;
             }
 
-            Log.p("responseUser name=" + responseUser.getAgent_code() + " password=" + responseUser.getPassword(), Log.DEBUG);
-
+            //Log.p("responseUser name=" + responseUser.getAgent_code() + " password=" + responseUser.getPassword(), Log.DEBUG);
             String errorMessage = "";
 
             String responsePassword = null;
@@ -2539,14 +2542,14 @@ public class StateMachine extends StateMachineBase {
                 formProgress.removeProgress();
                 Log.p("exception" + "", Log.DEBUG);
 
-                errorMessage += "Incorrect Customer Code or password. ";
+                errorMessage += "Incorrect Customer Code or Password. ";
 
             } else {
                 responsePassword = responseUser.getPassword();
             }
 
             //Log.p(password + ":" + responsePassword);
-            if (password != null && password.equals(responsePassword)) {
+            if (errorMessage.length() == 0 && password != null && password.equals(responsePassword)) {
                 AGENT_CODE = txtCustomerCode.toUpperCase();//CIPC web service expects uppercase customer code
                 return false;
             } else {
@@ -3477,8 +3480,14 @@ public class StateMachine extends StateMachineBase {
         String currentAppVersion = Display.getInstance().getProperty("AppVersion", "Unknown");
 
         Label lblVersion = (Label) findByName("lblVersion", f);
+        SpanLabel SpanLabel = (SpanLabel) findByName("SpanLabel", f);
         lblVersion.setText("v" + currentAppVersion);
         lblVersion.repaint();
+
+        if (Display.getInstance().getPlatformName().equals("ios")) {
+            lblVersion.setText("");
+            SpanLabel.setText("");
+        }
 
     }
 
@@ -3511,11 +3520,11 @@ public class StateMachine extends StateMachineBase {
 //                    catch(Exception e){
 //                        //do nothing
 //                    }
-                    
-                    if(url == null){
-                      url =  "http://139.162.223.194:8080/CIPC2/TermsandConditions_version_Final_3.0.pdf";
+
+                    if (url == null) {
+                        url = "http://139.162.223.194:8080/CIPC2/TermsandConditions_version_Final_3.0.pdf";
                     }
-                    
+
                     //url = "https://drive.google.com/file/d/1XKmFRBcgEn0iY1vV18jRgpbgfXfQbQBy/view?usp=sharing";
                     //url = "https://www.dropbox.com/s/shsokeklu20gwc8/TermsandConditions_version_Final%203.0.pdf?dl=0";
                     FileSystemStorage fs = FileSystemStorage.getInstance();
@@ -3625,11 +3634,13 @@ public class StateMachine extends StateMachineBase {
 
         }
 
+        customerCode = customerCode.toUpperCase();
+
         if (msg.length() == 0) {
             UserWebServices u = new UserWebServices();
             String res1 = u.forget_password_MOBI(customerCode);
             //Log.p("res1 len=" + res1.length(), Log.DEBUG);
-            if (res1.indexOf("The Password was sent to the registered") > -1) {
+            if (res1.indexOf("Password was sent via") > -1) {
                 Dialog.show("Success", res1, "Ok", null);
                 return false;
 

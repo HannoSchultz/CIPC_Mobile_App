@@ -164,6 +164,18 @@ public abstract class StateMachineBase extends UIBuilder {
         return cmp;
     }
 
+    public com.codename1.ui.Label findAppVersion(Component root) {
+        return (com.codename1.ui.Label)findByName("appVersion", root);
+    }
+
+    public com.codename1.ui.Label findAppVersion() {
+        com.codename1.ui.Label cmp = (com.codename1.ui.Label)findByName("appVersion", Display.getInstance().getCurrent());
+        if(cmp == null && aboutToShowThisContainer != null) {
+            cmp = (com.codename1.ui.Label)findByName("appVersion", aboutToShowThisContainer);
+        }
+        return cmp;
+    }
+
     public com.codename1.ui.TextField findTxtARStep2CellNumber(Component root) {
         return (com.codename1.ui.TextField)findByName("txtARStep2CellNumber", root);
     }
