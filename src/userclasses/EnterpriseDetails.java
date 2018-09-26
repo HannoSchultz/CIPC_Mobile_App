@@ -289,5 +289,133 @@ public class EnterpriseDetails {
     }
     
     
+    private String FYE;
 
+    public String getFYE() {
+        return FYE;
+    }
+
+    public void setFYE(String FYE) {
+        this.FYE = FYE;
+    }
+   
+    private String cust_code;
+
+    public String getCust_code() {
+        return cust_code;
+    }
+
+    public void setCust_code(String cust_code) {
+        this.cust_code = cust_code;
+    }
+    
+    private String shares;
+    private String physaddr1;
+    private String physaddr2;
+    private String physaddr3;
+    private String physaddr4;
+    private String physcode;
+    private String postaladdr1;
+    private String postaladdr2;
+    private String postaladdr3;
+    private String postaladdr4;
+    private String postalcode;
+
+    public String getPostaladdr1() {
+        return postaladdr1;
+    }
+
+    public void setPostaladdr1(String postaladdr1) {
+        this.postaladdr1 = postaladdr1;
+    }
+
+    public String getPostaladdr2() {
+        return postaladdr2;
+    }
+
+    public void setPostaladdr2(String postaladdr2) {
+        this.postaladdr2 = postaladdr2;
+    }
+
+    public String getPostaladdr3() {
+        return postaladdr3;
+    }
+
+    public void setPostaladdr3(String postaladdr3) {
+        this.postaladdr3 = postaladdr3;
+    }
+
+    public String getPostaladdr4() {
+        return postaladdr4;
+    }
+
+    public void setPostaladdr4(String postaladdr4) {
+        this.postaladdr4 = postaladdr4;
+    }
+
+    public String getPostalcode() {
+        return postalcode;
+    }
+
+    public void setPostalcode(String postalcode) {
+        this.postalcode = postalcode;
+    }
+
+    public String getPhysaddr1() {
+        return physaddr1;
+    }
+
+    public void setPhysaddr1(String physaddr1) {
+        this.physaddr1 = physaddr1;
+    }
+
+    public String getPhysaddr2() {
+        return physaddr2;
+    }
+
+    public void setPhysaddr2(String physaddr2) {
+        this.physaddr2 = physaddr2;
+    }
+
+    public String getPhysaddr3() {
+        return physaddr3;
+    }
+
+    public void setPhysaddr3(String physaddr3) {
+        this.physaddr3 = physaddr3;
+    }
+
+    public String getPhysaddr4() {
+        return physaddr4;
+    }
+
+    public void setPhysaddr4(String physaddr4) {
+        this.physaddr4 = physaddr4;
+    }
+
+    public String getPhyscode() {
+        return physcode;
+    }
+
+    public void setPhyscode(String physcode) {
+        this.physcode = physcode;
+    }
+
+    public String getMail() {
+        return mail;
+    }
+
+    public void setMail(String mail) {
+        this.mail = mail;
+    }
+    private String mail;
+
+    public String getShares() {
+        return shares;
+    }
+
+    public void setShares(String shares) {
+        this.shares = shares;
+    }
+  
 }

@@ -8,6 +8,9 @@ import com.codename1.charts.renderers.DefaultRenderer;
 import com.codename1.charts.renderers.SimpleSeriesRenderer;
 import com.codename1.charts.util.ColorUtil;
 import com.codename1.charts.views.PieChart;
+import com.codename1.ext.codescan.CodeScanner;
+import com.codename1.ext.codescan.ScanResult;
+import com.codename1.ext.codescan.NativeCodeScanner;
 import com.codename1.components.FloatingActionButton;
 import com.codename1.components.InfiniteProgress;
 import com.codename1.components.MultiButton;
@@ -86,6 +89,7 @@ import ui.FormProgress;
 import za.co.cipc.pojos.AnnualReturns;
 import za.co.cipc.pojos.Dashboard;
 import za.co.cipc.pojos.User;
+import za.co.cipc.webservices.UserWebServicesNewReg;
 //TESTING UPLOAD
 
 /**
@@ -94,6 +98,7 @@ import za.co.cipc.pojos.User;
  */
 public class StateMachine extends StateMachineBase {
 
+    UserWebServicesNewReg uws = new UserWebServicesNewReg();
     final String PROCESSING = "Processing...";
     String PREVTEXT = "";
 
@@ -250,7 +255,7 @@ public class StateMachine extends StateMachineBase {
 
         if (Display.getInstance().isSimulator()) {
 
-            AGENT_CODE = "NEWLNE";
+            AGENT_CODE = "INKE01";
 
             Log.p("isCellPhoneValid=" + isCellPhoneValid("0827786881"), Log.DEBUG);
             Log.p("isEmailValid=" + isEmailValid("blessing@mfactory.mobi"), Log.DEBUG);
@@ -371,8 +376,8 @@ public class StateMachine extends StateMachineBase {
             Log.setLevel(Log.DEBUG);
             Log.p("issimulator", Log.DEBUG);
 
+            //return "frmNewEntReg1";
             return "Splash";
-            //return "Splash";
 
         } else {
             Log.setLevel(Log.REPORTING_PRODUCTION);//To disable debug information
@@ -936,7 +941,7 @@ public class StateMachine extends StateMachineBase {
         Label lblIcon1 = (Label) findByName("lblIcon1", cont);
         Label lblIcon2 = (Label) findByName("lblIcon2", cont);
         Label lblIcon3 = (Label) findByName("lblIcon3", cont);
-
+        //Label lblIcon4 = (Label) findByName("lblIcon4", cont);
         Image img1 = FontImage.createMaterial(FontImage.MATERIAL_STORE, labelForm, sizeLabel);
         Image img2 = FontImage.createMaterial(FontImage.MATERIAL_CREDIT_CARD, labelForm, sizeLabel);
         Image img3 = FontImage.createMaterial(FontImage.MATERIAL_SHOPPING_CART, labelForm, sizeLabel);
@@ -944,9 +949,9 @@ public class StateMachine extends StateMachineBase {
         lblIcon1.setIcon(img1);
         lblIcon2.setIcon(img2);
         lblIcon3.setIcon(img3);
+        //lblIcon4.setIcon(img1);
 
         Button mbNameReservations = (Button) findByName("mbTasks", cont);
-
         mbNameReservations.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
@@ -982,7 +987,22 @@ public class StateMachine extends StateMachineBase {
                 mbCardPayments.setEnabled(true);
             }
         });
+        
+        Button mbReg = (Button) findByName("mbRegistration", cont);
 
+        mbReg.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                mbReg.setEnabled(false);
+
+                showForm("frmNewEntReg1", null);
+                //showForm("ForgotPassword", null);
+
+                //formProgress = new FormProgress(f);
+                //hszshowFrmNewEntRegistration(f, Const.TASK_TODAY);
+                mbReg.setEnabled(true);
+            }
+        });
         UserWebServices u = new UserWebServices();
         Hashtable<String, Dashboard> table = u.get_mobi_permissions(AGENT_CODE);
 
@@ -993,7 +1013,8 @@ public class StateMachine extends StateMachineBase {
             //cont.remove();
             //f.reva
         } else {
-            String[] names = {"AR", "NR", "CP"};
+           // String[] names = {"AR", "NR", "CP"};
+             String[] names = {"AR", "NR", "CP", "CR"};
 
             for (int i = 0; i < names.length; i++) {
                 String key = names[i];
@@ -2530,7 +2551,6 @@ public class StateMachine extends StateMachineBase {
                     formProgress.removeProgress();
                 }
                 Dialog.show("Error", responseUser.getError(), "Ok", null);
-
                 return true;
             }
 
@@ -3696,6 +3716,14 @@ public class StateMachine extends StateMachineBase {
         return entNo;
     }
 
+    private String RSM_A(String name) {
+
+        name = name.trim();
+        name = name.substring(1);
+        name = name.substring(0, name.length() - 1);
+        return name;
+    }
+
     private static String getRandomString(int numchars) {
         Random r = new Random();
         StringBuffer sb = new StringBuffer();
@@ -3768,6 +3796,61 @@ public class StateMachine extends StateMachineBase {
         return flag;
     }
 
+    private void Hide_Director_Fields(Form f) {
+        Container condirinfo = (Container) findByName("Condirinfo", f);
+        condirinfo.setHidden(true);
+        Container conregister = (Container) findByName("Conregister", f);
+        conregister.setHidden(true);
+        Container conaddDirector = (Container) findByName("ConaddDirector", f);
+        conaddDirector.setHidden(true);
+        //Conregister
+//        Container conappointdate = (Container) findByName("ConAppointDate", f);
+//        //Container contdateofbirth = (Container) findByName("ContDateofBirth", f);
+//        Container concell = (Container) findByName("ConCell", f);
+//        Container conemail = (Container) findByName("ConEmail", f);
+//        Container conphysaddress = (Container) findByName("ConPhysAddress", f);
+//        Container conpostaladdress = (Container) findByName("ConPostalAddress", f);
+//        
+//        conappointdate.setVisible(false);
+//        conappointdate.setHidden(true);
+//        //contdateofbirth.setVisible(false);
+//        concell.setVisible(false);
+//        concell.setHidden(true);
+//        conemail.setVisible(false);
+//        conemail.setHidden(true);
+//        conphysaddress.setVisible(false);
+//        conphysaddress.setHidden(true);
+//        conpostaladdress.setVisible(false);
+//        conpostaladdress.setHidden(true);
+        f.repaint();
+    }
+
+    private void Show_Director_Fields(Form f) {
+        Container condirinfo = (Container) findByName("Condirinfo", f);
+        condirinfo.setHidden(false);
+        Container conaddDirector = (Container) findByName("ConaddDirector", f);
+        conaddDirector.setHidden(false);
+        //ConaddDirector
+//        Container conappointdate = (Container) findByName("ConAppointDate", f);
+//        //Container contdateofbirth = (Container) findByName("ContDateofBirth", f);
+//        Container concell = (Container) findByName("ConCell", f);
+//        Container conemail = (Container) findByName("ConEmail", f);
+//        Container conphysaddress = (Container) findByName("ConPhysAddress", f);
+//        Container conpostaladdress = (Container) findByName("ConPostalAddress", f);
+//        conappointdate.setVisible(true);
+//        conappointdate.setHidden(false);
+//        //contdateofbirth.setVisible(true);
+//        concell.setVisible(true);
+//        concell.setHidden(false);
+//        conemail.setVisible(true);
+//        conemail.setHidden(false);
+//        conphysaddress.setVisible(true);
+//        conphysaddress.setHidden(false);
+//        conpostaladdress.setVisible(true);
+//        conpostaladdress.setHidden(false);
+        f.repaint();
+    }
+
     public static String changeComma(String s) {
         String original = s.substring(0, s.length() - 3);
         s = s.substring(s.length() - 3, s.length());
@@ -3778,4 +3861,1259 @@ public class StateMachine extends StateMachineBase {
         return s;
     }
 
+    protected void onFrmtest_ButtonAction(Component c, ActionEvent event) {
+
+        Dialog.show("Error", "Error occurred while processing your request. Please contact CIPC.", "Ok", null);
+    }
+
+    protected void onFrmNewEntReg1_BtnStartNewRegAction(Component c, ActionEvent event) {
+
+        Form f = c.getComponentForm();
+//        CheckBox CHB = (CheckBox) findByName("ChkBApprovedName", f);
+//        CHB.setSelected(false);
+//        CheckBox RDB = (CheckBox) findByName("ChBSubmitNameReservation", f);
+//        RDB.setSelected(false);
+
+        uws.setIsnamereserved(false);
+        uws.setInfo_Allowed(true);
+        uws.setNames_Allowed(false);
+        uws.setEnterprise_Allowed(false);
+        uws.setDirectors_Allowed(false);
+        uws.setName_reservation_no("");
+        uws.setTrak_no("");
+        Tabs tabs = (Tabs) findByName("Tabs", f);
+        tabs.setSwipeActivated(false);
+        tabs.hideTabs();
+        f.setTitle("Enterprise Details");
+        Label lblname_no = (Label) findByName("LbLNameResNo", f);
+        lblname_no.setText("No Name attached to new registration.");
+        tabs.setSelectedIndex(2);
+        //Container conttop = (Container) findByName("conttop", f);
+    }
+
+    @Override
+    protected void beforeFrmNewEntReg1(Form f) {
+        Tabs tabs = (Tabs) findByName("Tabs", f);
+        tabs.setSwipeActivated(false);
+        tabs.hideTabs();
+        Button btn1 = new Button("Info");
+        //btn1.setName("btn1");
+        //String x = btn1.getName();
+        Button btn2 = new Button("Name");
+        Button btn3 = new Button("CO Detail");
+        Button btn4 = new Button("Dir");
+        uws.setIsnamereserved(false);
+        uws.setIsnamefiled(false);
+        uws.setInfo_Allowed(true);
+        uws.setNames_Allowed(true);
+        uws.setEnterprise_Allowed(false);
+        uws.setDirectors_Allowed(false);
+        Hide_Director_Fields(f);
+        Picker dtpic = (Picker) findByName("dtAppDate", f);
+      //   dtpic.setType(Display.PICKER_TYPE_CALENDAR);
+                 //.PICKER_TYPE_DATE);
+        Date now = new Date();
+        
+        dtpic.setDate(now);
+        
+        
+//        Container connameres = (Container) findByName("ConNameres", f);
+//        connameres.setVisible(false);
+//        connameres.repaint();
+        btn1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                //Log.p("clicked btn1", Log.DEBUG);
+                f.setTitle("New Registration. ");
+                if (uws.isInfo_Allowed() == true) {
+                    //clear Names
+                    uws.setIsnamereserved(false);
+                    uws.setIsnamefiled(false);
+                    uws.setInfo_Allowed(true);
+                    uws.setNames_Allowed(true);
+                    uws.setEnterprise_Allowed(false);
+                    uws.setDirectors_Allowed(false);
+                    //
+                    f.setTitle("New Registration. ");
+                    tabs.setSelectedIndex(0);
+                    btn1.setUIID("btnselected");
+                    btn2.setUIID("Button");
+                    btn3.setUIID("Button");
+                    btn4.setUIID("Button");
+                } else {
+                    if (uws.isDirectors_Allowed() == true) {
+                        String msg = "Please complete capturing of all directors and submit current transactions first before you can start a new transaction.";
+                        Dialog.show("Error", msg, "Ok", null);
+                    }
+                    if (uws.isEnterprise_Allowed() == true) {
+                        String msg = "Please complete capturing of all enterprise details and submit current transactions first before you can start a new transaction.";
+                        Dialog.show("Error", msg, "Ok", null);
+                    }
+                    //checkRegButtonPressed();
+                    //String msg = "Please complete current transaction with name that was submitted for approval. You can't go back now.";
+                    //Dialog.show("Error", msg, "Ok", null);
+                }
+            }
+        });
+
+        btn2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                //Log.p("clicked btn2, isRegStep1Passed=" + isRegStep1Passed
+                //   + ", isRegStep2Passed=" + isRegStep2Passed, Log.DEBUG);
+                if (uws.isNames_Allowed() == true) {
+                    f.setTitle("File Name Reservation");
+                    tabs.setSelectedIndex(1);
+                } else {
+                    if (uws.isEnterprise_Allowed() == true) {
+                        String msg = "Please complete capturing of all enterprise details and director details and submit current transactions first before you can start a new transaction.";
+                        Dialog.show("Error", msg, "Ok", null);
+                    }
+                    if (uws.isDirectors_Allowed() == true) {
+                        String msg = "Please complete capturing of all director details and submit current transactions first before you can start a new transaction.";
+                        Dialog.show("Error", msg, "Ok", null);
+                    }
+                    //checkRegButtonPressed();
+                    //String msg = "You are not allowed to file a name reservation at this time of th eprocess. Please complete current transaction first.";
+                    //Dialog.show("Error", msg, "Ok", null);
+                    //return;
+                };
+//                if (uws.isInfo_Allowed() == false) {
+//                    String msg = "Please complete current transaction with name that was submitted for approval. You can't go back now.";
+//                    Dialog.show("Error", msg, "Ok", null);
+//                    return;
+//                }
+//                if (uws.isIsRegStep1Passed() == true) {
+//                    f.setTitle("File Name Reservation");
+//                    tabs.setSelectedIndex(1);
+//                    btn1.setUIID("Button");
+//                    // btn2.setUIID("btnselected");
+//                    btn3.setUIID("Button");
+//                    btn4.setUIID("Button");
+//                } else {
+//                    checkRegButtonPressed();
+//                }
+
+            }
+        });
+
+        btn3.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                //Log.p("clicked btn3", Log.DEBUG);
+                //if (isnamereserved == true || isRegStep2Passed == true) {
+                if (uws.isEnterprise_Allowed() == true) {
+                    f.setTitle("Enterprise Details");
+                    tabs.setSelectedIndex(2);
+                    btn1.setUIID("Button");
+                    btn2.setUIID("Button");
+                    //  btn3.setUIID("btnselected");
+                    btn4.setUIID("Button");
+                } else {
+                    if (uws.isDirectors_Allowed() == true) {
+                        String msg = "Please complete capturing of all director details and submit current transactions. You can't change the enterprise detail now it was already submitted.";
+                        Dialog.show("Error", msg, "Ok", null);
+                    }
+                    if (uws.isNames_Allowed() == true) {
+                        String msg = "You selected to reserve a name with the application. Please complete the name reservation or select to continue with no name from Info.";
+                        Dialog.show("Error", msg, "Ok", null);
+                    }
+                    //   checkRegButtonPressed();
+                }
+            }
+        });
+
+        btn4.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                //Log.p("clicked btn4", Log.DEBUG);
+//                if (isnamereserved == true && isRegStep2Passed == true
+//                        && isRegStep3Passed == true) {
+                if (uws.isDirectors_Allowed() == true) {
+                    f.setTitle("Director Details");
+                    tabs.setSelectedIndex(3);
+                    btn1.setUIID("Button");
+                    btn2.setUIID("Button");
+                    btn3.setUIID("Button");
+                    // btn4.setUIID("btnselected");
+                } else {
+                    if (uws.isEnterprise_Allowed() == true) {
+                        String msg = "Please complete capturing of all enterprise details  before you can continue to capture director details.";
+                        Dialog.show("Error", msg, "Ok", null);
+                        return;
+                    }
+                    if (uws.isNames_Allowed() == true) {
+                        String msg = "You selected to reserve a name with the application. Please complete the name reservation or select to continue with no name from Info.";
+                        Dialog.show("Error", msg, "Ok", null);
+                        return;
+                    } else {
+                        String msg = "Please select an option from the Info tab to continue.";
+                        Dialog.show("Error", msg, "Ok", null);
+                    }
+//                    checkRegButtonPressed();
+                }
+
+            }
+        });
+        TextField txtotp = (TextField) findByName("TxtOtp", f);
+        txtotp.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                //Log.p("clicked btn4", Log.DEBUG);
+//                if (isnamereserved == true && isRegStep2Passed == true
+//                        && isRegStep3Passed == true) {
+                if (txtotp.getText().trim().equals(uws.getOTP().toString())) {
+                    f.setTitle("Director Details");
+                    //tabs.setSelectedIndex(3);
+                    txtotp.setUIID("TextFieldcorrect");
+                    txtotp.repaint();
+
+                    // btn4.setUIID("btnselected");
+                } else {
+                    txtotp.setUIID("TextFieldwrong");
+                    //checkRegButtonPressed();
+                    Dialog.show("Invalid OTP", "Please enter a Vlid OTP", "OK", null);
+                    txtotp.requestFocus();
+                }
+
+            }
+        });
+
+//        txtotp.addActionListener((ActionListener) (ActionEvent evt) -> {
+//            //Log.p("clicked btn4", Log.DEBUG);
+////                if (isnamereserved == true && isRegStep2Passed == true
+////                        && isRegStep3Passed == true) {
+//           
+//        });
+        Container contTop = new Container();
+        contTop.setUIID("LabelWhite");
+        contTop.setLayout(new GridLayout(1, 4));
+        contTop.add(btn1).add(btn2).add(btn3).add(btn4);
+        contTop.setName("conttop");
+        btn1.setUIID("btnselected");
+//        btn1.setEnabled(false);
+        btn2.setUIID("Button");
+//        btn2.setEnabled(false);
+        btn3.setUIID("Button");
+//        btn3.setEnabled(false);
+        btn4.setUIID("Button");
+//        btn4.setEnabled(false);
+        f.add(BorderLayout.NORTH, contTop);
+
+        tabs.addSelectionListener(new SelectionListener() {
+            @Override
+            public void selectionChanged(int oldSelected, int newSelected) {
+                if (newSelected == 0) {
+                    btn1.setUIID("btnselected");
+                    btn2.setUIID("Button");
+                    btn3.setUIID("Button");
+                    btn4.setUIID("Button");;
+                }
+                if (newSelected == 1) {
+                    btn1.setUIID("Button");
+                    btn2.setUIID("btnselected");
+                    btn3.setUIID("Button");
+                    btn4.setUIID("Button");;
+                }
+
+                if (newSelected == 2) {
+                    btn1.setUIID("Button");
+                    btn2.setUIID("Button");
+                    btn3.setUIID("btnselected");
+                    btn4.setUIID("Button");;
+                }
+                if (newSelected == 3) {
+                    btn1.setUIID("Button");
+                    btn2.setUIID("Button");
+                    btn3.setUIID("Button");
+                    btn4.setUIID("btnselected");;
+                }
+            }
+        }
+        );
+//        TextField tx1 = (TextField) findByName("TxtApprovedNo", f);
+//        tx1.setVisible(false);
+//        tx1.repaint();
+//        Button cmd = (Button) findByName("BtnStartNewReg", f);
+//        cmd.setVisible(false);
+//        cmd.repaint();
+//                Container coninfo = (Container) findByName("ConInfo",tabs);
+//                Container conApprovedname = (Container) findByName("ConApprovedName", coninfo);
+//                Log.p (conApprovedname.getName(),Log.DEBUG);
+//                //conApprovedname.setHidden(true);
+//                conApprovedname.setVisible(false);
+//                //conApprovedname.getParent().animateLayout(200);
+//                conApprovedname.repaint();
+    }
+
+    protected void onFrmNewEntReg1_BtnFileNamereservationAction(Component c, ActionEvent event) {
+        uws.setIsnamereserved(false);
+        uws.setInfo_Allowed(true);
+        uws.setNames_Allowed(true);
+        uws.setEnterprise_Allowed(false);
+        uws.setDirectors_Allowed(false);
+        Form f = c.getComponentForm();
+        Tabs tabs = (Tabs) findByName("Tabs", f);
+        tabs.setSwipeActivated(false);
+        tabs.hideTabs();
+        f.setTitle("File Name Reservation");
+        tabs.setSelectedIndex(1);
+
+    }
+
+    @Override
+    protected void onFrmNewEntReg1_BtnvalnoAction(Component c, ActionEvent event) {
+        Form f = c.getComponentForm();
+        TextField txt1 = (TextField) findByName("TxtApprovedNo", f);
+        String approvedname = "";
+        String errdesc = "";
+        String reserved_no = "";
+        String TXTVAL = txt1.getText();
+        Tabs tabs = (Tabs) findByName("Tabs", f);
+        tabs.setSwipeActivated(false);
+        tabs.hideTabs();
+        if (TXTVAL.length() > 8) {
+            Log.p("in" + txt1, Log.DEBUG);
+
+            Result result = uws.ReservedName_Name_Mobi(AGENT_CODE, txt1.getText());
+            uws.ReservedName(result);
+
+            for (int i = 0; i < uws.getArlNameReserved().size(); i++) {
+                NameReserved nr = uws.ArlNameReserved.get(i);
+                approvedname = nr.ApprovedName;
+                errdesc = nr.Error_Desc;
+                reserved_no = nr.Reserved_NO;
+            }
+            Log.p("in2" + txt1, Log.DEBUG);
+            //Log.p (approvedname, Log.DEBUG);
+
+            if ("Err".equals(errdesc.substring(2, 5))) {
+                Dialog.show("Error", errdesc, "OK", null);
+                return;
+            } else {
+
+                Label lblname_no = (Label) findByName("LbLNameResNo", f);
+                uws.setName_reservation_no(RSM_A(reserved_no));
+                lblname_no.setText("Name Reservation NO. " + RSM_A(reserved_no));
+                uws.setIsnamereserved(true);
+                uws.setIsnamefiled(false);
+                uws.setNames_Allowed(false);
+                uws.setInfo_Allowed(false);
+                uws.setEnterprise_Allowed(true);
+                uws.setDirectors_Allowed(false);
+                //f.setTitle("Enterprise Details");
+                f.setTitle("Enterprise Details");
+                tabs.setSelectedIndex(2);
+            }
+        } else {
+            uws.setIsnamereserved(false);
+            uws.setInfo_Allowed(true);
+            uws.setNames_Allowed(true);
+            uws.setEnterprise_Allowed(false);
+            uws.setDirectors_Allowed(false);
+            tabs.setSelectedIndex(0);
+//            Button cmd = (Button) findByName("BtnStartNewReg", f);
+//            cmd.setVisible(false);
+//            cmd.repaint();
+            Dialog.show("Error", "Invalid Name reservation Number.", "OK", null);
+
+        }
+
+    }
+
+    protected void onFrmNewEntReg1_BtnTestNamesAction(Component c, ActionEvent event) {
+
+        Form f = c.getComponentForm();
+        Container contTest = (Container) findByName("Con4Names", c);
+        //Container contTasks = (Container) createContainer("/theme", "Con4Names");
+        String name1 = findTxtname1().getText();
+        String name2 = findTxtname2().getText();
+        String name3 = findTxtname3().getText();
+        String name4 = findTxtname4().getText();
+        TextField txtname1 = (TextField) findByName("Txtname1", f);
+        if (txtname1.getText().trim().equals("")) {
+            Dialog.show("Error", "Please enter a valid Name in line 1", "OK", null);
+            //TextField txtname1 = (TextField) findByName("Txtname1", f);
+            txtname1.requestFocus();
+            txtname1.startEditing();
+            return;
+        }
+        ArrayList<NameSearchObject> arrayList = uws.search_name_MOBI(AGENT_CODE, name1, name2, name3, name4);
+        for (int i = 0; i < 4; i++) {
+            int count = i + 1;
+            Label lblResponse = (Label) findByName("lblName" + count + "Response", contTest);
+            lblResponse.setText("");
+        }
+        for (int i = 0; i < arrayList.size(); i++) {
+            int count = i + 1;
+            Label lblResponse = (Label) findByName("lblName" + count + "Response", contTest);
+            NameSearchObject n = arrayList.get(i);
+            lblResponse.setText("");
+            if (n.isIsValid()) {
+                lblResponse.setText("Might be available");
+                lblResponse.setUIID("LabelGreen");
+                lblResponse.repaint();
+                c.repaint();
+                f.repaint();
+            } else {
+                lblResponse.setText("Is not available");
+                lblResponse.setUIID("LabelRed");
+                lblResponse.repaint();
+                c.repaint();
+                f.repaint();
+            }
+        }
+        f.repaint();
+        contTest.repaint();
+    }
+
+    protected void onFrmNewEntReg1_BtnFileNameAction(Component c, ActionEvent event) {
+
+        Form f = c.getComponentForm();
+        String name1 = findTxtname1().getText();
+        String name2 = findTxtname2().getText();
+        String name3 = findTxtname3().getText();
+        String name4 = findTxtname4().getText();
+        TextField txtname1 = (TextField) findByName("Txtname1", f);
+        if (txtname1.getText().trim().equals("")) {
+            Dialog.show("Error", "Please enter a valid Name in line 1", "OK", null);
+            //TextField txtname1 = (TextField) findByName("Txtname1", f);
+            txtname1.requestFocus();
+            txtname1.startEditing();
+            return;
+        }
+        // UserWebServicesNewReg u = new UserWebServicesNewReg();
+        //String responseCall = Namereservation_MOBI(uws.getAgent_code(), name1, name2, name3, name4);
+        //String responseCall = uws.Namereservation_MOBI(uws.getAgent_code(), name1, name2, name3, name4);
+        String responseCall = uws.Namereservation_MOBI(AGENT_CODE, name1, name2, name3, name4);
+        
+        if ("|".equals(responseCall.substring(0, 1))) {
+            responseCall = uws.RSM_1(responseCall);
+        } else {
+            StringTokenizer token = new StringTokenizer(responseCall, "|");
+            uws.setName_reservation_no(token.nextToken());
+            responseCall = token.nextToken();
+        }
+
+        if (responseCall != null && responseCall.length() > 0
+                && responseCall.indexOf("already filed") == -1) {
+            Dialog.show("Success", responseCall, "Ok", null);
+            uws.setIsnamereserved(false);
+            uws.setIsnamefiled(true);
+            Label lblname_no = (Label) findByName("LbLNameResNo", f);
+            lblname_no.setText("Name Reservation No. " + uws.getName_reservation_no());
+            Tabs tabs = (Tabs) findByName("Tabs", f);
+            f.setTitle("Enterprise Details");
+            tabs.setSelectedIndex(2);
+
+        } else if (responseCall != null && responseCall.length() > 0
+                && responseCall.indexOf("already filed") != -1) {
+            Dialog.show("Error", responseCall, "Ok", null);//TODO scroll to top
+        } else {
+            Dialog.show("Error", "Error occurred while processing your request. Please try again later or contact CIPC.", "Ok", null);
+        }
+    }
+
+    @Override
+    protected void onFrmNewEntReg1_BtncopyphysicaladdressAction(Component c, ActionEvent event) {
+        Form f = c.getComponentForm();
+//        CheckBox chbsame = (CheckBox) findByName("ChbIssameasPhys", f);
+//        if (chbsame.isSelected()) {
+        TextField txtpostaladdr1 = (TextField) findByName("TxtPostaladdr1", f);
+        TextField txtpostaladdr2 = (TextField) findByName("TxtPostaladdr2", f);
+        TextField txtpostaladdr3 = (TextField) findByName("TxtPostaladdr3", f);
+        ComboBox cmbentpostalpr = (ComboBox) findByName("CmbEntPostalPr", f);
+        TextField TxtentPostalcode = (TextField) findByName("TxtentPostalcode", f);
+        TextField txtphysaddr1 = (TextField) findByName("txtEntPhysAddr1", f);
+        txtpostaladdr1.setText(txtphysaddr1.getText().toString());
+        TextField txtphysaddr2 = (TextField) findByName("txtEntPhysAddr2", f);
+        txtpostaladdr2.setText(txtphysaddr2.getText().toString());
+        TextField txtphysaddr3 = (TextField) findByName("txtEntPhysAddr3", f);
+        txtpostaladdr3.setText(txtphysaddr3.getText().toString());
+        TextField txtphyscode = (TextField) findByName("txtEntPhysCode", f);
+        TxtentPostalcode.setText(txtphyscode.getText().toString());
+
+        //  ComboBox CmbPhysProvince = (ComboBox) findByName("CmbEntPhysProvince", f);
+        //  cmbentpostalpr.setSelectedIndex(CmbPhysProvince.getSelectedIndex());
+//        } else {
+//            TextField txtpostaladdr1 = (TextField) findByName("TxtPostaladdr1", f);
+//            TextField txtpostaladdr2 = (TextField) findByName("TxtPostaladdr2", f);
+//            TextField txtpostaladdr3 = (TextField) findByName("TxtPostaladdr3", f);
+//            ComboBox cmbentpostalpr = (ComboBox) findByName("CmbEntPostalPr", f);
+//            TextField txtpostalcode = (TextField) findByName("TxtPostalcode", f);
+//            //TextField txtphysaddr1 = (TextField) findByName("txtPhysAddr1", f);
+//            txtpostaladdr1.setText("");
+//            //TextField txtphysaddr2 = (TextField) findByName("txtPhysAddr2", f);
+//            txtpostaladdr2.setText("");
+//            //TextField txtphysaddr3 = (TextField) findByName("txtPhysAddr3", f);
+//            txtpostaladdr3.setText("");
+//            //TextField txtphyscode = (TextField) findByName("txtPhysCode", f);
+//            txtpostalcode.setText("");
+//            //ComboBox CmbPhysProvince = (ComboBox) findByName("CmbPhysProvince", f);
+//            cmbentpostalpr.setSelectedIndex(0);
+        // }
+    }
+
+    protected boolean validentdata(Component c) {
+        try {
+            EnterpriseDetails enterprisedetails = new EnterpriseDetails();
+
+            Form f = c.getComponentForm();
+            TextField TxtAuthShares = (TextField) findByName("TxtAuthShares", f);
+            //##########
+            if (TxtAuthShares.getText().trim().equals("")) {
+                Dialog.show("Error", "Please enter a valid number of shares.", "OK", null);
+                TxtAuthShares.repaint();
+                TxtAuthShares.requestFocus();
+                TxtAuthShares.startEditing();
+                return false;
+            }
+            enterprisedetails.setShares(TxtAuthShares.getText().trim());
+            TextField TxtEntEmail = (TextField) findByName("TxtEntEmail", f);
+            //##########
+            if (TxtEntEmail.getText().trim().equals("")) {
+                Dialog.show("Error", "Please enter a valid E-Mail.", "OK", null);
+                TxtEntEmail.repaint();
+                TxtEntEmail.requestFocus();
+                TxtEntEmail.startEditing();
+                return false;
+            }
+            enterprisedetails.setMail(TxtEntEmail.getText().trim());
+            TextField txtphysaddr1 = (TextField) findByName("txtEntPhysAddr1", f);
+            //##########
+            if (txtphysaddr1.getText().trim().equals("")) {
+                Dialog.show("Error", "Please enter a valid physical address line 1.", "OK", null);
+                txtphysaddr1.repaint();
+                txtphysaddr1.requestFocus();
+                txtphysaddr1.startEditing();
+                return false;
+            }
+            enterprisedetails.setPhysaddr1(txtphysaddr1.getText().trim());
+            TextField txtphysaddr2 = (TextField) findByName("txtEntPhysAddr2", f);
+            //##########
+            if (txtphysaddr2.getText().trim().equals("")) {
+                Dialog.show("Error", "Please enter a valid physical address line 2.", "OK", null);
+                txtphysaddr2.repaint();
+                txtphysaddr2.requestFocus();
+                txtphysaddr2.startEditing();
+                return false;
+            }
+            enterprisedetails.setPhysaddr2(txtphysaddr2.getText().trim());
+            TextField txtphysaddr3 = (TextField) findByName("txtEntPhysAddr3", f);
+            //##########
+            if (txtphysaddr3.getText().trim().equals("")) {
+                Dialog.show("Error", "Please enter a valid physical address line 3.", "OK", null);
+                txtphysaddr3.repaint();
+                txtphysaddr3.requestFocus();
+                txtphysaddr3.startEditing();
+                return false;
+            }
+            enterprisedetails.setPhysaddr3(txtphysaddr3.getText().trim());
+
+            //Cmbenttype
+            ComboBox cmbenttype = (ComboBox) findByName("Cmbenttype", f);
+            String ent_type_code = "";
+            if (cmbenttype.getSelectedItem().toString().equals("Private Company")) {
+                ent_type_code = "07";
+            }
+            enterprisedetails.setEnt_type_code(ent_type_code);
+
+//            ComboBox CmbPhysProvince = (ComboBox) findByName("CmbEntPhysProvince", f);
+//            if (CmbPhysProvince.getSelectedItem().toString().equals("Select Province")) {
+//                Dialog.show("Error", "Please enter a valid province for physical address.", "OK", null);
+//                CmbPhysProvince.repaint();
+//                CmbPhysProvince.requestFocus();
+//                
+//                return false;
+//            }
+            //  enterprisedetails.setPhysaddr4(CmbPhysProvince.getSelectedItem().toString());
+            TextField txtphyscode = (TextField) findByName("txtEntPhysCode", f);
+            //##########
+            if (txtphyscode.getText().trim().equals("")) {
+                Dialog.show("Error", "Please enter a valid physical address code.", "OK", null);
+                txtphyscode.repaint();
+                txtphyscode.requestFocus();
+                txtphyscode.startEditing();
+                return false;
+            }
+            enterprisedetails.setPhyscode(txtphyscode.getText().trim());
+            TextField txtpostaladdr1 = (TextField) findByName("TxtPostaladdr1", f);
+            //##########
+            if (txtpostaladdr1.getText().trim().equals("")) {
+                Dialog.show("Error", "Please enter a valid postal address line 1.", "OK", null);
+                txtpostaladdr1.repaint();
+                txtpostaladdr1.requestFocus();
+                txtpostaladdr1.startEditing();
+                return false;
+            }
+            enterprisedetails.setPostaladdr1(txtpostaladdr1.getText().trim());
+            TextField txtpostaladdr2 = (TextField) findByName("TxtPostaladdr2", f);
+            //##########
+            if (txtpostaladdr2.getText().trim().equals("")) {
+                Dialog.show("Error", "Please enter a valid postal address line 2.", "OK", null);
+                txtpostaladdr2.repaint();
+                txtpostaladdr2.requestFocus();
+                txtpostaladdr2.startEditing();
+                return false;
+            }
+            enterprisedetails.setPostaladdr2(txtpostaladdr2.getText().trim());
+            TextField txtpostaladdr3 = (TextField) findByName("TxtPostaladdr3", f);
+            //##########
+            if (txtpostaladdr3.getText().trim().equals("")) {
+                Dialog.show("Error", "Please enter a valid postal address line 3.", "OK", null);
+                txtpostaladdr3.repaint();
+                txtpostaladdr3.requestFocus();
+                txtpostaladdr3.startEditing();
+                return false;
+            }
+            enterprisedetails.setPostaladdr3(txtpostaladdr3.getText().trim());
+//            ComboBox cmbentpostalpr = (ComboBox) findByName("CmbEntPostalPr", f);
+//            if (cmbentpostalpr.getSelectedItem().toString().equals("Select Province")) {
+//                Dialog.show("Error", "Please enter a valid province for postal address.", "OK", null);
+//                cmbentpostalpr.repaint();
+//                cmbentpostalpr.requestFocus();
+//                return false;
+//            }
+            //enterprisedetails.setPostaladdr4(cmbentpostalpr.getSelectedItem().toString());
+
+            TextField txtentpostalcode = (TextField) findByName("TxtentPostalcode", f);
+            //##########
+            if (txtentpostalcode.getText().trim().equals("")) {
+                Dialog.show("Error", "Please enter a valid postal address code.", "OK", null);
+                txtentpostalcode.repaint();
+                txtentpostalcode.requestFocus();
+                txtentpostalcode.startEditing();
+                return false;
+            }
+            enterprisedetails.setPostalcode(txtentpostalcode.getText().trim());
+            //CmbFyeMonth
+            ComboBox cmbfyemonth = (ComboBox) findByName("CmbFyeMonth", f);
+            String FYE = "";
+            if (cmbfyemonth.getSelectedItem().toString().equals("January")) {
+                FYE = "1";
+            }
+            if (cmbfyemonth.getSelectedItem().toString().equals("February")) {
+                FYE = "2";
+            }
+            if (cmbfyemonth.getSelectedItem().toString().equals("March")) {
+                FYE = "3";
+            }
+            if (cmbfyemonth.getSelectedItem().toString().equals("April")) {
+                FYE = "4";
+            }
+            if (cmbfyemonth.getSelectedItem().toString().equals("May")) {
+                FYE = "5";
+            }
+            if (cmbfyemonth.getSelectedItem().toString().equals("June")) {
+                FYE = "6";
+            }
+            if (cmbfyemonth.getSelectedItem().toString().equals("July")) {
+                FYE = "7";
+            }
+            if (cmbfyemonth.getSelectedItem().toString().equals("August")) {
+                FYE = "8";
+            }
+            if (cmbfyemonth.getSelectedItem().toString().equals("September")) {
+                FYE = "9";
+            }
+            if (cmbfyemonth.getSelectedItem().toString().equals("October")) {
+                FYE = "10";
+            }
+            if (cmbfyemonth.getSelectedItem().toString().equals("November")) {
+                FYE = "11";
+            }
+            if (cmbfyemonth.getSelectedItem().toString().equals("December")) {
+                FYE = "12";
+            }
+            enterprisedetails.setFYE(FYE);
+            enterprisedetails.setCust_code(AGENT_CODE);
+//            uws.enterprisedetails.setTrak_no(FYE);
+            Result rs = uws.AddEnterprise(enterprisedetails);
+            String Response = rs.getAsString("//ReceiveNewEntDataResult");
+            if (Response == "") {
+                return true;
+            } else {//        if (Response != null) {
+                Dialog.show("Error", Response, "OK", null);
+                return false;
+            }
+
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
+
+        //return true;
+    }
+
+    public void scanCanceled_death() {
+        System.out.println("cancelled");
+        Dialog.show("Scan Cancelled", "According to DHA this person is Diseased.", "Ok", null);
+    }
+
+    protected void onFrmNewEntReg1_ButtonAction(Component c, ActionEvent event) {
+        if (validentdata(c)) {
+            uws.setInfo_Allowed(false);
+            uws.setNames_Allowed(false);
+            uws.setEnterprise_Allowed(false);
+            uws.setDirectors_Allowed(true);
+            Form f = c.getComponentForm();
+            Tabs tabs = (Tabs) findByName("Tabs", f);
+            tabs.setSwipeActivated(false);
+            tabs.hideTabs();
+            f.setTitle("Director Details");
+            Result rs = uws.name_workflow(uws.getTrak_no(), uws.getName_reservation_no(),AGENT_CODE);
+            String Response = rs.getAsString("//Insert_Name_Workflow_mobiResult");
+            if (Response == "") {
+                tabs.setSelectedIndex(3);
+            } else {//        if (Response != null) {
+                Dialog.show("Error", Response, "OK", null);
+            }
+
+// get traking no for new registration
+        }
+
+    }
+
+    @Override
+    protected void onFrmNewEntReg1_BtnGetIdInfoAction(Component c, ActionEvent event) {
+        Form f = c.getComponentForm();
+//        Result result = uws.get_dha_data("7104085085085");
+//        uws.DHA_Data(result);
+//
+//        for (int i = 0; i < uws.ArlDHA_Detail.size(); i++) {
+//            DHA_Detail DD = uws.ArlDHA_Detail.get(i); 
+//                    
+//            String death_status = RSM_A(DD.getDEATH_STATUS());
+//            if (!"ALIVE".equals(death_status)) {
+//                scanCanceled_death();
+//                return;
+//            }
+//            Label lblIdno = (Label) findByName("LblIdNo", f);
+//            lblIdno.setText(RSM_A(DD.getIDNUMBER()));
+//            lblIdno.repaint();
+//
+//            Label lblDirbirthdate = (Label) findByName("lbldirbirthdate", f);
+//            lblDirbirthdate.setText(RSM_A(DD.getDOB()));
+//            lblDirbirthdate.repaint();
+//            //LblNames
+//            Label lblnames = (Label) findByName("LblNames", f);
+//            lblnames.setText(RSM_A(DD.getNAMES()));
+//            lblnames.repaint();
+//            //LblSurname
+//            Label lblsurname = (Label) findByName("LblSurname", f);
+//            lblsurname.setText(RSM_A(DD.getSURNAME()));
+//            lblsurname.repaint();
+//            //PhysAddr1
+//            TextField physaddr1 = (TextField) findByName("PhysAddr1", f);
+//            physaddr1.setText(RSM_A(DD.getADDR_LINE1()));
+//            physaddr1.repaint();
+//            TextField physaddr2 = (TextField) findByName("PhysAddr2", f);
+//            physaddr2.setText(RSM_A(DD.getADDR_LINE2()));
+//            physaddr2.repaint();
+//        }
+//        Show_Director_Fields(f);
+//        f.repaint();
+//        TextField txtcell = (TextField) findByName("TxtCell", f);
+//        txtcell.repaint();
+//        txtcell.requestFocus();
+//        txtcell.startEditing();
+        
+        //########
+        CodeScanner.getInstance().scanBarCode(new ScanResult() {
+            public void scanCompleted(String contents, String formatName, byte[] rawBytes) {
+                //Dialog.show("Bar code", "Bar code is: " + contents, "Ok", null);
+
+                Result result = uws.get_dha_data(contents);
+                       uws.DHA_Data(result);
+                for (int i = 0; i < uws.ArlDHA_Detail.size(); i++) {
+                    DHA_Detail DD = uws.ArlDHA_Detail.get(i);
+                    String death_status  = RSM_A(DD.getDEATH_STATUS());
+                    if (death_status != "ALIVE")
+                    {
+                    
+                    }
+                    Label lblIdno = (Label) findByName("LblIdNo", f);
+                    lblIdno.setText(RSM_A(DD.getIDNUMBER()));
+                    lblIdno.repaint();
+                    //LblNames
+                    Label lblnames = (Label) findByName("LblNames", f);
+                    lblnames.setText(RSM_A(DD.getNAMES()));
+                    lblnames.repaint();
+                    //LblSurname
+                           Label lblsurname = (Label) findByName("LblSurname", f);
+                    lblsurname.setText(RSM_A(DD.getSURNAME()));
+                    lblsurname.repaint();
+                    //PhysAddr1
+                    TextField physaddr1 = (TextField) findByName("PhysAddr1", f);
+                    physaddr1.setText(RSM_A(DD.getADDR_LINE1()));
+                    physaddr1.repaint();
+                    TextField physaddr2 = (TextField) findByName("PhysAddr2", f);
+                    physaddr2.setText(RSM_A(DD.getADDR_LINE2()));
+                    physaddr2.repaint();
+                    ;    
+                }
+                        Show_Director_Fields(f);
+               f.repaint();
+               TextField txtcell = (TextField) findByName("TxtCell", f);   
+                   txtcell.repaint();
+            txtcell.requestFocus();
+            txtcell.startEditing();   
+                   }
+                   public void scanCanceled() {
+                      System.out.println("cancelled");
+                       Dialog.show("Scan Cancelled", "Please ensure that there is sufficient light when performing scan", "Ok", null);
+                   }
+                   public void scanError(int errorCode, String message) {
+                       Dialog.show("Scan Error", "Please ensure that there is sufficient light when performing scan", "Ok", null);
+                   }
+              });
+    }
+
+    protected void onFrmNewEntReg1_ButtoncondirAction(Component c, ActionEvent event) {
+
+        if (validentdata(c)) {
+            uws.setInfo_Allowed(false);
+            uws.setNames_Allowed(false);
+            uws.setEnterprise_Allowed(false);
+            uws.setDirectors_Allowed(true);
+            Form f = c.getComponentForm();
+            Tabs tabs = (Tabs) findByName("Tabs", f);
+            tabs.setSwipeActivated(false);
+            tabs.hideTabs();
+            f.setTitle("Director Details");
+            Result rs = uws.name_workflow(uws.getTrak_no(), uws.getName_reservation_no(),AGENT_CODE);
+            String Response = rs.getAsString("//Insert_Name_Workflow_mobiResult");
+            if (Response == "") {
+                tabs.setSelectedIndex(3);
+            } else {//        if (Response != null) {
+                Dialog.show("Error", Response, "OK", null);
+            }
+
+// get traking no for new registration
+        }
+    }
+
+    @Override
+    protected void onFrmNewEntReg1_BtnverifyOtpAction(Component c, ActionEvent event) {
+        Form f = c.getComponentForm();
+//TxtCell
+        TextField txtcell = (TextField) findByName("TxtCell", f);
+        if (txtcell.getText().trim().equals("")) {
+            Dialog.show("Error", "Please enter a valid cell number", "OK", null);
+            txtcell.repaint();
+            txtcell.requestFocus();
+            txtcell.startEditing();
+            return;
+        }
+        Label lblidno = (Label) findByName("LblIdNo", f);
+        if (lblidno.getText().trim().equals("")) {
+            Dialog.show("Error", "Please Scan a valid ID Document", "OK", null);
+            lblidno.repaint();
+            lblidno.requestFocus();
+            return;
+        }
+        uws.setOTP(uws.ValidateCelNo(AGENT_CODE, uws.getTrak_no(), txtcell.getText().trim(), lblidno.toString()));
+        if ("ERR".equals(uws.getOTP().substring(0, 3))) {
+            Dialog.show("Error", uws.getOTP(), "OK", null);
+            txtcell.repaint();
+            txtcell.requestFocus();
+            txtcell.startEditing();
+            return;
+        }
+
+    }
+
+    protected void copydiraddress(Component c) {
+        Form f = c.getComponentForm();
+        TextField physaddr1 = (TextField) findByName("PhysAddr1", f);
+        TextField physaddr2 = (TextField) findByName("PhysAddr2", f);
+        TextField physaddr3 = (TextField) findByName("PhysAddr3", f);
+        //ComboBox cmbprovince = (ComboBox) findByName("CmbProvince", f);
+        //cmbprovince.setSelectedIndex(0);
+        TextField physaddrcode = (TextField) findByName("Physaddrcode", f);
+        TextField txtpostaladdr1 = (TextField) findByName("TxtPostalAddr1", f);
+        txtpostaladdr1.setText(physaddr1.getText());
+        TextField txtpostaladdr2 = (TextField) findByName("TxtPostalAddr2", f);
+        txtpostaladdr2.setText(physaddr2.getText());
+        TextField txtpostaladdr3 = (TextField) findByName("TxtPostalAddr3", f);
+        txtpostaladdr3.setText(physaddr3.getText());
+        // ComboBox cmbpostalprovince = (ComboBox) findByName("CmbPostalProvince", f);
+        //  cmbpostalprovince.setSelectedIndex(cmbprovince.getSelectedIndex());
+        TextField txtpostalcode = (TextField) findByName("TxtdirPostalCode", f);
+        txtpostalcode.setText(physaddrcode.getText());
+    }
+
+    protected void onFrmNewEntReg1_BtncopyphysaddressAction(Component c, ActionEvent event) {
+        copydiraddress(c);
+
+    }
+
+    protected boolean validatedirdata(Component c) {
+        //TxtIdNo
+
+        //directordetails = new DirectorDetails();
+        Form f = c.getComponentForm();
+        CheckBox RDB = (CheckBox) findByName("chbIncorporator", f);
+        if (RDB.isSelected()) {
+            uws.setIsIncorporator(true);
+        } else {
+            uws.setIsIncorporator(false);
+        }
+         Label lbldirbirthdate = (Label) findByName("lbldirbirthdate", f); 
+        Label lblidNo = (Label) findByName("LblIdNo", f);
+        if (lblidNo.getText().trim().equals("")) {
+            Dialog.show("Error", "Please enter a valid Director ID Number", "OK", null);
+            lblidNo.repaint();
+            lblidNo.requestFocus();
+            //lblidNo.startEditing();
+
+            return false;
+        }
+        TextField txtotp = (TextField) findByName("TxtOtp", f);
+//        if (txtotp.getText().trim().equals("")) {
+//            Dialog.show("Error", "Please enter a valid otp for Director ID Number" + lblidNo.getText().trim(), "OK", null);
+//            txtotp.repaint();
+//            txtotp.requestFocus();
+//            txtotp.startEditing();
+//
+//            return false;
+//        } else {
+//            if (txtotp.getText().trim().equals(uws.getOTP())) {
+//            } else {
+//                Dialog.show("Error", "Please enter a valid otp for Director ID Number" + lblidNo.getText().trim(), "OK", null);
+//                txtotp.repaint();
+//                txtotp.requestFocus();
+//                txtotp.startEditing();
+//                return false;
+//            }
+//        }
+//LblNames
+        Label lblnames = (Label) findByName("LblNames", f);
+        if (lblnames.getText().trim().equals("")) {
+            Dialog.show("Error", "Invalid first names", "OK", null);
+            lblnames.repaint();
+            lblnames.requestFocus();
+            return false;
+        }
+//LblSurname
+
+        Label lblsurname = (Label) findByName("LblSurname", f);
+        if (lblsurname.getText().trim().equals("")) {
+            Dialog.show("Error", "Invalid surnames names", "OK", null);
+            lblsurname.repaint();
+            lblsurname.requestFocus();
+            return false;
+        }
+
+//DtDatofBirth
+//TxtCell
+        TextField txtcell = (TextField) findByName("TxtCell", f);
+        if (txtcell.getText().trim().equals("")) {
+            Dialog.show("Error", "Please enter a valid cell number", "OK", null);
+            txtcell.repaint();
+            txtcell.requestFocus();
+            txtcell.startEditing();
+            return false;
+        }
+
+//TxtEmail
+        TextField txtemail = (TextField) findByName("TxtEmail", f);
+        if (txtemail.getText().trim().equals("")) {
+            Dialog.show("Error", "Please enter a valid email", "OK", null);
+            txtemail.repaint();
+            txtemail.requestFocus();
+            txtemail.startEditing();
+            return false;
+        }
+
+//PhysAddr1
+        TextField physaddr1 = (TextField) findByName("PhysAddr1", f);
+        if (physaddr1.getText().trim().equals("")) {
+            Dialog.show("Error", "Please enter a valid Physical Address line 1", "OK", null);
+            physaddr1.repaint();
+            physaddr1.requestFocus();
+            physaddr1.startEditing();
+            return false;
+        }
+
+//PhysAddr2
+        TextField physaddr2 = (TextField) findByName("PhysAddr2", f);
+        if (physaddr2.getText().trim().equals("")) {
+            Dialog.show("Error", "Please enter a valid Physical Address line 2", "OK", null);
+            physaddr2.repaint();
+            physaddr2.requestFocus();
+            physaddr2.startEditing();
+            return false;
+        }
+
+//PhysAddr3
+        TextField physaddr3 = (TextField) findByName("PhysAddr3", f);
+        if (physaddr3.getText().trim().equals("")) {
+            Dialog.show("Error", "Please enter a valid Physical Address line 3", "OK", null);
+            physaddr3.repaint();
+            physaddr3.requestFocus();
+            physaddr3.startEditing();
+            return false;
+        }
+//Cmbdirectortype
+        ComboBox mbdirectortype = (ComboBox) findByName("Cmbdirectortype", f);
+        if (mbdirectortype.getSelectedItem().toString().equals("")) {
+            Dialog.show("Error", "Please enter a valid director type.", "OK", null);
+            mbdirectortype.repaint();
+            mbdirectortype.requestFocus();
+            return false;
+        }
+
+//CmbProvince
+//        ComboBox cmbprovince = (ComboBox) findByName("CmbProvince", f);
+//        if (cmbprovince.getSelectedItem().toString().equals("Select Province")) {
+//            Dialog.show("Error", "Please enter a valid province for physical address.", "OK", null);
+//            cmbprovince.repaint();
+//            cmbprovince.requestFocus();
+//            return false;
+//        }
+//Physaddrcode
+        TextField physaddrcode = (TextField) findByName("Physaddrcode", f);
+        if (physaddrcode.getText().trim().equals("")) {
+            Dialog.show("Error", "Please enter a valid Physical Address Code", "OK", null);
+            physaddrcode.repaint();
+            physaddrcode.requestFocus();
+            physaddrcode.startEditing();
+            return false;
+        }
+
+//TxtPostalAddr1
+        TextField txtpostaladdr1 = (TextField) findByName("TxtPostalAddr1", f);
+        if (txtpostaladdr1.getText().trim().equals("")) {
+            Dialog.show("Error", "Please enter a valid Postal Address line 1", "OK", null);
+            txtpostaladdr1.repaint();
+            txtpostaladdr1.requestFocus();
+            txtpostaladdr1.startEditing();
+            return false;
+        }
+
+//TxtPostalAddr2}
+        TextField txtpostaladdr2 = (TextField) findByName("TxtPostalAddr2", f);
+        if (txtpostaladdr2.getText().trim().equals("")) {
+            Dialog.show("Error", "Please enter a valid Postal Address line 2", "OK", null);
+            txtpostaladdr2.repaint();
+            txtpostaladdr2.requestFocus();
+            txtpostaladdr2.startEditing();
+            return false;
+        }
+
+//TxtPostalAddr3
+        TextField txtpostaladdr3 = (TextField) findByName("TxtPostalAddr3", f);
+        if (txtpostaladdr3.getText().trim().equals("")) {
+            Dialog.show("Error", "Please enter a valid Postal Address line 3", "OK", null);
+            txtpostaladdr3.repaint();
+            txtpostaladdr3.requestFocus();
+            txtpostaladdr3.startEditing();
+            return false;
+        }
+
+//CmbPostalProvince
+//        ComboBox cmbpostalprovince = (ComboBox) findByName("CmbPostalProvince", f);
+//        if (cmbpostalprovince.getSelectedItem().toString().equals("Select Province")) {
+//            Dialog.show("Error", "Please enter a valid province for physical address.", "OK", null);
+//            cmbpostalprovince.repaint();
+//            cmbpostalprovince.requestFocus();
+//            return false;
+//        }
+//TxtPostalCode
+        TextField txtpostalcode = (TextField) findByName("TxtdirPostalCode", f);
+        if (txtpostalcode.getText().trim().equals("")) {
+            Dialog.show("Error", "Please enter a valid Postal Address Code", "OK", null);
+            txtpostalcode.repaint();
+            txtpostalcode.requestFocus();
+            txtpostalcode.startEditing();
+            return false;
+        }
+//dtAppDate
+        Picker dtappdate = (Picker) findByName("dtAppDate", f);
+        Date  testdate = dtappdate.getDate();
+        Date d = dtappdate.getDate();
+                        Calendar cal = Calendar.getInstance();
+                        cal.setTime(d);
+
+
+                        String m1 = Integer.toString(cal.get(Calendar.MONTH) + 1);
+                        if(m1.length()==1)
+                        {
+                            m1= "0"+m1;
+                        }
+                        String y1 = Integer.toString(cal.get(Calendar.YEAR));
+                        String d1 = Integer.toString(cal.get(Calendar.DAY_OF_MONTH));
+       String dateStringApp = y1 + "/" + m1 + "/" + d1;
+//        String m1=Integer.toString(dtappdate.getDate().getMonth());
+//        String d1=Integer.toString(dtappdate.getDate().getDay());
+//        String y1=Integer.toString(dtappdate.getDate().getYear());
+
+ //       String dateStringApp = new SimpleDateFormat("yyyy-MM-dd").format(dtappdate.getDate().toString());
+ //       dtappdate.setType(Display.PICKER_TYPE_DATE);
+//DtDatofBirth
+        //Picker dtdatofbirth = (Picker) findByName("DtDatofBirth", f);
+//perform test if date of birth is valid
+        DirectorDetails directordetails = new DirectorDetails();
+        if (mbdirectortype.getSelectedItem().toString().equals("Director")) {
+            directordetails.setDir_type_code("D");
+        }
+        if (mbdirectortype.getSelectedItem().toString().equals("Non Executive Director")) {
+            directordetails.setDir_type_code("K");
+        }
+        if (mbdirectortype.getSelectedItem().toString().equals("Alternate Director")) {
+            directordetails.setDir_type_code("N");
+        }
+
+        //directordetails.setDir_appoint_date(dtappdate.getText().toString());
+        directordetails.setDir_appoint_date(dateStringApp);
+          String dateString = lbldirbirthdate.getText().trim();
+         // dateString = dateString.substring(6,8) + "/" + dateString.substring(4, 6) +"/"+ dateString.substring(0, 4 );
+                  
+          //        new SimpleDateFormat("dd-MM-yyyy").format(lbldirbirthdate.getText().trim());
+         
+                  
+        directordetails.setDir_birth_date(  dateString);
+        directordetails.setPost_post_code(txtpostalcode.getText().trim());
+        //  directordetails.setPost_addr4(cmbpostalprovince.getSelectedItem().toString());
+        directordetails.setPost_addr3(txtpostaladdr3.getText().trim());
+        directordetails.setPost_addr2(txtpostaladdr2.getText().trim());
+        directordetails.setPost_addr1(txtpostaladdr1.getText().trim());
+        directordetails.setRes_post_code(physaddrcode.getText().trim());
+        //directordetails.setRes_addr4(cmbprovince.getSelectedItem().toString());
+        directordetails.setRes_addr3(physaddr3.getText().trim());
+        directordetails.setRes_addr2(physaddr2.getText().trim());
+        directordetails.setRes_addr1(physaddr1.getText().trim());
+        directordetails.setEmail_address(txtemail.getText().trim());
+        directordetails.setCell_no(txtcell.getText().trim());
+        directordetails.setId_no(lblidNo.getText().trim());
+        directordetails.setFirst_names(lblnames.getText().trim());
+        directordetails.setSurname(lblsurname.getText().trim());
+        //directordetails.setCust_code(uws.getAgent_code());
+        directordetails.setCust_code(AGENT_CODE);
+        directordetails.setIsIncorporator(uws.isIsIncorporator());
+        
+        uws.setFirstNames(lblnames.getText().trim());
+        uws.setSurname(lblsurname.getText().trim());
+        Result rs = uws.AddDirector(directordetails);
+
+        String Response = rs.getAsString("//ReceiveNewDirData_mobiResult");
+        if (Response == "") {
+            RDB.setEnabled(true);
+            RDB.setSelected(true);
+            return true;
+        } else {//        if (Response != null) {
+            Dialog.show("Error", Response, "OK", null);
+            return false;
+        }
+        //return true;
+    }
+
+    protected boolean cleardirdata(Component c) {
+        //TxtIdNo
+        Form f = c.getComponentForm();
+        Label lblnames = (Label) findByName("LblNames", f);
+        lblnames.setText("");
+        Label lblsurname = (Label) findByName("LblSurname", f);
+        lblsurname.setText("");
+        Label lblidno = (Label) findByName("LblIdNo", f);
+        lblidno.setText("");
+//TxtrelativeID
+//        TextField txtrelativeid = (TextField) findByName("TxtrelativeID", f);
+//        txtrelativeid.setText("");
+//DtDatofBirth
+//TxtCell
+        TextField txtcell = (TextField) findByName("TxtCell", f);
+        txtcell.setText("");
+        TextField txtotp = (TextField) findByName("TxtOtp", f);
+        txtotp.setText("");
+        uws.setOTP("");
+//TxtEmail
+        TextField txtemail = (TextField) findByName("TxtEmail", f);
+        txtemail.setText("");
+//PhysAddr1
+        TextField physaddr1 = (TextField) findByName("PhysAddr1", f);
+        physaddr1.setText("");
+//PhysAddr2
+        TextField physaddr2 = (TextField) findByName("PhysAddr2", f);
+        physaddr2.setText("");
+//PhysAddr3
+        TextField physaddr3 = (TextField) findByName("PhysAddr3", f);
+        physaddr3.setText("");
+//CmbProvince
+        //  ComboBox cmbprovince = (ComboBox) findByName("CmbProvince", f);
+        //   cmbprovince.setSelectedIndex(0);
+//Physaddrcode
+        TextField physaddrcode = (TextField) findByName("Physaddrcode", f);
+        physaddrcode.setText("");
+//TxtPostalAddr1
+        TextField txtpostaladdr1 = (TextField) findByName("TxtPostalAddr1", f);
+        txtpostaladdr1.setText("");
+//TxtPostalAddr2}
+        TextField txtpostaladdr2 = (TextField) findByName("TxtPostalAddr2", f);
+        txtpostaladdr2.setText("");
+//TxtPostalAddr3
+        TextField txtpostaladdr3 = (TextField) findByName("TxtPostalAddr3", f);
+        txtpostaladdr3.setText("");
+//CmbPostalProvince
+        //   ComboBox cmbpostalprovince = (ComboBox) findByName("CmbPostalProvince", f);
+        //   cmbpostalprovince.setSelectedIndex(0);
+//TxtPostalCode
+        TextField txtpostalcode = (TextField) findByName("TxtdirPostalCode", f);
+        txtpostalcode.setText("");
+        return true;
+    }
+
+    protected void onFrmNewEntReg1_BtnAddDirectorAction(Component c, ActionEvent event) {
+        if (validatedirdata(c)) {
+            //add director
+
+            Form f = c.getComponentForm();
+            List listdir = (List) findByName("ListDir", f);
+            //TextField textfield = (TextField) findByName("TxtIdNo", f);
+            listdir.addItem(uws.getFirstNames() + " " + uws.getSurname());
+            listdir.repaint();
+            cleardirdata(c);
+            Hide_Director_Fields(f);
+            //textfield.requestFocus();
+            listdir.scrollRectToVisible(0, 0, 0, 0, listdir);
+            listdir.repaint();
+            Container conregister = (Container) findByName("Conregister", f);
+            conregister.setHidden(false);
+            //Container conregister = (Container) findByName("Conregister", f);
+            //conregister.setHidden(true);        
+
+            //Button btnGetIdInfo = (Button)  findByName("BtnGetIdInfo", f);
+//                    BtnGetIdInfo
+            f.repaint();
+        };
+
+    }
+
+    @Override
+    protected void onFrmNewEntReg1_BtnRegisterenterprisAction(Component c, ActionEvent event) {
+        String Sreservedname = uws.getName_reservation_no();
+        String Strak_no = uws.getTrak_no();
+        Dialog.show("testing ", "Name reservation-" + Sreservedname + " Trak no - " + Strak_no, "OK", null);
+
+    }
+
+    @Override
+    protected void onContTasks_BtnLodgeAction(Component c, ActionEvent event) {
+
+    }
+
+    @Override
+    protected void onContTasks_BtnVerifyAction(Component c, ActionEvent event) {
+
+    }
+
+    @Override
+    protected void onLogin_BtnLoginAction(Component c, ActionEvent event) {
+
+    }
+
+    @Override
+    protected void onCreateMain() {
+    
+    }
 }
