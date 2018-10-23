@@ -4146,7 +4146,7 @@ public class StateMachine extends StateMachineBase {
 //        border.add(BorderLayout.CENTER, contProjects);
 //#########################
         Container contTop = new Container();
-        contTop.setUIID("ContainerWhite");       
+        contTop.setUIID("ContainerWhite");
         contTop.setLayout(new GridLayout(1, 4));
         contTop.add(btnnr1).add(btnnr2).add(btnnr3).add(btnnr4);
 //        Container border = new Container(new BorderLayout());
@@ -4637,104 +4637,109 @@ public class StateMachine extends StateMachineBase {
     protected void onFrmNewEntReg1_BtnGetIdInfoAction(Component c, ActionEvent event) {
         Form f = c.getComponentForm();
         //#########
-//        Dialog ip = new InfiniteProgress().showInifiniteBlocking();
-//        Result result = uws.get_dha_data("7104085085085");
-//        
-//        uws.DHA_Data(result);
-//        ip.dispose();
-//        for (int i = 0; i < uws.ArlDHA_Detail.size(); i++) {
-//            DHA_Detail DD = uws.ArlDHA_Detail.get(i);
-//
-//            String death_status = RSM_A(DD.getDEATH_STATUS());
-//            if (!"ALIVE".equals(death_status)) {
-//                scanCanceled_death();
-//                return;
-//            }
-//            Label lblIdno = (Label) findByName("LblIdNo", f);
-//            lblIdno.setText(RSM_A(DD.getIDNUMBER()));
-//            lblIdno.repaint();
-//
-//            Label lblDirbirthdate = (Label) findByName("lbldirbirthdate", f);
-//            lblDirbirthdate.setText(RSM_A(DD.getDOB()));
-//            lblDirbirthdate.repaint();
-//            //LblNames
-//            Label lblnames = (Label) findByName("LblNames", f);
-//            lblnames.setText(RSM_A(DD.getNAMES()));
-//            lblnames.repaint();
-//            //LblSurname
-//            Label lblsurname = (Label) findByName("LblSurname", f);
-//            lblsurname.setText(RSM_A(DD.getSURNAME()));
-//            lblsurname.repaint();
-//            //PhysAddr1
-//            TextField physaddr1 = (TextField) findByName("PhysAddr1", f);
-//            physaddr1.setText(RSM_A(DD.getADDR_LINE1()));
-//            physaddr1.repaint();
-//            TextField physaddr2 = (TextField) findByName("PhysAddr2", f);
-//            physaddr2.setText(RSM_A(DD.getADDR_LINE2()));
-//            physaddr2.repaint();
-//        }
-//        Show_Director_Fields(f);
-//        f.repaint();
-//        TextField txtcell = (TextField) findByName("TxtCell", f);
-//        txtcell.repaint();
-//        txtcell.requestFocus();
-//        txtcell.startEditing();
+        if (Display.getInstance().isSimulator()) {
+            Dialog ip = new InfiniteProgress().showInifiniteBlocking();
+            //Result result = uws.get_dha_data("7104085085085");
+            Result result = uws.get_dha_data("5111065613085");
+            
 
-        //########
-        CodeScanner.getInstance().scanBarCode(new ScanResult() {
-            public void scanCompleted(String contents, String formatName, byte[] rawBytes) {
-                //Dialog.show("Bar code", "Bar code is: " + contents, "Ok", null);
-//#################################disable barcode scanner
-                Result result = uws.get_dha_data(contents);
-                uws.DHA_Data(result);
-                for (int i = 0; i < uws.ArlDHA_Detail.size(); i++) {
-                    DHA_Detail DD = uws.ArlDHA_Detail.get(i);
-                    String death_status = RSM_A(DD.getDEATH_STATUS());
-                    if (death_status != "ALIVE") {
+            uws.DHA_Data(result);
+            ip.dispose();
+            for (int i = 0; i < uws.ArlDHA_Detail.size(); i++) {
+                DHA_Detail DD = uws.ArlDHA_Detail.get(i);
 
-                    }
-                    Label lblIdno = (Label) findByName("LblIdNo", f);
-                    lblIdno.setText(RSM_A(DD.getIDNUMBER()));
-                    lblIdno.repaint();
-                    //DOB
-                    Label lblDirbirthdate = (Label) findByName("lbldirbirthdate", f);
-                    lblDirbirthdate.setText(RSM_A(DD.getDOB()));
-                    lblDirbirthdate.repaint();
-                    //LblNames
-                    Label lblnames = (Label) findByName("LblNames", f);
-                    lblnames.setText(RSM_A(DD.getNAMES()));
-                    lblnames.repaint();
-                    //LblSurname
-                    Label lblsurname = (Label) findByName("LblSurname", f);
-                    lblsurname.setText(RSM_A(DD.getSURNAME()));
-                    lblsurname.repaint();
-                    //PhysAddr1
-                    TextField physaddr1 = (TextField) findByName("PhysAddr1", f);
-                    physaddr1.setText(RSM_A(DD.getADDR_LINE1()));
-                    physaddr1.repaint();
-                    TextField physaddr2 = (TextField) findByName("PhysAddr2", f);
-                    physaddr2.setText(RSM_A(DD.getADDR_LINE2()));
-                    physaddr2.repaint();
-                    ;
+                String death_status = RSM_A(DD.getDEATH_STATUS());
+                if (!"ALIVE".equals(death_status)) {
+                    scanCanceled_death();
+                    return;
                 }
-                Show_Director_Fields(f);
-                f.repaint();
-                TextField txtcell = (TextField) findByName("TxtCell", f);
-                txtcell.repaint();
-                txtcell.requestFocus();
-                txtcell.startEditing();
-                //#######disable barcode scanner
-            }
+                Label lblIdno = (Label) findByName("LblIdNo", f);
+                lblIdno.setText(RSM_A(DD.getIDNUMBER()));
+                lblIdno.repaint();
 
-            public void scanCanceled() {
-                System.out.println("cancelled");
-                Dialog.show("Scan Cancelled", "Please ensure that there is sufficient light when performing scan", "Ok", null);
+                Label lblDirbirthdate = (Label) findByName("lbldirbirthdate", f);
+                lblDirbirthdate.setText(RSM_A(DD.getDOB()));
+                lblDirbirthdate.repaint();
+                //LblNames
+                Label lblnames = (Label) findByName("LblNames", f);
+                lblnames.setText(RSM_A(DD.getNAMES()));
+                lblnames.repaint();
+                //LblSurname
+                Label lblsurname = (Label) findByName("LblSurname", f);
+                lblsurname.setText(RSM_A(DD.getSURNAME()));
+                lblsurname.repaint();
+                //PhysAddr1
+                TextField physaddr1 = (TextField) findByName("PhysAddr1", f);
+                physaddr1.setText(RSM_A(DD.getADDR_LINE1()));
+                physaddr1.repaint();
+                TextField physaddr2 = (TextField) findByName("PhysAddr2", f);
+                physaddr2.setText(RSM_A(DD.getADDR_LINE2()));
+                physaddr2.repaint();
             }
+            Show_Director_Fields(f);
+            f.repaint();
+            TextField txtcell = (TextField) findByName("TxtCell", f);
+            txtcell.repaint();
+            txtcell.requestFocus();
+            txtcell.startEditing();
+        } else {
+            //########
+            CodeScanner.getInstance().scanBarCode(new ScanResult() {
+                public void scanCompleted(String contents, String formatName, byte[] rawBytes) {
+                    //Dialog.show("Bar code", "Bar code is: " + contents, "Ok", null);
+//#################################disable barcode scanner
+                    Result result = uws.get_dha_data(contents);
+                    uws.DHA_Data(result);
+                    for (int i = 0; i < uws.ArlDHA_Detail.size(); i++) {
+                        DHA_Detail DD = uws.ArlDHA_Detail.get(i);
+                        String death_status = RSM_A(DD.getDEATH_STATUS());
+                        if (death_status != "ALIVE") {
 
-            public void scanError(int errorCode, String message) {
-                Dialog.show("Scan Error", "Please ensure that there is sufficient light when performing scan", "Ok", null);
-            }
-        });
+                        }
+                        Label lblIdno = (Label) findByName("LblIdNo", f);
+                        lblIdno.setText(RSM_A(DD.getIDNUMBER()));
+                        lblIdno.repaint();
+                        //DOB
+                        Label lblDirbirthdate = (Label) findByName("lbldirbirthdate", f);
+                        lblDirbirthdate.setText(RSM_A(DD.getDOB()));
+                        lblDirbirthdate.repaint();
+                        //LblNames
+                        Label lblnames = (Label) findByName("LblNames", f);
+                        lblnames.setText(RSM_A(DD.getNAMES()));
+                        lblnames.repaint();
+                        //LblSurname
+                        Label lblsurname = (Label) findByName("LblSurname", f);
+                        lblsurname.setText(RSM_A(DD.getSURNAME()));
+                        lblsurname.repaint();
+                        //PhysAddr1
+                        TextField physaddr1 = (TextField) findByName("PhysAddr1", f);
+                        physaddr1.setText(RSM_A(DD.getADDR_LINE1()));
+                        physaddr1.repaint();
+                        TextField physaddr2 = (TextField) findByName("PhysAddr2", f);
+                        physaddr2.setText(RSM_A(DD.getADDR_LINE2()));
+                        physaddr2.repaint();
+                        ;
+                    }
+                    Show_Director_Fields(f);
+                    f.repaint();
+                    TextField txtcell = (TextField) findByName("TxtCell", f);
+                    txtcell.repaint();
+                    txtcell.requestFocus();
+                    txtcell.startEditing();
+
+                    //#######disable barcode scanner
+                }
+
+                public void scanCanceled() {
+                    System.out.println("cancelled");
+                    Dialog.show("Scan Cancelled", "Please ensure that there is sufficient light when performing scan", "Ok", null);
+                }
+
+                public void scanError(int errorCode, String message) {
+                    Dialog.show("Scan Error", "Please ensure that there is sufficient light when performing scan", "Ok", null);
+                }
+            });
+        }
     }
 
     protected void onFrmNewEntReg1_ButtoncondirAction(Component c, ActionEvent event) {
@@ -4794,7 +4799,7 @@ public class StateMachine extends StateMachineBase {
             f.repaint();
 
             return;
-        }  
+        }
         Dialog ip = new InfiniteProgress().showInifiniteBlocking();
         uws.setOTP(uws.ValidateCelNo(AGENT_CODE, uws.getTrak_no(), txtcell.getText().trim(), lblidno.toString()));
         ip.dispose();
@@ -5184,13 +5189,12 @@ public class StateMachine extends StateMachineBase {
         Result result = uws.get_directors_stage(ref_no);
         uws.DIR_Data(result);
         ip.dispose();
-        if (uws.ArlDIR_Detail == null) 
-        {
+        if (uws.ArlDIR_Detail.size() == 0) {
             return;
         }
         Table tbl = (Table) findByName("Tablememinfo", c);
         tbl.setModel(tbl.getModel());
-        Container cnt = new Container(BoxLayout.y());       
+        Container cnt = new Container(BoxLayout.y());
         for (int i = 0; i < uws.ArlDIR_Detail.size(); i++) {
             DIR_Detail DD = uws.ArlDIR_Detail.get(i);
             String Dir_id = RSM_A(DD.getDir_id());
@@ -5372,7 +5376,7 @@ public class StateMachine extends StateMachineBase {
         Result result = uws.get_name_workflow(txtrefno.getText(), AGENT_CODE);
         uws.name_workflow(result);
         ip.dispose();
-        if (uws.Arl_name_workflow_Detail.isEmpty() == true) {
+        if (uws.Arl_name_workflow_Detail.size() == 0) {
             Dialog.show("Error", "No Information found for reference no - " + txtrefno.getText(), "OK", null);
             return;
         }
@@ -5453,6 +5457,5 @@ public class StateMachine extends StateMachineBase {
     @Override
     protected void onFrmNewEntReg1_CmbFyeMonthAction(Component c, ActionEvent event) {
 
-    
     }
 }
