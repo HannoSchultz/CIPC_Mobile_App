@@ -4640,7 +4640,8 @@ public class StateMachine extends StateMachineBase {
         if (Display.getInstance().isSimulator()) {
             Dialog ip = new InfiniteProgress().showInifiniteBlocking();
             //Result result = uws.get_dha_data("7104085085085");
-            Result result = uws.get_dha_data("5111065613085");
+           // Result result = uws.get_dha_data("6811100969082");
+            Result result = uws.get_dha_data("7611160016082");
             
 
             uws.DHA_Data(result);
