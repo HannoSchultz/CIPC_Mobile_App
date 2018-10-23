@@ -4640,9 +4640,8 @@ public class StateMachine extends StateMachineBase {
         if (Display.getInstance().isSimulator()) {
             Dialog ip = new InfiniteProgress().showInifiniteBlocking();
             //Result result = uws.get_dha_data("7104085085085");
-           // Result result = uws.get_dha_data("6811100969082");
+            // Result result = uws.get_dha_data("6811100969082");
             Result result = uws.get_dha_data("7611160016082");
-            
 
             uws.DHA_Data(result);
             ip.dispose();
@@ -5232,11 +5231,20 @@ public class StateMachine extends StateMachineBase {
     @Override
     protected void onFrmNewEntReg1_BtnRegisterenterprisAction(Component c, ActionEvent event) {
         UserWebServices u = new UserWebServices();
+        Dialog ip = new InfiniteProgress().showInifiniteBlocking();
+
         u.insertCartItemServiceCOREG(uws.getTrak_no(), AGENT_CODE, "125");
+
         String Sreservation_no = uws.getName_reservation_no();
         if (Sreservation_no.trim() != "") {
-            u.insertCartItemServiceName(Sreservation_no, AGENT_CODE, "50");
+
+//            if (Sreservation_no.trim() != "") {
+
+                u.insertCartItemServiceName(Sreservation_no, AGENT_CODE, "50");
+
+//            }
         }
+        ip.dispose();
         String Strak_no = uws.getTrak_no();
         Dialog.show("testing ", "Name reservation-" + Sreservation_no + " Trak no - " + Strak_no + " Was added to the Chart", "OK", null);
         // Form concart = contDashBoard.getComponentForm();
@@ -5413,6 +5421,8 @@ public class StateMachine extends StateMachineBase {
 //            Result result = uws.get_directors_stage("1-18UCACQ");
 //            uws.DIR_Data(result);
         loadlist(ref_no, c);
+        Container conregister = (Container) findByName("Conregister", f);
+        conregister.setHidden(false);
         f.repaint();
         //  kkkk
 
