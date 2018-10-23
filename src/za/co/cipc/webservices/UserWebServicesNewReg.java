@@ -72,9 +72,9 @@ public class UserWebServicesNewReg {
     private String Surname;
     private String FirstNames;
     private String trak_no;
- //   private String sUserName = "wBAA7LAkWIs=";
- //   private String sPassword = "6EGQAUzYJlhvffhZ+gUFfg==";
- //   private String sBankID = "wBAA7LAkWIs=";
+    //   private String sUserName = "wBAA7LAkWIs=";
+    //   private String sPassword = "6EGQAUzYJlhvffhZ+gUFfg==";
+    //   private String sBankID = "wBAA7LAkWIs=";
     private String OTP = "";
     private static boolean isIncorporator = false;
 
@@ -192,7 +192,18 @@ public class UserWebServicesNewReg {
     }
 
     public void setName_reservation_no(String name_reservation_no) {
-        this.name_reservation_no = name_reservation_no;
+        try {
+            if (name_reservation_no == null) {
+                this.name_reservation_no = "";
+            } else {
+                this.name_reservation_no = name_reservation_no;
+            }
+        } catch (Throwable err) {
+            if (err.toString() == "java.lang.NullPointerException") {
+                this.name_reservation_no = "";
+            }
+        }
+
     }
 
     public String getSurname() {
@@ -222,15 +233,12 @@ public class UserWebServicesNewReg {
 //    public String getsUserName() {
 //        return sUserName;
 //    }
-
 //    public void setsUserName(String sUserName) {
 //        this.sUserName = sUserName;
 //    }
-
 //    public String getsPassword() {
 //        return sPassword;
 //    }
-
 //    public void setsPassword(String sPassword) {
 //        this.sPassword = sPassword;
 //    }
@@ -242,7 +250,6 @@ public class UserWebServicesNewReg {
 //    public void setsBankID(String sBankID) {
 //        this.sBankID = sBankID;
 //    }
-
     public String getOTP() {
         return OTP;
     }
@@ -372,7 +379,7 @@ public class UserWebServicesNewReg {
         return result;
     }
 
-    public Result name_workflow(String trk_reg, String trk_name,String AGENT_CODE) {
+    public Result name_workflow(String trk_reg, String trk_name, String AGENT_CODE) {
 
         final String SOAP_BODY
                 = "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:cipc=\"CIPC_WEB_SERVICES\">\n"
@@ -700,6 +707,7 @@ public class UserWebServicesNewReg {
         }
         return response;
     }
+
     public Result get_directors_stage(String ref_no) {
 
         final String SOAP_BODY
@@ -742,6 +750,7 @@ public class UserWebServicesNewReg {
         Result result = Result.fromContent(data, Result.XML);
         return result;
     }
+
     public Result get_dha_data(String id_no) {
 
         final String SOAP_BODY
@@ -784,7 +793,8 @@ public class UserWebServicesNewReg {
         Result result = Result.fromContent(data, Result.XML);
         return result;
     }
-   public Result get_name_workflow(String sRef_no,String sCust_Code) {
+
+    public Result get_name_workflow(String sRef_no, String sCust_Code) {
 
         final String SOAP_BODY
                 = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cipc=\"CIPC_WEB_SERVICES\">\n"
@@ -827,6 +837,7 @@ public class UserWebServicesNewReg {
         Result result = Result.fromContent(data, Result.XML);
         return result;
     }
+
     public Result ReservedName_Name_Mobi(String customerCode, String Name_Res_no) {
 
         final String SOAP_BODY
@@ -1206,11 +1217,12 @@ public class UserWebServicesNewReg {
 
         return response;
     }
-   public void DIR_Data(Result result) {
+
+    public void DIR_Data(Result result) {
         try {
             XMLParser parser = new XMLParser();
-            parser.setCaseSensitive(true);            
-           Element element = parser.parse(convertStringtoInputStreamReader(result.getAsString("//DataSet")));
+            parser.setCaseSensitive(true);
+            Element element = parser.parse(convertStringtoInputStreamReader(result.getAsString("//DataSet")));
             ArlDIR_Detail = new ArrayList();
             for (int i = 0; i < element.getNumChildren(); i++) {
                 Element child = element.getChildAt(i);
@@ -1222,28 +1234,25 @@ public class UserWebServicesNewReg {
                 String surname = elem_surname.getText();
                 Element elem_id_no = ((Element) child.getTextChildren(null, true).get(3));
                 String id_no = elem_id_no.getText();
-                
+
                 DIR_Detail dir_detail = new DIR_Detail();
                 dir_detail.setDir_id(dir_id);
                 dir_detail.setFirs_names(first_names);
                 dir_detail.setSurname(surname);
                 dir_detail.setId_no(id_no);
-                
+
                 ArlDIR_Detail.add(dir_detail);
             }
         } catch (Throwable err) {
-            if (err.toString() == "java.lang.NullPointerException")
-            {
-                ArlDIR_Detail = new ArrayList(); 
-            }
-            else
-            {
-            Dialog.show("Change Name", err.toString(), "OK", null);
+            if (err.toString() == "java.lang.NullPointerException") {
+                ArlDIR_Detail = new ArrayList();
+            } else {
+                Dialog.show("Change Name", err.toString(), "OK", null);
             }
         }
 
     }
-   
+
     public void name_workflow(Result result) {
         try {
             XMLParser parser = new XMLParser();
@@ -1256,12 +1265,12 @@ public class UserWebServicesNewReg {
                 String cust_code = elem_cust_code.getText();
                 Element elem_trk_reg_no = ((Element) child.getTextChildren(null, true).get(1));
                 String trk_reg_no = elem_trk_reg_no.getText();
-               // Element elem_application_no = ((Element) child.getTextChildren(null, true).get(2));
-               // String application_no = elem_application_no.getText();
+                // Element elem_application_no = ((Element) child.getTextChildren(null, true).get(2));
+                // String application_no = elem_application_no.getText();
                 Name_Workflow name_workflow = new Name_Workflow();
                 name_workflow.setCust_code(cust_code);
                 name_workflow.setRef_no(trk_reg_no);
-              //  name_workflow.setApplication_no(application_no);
+                //  name_workflow.setApplication_no(application_no);
                 Arl_name_workflow_Detail.add(name_workflow);
             }
         } catch (Throwable err) {
@@ -1269,6 +1278,7 @@ public class UserWebServicesNewReg {
         }
 
     }
+
     public void DHA_Data(Result result) {
         try {
             XMLParser parser = new XMLParser();
@@ -1286,13 +1296,12 @@ public class UserWebServicesNewReg {
                 Element elem_DEATH_STATUS = ((Element) child.getTextChildren(null, true).get(3));
                 String DEATH_STATUS = elem_DEATH_STATUS.getText();
                 Element elem_DOB = ((Element) child.getTextChildren(null, true).get(4));
-                String DOB = elem_DOB.getText();                  
+                String DOB = elem_DOB.getText();
                 Element elem_ADDR_LINE1 = ((Element) child.getTextChildren(null, true).get(5));
                 String ADDR_LINE1 = elem_ADDR_LINE1.getText();
                 Element elem_ADDR_LINE2 = ((Element) child.getTextChildren(null, true).get(6));
                 String ADDR_LINE2 = elem_ADDR_LINE2.getText();
-                 
-                
+
                 DHA_Detail dha_detail = new DHA_Detail();
                 dha_detail.setADDR_LINE1(ADDR_LINE1);
                 dha_detail.setADDR_LINE2(ADDR_LINE2);
@@ -1308,6 +1317,7 @@ public class UserWebServicesNewReg {
         }
 
     }
+
     private static InputStreamReader convertStringtoInputStreamReader(String data) {
 
         byte[] resultByte = data.getBytes();
@@ -1387,7 +1397,7 @@ public class UserWebServicesNewReg {
 
             }
         };
-       
+
         httpRequest.setUrl(Constants.soapServicesEndPoint + "enterprise.asmx");
         httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
         httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
