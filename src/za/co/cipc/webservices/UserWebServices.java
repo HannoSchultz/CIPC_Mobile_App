@@ -39,7 +39,9 @@ import java.util.StringTokenizer;
 import userclasses.Const;
 import userclasses.Constants;
 import userclasses.EnterpriseDetails;
+
 import userclasses.NameReservation;
+import userclasses.BEEDetail;
 import userclasses.NameSearchObject;
 import za.co.cipc.pojos.AnnualReturns;
 import za.co.cipc.pojos.AuthObject;
@@ -946,8 +948,121 @@ public class UserWebServices {
 
         return arrayList;
 
-    }//end name reservation
+    }
+ public ArrayList<BEEDetail> Get_BEE_MOBI(String agentCode) {
 
+        ArrayList<BEEDetail> arrayList = new ArrayList<BEEDetail>();
+
+        final String SOAP_BODY
+                = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cipc=\"CIPC_WEB_SERVICES\">\n"
+                + "   <soapenv:Header/>\n"
+                + "   <soapenv:Body>\n"
+                + "      <cipc:GetBEE>\n"
+                + "<cipc:sUserName>" + Constants.sUserName + "</cipc:sUserName>\n"
+                + "         <cipc:sPassword>" + Constants.sPassword + "</cipc:sPassword>\n"
+                + "         <cipc:sBankID>" + Constants.sBankID + "</cipc:sBankID>\n"
+                + "         <cipc:sCust_Code>" + agentCode + "</cipc:sCust_Code>\n"
+                + "      </cipc:GetBEE>\n"
+                + "   </soapenv:Body>\n"
+                + "</soapenv:Envelope>\n"
+                + " ";
+
+        ConnectionRequest httpRequest = new ConnectionRequest() {
+            Element h;
+
+            @Override
+            protected void buildRequestBody(OutputStream os) throws IOException {
+                super.buildRequestBody(os);
+                os.write(SOAP_BODY.getBytes("utf-8"));
+
+            }
+
+            protected void postResponse() {
+
+                super.postResponse();
+            }
+
+            protected void readResponse(InputStream input) throws IOException {
+                super.readResponse(input);
+
+            }
+
+            @Override
+            protected void handleException(Exception err) {
+                Log.p("Exception: " + err.toString());
+                Dialog.show("No Internet", "There is no internet connection. Please switch your connection on.", "Okay", null);
+
+            }
+        };
+
+        httpRequest.setUrl(Constants.soapServicesEndPoint + "enterprise.asmx");
+        httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
+        httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
+        httpRequest.setPost(true);
+
+        InfiniteProgress prog = new InfiniteProgress();
+        Dialog dlg = prog.showInifiniteBlocking();
+        httpRequest.setDisposeOnCompletion(dlg);
+
+        NetworkManager.getInstance().addToQueueAndWait(httpRequest);
+        String data = new String(httpRequest.getResponseData());
+        Log.p("GetAREntTranDetails" + data, Log.DEBUG);
+
+        try {
+
+            Result result = Result.fromContent(data, Result.XML);
+
+            Log.p("GetAREntTranDetails=" + result, Log.DEBUG);
+
+            XMLParser parser = new XMLParser();
+            parser.setCaseSensitive(true);
+            Element element = parser.parse(convertStringtoInputStreamReader(result.getAsString("//newdataset")));
+
+            for (int i = 0; i < element.getNumChildren(); i++) {
+                Element child = element.getChildAt(i);
+                if (child.getTextChildren(null, true).size() == 2) {
+
+                    Log.p("i=" + i + " " + child.getTextChildren(null, true).size(), Log.DEBUG);
+
+                    String ent_no = RSM(((Element) child.getTextChildren(null, true).get(0)).toString());
+                    String ent_name = RSM(((Element) child.getTextChildren(null, true).get(1)).toString());
+                    //int intAr_year = Integer.parseInt(ar_year);
+                    //String trak_no = RSM(((Element) child.getTextChildren(null, true).get(2)).toString());
+//                    String turnover = RSM(((Element) child.getTextChildren(null, true).get(2)).toString());
+//                    double dblTurnover = Double.parseDouble(turnover);
+//                    String amt_paid = RSM(((Element) child.getTextChildren(null, true).get(3)).toString());
+//                    //String date_paid = RSM(((Element) child.getTextChildren(null, true).get(5)).toString());
+//                    String reg_date = RSM(((Element) child.getTextChildren(null, true).get(4)).toString());
+//                    String ar_start_date = RSM(((Element) child.getTextChildren(null, true).get(5)).toString());
+//                    String due_date = RSM(((Element) child.getTextChildren(null, true).get(6)).toString());
+//                    String ent_type_code = RSM(((Element) child.getTextChildren(null, true).get(7)).toString());
+//                    String ar_month = RSM(((Element) child.getTextChildren(null, true).get(8)).toString());
+                    //String  cust_code_old = RSM(((Element) child.getTextChildren(null, true).get(11)).toString());
+
+                    BEEDetail BEE = new BEEDetail();
+
+                    BEE.setEnt_no(ent_no);
+                    BEE.setEnt_name(ent_name);
+//                    e.setTurnover(dblTurnover);
+//                    e.setAmt_paid(amt_paid);
+//                    e.setReg_date(reg_date);
+//                    e.setAr_start_date(ar_start_date);
+//                    e.setDue_date(due_date);
+//                    e.setEnt_type_code(ent_type_code);
+//                    e.setAr_month(ar_month);
+
+                    arrayList.add(BEE);
+
+                }
+            }
+
+        } catch (IllegalArgumentException e) {
+            Log.p(e.toString());
+        }
+
+        return arrayList;
+
+    }
     public ArrayList<EnterpriseDetails> CalculateARTranData(String dataset) {
 
         ArrayList<EnterpriseDetails> enterpriseDetailses = new ArrayList<>();
@@ -1164,7 +1279,15 @@ public class UserWebServices {
                 + "\"ItemData\":\"{\\\"ReferenceNumber\\\": " + nameReservation.getReferenceNumber() + ",\\\"EnterpriseNumber\\\":\\\"\\\",\\\"FormCode\\\":\\\"COR9.1\\\",\\\"ChangeTypeCode\\\":\\\"0\\\",\\\"Description\\\":null,\\\"TotalAmount\\\":" + nameReservation.getTotalAmount() + "}\","
                 + "\"Amount\":" + nameReservation.getAmount() + ""
                 + "}";
-
+// String BODY
+//                = "{\"ReferenceNumber\": " + nameReservation.getReferenceNumber() + ","
+//                + "\"Status\":0,"
+//                + "\"StatusDate\":\"" + nameReservation.getStatusDate() + "\","
+//                + "\"CustomerCode\":\"" + nameReservation.getCustomerCode() + "\","
+//                + "\"ItemType\":4,"
+//                + "\"ItemData\":\"{\\\"ReferenceNumber\\\": " + nameReservation.getReferenceNumber() + ",\\\"EnterpriseNumber\\\":\\\"\\\",\\\"FormCode\\\":\\\"COR9.1\\\",\\\"ChangeTypeCode\\\":\\\"0\\\",\\\"Description\\\":null,\\\"TotalAmount\\\":" + nameReservation.getTotalAmount() + "}\","
+//                + "\"Amount\":" + nameReservation.getAmount() + ""
+//                + "}";
         Log.p("joe=" + BODY, Log.DEBUG);
 
 //  String BODY
@@ -1207,7 +1330,146 @@ public class UserWebServices {
 
         return null;
     }
+     public String insertCartItemServiceName(String str_Ref,String str_Cust_Code,String str_Amount) {
 
+        String END_POINT = Constants.cartAPIEndPoint + "v1/payment/cartitem";
+        long dateNow = System.currentTimeMillis();
+        Date newDate = new Date(dateNow);
+        String dateString = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss.SSS").format(newDate);
+        dateString = StringUtil.replaceAll(dateString, "_", "T");
+        /*String ref = nameReservation.getReferenceNumber()+"";
+        ref = "1" + ref;
+        nameReservation.setReferenceNumber(Integer.parseInt(ref));*/
+        String BODY
+                = "{\"ReferenceNumber\": " + str_Ref + ","
+                + "\"Status\":0,"
+                + "\"StatusDate\":\"" + dateString + "\","
+                + "\"CustomerCode\":\"" + str_Cust_Code + "\","
+                + "\"ItemType\":4,"
+                + "\"ItemData\":\"{\\\"ReferenceNumber\\\": " + str_Ref + ",\\\"EnterpriseNumber\\\":\\\"\\\",\\\"FormCode\\\":\\\"COR9.1\\\",\\\"ChangeTypeCode\\\":\\\"0\\\",\\\"Description\\\":null,\\\"TotalAmount\\\":" + str_Amount + "}\","
+                + "\"Amount\":" + str_Amount + ""
+                + "}";
+// String BODY
+//                = "{\"ReferenceNumber\": " + nameReservation.getReferenceNumber() + ","
+//                + "\"Status\":0,"
+//                + "\"StatusDate\":\"" + nameReservation.getStatusDate() + "\","
+//                + "\"CustomerCode\":\"" + nameReservation.getCustomerCode() + "\","
+//                + "\"ItemType\":4,"
+//                + "\"ItemData\":\"{\\\"ReferenceNumber\\\": " + nameReservation.getReferenceNumber() + ",\\\"EnterpriseNumber\\\":\\\"\\\",\\\"FormCode\\\":\\\"COR9.1\\\",\\\"ChangeTypeCode\\\":\\\"0\\\",\\\"Description\\\":null,\\\"TotalAmount\\\":" + nameReservation.getTotalAmount() + "}\","
+//                + "\"Amount\":" + nameReservation.getAmount() + ""
+//                + "}";
+        Log.p("joe=" + BODY, Log.DEBUG);
+
+//  String BODY
+//                = "{\"ReferenceNumber\": " + nameReservation.getReferenceNumber() + ","
+//                + "\"Status\":0,"
+//                + "\"StatusDate\":\"2018-06-23T17:04:28.873\","
+//                + "\"CustomerCode\":\"" + nameReservation.getCustomerCode() + "\","
+//                + "\"ItemType\":4,"
+//                + "\"ItemData\":\"{\\\"ReferenceNumber\\\": " + nameReservation.getReferenceNumber() + ",\\\"EnterpriseNumber\\\":\\\"\\\",\\\"FormCode\\\":\\\"COR9.1\\\",\\\"ChangeTypeCode\\\":\\\"30\\\",\\\"Description\\\":null,\\\"TotalAmount\\\":50.0}\","
+//                + "\"Amount\":50.0"
+//                + "}";
+        Log.p("insertCartItemService request=" + BODY, Log.DEBUG);
+
+        ConnectionRequest post = new ConnectionRequest() {
+            @Override
+            protected void buildRequestBody(OutputStream os) throws IOException {
+                Log.p(BODY.toString().trim());
+                os.write(BODY.toString().trim().getBytes("UTF-8"));
+            }
+
+            @Override
+            protected void readResponse(InputStream input) throws IOException {
+                // parse response data
+            }
+        };
+        post.setUrl(END_POINT);
+        post.setPost(true);
+        post.setContentType("application/json");
+
+        User user = new User();
+        user.setAgent_code(str_Cust_Code);
+        AuthObject auth = getToken(user);
+
+        post.addRequestHeader("Authorization", auth.getToken_type() + " " + auth.getAccess_token());
+
+        NetworkManager.getInstance().addToQueueAndWait(post);
+        byte[] raw = post.getResponseData();
+        Log.p("raw=" + raw);
+//        String data = new String(post.getResponseData());
+
+        return null;
+    }
+ public String insertCartItemServiceCOREG(String str_Ref,String str_Cust_Code,String str_Amount) {
+
+        String END_POINT = Constants.cartAPIEndPoint + "v1/payment/cartitem";
+        long dateNow = System.currentTimeMillis();
+        Date newDate = new Date(dateNow);
+        String dateString = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss.SSS").format(newDate);
+        dateString = StringUtil.replaceAll(dateString, "_", "T");
+        /*String ref = nameReservation.getReferenceNumber()+"";
+        ref = "1" + ref;
+        nameReservation.setReferenceNumber(Integer.parseInt(ref));*/
+        String BODY
+                = "{\"ReferenceNumber\": " + str_Ref + ","
+                + "\"Status\":0,"
+                + "\"StatusDate\":\"" + dateString + "\","
+                + "\"CustomerCode\":\"" + str_Cust_Code + "\","
+                + "\"ItemType\":2,"
+                + "\"ItemData\":\"{\\\"ReferenceNumber\\\": " + str_Ref + ",\\\"EnterpriseNumber\\\":\\\"\\\",\\\"FormCode\\\":\\\"COR15.1A\\\",\\\"ChangeTypeCode\\\":\\\"0\\\",\\\"Description\\\":null,\\\"TotalAmount\\\":" + str_Amount + "}\","
+                + "\"Amount\":" + str_Amount + ""
+                + "}";
+// String BODY
+//                = "{\"ReferenceNumber\": " + nameReservation.getReferenceNumber() + ","
+//                + "\"Status\":0,"
+//                + "\"StatusDate\":\"" + nameReservation.getStatusDate() + "\","
+//                + "\"CustomerCode\":\"" + nameReservation.getCustomerCode() + "\","
+//                + "\"ItemType\":4,"
+//                + "\"ItemData\":\"{\\\"ReferenceNumber\\\": " + nameReservation.getReferenceNumber() + ",\\\"EnterpriseNumber\\\":\\\"\\\",\\\"FormCode\\\":\\\"COR9.1\\\",\\\"ChangeTypeCode\\\":\\\"0\\\",\\\"Description\\\":null,\\\"TotalAmount\\\":" + nameReservation.getTotalAmount() + "}\","
+//                + "\"Amount\":" + nameReservation.getAmount() + ""
+//                + "}";
+        Log.p("insertCartItemServiceCOREG=" + BODY, Log.DEBUG);
+
+//  String BODY
+//                = "{\"ReferenceNumber\": " + nameReservation.getReferenceNumber() + ","
+//                + "\"Status\":0,"
+//                + "\"StatusDate\":\"2018-06-23T17:04:28.873\","
+//                + "\"CustomerCode\":\"" + nameReservation.getCustomerCode() + "\","
+//                + "\"ItemType\":4,"
+//                + "\"ItemData\":\"{\\\"ReferenceNumber\\\": " + nameReservation.getReferenceNumber() + ",\\\"EnterpriseNumber\\\":\\\"\\\",\\\"FormCode\\\":\\\"COR9.1\\\",\\\"ChangeTypeCode\\\":\\\"30\\\",\\\"Description\\\":null,\\\"TotalAmount\\\":50.0}\","
+//                + "\"Amount\":50.0"
+//                + "}";
+        Log.p("insertCartItemService request=" + BODY, Log.DEBUG);
+
+        ConnectionRequest post = new ConnectionRequest() {
+            @Override
+            protected void buildRequestBody(OutputStream os) throws IOException {
+                Log.p(BODY.toString().trim());
+                os.write(BODY.toString().trim().getBytes("UTF-8"));
+            }
+
+            @Override
+            protected void readResponse(InputStream input) throws IOException {
+                // parse response data
+            }
+        };
+        post.setUrl(END_POINT);
+        post.setPost(true);
+        post.setContentType("application/json");
+
+        User user = new User();
+        user.setAgent_code(str_Cust_Code);
+        AuthObject auth = getToken(user);
+
+        post.addRequestHeader("Authorization", auth.getToken_type() + " " + auth.getAccess_token());
+
+        NetworkManager.getInstance().addToQueueAndWait(post);
+        byte[] raw = post.getResponseData();
+        Log.p("raw=" + raw);
+//        String data = new String(post.getResponseData());
+
+        return null;
+    }
     public String insertCartItemAR(User user, ArrayList<EnterpriseDetails> listCalculateARTran, EnterpriseDetails enterpriseDetails) {
         
         String entTypeCode = enterpriseDetails.getEnt_type_code();

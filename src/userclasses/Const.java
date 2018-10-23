@@ -15,7 +15,8 @@ public class Const {
     public static final String sUserName = "wBAA7LAkWIs=";
     public static final String sPassword = "6EGQAUzYJlhvffhZ+gUFfg==";
     public static final String sBankID = "wBAA7LAkWIs=";
-
+    //
+    public static boolean DisplayCart = false;
     //Color
     public static final int FLOATING_BUTTON = 0xb2d62e;
     public static final int FLOATING_BUTTON_PRESSED = 0x91b015;

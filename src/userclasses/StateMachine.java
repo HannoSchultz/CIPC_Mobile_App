@@ -61,6 +61,8 @@ import com.codename1.ui.validation.RegexConstraint;
 import com.codename1.ui.validation.Validator;
 import com.codename1.util.StringUtil;
 import com.codename1.util.regex.RE;
+import static com.codename1.ui.CN.*;
+import com.codename1.ui.table.Table;
 
 import com.sun.prism.paint.Color;
 import java.io.ByteArrayInputStream;
@@ -108,7 +110,7 @@ public class StateMachine extends StateMachineBase {
     static za.co.cipc.pojos.User responseUser;
 
     Container contSideMenu;
-
+    Container contDashBoard;
     String ReferenceNumber;
     int j = 0;
     Map map;
@@ -124,6 +126,7 @@ public class StateMachine extends StateMachineBase {
     static boolean isARStep1Passed = false;
     static boolean isARStep2Passed = false;
     static boolean isARStep3Passed = false;
+    public static boolean DisplayCart = false;
 
     static String ENT_NUMBER;
     ArrayList annualReturnsEntDetails;
@@ -131,7 +134,7 @@ public class StateMachine extends StateMachineBase {
     ArrayList<EnterpriseDetails> listEnterpriseDetails;
     ArrayList<TextArea> listTextEnterpriseDetails;
     ArrayList<EnterpriseDetails> listCalculateARTran;
-
+    ArrayList<BEEDetail> listBEEDetail;
     //private com.pmovil.nativega.Tracker tracker;
     private String[] arrDevices;
     private String action = "";
@@ -376,7 +379,7 @@ public class StateMachine extends StateMachineBase {
             Log.setLevel(Log.DEBUG);
             Log.p("issimulator", Log.DEBUG);
 
-            //return "frmNewEntReg1";
+            // return "testlist";
             return "Splash";
 
         } else {
@@ -857,8 +860,13 @@ public class StateMachine extends StateMachineBase {
 
     public void showDashboard(final Form f) {
 
+        if (DisplayCart == true) {
+            showCart2(f);
+            DisplayCart = false;
+            return;
+        }
         f.removeAllCommands();
-
+//contDashBoard = (Container) findByName("ContDashBoard", f);
         Command back = new Command("") {
             @Override
             public void actionPerformed(ActionEvent evt) {
@@ -987,7 +995,7 @@ public class StateMachine extends StateMachineBase {
                 mbCardPayments.setEnabled(true);
             }
         });
-        
+
         Button mbReg = (Button) findByName("mbRegistration", cont);
 
         mbReg.addActionListener(new ActionListener() {
@@ -1013,8 +1021,8 @@ public class StateMachine extends StateMachineBase {
             //cont.remove();
             //f.reva
         } else {
-           // String[] names = {"AR", "NR", "CP"};
-             String[] names = {"AR", "NR", "CP", "CR"};
+            // String[] names = {"AR", "NR", "CP"};
+            String[] names = {"AR", "NR", "CP", "CR"};
 
             for (int i = 0; i < names.length; i++) {
                 String key = names[i];
@@ -1076,7 +1084,7 @@ public class StateMachine extends StateMachineBase {
         }
         f.revalidate();
         closeMenu(f, true);
-
+//contDashBoard = (Container) findByName("ContDashBoard", f);
     }
 
     public static SwipeableContainer createRankWidget(String line1, String line2, ActionListener action) {
@@ -1904,9 +1912,7 @@ public class StateMachine extends StateMachineBase {
                         Tabs.setSelectedIndex(0);
                         isCartStep2 = false;
                     } else {
-
                         showDashboard(f);
-
                     }
                 }
 
@@ -2403,9 +2409,7 @@ public class StateMachine extends StateMachineBase {
     protected void beforeMain(Form f) {
 
         Toolbar toolbar = analytics(f, "Home");
-
-        current = f;
-
+        //contDashBoard = (Container) findByName("ContDashBoard", f);
         showDashboard(f);
 
     }
@@ -3803,6 +3807,11 @@ public class StateMachine extends StateMachineBase {
         conregister.setHidden(true);
         Container conaddDirector = (Container) findByName("ConaddDirector", f);
         conaddDirector.setHidden(true);
+        Table tbl = (Table) findByName("Tablememinfo", f);
+        tbl.setHidden(false);
+//        Container Containermem = (Container) findByName("Containermem", f);
+//        Containermem.setHidden(false);
+
         //Conregister
 //        Container conappointdate = (Container) findByName("ConAppointDate", f);
 //        //Container contdateofbirth = (Container) findByName("ContDateofBirth", f);
@@ -3896,12 +3905,42 @@ public class StateMachine extends StateMachineBase {
         Tabs tabs = (Tabs) findByName("Tabs", f);
         tabs.setSwipeActivated(false);
         tabs.hideTabs();
-        Button btn1 = new Button("Info");
+        Container cond = (Container) findByName("Containerd", f);
+        cond.setHidden(true);
+//        //################
+        Style labelForm = UIManager.getInstance().getComponentStyle("CIPC_DARK");
+        labelForm.setMargin(0, 0, 0, 0);
+        labelForm.setPadding(0, 0, 0, 0);
+        int sizeLabel = 6;
+//        
+        Image img1 = FontImage.createMaterial(FontImage.MATERIAL_PERSON, labelForm, sizeLabel);
+        Image img2 = FontImage.createMaterial(FontImage.MATERIAL_ACCESS_TIME, labelForm, sizeLabel);
+        Image img3 = FontImage.createMaterial(FontImage.MATERIAL_ASSESSMENT, labelForm, sizeLabel);
+        Image img4 = FontImage.createMaterial(FontImage.MATERIAL_INFO, labelForm, sizeLabel);
+//
+        Button btnnr1 = new Button("");
+        Button btnnr2 = new Button("");
+        Button btnnr3 = new Button("");
+        Button btnnr4 = new Button("");
+//
+
+//
+        btnnr1.setIcon(img4);
+        btnnr2.setIcon(img2);
+        btnnr3.setIcon(img3);
+        btnnr4.setIcon(img1);
+//        //################
+
+        //      Button btn1 = new Button("Info");
         //btn1.setName("btn1");
         //String x = btn1.getName();
-        Button btn2 = new Button("Name");
-        Button btn3 = new Button("CO Detail");
-        Button btn4 = new Button("Dir");
+//        Button btn2 = new Button("Name");
+        //      Button btn3 = new Button("CO Detail");
+        //     Button btn4 = new Button("Dir");
+        btnnr1.setUIID("CIPC_DARK_SELECTED");
+        btnnr2.setUIID("CIPC_DARK");
+        btnnr3.setUIID("CIPC_DARK");
+        btnnr4.setUIID("CIPC_DARK");
         uws.setIsnamereserved(false);
         uws.setIsnamefiled(false);
         uws.setInfo_Allowed(true);
@@ -3910,17 +3949,16 @@ public class StateMachine extends StateMachineBase {
         uws.setDirectors_Allowed(false);
         Hide_Director_Fields(f);
         Picker dtpic = (Picker) findByName("dtAppDate", f);
-      //   dtpic.setType(Display.PICKER_TYPE_CALENDAR);
-                 //.PICKER_TYPE_DATE);
+        //   dtpic.setType(Display.PICKER_TYPE_CALENDAR);
+        //.PICKER_TYPE_DATE);
         Date now = new Date();
-        
+
         dtpic.setDate(now);
-        
-        
+
 //        Container connameres = (Container) findByName("ConNameres", f);
 //        connameres.setVisible(false);
 //        connameres.repaint();
-        btn1.addActionListener(new ActionListener() {
+        btnnr1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
                 //Log.p("clicked btn1", Log.DEBUG);
@@ -3936,10 +3974,10 @@ public class StateMachine extends StateMachineBase {
                     //
                     f.setTitle("New Registration. ");
                     tabs.setSelectedIndex(0);
-                    btn1.setUIID("btnselected");
-                    btn2.setUIID("Button");
-                    btn3.setUIID("Button");
-                    btn4.setUIID("Button");
+                    btnnr1.setUIID("CIPC_DARK_SELECTED");
+                    btnnr2.setUIID("CIPC_DARK");
+                    btnnr3.setUIID("CIPC_DARK");
+                    btnnr4.setUIID("CIPC_DARK");
                 } else {
                     if (uws.isDirectors_Allowed() == true) {
                         String msg = "Please complete capturing of all directors and submit current transactions first before you can start a new transaction.";
@@ -3956,7 +3994,7 @@ public class StateMachine extends StateMachineBase {
             }
         });
 
-        btn2.addActionListener(new ActionListener() {
+        btnnr2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
                 //Log.p("clicked btn2, isRegStep1Passed=" + isRegStep1Passed
@@ -3964,13 +4002,17 @@ public class StateMachine extends StateMachineBase {
                 if (uws.isNames_Allowed() == true) {
                     f.setTitle("File Name Reservation");
                     tabs.setSelectedIndex(1);
+                    btnnr1.setUIID("CIPC_DARK");
+                    btnnr2.setUIID("CIPC_DARK_SELECTED");
+                    btnnr3.setUIID("CIPC_DARK");
+                    btnnr4.setUIID("CIPC_DARK");
                 } else {
                     if (uws.isEnterprise_Allowed() == true) {
-                        String msg = "Please complete capturing of all enterprise details and director details and submit current transactions first before you can start a new transaction.";
+                        String msg = "Please complete capturing of all Enterprise details and Director details and submit current transactions first before you can start a new transaction.";
                         Dialog.show("Error", msg, "Ok", null);
                     }
                     if (uws.isDirectors_Allowed() == true) {
-                        String msg = "Please complete capturing of all director details and submit current transactions first before you can start a new transaction.";
+                        String msg = "Please complete capturing of all directors details and submit current transactions first before you can start a new transaction.";
                         Dialog.show("Error", msg, "Ok", null);
                     }
                     //checkRegButtonPressed();
@@ -3997,7 +4039,7 @@ public class StateMachine extends StateMachineBase {
             }
         });
 
-        btn3.addActionListener(new ActionListener() {
+        btnnr3.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
                 //Log.p("clicked btn3", Log.DEBUG);
@@ -4005,13 +4047,13 @@ public class StateMachine extends StateMachineBase {
                 if (uws.isEnterprise_Allowed() == true) {
                     f.setTitle("Enterprise Details");
                     tabs.setSelectedIndex(2);
-                    btn1.setUIID("Button");
-                    btn2.setUIID("Button");
-                    //  btn3.setUIID("btnselected");
-                    btn4.setUIID("Button");
+                    btnnr1.setUIID("CIPC_DARK");
+                    btnnr2.setUIID("CIPC_DARK");
+                    btnnr3.setUIID("CIPC_DARK_SELECTED");
+                    btnnr4.setUIID("CIPC_DARK");
                 } else {
                     if (uws.isDirectors_Allowed() == true) {
-                        String msg = "Please complete capturing of all director details and submit current transactions. You can't change the enterprise detail now it was already submitted.";
+                        String msg = "Please complete capturing of all directors details and submit current transactions. You can't change the enterprise detail now it was already submitted.";
                         Dialog.show("Error", msg, "Ok", null);
                     }
                     if (uws.isNames_Allowed() == true) {
@@ -4023,7 +4065,7 @@ public class StateMachine extends StateMachineBase {
             }
         });
 
-        btn4.addActionListener(new ActionListener() {
+        btnnr4.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
                 //Log.p("clicked btn4", Log.DEBUG);
@@ -4032,13 +4074,14 @@ public class StateMachine extends StateMachineBase {
                 if (uws.isDirectors_Allowed() == true) {
                     f.setTitle("Director Details");
                     tabs.setSelectedIndex(3);
-                    btn1.setUIID("Button");
-                    btn2.setUIID("Button");
-                    btn3.setUIID("Button");
-                    // btn4.setUIID("btnselected");
+                    btnnr1.setUIID("CIPC_DARK");
+                    btnnr2.setUIID("CIPC_DARK");
+                    btnnr3.setUIID("CIPC_DARK");
+                    btnnr4.setUIID("CIPC_DARK_SELECTED");
+
                 } else {
                     if (uws.isEnterprise_Allowed() == true) {
-                        String msg = "Please complete capturing of all enterprise details  before you can continue to capture director details.";
+                        String msg = "Please complete capturing of all enterprise details before you can continue to capture directors details.";
                         Dialog.show("Error", msg, "Ok", null);
                         return;
                     }
@@ -4065,15 +4108,18 @@ public class StateMachine extends StateMachineBase {
                 if (txtotp.getText().trim().equals(uws.getOTP().toString())) {
                     f.setTitle("Director Details");
                     //tabs.setSelectedIndex(3);
-                    txtotp.setUIID("TextFieldcorrect");
+                    //txtotp.setUIID("TextFieldcorrect");
+                    txtotp.setUIID("TextFieldNameSearchcorrect");
                     txtotp.repaint();
 
                     // btn4.setUIID("btnselected");
                 } else {
-                    txtotp.setUIID("TextFieldwrong");
+                    //txtotp.setUIID("TextFieldwrong");
+                    txtotp.setUIID("TextFieldNameSearcherror");
+
                     //checkRegButtonPressed();
                     Dialog.show("Invalid OTP", "Please enter a Vlid OTP", "OK", null);
-                    txtotp.requestFocus();
+                    //txtotp.requestFocus();
                 }
 
             }
@@ -4085,48 +4131,61 @@ public class StateMachine extends StateMachineBase {
 ////                        && isRegStep3Passed == true) {
 //           
 //        });
+//#########################
+//       Container contTop = new Container();
+//        contTop.setUIID("ContainerWhite");
+//        contProjects.setUIID("ContainerWhite");
+//        contTop.setLayout(new GridLayout(1, 4));
+//        contTop.add(btn1).add(btn2).add(btn3).add(btn4);
+//
+//        Container border = new Container(new BorderLayout());
+//        border.setUIID("ContainerWhite");
+//
+//        border.add(BorderLayout.NORTH, contTop);
+//
+//        border.add(BorderLayout.CENTER, contProjects);
+//#########################
         Container contTop = new Container();
-        contTop.setUIID("LabelWhite");
+        contTop.setUIID("ContainerWhite");       
         contTop.setLayout(new GridLayout(1, 4));
-        contTop.add(btn1).add(btn2).add(btn3).add(btn4);
-        contTop.setName("conttop");
-        btn1.setUIID("btnselected");
-//        btn1.setEnabled(false);
-        btn2.setUIID("Button");
-//        btn2.setEnabled(false);
-        btn3.setUIID("Button");
-//        btn3.setEnabled(false);
-        btn4.setUIID("Button");
-//        btn4.setEnabled(false);
+        contTop.add(btnnr1).add(btnnr2).add(btnnr3).add(btnnr4);
+//        Container border = new Container(new BorderLayout());
+//        border.setUIID("ContainerWhite");
+//        border.add(BorderLayout.NORTH, contTop);       
+        btnnr1.setUIID("CIPC_DARK_SELECTED");
+        btnnr2.setUIID("CIPC_DARK");
+        btnnr3.setUIID("CIPC_DARK");
+        btnnr4.setUIID("CIPC_DARK");
         f.add(BorderLayout.NORTH, contTop);
+        //f.add(border);
 
         tabs.addSelectionListener(new SelectionListener() {
             @Override
             public void selectionChanged(int oldSelected, int newSelected) {
                 if (newSelected == 0) {
-                    btn1.setUIID("btnselected");
-                    btn2.setUIID("Button");
-                    btn3.setUIID("Button");
-                    btn4.setUIID("Button");;
+                    btnnr1.setUIID("CIPC_DARK_SELECTED");
+                    btnnr2.setUIID("CIPC_DARK");
+                    btnnr3.setUIID("CIPC_DARK");
+                    btnnr4.setUIID("CIPC_DARK");;
                 }
                 if (newSelected == 1) {
-                    btn1.setUIID("Button");
-                    btn2.setUIID("btnselected");
-                    btn3.setUIID("Button");
-                    btn4.setUIID("Button");;
+                    btnnr1.setUIID("CIPC_DARK");
+                    btnnr2.setUIID("CIPC_DARK_SELECTED");
+                    btnnr3.setUIID("CIPC_DARK");
+                    btnnr4.setUIID("CIPC_DARK");;
                 }
 
                 if (newSelected == 2) {
-                    btn1.setUIID("Button");
-                    btn2.setUIID("Button");
-                    btn3.setUIID("btnselected");
-                    btn4.setUIID("Button");;
+                    btnnr1.setUIID("CIPC_DARK");
+                    btnnr2.setUIID("CIPC_DARK");
+                    btnnr3.setUIID("CIPC_DARK_SELECTED");
+                    btnnr4.setUIID("CIPC_DARK");;
                 }
                 if (newSelected == 3) {
-                    btn1.setUIID("Button");
-                    btn2.setUIID("Button");
-                    btn3.setUIID("Button");
-                    btn4.setUIID("btnselected");;
+                    btnnr1.setUIID("CIPC_DARK");
+                    btnnr2.setUIID("CIPC_DARK");
+                    btnnr3.setUIID("CIPC_DARK");
+                    btnnr4.setUIID("CIPC_DARK_SELECTED");;
                 }
             }
         }
@@ -4174,10 +4233,11 @@ public class StateMachine extends StateMachineBase {
         tabs.hideTabs();
         if (TXTVAL.length() > 8) {
             Log.p("in" + txt1, Log.DEBUG);
-
+            Dialog ip = new InfiniteProgress().showInifiniteBlocking();
             Result result = uws.ReservedName_Name_Mobi(AGENT_CODE, txt1.getText());
             uws.ReservedName(result);
 
+            ip.dispose();
             for (int i = 0; i < uws.getArlNameReserved().size(); i++) {
                 NameReserved nr = uws.ArlNameReserved.get(i);
                 approvedname = nr.ApprovedName;
@@ -4286,7 +4346,7 @@ public class StateMachine extends StateMachineBase {
         //String responseCall = Namereservation_MOBI(uws.getAgent_code(), name1, name2, name3, name4);
         //String responseCall = uws.Namereservation_MOBI(uws.getAgent_code(), name1, name2, name3, name4);
         String responseCall = uws.Namereservation_MOBI(AGENT_CODE, name1, name2, name3, name4);
-        
+
         if ("|".equals(responseCall.substring(0, 1))) {
             responseCall = uws.RSM_1(responseCall);
         } else {
@@ -4560,7 +4620,7 @@ public class StateMachine extends StateMachineBase {
             tabs.setSwipeActivated(false);
             tabs.hideTabs();
             f.setTitle("Director Details");
-            Result rs = uws.name_workflow(uws.getTrak_no(), uws.getName_reservation_no(),AGENT_CODE);
+            Result rs = uws.name_workflow(uws.getTrak_no(), uws.getName_reservation_no(), AGENT_CODE);
             String Response = rs.getAsString("//Insert_Name_Workflow_mobiResult");
             if (Response == "") {
                 tabs.setSelectedIndex(3);
@@ -4576,12 +4636,15 @@ public class StateMachine extends StateMachineBase {
     @Override
     protected void onFrmNewEntReg1_BtnGetIdInfoAction(Component c, ActionEvent event) {
         Form f = c.getComponentForm();
+        //#########
+//        Dialog ip = new InfiniteProgress().showInifiniteBlocking();
 //        Result result = uws.get_dha_data("7104085085085");
+//        
 //        uws.DHA_Data(result);
-//
+//        ip.dispose();
 //        for (int i = 0; i < uws.ArlDHA_Detail.size(); i++) {
-//            DHA_Detail DD = uws.ArlDHA_Detail.get(i); 
-//                    
+//            DHA_Detail DD = uws.ArlDHA_Detail.get(i);
+//
 //            String death_status = RSM_A(DD.getDEATH_STATUS());
 //            if (!"ALIVE".equals(death_status)) {
 //                scanCanceled_death();
@@ -4616,30 +4679,33 @@ public class StateMachine extends StateMachineBase {
 //        txtcell.repaint();
 //        txtcell.requestFocus();
 //        txtcell.startEditing();
-        
+
         //########
         CodeScanner.getInstance().scanBarCode(new ScanResult() {
             public void scanCompleted(String contents, String formatName, byte[] rawBytes) {
                 //Dialog.show("Bar code", "Bar code is: " + contents, "Ok", null);
-
+//#################################disable barcode scanner
                 Result result = uws.get_dha_data(contents);
-                       uws.DHA_Data(result);
+                uws.DHA_Data(result);
                 for (int i = 0; i < uws.ArlDHA_Detail.size(); i++) {
                     DHA_Detail DD = uws.ArlDHA_Detail.get(i);
-                    String death_status  = RSM_A(DD.getDEATH_STATUS());
-                    if (death_status != "ALIVE")
-                    {
-                    
+                    String death_status = RSM_A(DD.getDEATH_STATUS());
+                    if (death_status != "ALIVE") {
+
                     }
                     Label lblIdno = (Label) findByName("LblIdNo", f);
                     lblIdno.setText(RSM_A(DD.getIDNUMBER()));
                     lblIdno.repaint();
+                    //DOB
+                    Label lblDirbirthdate = (Label) findByName("lbldirbirthdate", f);
+                    lblDirbirthdate.setText(RSM_A(DD.getDOB()));
+                    lblDirbirthdate.repaint();
                     //LblNames
                     Label lblnames = (Label) findByName("LblNames", f);
                     lblnames.setText(RSM_A(DD.getNAMES()));
                     lblnames.repaint();
                     //LblSurname
-                           Label lblsurname = (Label) findByName("LblSurname", f);
+                    Label lblsurname = (Label) findByName("LblSurname", f);
                     lblsurname.setText(RSM_A(DD.getSURNAME()));
                     lblsurname.repaint();
                     //PhysAddr1
@@ -4649,27 +4715,30 @@ public class StateMachine extends StateMachineBase {
                     TextField physaddr2 = (TextField) findByName("PhysAddr2", f);
                     physaddr2.setText(RSM_A(DD.getADDR_LINE2()));
                     physaddr2.repaint();
-                    ;    
+                    ;
                 }
-                        Show_Director_Fields(f);
-               f.repaint();
-               TextField txtcell = (TextField) findByName("TxtCell", f);   
-                   txtcell.repaint();
-            txtcell.requestFocus();
-            txtcell.startEditing();   
-                   }
-                   public void scanCanceled() {
-                      System.out.println("cancelled");
-                       Dialog.show("Scan Cancelled", "Please ensure that there is sufficient light when performing scan", "Ok", null);
-                   }
-                   public void scanError(int errorCode, String message) {
-                       Dialog.show("Scan Error", "Please ensure that there is sufficient light when performing scan", "Ok", null);
-                   }
-              });
+                Show_Director_Fields(f);
+                f.repaint();
+                TextField txtcell = (TextField) findByName("TxtCell", f);
+                txtcell.repaint();
+                txtcell.requestFocus();
+                txtcell.startEditing();
+                //#######disable barcode scanner
+            }
+
+            public void scanCanceled() {
+                System.out.println("cancelled");
+                Dialog.show("Scan Cancelled", "Please ensure that there is sufficient light when performing scan", "Ok", null);
+            }
+
+            public void scanError(int errorCode, String message) {
+                Dialog.show("Scan Error", "Please ensure that there is sufficient light when performing scan", "Ok", null);
+            }
+        });
     }
 
     protected void onFrmNewEntReg1_ButtoncondirAction(Component c, ActionEvent event) {
-
+        Dialog ip = new InfiniteProgress().showInifiniteBlocking();
         if (validentdata(c)) {
             uws.setInfo_Allowed(false);
             uws.setNames_Allowed(false);
@@ -4680,16 +4749,23 @@ public class StateMachine extends StateMachineBase {
             tabs.setSwipeActivated(false);
             tabs.hideTabs();
             f.setTitle("Director Details");
-            Result rs = uws.name_workflow(uws.getTrak_no(), uws.getName_reservation_no(),AGENT_CODE);
+            // Dialog ip = new InfiniteProgress().showInifiniteBlocking();
+            Result rs = uws.name_workflow(uws.getTrak_no(), uws.getName_reservation_no(), AGENT_CODE);
+            //   ip.dispose();
             String Response = rs.getAsString("//Insert_Name_Workflow_mobiResult");
+            ip.dispose();
             if (Response == "") {
+                Table tbl = (Table) findByName("Tablememinfo", f);
+                tbl.setHidden(true);
+//               Container Containermem = (Container) findByName("Containermem", f);
+//               Containermem.setHidden(true);
                 tabs.setSelectedIndex(3);
             } else {//        if (Response != null) {
                 Dialog.show("Error", Response, "OK", null);
             }
-
 // get traking no for new registration
         }
+        ip.dispose();
     }
 
     @Override
@@ -4699,9 +4775,13 @@ public class StateMachine extends StateMachineBase {
         TextField txtcell = (TextField) findByName("TxtCell", f);
         if (txtcell.getText().trim().equals("")) {
             Dialog.show("Error", "Please enter a valid cell number", "OK", null);
-            txtcell.repaint();
-            txtcell.requestFocus();
-            txtcell.startEditing();
+            //  txtcell.repaint();
+            //  txtcell.requestFocus();
+            //  txtcell.startEditing();
+
+            loadlist(uws.getTrak_no(), c);
+            f.repaint();
+
             return;
         }
         Label lblidno = (Label) findByName("LblIdNo", f);
@@ -4709,16 +4789,30 @@ public class StateMachine extends StateMachineBase {
             Dialog.show("Error", "Please Scan a valid ID Document", "OK", null);
             lblidno.repaint();
             lblidno.requestFocus();
+
+            loadlist(uws.getTrak_no(), c);
+            f.repaint();
+
             return;
-        }
+        }  
+        Dialog ip = new InfiniteProgress().showInifiniteBlocking();
         uws.setOTP(uws.ValidateCelNo(AGENT_CODE, uws.getTrak_no(), txtcell.getText().trim(), lblidno.toString()));
+        ip.dispose();
+        //RSM_A(DD.getIDNUMBER()
         if ("ERR".equals(uws.getOTP().substring(0, 3))) {
             Dialog.show("Error", uws.getOTP(), "OK", null);
             txtcell.repaint();
             txtcell.requestFocus();
             txtcell.startEditing();
+
+            loadlist(uws.getTrak_no(), c);
+            f.repaint();
+
             return;
         }
+
+        loadlist(uws.getTrak_no(), c);
+        f.repaint();
 
     }
 
@@ -4758,7 +4852,7 @@ public class StateMachine extends StateMachineBase {
         } else {
             uws.setIsIncorporator(false);
         }
-         Label lbldirbirthdate = (Label) findByName("lbldirbirthdate", f); 
+        Label lbldirbirthdate = (Label) findByName("lbldirbirthdate", f);
         Label lblidNo = (Label) findByName("LblIdNo", f);
         if (lblidNo.getText().trim().equals("")) {
             Dialog.show("Error", "Please enter a valid Director ID Number", "OK", null);
@@ -4769,23 +4863,23 @@ public class StateMachine extends StateMachineBase {
             return false;
         }
         TextField txtotp = (TextField) findByName("TxtOtp", f);
-//        if (txtotp.getText().trim().equals("")) {
-//            Dialog.show("Error", "Please enter a valid otp for Director ID Number" + lblidNo.getText().trim(), "OK", null);
-//            txtotp.repaint();
-//            txtotp.requestFocus();
-//            txtotp.startEditing();
-//
-//            return false;
-//        } else {
-//            if (txtotp.getText().trim().equals(uws.getOTP())) {
-//            } else {
-//                Dialog.show("Error", "Please enter a valid otp for Director ID Number" + lblidNo.getText().trim(), "OK", null);
-//                txtotp.repaint();
-//                txtotp.requestFocus();
-//                txtotp.startEditing();
-//                return false;
-//            }
-//        }
+        if (txtotp.getText().trim().equals("")) {
+            Dialog.show("Error", "Please enter a valid otp for Director ID Number" + lblidNo.getText().trim(), "OK", null);
+            txtotp.repaint();
+            txtotp.requestFocus();
+            txtotp.startEditing();
+
+            return false;
+        } else {
+            if (txtotp.getText().trim().equals(uws.getOTP())) {
+            } else {
+                Dialog.show("Error", "Please enter a valid otp for Director ID Number" + lblidNo.getText().trim(), "OK", null);
+                txtotp.repaint();
+                txtotp.requestFocus();
+                txtotp.startEditing();
+                return false;
+            }
+        }
 //LblNames
         Label lblnames = (Label) findByName("LblNames", f);
         if (lblnames.getText().trim().equals("")) {
@@ -4857,10 +4951,11 @@ public class StateMachine extends StateMachineBase {
 //Cmbdirectortype
         ComboBox mbdirectortype = (ComboBox) findByName("Cmbdirectortype", f);
         if (mbdirectortype.getSelectedItem().toString().equals("")) {
-            Dialog.show("Error", "Please enter a valid director type.", "OK", null);
+            Dialog.show("Error", "Please enter a valid Director type.", "OK", null);
             mbdirectortype.repaint();
             mbdirectortype.requestFocus();
             return false;
+
         }
 
 //CmbProvince
@@ -4930,26 +5025,24 @@ public class StateMachine extends StateMachineBase {
         }
 //dtAppDate
         Picker dtappdate = (Picker) findByName("dtAppDate", f);
-        Date  testdate = dtappdate.getDate();
+        Date testdate = dtappdate.getDate();
         Date d = dtappdate.getDate();
-                        Calendar cal = Calendar.getInstance();
-                        cal.setTime(d);
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(d);
 
-
-                        String m1 = Integer.toString(cal.get(Calendar.MONTH) + 1);
-                        if(m1.length()==1)
-                        {
-                            m1= "0"+m1;
-                        }
-                        String y1 = Integer.toString(cal.get(Calendar.YEAR));
-                        String d1 = Integer.toString(cal.get(Calendar.DAY_OF_MONTH));
-       String dateStringApp = y1 + "/" + m1 + "/" + d1;
+        String m1 = Integer.toString(cal.get(Calendar.MONTH) + 1);
+        if (m1.length() == 1) {
+            m1 = "0" + m1;
+        }
+        String y1 = Integer.toString(cal.get(Calendar.YEAR));
+        String d1 = Integer.toString(cal.get(Calendar.DAY_OF_MONTH));
+        String dateStringApp = y1 + "/" + m1 + "/" + d1;
 //        String m1=Integer.toString(dtappdate.getDate().getMonth());
 //        String d1=Integer.toString(dtappdate.getDate().getDay());
 //        String y1=Integer.toString(dtappdate.getDate().getYear());
 
- //       String dateStringApp = new SimpleDateFormat("yyyy-MM-dd").format(dtappdate.getDate().toString());
- //       dtappdate.setType(Display.PICKER_TYPE_DATE);
+        //       String dateStringApp = new SimpleDateFormat("yyyy-MM-dd").format(dtappdate.getDate().toString());
+        //       dtappdate.setType(Display.PICKER_TYPE_DATE);
 //DtDatofBirth
         //Picker dtdatofbirth = (Picker) findByName("DtDatofBirth", f);
 //perform test if date of birth is valid
@@ -4966,13 +5059,11 @@ public class StateMachine extends StateMachineBase {
 
         //directordetails.setDir_appoint_date(dtappdate.getText().toString());
         directordetails.setDir_appoint_date(dateStringApp);
-          String dateString = lbldirbirthdate.getText().trim();
-         // dateString = dateString.substring(6,8) + "/" + dateString.substring(4, 6) +"/"+ dateString.substring(0, 4 );
-                  
-          //        new SimpleDateFormat("dd-MM-yyyy").format(lbldirbirthdate.getText().trim());
-         
-                  
-        directordetails.setDir_birth_date(  dateString);
+        String dateString = lbldirbirthdate.getText().trim();
+        // dateString = dateString.substring(6,8) + "/" + dateString.substring(4, 6) +"/"+ dateString.substring(0, 4 );
+
+        //        new SimpleDateFormat("dd-MM-yyyy").format(lbldirbirthdate.getText().trim());
+        directordetails.setDir_birth_date(dateString);
         directordetails.setPost_post_code(txtpostalcode.getText().trim());
         //  directordetails.setPost_addr4(cmbpostalprovince.getSelectedItem().toString());
         directordetails.setPost_addr3(txtpostaladdr3.getText().trim());
@@ -4991,7 +5082,7 @@ public class StateMachine extends StateMachineBase {
         //directordetails.setCust_code(uws.getAgent_code());
         directordetails.setCust_code(AGENT_CODE);
         directordetails.setIsIncorporator(uws.isIsIncorporator());
-        
+
         uws.setFirstNames(lblnames.getText().trim());
         uws.setSurname(lblsurname.getText().trim());
         Result rs = uws.AddDirector(directordetails);
@@ -5064,37 +5155,96 @@ public class StateMachine extends StateMachineBase {
     }
 
     protected void onFrmNewEntReg1_BtnAddDirectorAction(Component c, ActionEvent event) {
+        Form f = c.getComponentForm();
+        Dialog ip = new InfiniteProgress().showInifiniteBlocking();
         if (validatedirdata(c)) {
-            //add director
 
-            Form f = c.getComponentForm();
-            List listdir = (List) findByName("ListDir", f);
-            //TextField textfield = (TextField) findByName("TxtIdNo", f);
-            listdir.addItem(uws.getFirstNames() + " " + uws.getSurname());
-            listdir.repaint();
             cleardirdata(c);
             Hide_Director_Fields(f);
-            //textfield.requestFocus();
-            listdir.scrollRectToVisible(0, 0, 0, 0, listdir);
-            listdir.repaint();
             Container conregister = (Container) findByName("Conregister", f);
             conregister.setHidden(false);
-            //Container conregister = (Container) findByName("Conregister", f);
-            //conregister.setHidden(true);        
-
-            //Button btnGetIdInfo = (Button)  findByName("BtnGetIdInfo", f);
-//                    BtnGetIdInfo
+            //####################
+            //Form f = c.getComponentForm();
+            String Strak_no = uws.getTrak_no();
+            ip.dispose();
+            loadlist(Strak_no, c);
+            Table tbl = (Table) findByName("Tablememinfo", c);
+            tbl.requestFocus();
             f.repaint();
+            //####################
         };
+        loadlist(uws.getTrak_no(), c);
+        ip.dispose();
+        f.repaint();
+    }
 
+    public void loadlist(String ref_no, Component c) {
+        Form f = c.getComponentForm();
+        Dialog ip = new InfiniteProgress().showInifiniteBlocking();
+        Result result = uws.get_directors_stage(ref_no);
+        uws.DIR_Data(result);
+        ip.dispose();
+        if (uws.ArlDIR_Detail == null) 
+        {
+            return;
+        }
+        Table tbl = (Table) findByName("Tablememinfo", c);
+        tbl.setModel(tbl.getModel());
+        Container cnt = new Container(BoxLayout.y());       
+        for (int i = 0; i < uws.ArlDIR_Detail.size(); i++) {
+            DIR_Detail DD = uws.ArlDIR_Detail.get(i);
+            String Dir_id = RSM_A(DD.getDir_id());
+            String First_Names = (RSM_A(DD.getFirs_names()));
+            String Surname = (RSM_A(DD.getSurname()));
+            String Id_no = (RSM_A(DD.getId_no()));
+            Button b = new Button(First_Names + " " + Surname + " - " + Id_no);
+            b.setName(Dir_id);
+            b.setUIID("Button_small");
+            cnt.add(b);
+            b.addActionListener(e
+                    -> {
+                boolean answer = Dialog.show("Info", "Do You Want to  Change info for " + b.getText() + ". Then you must delete the info and add the director as a new director. Do you want to delete this information?", "Confirm", "Decline");
+                if (answer) {
+                    Dialog.show("", "delete director from table with dir_id = " + b.getName(), "OK", null);
+                    String Strak_no = uws.getTrak_no();
+                    loadlist(Strak_no, c);
+                    //Table tbl = (Table) findByName("Tablememinfo", c);
+                    tbl.requestFocus();
+                    f.repaint();
+                } else {
+                    String Strak_no = uws.getTrak_no();
+                    loadlist(Strak_no, c);
+                    //Table tbl = (Table) findByName("Tablememinfo", c);
+                    tbl.requestFocus();
+                    f.repaint();
+                }
+            });
+        }
+        // cnt.setScrollableY(true);
+        tbl.add(cnt);
     }
 
     @Override
     protected void onFrmNewEntReg1_BtnRegisterenterprisAction(Component c, ActionEvent event) {
-        String Sreservedname = uws.getName_reservation_no();
+        UserWebServices u = new UserWebServices();
+        u.insertCartItemServiceCOREG(uws.getTrak_no(), AGENT_CODE, "125");
+        String Sreservation_no = uws.getName_reservation_no();
+        if (Sreservation_no.trim() != "") {
+            u.insertCartItemServiceName(Sreservation_no, AGENT_CODE, "50");
+        }
         String Strak_no = uws.getTrak_no();
-        Dialog.show("testing ", "Name reservation-" + Sreservedname + " Trak no - " + Strak_no, "OK", null);
+        Dialog.show("testing ", "Name reservation-" + Sreservation_no + " Trak no - " + Strak_no + " Was added to the Chart", "OK", null);
+        // Form concart = contDashBoard.getComponentForm();
+        DisplayCart = true;
+        showForm("Main", null);
 
+        // showCart2(concart);
+//        //Form f = Display.getInstance().getCurrent();
+//       // Form f = (Form); // findByName("Login");
+//        Container c1 = (Container) findByName("containerParent",f);
+//        Form f = c1.getComponentForm();
+        //    showDashboard(f);
+        //Display.getInstance().get
     }
 
     @Override
@@ -5114,6 +5264,195 @@ public class StateMachine extends StateMachineBase {
 
     @Override
     protected void onCreateMain() {
+
+    }
+
+    protected void beforeBEE(Form f) {
+        UserWebServices u = new UserWebServices();
+        //AnnualReturns annualReturns = u.get_ar_info_mobi(AGENT_CODE, ENT_NUMBER);
+        listBEEDetail = u.Get_BEE_MOBI(AGENT_CODE);
+        //listBEEDetail = u.Get_BEE_MOBI(dataset);
+
+        if (listBEEDetail.isEmpty()) {
+            Log.p("listCalculateARTran=0", Log.DEBUG);
+        } else {
+            Log.p("listCalculateARTran=" + listBEEDetail.size(), Log.DEBUG);
+        }
+
+        for (int i = 0; i < listBEEDetail.size(); i++) {
+            //rm f = c.getComponentForm();
+            BEEDetail n = listBEEDetail.get(i);
+            //Dialog.show("1.1", n.getName(), "Ok", null);
+            String ent_no = n.getEnt_no();
+            String ent_name = n.getEnt_name();
+//                    if (txt.indexOf("|") > -1) {
+//                        java.util.List<String> list = StringUtil.tokenize(n.getName(), "|");
+//                        if (list != null && list.size() > 0) {
+//                            txt = list.get(0);
+//                        }
+//                        name = txt;
+//                    } else {
+//                        name = n.getName();
+//                    }
+            List ListEnt = (List) findByName("ListEnt", f);
+            //TextField textfield = (TextField) findByName("TxtIdNo", f);
+            ListEnt.addItem(ent_no);
+            ListEnt.repaint();
+            List ListEntname = (List) findByName("ListEntname", f);
+            //TextField textfield = (TextField) findByName("TxtIdNo", f);
+            ListEntname.addItem(ent_no);
+            ListEntname.repaint();
+        }
+    }
+
+    @Override
+    protected void onContTasks_TxtName4Action(Component c, ActionEvent event) {
+
+    }
+
+    @Override
+    protected void onContCart_BtnPayNowAction(Component c, ActionEvent event) {
+
+    }
+
+    @Override
+    protected void onContDashBoard_MbButtonAction(Component c, ActionEvent event) {
+
+    }
+
+    @Override
+    protected void onFrmNewEntReg1_TxtOtpAction(Component c, ActionEvent event) {
+
+    }
+
+    @Override
+    protected void onTestlist_ButtonAction(Component c, ActionEvent event) {
+
+        Form f = c.getComponentForm();
+        Dialog ip = new InfiniteProgress().showInifiniteBlocking();
+        Result result = uws.get_directors_stage("1-18UCACQ");
+        uws.DIR_Data(result);
+        ip.dispose();
+        loadlist("1-18UCACQ", c);
+//        Container cnt = new Container(BoxLayout.y());
+//        for (int i = 0; i < uws.ArlDIR_Detail.size(); i++) {
+//            DIR_Detail DD = uws.ArlDIR_Detail.get(i);
+//            String Dir_id = RSM_A(DD.getDir_id());
+//            String First_Names = (RSM_A(DD.getFirs_names()));
+//            String Surname = (RSM_A(DD.getSurname()));
+//            String Id_no = (RSM_A(DD.getId_no()));
+//            Button b = new Button(First_Names + " " + Surname + " - " + Id_no);
+//            b.setName(Dir_id);
+//            b.setUIID("Button_small");
+//            cnt.add(b);
+//            b.addActionListener(e
+//                    -> {
+//                boolean answer = Dialog.show("Info", "Do You Want to  Change info for " + b.getText() + ". Then you must delete the info and add the director as a new director. Do you want to delete this information?", "Confirm", "Decline");
+//                if (answer) {
+//                    Dialog.show("", "delete director from table with dir_id = " + b.getName(), "OK", null);
+//                    Table tbl = (Table) findByName("Tablememinfo", c);
+//                    tbl.add(cnt);
+//                }
+//            });
+//        }
+//        cnt.setScrollableY(true);
+//        Table tbl = (Table) findByName("Tablememinfo", c);
+
+        f.repaint();
+//        cnt.repaint();
+        //       tbl.repaint();
+    }
+
+    @Override
+    protected void onFrmNewEntReg1_BtnconregAction(Component c, ActionEvent event) {
+
+        TextField txtrefno = (TextField) findByName("txtrefno", c);
+        Dialog ip = new InfiniteProgress().showInifiniteBlocking();
+
+        Result result = uws.get_name_workflow(txtrefno.getText(), AGENT_CODE);
+        uws.name_workflow(result);
+        ip.dispose();
+        if (uws.Arl_name_workflow_Detail.isEmpty() == true) {
+            Dialog.show("Error", "No Information found for reference no - " + txtrefno.getText(), "OK", null);
+            return;
+        }
+        String Application_no = "";
+        String ref_no = "";
+        String cust_code = "";
+        for (int i = 0; i < uws.getArl_name_workflow_Detail().size(); i++) {
+            Name_Workflow nw = uws.Arl_name_workflow_Detail.get(i);
+
+            Application_no = nw.getApplication_no();
+            ref_no = RSM_A(nw.getRef_no());
+            cust_code = RSM_A(nw.getCust_code());
+        }
+        //   String scust_code = RSM_A(cust_code);
+        if (!AGENT_CODE.equals(cust_code)) {
+            Dialog.show("Error", "Reference no " + txtrefno.getText() + " does not belong to customer code " + AGENT_CODE, "OK", null);
+            return;
+        }
+        uws.setInfo_Allowed(false);
+        uws.setNames_Allowed(false);
+        uws.setEnterprise_Allowed(false);
+        uws.setDirectors_Allowed(true);
+        Form f = c.getComponentForm();
+        Tabs tabs = (Tabs) findByName("Tabs", f);
+        tabs.setSwipeActivated(false);
+        tabs.hideTabs();
+        f.setTitle("Director Details");
+        uws.setTrak_no(ref_no);
+        uws.setAgent_code(AGENT_CODE);
+        uws.setName_reservation_no(Application_no);
+        tabs.setSelectedIndex(3);
+        // Form f = c.getComponentForm();
+//            Result result = uws.get_directors_stage("1-18UCACQ");
+//            uws.DIR_Data(result);
+        loadlist(ref_no, c);
+        f.repaint();
+        //  kkkk
+
+//            Result rs = uws.name_workflow(uws.getTrak_no(), uws.getName_reservation_no(), AGENT_CODE);
+//            String Response = rs.getAsString("//Insert_Name_Workflow_mobiResult");
+//            if (Response == "") {
+//                tabs.setSelectedIndex(3);
+//            } else {//        if (Response != null) {
+//                Dialog.show("Error", Response, "OK", null);
+//            }
+//    
+//    }
+    }
+
+    @Override
+    protected void postFrmNewEntReg1(Form f) {
+
+    }
+
+    @Override
+    protected void onFrmNewEntReg1_CmbdirectortypeAction(Component c, ActionEvent event) {
+        Form f = c.getComponentForm();
+        loadlist(uws.getTrak_no(), c);
+        f.repaint();
+    }
+
+    protected void onFrmNewEntReg1_BtnrefresdirAction(Component c, ActionEvent event) {
+
+    }
+
+    protected void onFrmNewEntReg1_BtnrefreshmemAction(Component c, ActionEvent event) {
+        Form f = c.getComponentForm();
+        loadlist(uws.getTrak_no(), c);
+        f.repaint();
+
+    }
+
+    @Override
+    protected void beforeContainerContProjects(Container c) {
+
+    }
+
+    @Override
+    protected void onFrmNewEntReg1_CmbFyeMonthAction(Component c, ActionEvent event) {
+
     
     }
 }

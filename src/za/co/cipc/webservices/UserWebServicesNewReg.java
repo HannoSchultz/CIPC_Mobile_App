@@ -27,10 +27,13 @@ import java.util.StringTokenizer;
 import java.text.DateFormat;
 import userclasses.Constants;
 import userclasses.DHA_Detail;
+import userclasses.Name_Workflow;
+import userclasses.DIR_Detail;
 import userclasses.DirectorDetails;
 import userclasses.EnterpriseDetails;
 import userclasses.NameReserved;
 import userclasses.NameSearchObject;
+import userclasses.Name_Workflow;
 import userclasses.ValidIdandRelative;
 
 /**
@@ -40,6 +43,24 @@ import userclasses.ValidIdandRelative;
 public class UserWebServicesNewReg {
 
     public ArrayList<DHA_Detail> ArlDHA_Detail;
+
+    public ArrayList<Name_Workflow> getArl_name_workflow_Detail() {
+        return Arl_name_workflow_Detail;
+    }
+
+    public void setArl_name_workflow_Detail(ArrayList<Name_Workflow> Arl_name_workflow_Detail) {
+        this.Arl_name_workflow_Detail = Arl_name_workflow_Detail;
+    }
+    public ArrayList<Name_Workflow> Arl_name_workflow_Detail;
+
+    public ArrayList<DIR_Detail> getArlDIR_Detail() {
+        return ArlDIR_Detail;
+    }
+
+    public void setArlDIR_Detail(ArrayList<DIR_Detail> ArlDIR_Detail) {
+        this.ArlDIR_Detail = ArlDIR_Detail;
+    }
+    public ArrayList<DIR_Detail> ArlDIR_Detail;
     public ArrayList<NameReserved> ArlNameReserved;
     public ArrayList<DirectorDetails> ArlDirectorDetails;
     public ArrayList<EnterpriseDetails> ArlEnterpriseDetails;
@@ -679,7 +700,48 @@ public class UserWebServicesNewReg {
         }
         return response;
     }
+    public Result get_directors_stage(String ref_no) {
 
+        final String SOAP_BODY
+                = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cipc=\"CIPC_WEB_SERVICES\">\n"
+                + "   <soapenv:Header/>\n"
+                + "   <soapenv:Body>\n"
+                + "      <cipc:get_dir_register>\n"
+                + "       <cipc:sUserName>" + Constants.sUserName + "</cipc:sUserName>\n"
+                + "         <cipc:sPassword>" + Constants.sPassword + "</cipc:sPassword>\n"
+                + "         <cipc:sBankID>" + Constants.sBankID + "</cipc:sBankID>\n"
+                + "         <cipc:reference_no>" + ref_no + "</cipc:reference_no>\n"
+                + "      </cipc:get_dir_register>\n"
+                + "   </soapenv:Body>\n"
+                + "</soapenv:Envelope>";
+        ConnectionRequest httpRequest = new ConnectionRequest() {
+            Element h;
+
+            @Override
+            protected void buildRequestBody(OutputStream os) throws IOException {
+                super.buildRequestBody(os);
+                os.write(SOAP_BODY.getBytes("utf-8"));
+            }
+
+            protected void postResponse() {
+                super.postResponse();
+            }
+
+            protected void readResponse(InputStream input) throws IOException {
+                super.readResponse(input);
+            }
+        };
+
+        httpRequest.setUrl(Constants.soapServicesEndPoint + "director.asmx?wsdl");
+        httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
+        httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
+        httpRequest.setPost(true);
+        NetworkManager.getInstance().setTimeout(60000);
+        NetworkManager.getInstance().addToQueueAndWait(httpRequest);
+        String data = new String(httpRequest.getResponseData());
+        Result result = Result.fromContent(data, Result.XML);
+        return result;
+    }
     public Result get_dha_data(String id_no) {
 
         final String SOAP_BODY
@@ -722,7 +784,49 @@ public class UserWebServicesNewReg {
         Result result = Result.fromContent(data, Result.XML);
         return result;
     }
+   public Result get_name_workflow(String sRef_no,String sCust_Code) {
 
+        final String SOAP_BODY
+                = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cipc=\"CIPC_WEB_SERVICES\">\n"
+                + "   <soapenv:Header/>\n"
+                + "   <soapenv:Body>\n"
+                + "      <cipc:Getname_workflow_mobi>\n"
+                + "       <cipc:sUserName>" + Constants.sUserName + "</cipc:sUserName>\n"
+                + "         <cipc:sPassword>" + Constants.sPassword + "</cipc:sPassword>\n"
+                + "         <cipc:sBankID>" + Constants.sBankID + "</cipc:sBankID>\n"
+                + "         <cipc:ref_no>" + sRef_no + "</cipc:ref_no>\n"
+                + "         <cipc:sCust_Code>" + sCust_Code + "</cipc:sCust_Code>\n"
+                + "      </cipc:Getname_workflow_mobi>\n"
+                + "   </soapenv:Body>\n"
+                + "</soapenv:Envelope>";
+        ConnectionRequest httpRequest = new ConnectionRequest() {
+            Element h;
+
+            @Override
+            protected void buildRequestBody(OutputStream os) throws IOException {
+                super.buildRequestBody(os);
+                os.write(SOAP_BODY.getBytes("utf-8"));
+            }
+
+            protected void postResponse() {
+                super.postResponse();
+            }
+
+            protected void readResponse(InputStream input) throws IOException {
+                super.readResponse(input);
+            }
+        };
+
+        httpRequest.setUrl(Constants.soapServicesEndPoint + "enterprise.asmx?wsdl");
+        httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
+        httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
+        httpRequest.setPost(true);
+        NetworkManager.getInstance().setTimeout(60000);
+        NetworkManager.getInstance().addToQueueAndWait(httpRequest);
+        String data = new String(httpRequest.getResponseData());
+        Result result = Result.fromContent(data, Result.XML);
+        return result;
+    }
     public Result ReservedName_Name_Mobi(String customerCode, String Name_Res_no) {
 
         final String SOAP_BODY
@@ -1102,7 +1206,69 @@ public class UserWebServicesNewReg {
 
         return response;
     }
+   public void DIR_Data(Result result) {
+        try {
+            XMLParser parser = new XMLParser();
+            parser.setCaseSensitive(true);            
+           Element element = parser.parse(convertStringtoInputStreamReader(result.getAsString("//DataSet")));
+            ArlDIR_Detail = new ArrayList();
+            for (int i = 0; i < element.getNumChildren(); i++) {
+                Element child = element.getChildAt(i);
+                Element elem_dir_id = ((Element) child.getTextChildren(null, true).get(0));
+                String dir_id = elem_dir_id.getText();
+                Element elem_first_names = ((Element) child.getTextChildren(null, true).get(1));
+                String first_names = elem_first_names.getText();
+                Element elem_surname = ((Element) child.getTextChildren(null, true).get(2));
+                String surname = elem_surname.getText();
+                Element elem_id_no = ((Element) child.getTextChildren(null, true).get(3));
+                String id_no = elem_id_no.getText();
+                
+                DIR_Detail dir_detail = new DIR_Detail();
+                dir_detail.setDir_id(dir_id);
+                dir_detail.setFirs_names(first_names);
+                dir_detail.setSurname(surname);
+                dir_detail.setId_no(id_no);
+                
+                ArlDIR_Detail.add(dir_detail);
+            }
+        } catch (Throwable err) {
+            if (err.toString() == "java.lang.NullPointerException")
+            {
+                ArlDIR_Detail = new ArrayList(); 
+            }
+            else
+            {
+            Dialog.show("Change Name", err.toString(), "OK", null);
+            }
+        }
 
+    }
+   
+    public void name_workflow(Result result) {
+        try {
+            XMLParser parser = new XMLParser();
+            parser.setCaseSensitive(true);
+            Element element = parser.parse(convertStringtoInputStreamReader(result.getAsString("//dataset")));
+            Arl_name_workflow_Detail = new ArrayList();
+            for (int i = 0; i < element.getNumChildren(); i++) {
+                Element child = element.getChildAt(i);
+                Element elem_cust_code = ((Element) child.getTextChildren(null, true).get(0));
+                String cust_code = elem_cust_code.getText();
+                Element elem_trk_reg_no = ((Element) child.getTextChildren(null, true).get(1));
+                String trk_reg_no = elem_trk_reg_no.getText();
+               // Element elem_application_no = ((Element) child.getTextChildren(null, true).get(2));
+               // String application_no = elem_application_no.getText();
+                Name_Workflow name_workflow = new Name_Workflow();
+                name_workflow.setCust_code(cust_code);
+                name_workflow.setRef_no(trk_reg_no);
+              //  name_workflow.setApplication_no(application_no);
+                Arl_name_workflow_Detail.add(name_workflow);
+            }
+        } catch (Throwable err) {
+            Dialog.show("Change Name", err.toString(), "OK", null);
+        }
+
+    }
     public void DHA_Data(Result result) {
         try {
             XMLParser parser = new XMLParser();
@@ -1142,7 +1308,6 @@ public class UserWebServicesNewReg {
         }
 
     }
-
     private static InputStreamReader convertStringtoInputStreamReader(String data) {
 
         byte[] resultByte = data.getBytes();

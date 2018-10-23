@@ -11,6 +11,7 @@ import com.codename1.xml.Element;
  *
  * @author Blessing
  */
+
 public class EnterpriseDetails {
 
     private String EmailAddress;

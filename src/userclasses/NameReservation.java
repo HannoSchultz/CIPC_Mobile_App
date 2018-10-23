@@ -19,7 +19,16 @@ public class NameReservation {
     private double Amount;
     private double TotalAmount;
     private String responseMessage;
+    private String ItemType;
+    
+    public String getItemType() {
+        return "4";
+    }
 
+//    public void setItemType(String ItemType) {
+//        this.ItemType = ItemType;
+//    }
+    
     public NameReservation() {
     }
 

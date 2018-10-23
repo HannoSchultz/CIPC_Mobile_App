@@ -10,13 +10,16 @@ package userclasses;
  * @author Blessing
  */
 public class Constants {
-
-    //public static String soapServicesEndPoint = "https://testwebservices4.cipc.co.za/";
+    
+    //public static String soapServicesEndPoint = "https://testwebservices1.cipc.co.za/";
     public static String sUserName = "wBAA7LAkWIs=";
     public static String sPassword = "6EGQAUzYJlhvffhZ+gUFfg==";
     public static String sBankID = "wBAA7LAkWIs=";
-    public static String cartAPIUsername = "CipcMobile";
-    public static String cartAPIPassword = "q3CWRG!*WsW9mYae";
+//    public static String cartAPIUsername = "CipcMobile";
+//    public static String cartAPIPassword = "q3CWRG!*WsW9mYae";
+    public static String cartAPIUsername = "eServices";
+    public static String cartAPIPassword = "t6G=Y7f385-9nLm5";
+    public static boolean DisplayCart = false;
     
     
     //##############33 
