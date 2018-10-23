@@ -5386,7 +5386,7 @@ public class StateMachine extends StateMachineBase {
         uws.name_workflow(result);
         ip.dispose();
         if (uws.Arl_name_workflow_Detail.size() == 0) {
-            Dialog.show("Error", "No Information found for reference no - " + txtrefno.getText(), "OK", null);
+            Dialog.show("Error", "No Information found for reference no - " + txtrefno.getText()+ ". Transaction might be completed for reference number.", "OK", null);
             return;
         }
         String Application_no = "";
