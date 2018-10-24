@@ -1273,8 +1273,12 @@ public class UserWebServicesNewReg {
                 //  name_workflow.setApplication_no(application_no);
                 Arl_name_workflow_Detail.add(name_workflow);
             }
-        } catch (Throwable err) {
-            Dialog.show("Change Name", err.toString(), "OK", null);
+       } catch (Throwable err) {
+            if (err.toString() == "java.lang.NullPointerException") {
+                Arl_name_workflow_Detail = new ArrayList();
+            } else {
+                Dialog.show("Change Name", err.toString(), "OK", null);
+            }
         }
 
     }
