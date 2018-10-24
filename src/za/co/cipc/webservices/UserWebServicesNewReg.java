@@ -425,6 +425,50 @@ public class UserWebServicesNewReg {
         Result result = Result.fromContent(data, Result.XML);
         return result;
     }
+ public Result removedir(String dir_id, String AGENT_CODE) {
+
+        final String SOAP_BODY
+                = "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:cipc=\"CIPC_WEB_SERVICES\">\n"
+                + "   <soap:Header/>\n"
+                + "   <soap:Body>\n"
+                + "      <cipc:remove_dir_mobi>\n"
+                + "         <cipc:sUserName>" + Constants.sUserName + "</cipc:sUserName>\n"
+                + "         <cipc:sPassword>" + Constants.sPassword + "</cipc:sPassword>\n"
+                + "         <cipc:sBankID>" + Constants.sBankID + "</cipc:sBankID>\n"
+                + "         <cipc:dir_id>" + dir_id + "</cipc:dir_id>\n"               
+                + "         <cipc:sCust_Code>" + AGENT_CODE + "</cipc:sCust_Code>\n"
+                + "      </cipc:remove_dir_mobi>\n"
+                + "   </soap:Body>\n"
+                + "</soap:Envelope>";
+        ConnectionRequest httpRequest = new ConnectionRequest() {
+            Element h;
+
+            @Override
+            protected void buildRequestBody(OutputStream os) throws IOException {
+                super.buildRequestBody(os);
+                os.write(SOAP_BODY.getBytes("utf-8"));
+            }
+
+            protected void postResponse() {
+                super.postResponse();
+            }
+
+            protected void readResponse(InputStream input) throws IOException {
+                super.readResponse(input);
+            }
+
+        };
+
+        httpRequest.setUrl(Constants.soapServicesEndPoint + "director.asmx?wsdl");
+        httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
+        httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
+        httpRequest.setPost(true);
+        NetworkManager.getInstance().setTimeout(60000);
+        NetworkManager.getInstance().addToQueueAndWait(httpRequest);
+        String data = new String(httpRequest.getResponseData());
+        Result result = Result.fromContent(data, Result.XML);
+        return result;
+    }
 
     public Result AddDirector(DirectorDetails directordetails) {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
