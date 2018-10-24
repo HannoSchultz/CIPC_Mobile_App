@@ -1276,18 +1276,6 @@ public abstract class StateMachineBase extends UIBuilder {
         return cmp;
     }
 
-    public com.codename1.ui.Button findBtnverifyOtp(Component root) {
-        return (com.codename1.ui.Button)findByName("BtnverifyOtp", root);
-    }
-
-    public com.codename1.ui.Button findBtnverifyOtp() {
-        com.codename1.ui.Button cmp = (com.codename1.ui.Button)findByName("BtnverifyOtp", Display.getInstance().getCurrent());
-        if(cmp == null && aboutToShowThisContainer != null) {
-            cmp = (com.codename1.ui.Button)findByName("BtnverifyOtp", aboutToShowThisContainer);
-        }
-        return cmp;
-    }
-
     public com.codename1.ui.Label findLabel9(Component root) {
         return (com.codename1.ui.Label)findByName("Label9", root);
     }
@@ -1296,6 +1284,18 @@ public abstract class StateMachineBase extends UIBuilder {
         com.codename1.ui.Label cmp = (com.codename1.ui.Label)findByName("Label9", Display.getInstance().getCurrent());
         if(cmp == null && aboutToShowThisContainer != null) {
             cmp = (com.codename1.ui.Label)findByName("Label9", aboutToShowThisContainer);
+        }
+        return cmp;
+    }
+
+    public com.codename1.ui.Button findBtnverifyOtp(Component root) {
+        return (com.codename1.ui.Button)findByName("BtnverifyOtp", root);
+    }
+
+    public com.codename1.ui.Button findBtnverifyOtp() {
+        com.codename1.ui.Button cmp = (com.codename1.ui.Button)findByName("BtnverifyOtp", Display.getInstance().getCurrent());
+        if(cmp == null && aboutToShowThisContainer != null) {
+            cmp = (com.codename1.ui.Button)findByName("BtnverifyOtp", aboutToShowThisContainer);
         }
         return cmp;
     }
