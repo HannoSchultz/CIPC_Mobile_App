@@ -5209,7 +5209,7 @@ public class StateMachine extends StateMachineBase {
                     -> {
                 boolean answer = Dialog.show("Info", "Do You Want to  Change info for " + b.getText() + ". Then you must delete the info and add the director as a new director. Do you want to delete this information?", "Confirm", "Decline");
                 if (answer) {
-                    Dialog.show("", "delete director from table with dir_id = " + b.getName(), "OK", null);
+                    //Dialog.show("", "delete director from table with dir_id = " + b.getName(), "OK", null);
                     uws.removedir(b.getName(), AGENT_CODE);
                     String Strak_no = uws.getTrak_no();
                     loadlist(Strak_no, c);
