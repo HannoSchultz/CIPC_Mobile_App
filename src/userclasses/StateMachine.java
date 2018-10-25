@@ -379,8 +379,8 @@ public class StateMachine extends StateMachineBase {
             Log.setLevel(Log.DEBUG);
             Log.p("issimulator", Log.DEBUG);
 
-            // return "testlist";
-            return "Splash";
+            //return "testlist";
+             return "Splash";
 
         } else {
             Log.setLevel(Log.REPORTING_PRODUCTION);//To disable debug information
@@ -987,7 +987,6 @@ public class StateMachine extends StateMachineBase {
             @Override
             public void actionPerformed(ActionEvent evt) {
                 mbCardPayments.setEnabled(false);
-                //formProgress = new FormProgress(f); this does not work
                 isFromDash = true;
                 Log.p("mbCardPayments start", Log.DEBUG);
                 showCart2(f);
@@ -1002,12 +1001,7 @@ public class StateMachine extends StateMachineBase {
             @Override
             public void actionPerformed(ActionEvent evt) {
                 mbReg.setEnabled(false);
-
                 showForm("frmNewEntReg1", null);
-                //showForm("ForgotPassword", null);
-
-                //formProgress = new FormProgress(f);
-                //hszshowFrmNewEntRegistration(f, Const.TASK_TODAY);
                 mbReg.setEnabled(true);
             }
         });
@@ -1030,7 +1024,7 @@ public class StateMachine extends StateMachineBase {
                 Dashboard d = table.get(key);
                 //key = key.toLowerCase();
                 if (d != null) {
-                    ;
+                    //hsz;
                     Container dynamicCont = (Container) findByName(key, cont);
                     Log.p("dynamicCont=" + dynamicCont, Log.DEBUG);
                     Log.p("key=" + key + " visbile=" + d.getB_visible(), Log.DEBUG);
@@ -1053,20 +1047,7 @@ public class StateMachine extends StateMachineBase {
 
         }
 
-//        mbTasks.setTextLine1("Name Reservations");
-//        mbTasks.setTextLine2("Submit Proposed Name (s)");
-//
-//        mbCurrency.setTextLine1("Annual Returns");
-//        mbCurrency.setTextLine2("Submit Enterprise Annual Returns");
-//
-//        mbCart.setTextLine1("Shopping Cart");
-//        mbCart.setTextLine2("Pay Now for CIPC Services");
         if (!Display.getInstance().isTablet()) {
-
-//            TableLayout layout = new TableLayout(2, 1);
-//            f.setLayout(layout);
-//            f.addComponent(layout.createConstraint().heightPercentage(15).widthPercentage(100), new Label(" "));
-//            f.addComponent(layout.createConstraint().heightPercentage(85).widthPercentage(100), cont);
             f.setLayout(new BorderLayout());
             Container north = new Container(BoxLayout.y());
             if (Display.getInstance().getPlatformName().equals("and")) {
@@ -1282,6 +1263,7 @@ public class StateMachine extends StateMachineBase {
                 if (isARStep1Passed == true && isARStep2Passed == true
                         && isARStep3Passed == true) {
                     tabs.setSelectedIndex(3);
+                    enableincorporator(uws.getTrak_no(),f);
                 } else {
                     checkARButtonPressed();
                 }
@@ -1713,6 +1695,7 @@ public class StateMachine extends StateMachineBase {
                 contStep4AnnualReturns.repaint();
 
                 tabs.setSelectedIndex(3);
+                  enableincorporator(uws.getTrak_no(),f);
                 btn1.setUIID("CIPC_DARK");
                 btn2.setUIID("CIPC_DARK");
                 btn3.setUIID("CIPC_DARK");
@@ -3183,10 +3166,12 @@ public class StateMachine extends StateMachineBase {
                 isRegStep3Passed = true;
                 btnStep4Register.setEnabled(true);
                 tabs.setSelectedIndex(3);
+                  enableincorporator(uws.getTrak_no(),f);
                 btn1.setUIID("CIPC_DARK");
                 btn2.setUIID("CIPC_DARK");
                 btn3.setUIID("CIPC_DARK");
                 btn4.setUIID("CIPC_DARK_SELECTED");
+
             } else {
                 btnStep3Next.setEnabled(true);
                 btnStep3Next.setText(PREVTEXT);
@@ -3381,6 +3366,7 @@ public class StateMachine extends StateMachineBase {
                 if (isRegStep1Passed == true && isRegStep2Passed == true
                         && isRegStep3Passed == true) {
                     tabs.setSelectedIndex(3);
+                      enableincorporator(uws.getTrak_no(),f);
                 } else {
                     checkRegButtonPressed();
                 }
@@ -4074,6 +4060,7 @@ public class StateMachine extends StateMachineBase {
                 if (uws.isDirectors_Allowed() == true) {
                     f.setTitle("Director Details");
                     tabs.setSelectedIndex(3);
+                      enableincorporator(uws.getTrak_no(),f);
                     btnnr1.setUIID("CIPC_DARK");
                     btnnr2.setUIID("CIPC_DARK");
                     btnnr3.setUIID("CIPC_DARK");
@@ -4438,6 +4425,13 @@ public class StateMachine extends StateMachineBase {
                 TxtEntEmail.startEditing();
                 return false;
             }
+            if (isEmailValid(TxtEntEmail.getText().trim()) == false) {
+                Dialog.show("Error", "Please enter a valid E-Mail format.", "OK", null);
+                TxtEntEmail.repaint();
+                TxtEntEmail.requestFocus();
+                TxtEntEmail.startEditing();
+                return false;
+            }
             enterprisedetails.setMail(TxtEntEmail.getText().trim());
             TextField txtphysaddr1 = (TextField) findByName("txtEntPhysAddr1", f);
             //##########
@@ -4624,6 +4618,7 @@ public class StateMachine extends StateMachineBase {
             String Response = rs.getAsString("//Insert_Name_Workflow_mobiResult");
             if (Response == "") {
                 tabs.setSelectedIndex(3);
+                  enableincorporator(uws.getTrak_no(),f);
             } else {//        if (Response != null) {
                 Dialog.show("Error", Response, "OK", null);
             }
@@ -4765,6 +4760,7 @@ public class StateMachine extends StateMachineBase {
 //               Container Containermem = (Container) findByName("Containermem", f);
 //               Containermem.setHidden(true);
                 tabs.setSelectedIndex(3);
+                  enableincorporator(uws.getTrak_no(),f);
             } else {//        if (Response != null) {
                 Dialog.show("Error", Response, "OK", null);
             }
@@ -4780,14 +4776,16 @@ public class StateMachine extends StateMachineBase {
         TextField txtcell = (TextField) findByName("TxtCell", f);
         if (txtcell.getText().trim().equals("")) {
             Dialog.show("Error", "Please enter a valid cell number", "OK", null);
-            //  txtcell.repaint();
-            //  txtcell.requestFocus();
-            //  txtcell.startEditing();
-
             loadlist(uws.getTrak_no(), c);
             f.repaint();
-
             return;
+        } else {
+            if (isCellPhoneValid(txtcell.getText()) == false) {
+                Dialog.show("Error", "Please enter a valid cell number. Incorrect Cell number format", "OK", null);
+                loadlist(uws.getTrak_no(), c);
+                f.repaint();
+                return;
+            }
         }
         Label lblidno = (Label) findByName("LblIdNo", f);
         if (lblidno.getText().trim().equals("")) {
@@ -4923,7 +4921,13 @@ public class StateMachine extends StateMachineBase {
             txtemail.startEditing();
             return false;
         }
-
+        if (isEmailValid(txtemail.getText().trim()) == false) {
+            Dialog.show("Error", "Please enter a valid E-Mail format.", "OK", null);
+            txtemail.repaint();
+            txtemail.requestFocus();
+            txtemail.startEditing();
+            return false;
+        }
 //PhysAddr1
         TextField physaddr1 = (TextField) findByName("PhysAddr1", f);
         if (physaddr1.getText().trim().equals("")) {
@@ -5179,6 +5183,7 @@ public class StateMachine extends StateMachineBase {
             //####################
         };
         loadlist(uws.getTrak_no(), c);
+        enableincorporator(uws.getTrak_no(),f);
         ip.dispose();
         f.repaint();
     }
@@ -5240,14 +5245,17 @@ public class StateMachine extends StateMachineBase {
         if (Sreservation_no.trim() != "") {
 
 //            if (Sreservation_no.trim() != "") {
-
-                u.insertCartItemServiceName(Sreservation_no, AGENT_CODE, "50");
+            u.insertCartItemServiceName(Sreservation_no, AGENT_CODE, "50");
 
 //            }
         }
         ip.dispose();
         String Strak_no = uws.getTrak_no();
-        Dialog.show("testing ", "Name reservation-" + Sreservation_no + " Trak no - " + Strak_no + " Was added to the Chart", "OK", null);
+        if (Sreservation_no == "") {
+            Dialog.show("Payment ", "Enterprise Registration reference no: " + Strak_no + " Was added to the Chart", "OK", null);
+        } else {
+            Dialog.show("Payment ", "Name reservation-" + Sreservation_no + " and Enterprise Registration reference no: - " + Strak_no + " Was added to the Chart", "OK", null);
+        }
         // Form concart = contDashBoard.getComponentForm();
         DisplayCart = true;
         showForm("Main", null);
@@ -5343,11 +5351,14 @@ public class StateMachine extends StateMachineBase {
     protected void onTestlist_ButtonAction(Component c, ActionEvent event) {
 
         Form f = c.getComponentForm();
-        Dialog ip = new InfiniteProgress().showInifiniteBlocking();
-        Result result = uws.get_directors_stage("1-18UCACQ");
-        uws.DIR_Data(result);
-        ip.dispose();
-        loadlist("1-18UCACQ", c);
+        UserWebServicesNewReg uws = new UserWebServicesNewReg();
+        Result result = uws.incorporatorcount("989124629", AGENT_CODE);
+        String sqty = uws.qtyincorporator(result);
+//        Dialog ip = new InfiniteProgress().showInifiniteBlocking();
+//        Result result = uws.get_directors_stage("1-18UCACQ");
+//        uws.DIR_Data(result);
+//        ip.dispose();
+//        loadlist("1-18UCACQ", c);
 //        Container cnt = new Container(BoxLayout.y());
 //        for (int i = 0; i < uws.ArlDIR_Detail.size(); i++) {
 //            DIR_Detail DD = uws.ArlDIR_Detail.get(i);
@@ -5386,8 +5397,9 @@ public class StateMachine extends StateMachineBase {
         Result result = uws.get_name_workflow(txtrefno.getText(), AGENT_CODE);
         uws.name_workflow(result);
         ip.dispose();
+        // Dialog.show("BtnconregAction hsz1","Arl_name_workflow_Detail size " + uws.Arl_name_workflow_Detail.size() + " - " + txtrefno.getText() + ". Transaction might be completed for reference number.", "OK", null);
         if (uws.Arl_name_workflow_Detail.size() == 0) {
-            Dialog.show("Error", "No Information found for reference no - " + txtrefno.getText()+ ". Transaction might be completed for reference number.", "OK", null);
+            Dialog.show("Notice", "No Information found for reference no - " + txtrefno.getText() + ". Transaction might be completed for reference number.", "OK", null);
             return;
         }
         String Application_no = "";
@@ -5402,7 +5414,7 @@ public class StateMachine extends StateMachineBase {
         }
         //   String scust_code = RSM_A(cust_code);
         if (!AGENT_CODE.equals(cust_code)) {
-            Dialog.show("Error", "Reference no " + txtrefno.getText() + " does not belong to customer code " + AGENT_CODE, "OK", null);
+            Dialog.show("Notice", "Reference no " + txtrefno.getText() + " does not belong to customer code " + AGENT_CODE, "OK", null);
             return;
         }
         uws.setInfo_Allowed(false);
@@ -5418,6 +5430,7 @@ public class StateMachine extends StateMachineBase {
         uws.setAgent_code(AGENT_CODE);
         uws.setName_reservation_no(Application_no);
         tabs.setSelectedIndex(3);
+          enableincorporator(uws.getTrak_no(),f);
         // Form f = c.getComponentForm();
 //            Result result = uws.get_directors_stage("1-18UCACQ");
 //            uws.DIR_Data(result);
@@ -5436,6 +5449,24 @@ public class StateMachine extends StateMachineBase {
 //            }
 //    
 //    }
+    }
+
+    protected void enableincorporator(String reference_no,Form f) {
+        UserWebServicesNewReg uws = new UserWebServicesNewReg();
+        Result result = uws.incorporatorcount(reference_no, AGENT_CODE);
+        String sqty = uws.qtyincorporator(result);
+          CheckBox RDB = (CheckBox) findByName("chbIncorporator", f);
+          
+        if (sqty == "0") {
+            RDB.setEnabled(false);
+            RDB.setFocusable(false);
+                    
+        } else {
+              
+         RDB.setEnabled(true);
+            RDB.setFocusable(true);
+        }
+
     }
 
     @Override
@@ -5468,6 +5499,11 @@ public class StateMachine extends StateMachineBase {
 
     @Override
     protected void onFrmNewEntReg1_CmbFyeMonthAction(Component c, ActionEvent event) {
+
+    }
+
+    @Override
+    protected void onFrmNewEntReg1_TxtEmailAction(Component c, ActionEvent event) {
 
     }
 }

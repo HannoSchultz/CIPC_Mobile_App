@@ -199,7 +199,8 @@ public class UserWebServicesNewReg {
                 this.name_reservation_no = name_reservation_no;
             }
         } catch (Throwable err) {
-            if (err.toString() == "java.lang.NullPointerException") {
+            if ("java.lang.Nul".equals(err.toString().substring(0, 13))) {
+                //if (err.toString() == "java.lang.NullPointerException") {
                 this.name_reservation_no = "";
             }
         }
@@ -378,6 +379,63 @@ public class UserWebServicesNewReg {
         Result result = Result.fromContent(data, Result.XML);
         return result;
     }
+//<cipc:alowincorporator_mobi>
+//                  <cipc:sUserName>ImJbvgnMVO0=</cipc:sUserName>
+//         <!--Optional:-->
+//         <cipc:sPassword>WViQlFqcunA=</cipc:sPassword>
+//         <!--Optional:-->
+//         <cipc:sBankID>WViQlFqcunA=</cipc:sBankID>
+//
+//         <!--Optional:-->
+//         <cipc:reference_no>989124629</cipc:reference_no>
+//         <!--Optional:-->
+//         <cipc:sCust_Code>INKE01</cipc:sCust_Code>
+//      </cipc:alowincorporator_mobi>
+
+    public Result incorporatorcount(String trk_reg, String AGENT_CODE) {
+
+        final String SOAP_BODY
+                = "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:cipc=\"CIPC_WEB_SERVICES\">\n"
+                + "   <soap:Header/>\n"
+                + "   <soap:Body>\n"
+                + "      <cipc:alowincorporator_mobi>\n"
+                + "         <cipc:sUserName>" + Constants.sUserName + "</cipc:sUserName>\n"
+                + "         <cipc:sPassword>" + Constants.sPassword + "</cipc:sPassword>\n"
+                + "         <cipc:sBankID>" + Constants.sBankID + "</cipc:sBankID>\n"
+                + "         <cipc:reference_no>" + trk_reg + "</cipc:reference_no>\n"
+                + "         <cipc:sCust_Code>" + AGENT_CODE + "</cipc:sCust_Code>\n"
+                + "      </cipc:alowincorporator_mobi>\n"
+                + "   </soap:Body>\n"
+                + "</soap:Envelope>";
+        ConnectionRequest httpRequest = new ConnectionRequest() {
+            Element h;
+
+            @Override
+            protected void buildRequestBody(OutputStream os) throws IOException {
+                super.buildRequestBody(os);
+                os.write(SOAP_BODY.getBytes("utf-8"));
+            }
+
+            protected void postResponse() {
+                super.postResponse();
+            }
+
+            protected void readResponse(InputStream input) throws IOException {
+                super.readResponse(input);
+            }
+
+        };
+
+        httpRequest.setUrl(Constants.soapServicesEndPoint + "director.asmx?wsdl");
+        httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
+        httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
+        httpRequest.setPost(true);
+        NetworkManager.getInstance().setTimeout(60000);
+        NetworkManager.getInstance().addToQueueAndWait(httpRequest);
+        String data = new String(httpRequest.getResponseData());
+        Result result = Result.fromContent(data, Result.XML);
+        return result;
+    }
 
     public Result name_workflow(String trk_reg, String trk_name, String AGENT_CODE) {
 
@@ -425,7 +483,8 @@ public class UserWebServicesNewReg {
         Result result = Result.fromContent(data, Result.XML);
         return result;
     }
- public Result removedir(String dir_id, String AGENT_CODE) {
+
+    public Result removedir(String dir_id, String AGENT_CODE) {
 
         final String SOAP_BODY
                 = "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:cipc=\"CIPC_WEB_SERVICES\">\n"
@@ -435,7 +494,7 @@ public class UserWebServicesNewReg {
                 + "         <cipc:sUserName>" + Constants.sUserName + "</cipc:sUserName>\n"
                 + "         <cipc:sPassword>" + Constants.sPassword + "</cipc:sPassword>\n"
                 + "         <cipc:sBankID>" + Constants.sBankID + "</cipc:sBankID>\n"
-                + "         <cipc:dir_id>" + dir_id + "</cipc:dir_id>\n"               
+                + "         <cipc:dir_id>" + dir_id + "</cipc:dir_id>\n"
                 + "         <cipc:sCust_Code>" + AGENT_CODE + "</cipc:sCust_Code>\n"
                 + "      </cipc:remove_dir_mobi>\n"
                 + "   </soap:Body>\n"
@@ -1288,13 +1347,49 @@ public class UserWebServicesNewReg {
                 ArlDIR_Detail.add(dir_detail);
             }
         } catch (Throwable err) {
-            if (err.toString() == "java.lang.NullPointerException") {
+            // Dialog.show("DIR_Data", err.toString(), "OK", null);
+            if ("java.lang.Nul".equals(err.toString().substring(0, 13))) {
+                //if (err.toString() == "java.lang.NullPointerException") {
                 ArlDIR_Detail = new ArrayList();
             } else {
-                Dialog.show("Change Name", err.toString(), "OK", null);
+                Dialog.show("DIR_Data", err.toString(), "OK", null);
             }
         }
 
+    }
+
+    public String qtyincorporator(Result result) {
+        try {
+            // String OTP_Response = result.getAsString("//generate_otp_mobiResult");
+//            XMLParser parser = new XMLParser();
+//            parser.setCaseSensitive(true);
+//            Element element = parser.parse(convertStringtoInputStreamReader(result.getAsString("//DataSet")));
+//            ArlDIR_Detail = new ArrayList();
+//            for (int i = 0; i < element.getNumChildren(); i++) {
+//                Element child = element.getChildAt(i);
+//                Element elem_qty = ((Element) child.getTextChildren(null, true).get(0));
+                //String qty = elem_qty.getText();
+                  String qty = result.getAsString("//alowincorporator_mobiresult");
+                return qty;
+//                Element elem_first_names = ((Element) child.getTextChildren(null, true).get(1));
+//                String first_names = elem_first_names.getText();
+//                Element elem_surname = ((Element) child.getTextChildren(null, true).get(2));
+//                String surname = elem_surname.getText();
+//                Element elem_id_no = ((Element) child.getTextChildren(null, true).get(3));
+//                String id_no = elem_id_no.getText();
+
+//                DIR_Detail dir_detail = new DIR_Detail();
+//                dir_detail.setDir_id(dir_id);
+//                dir_detail.setFirs_names(first_names);
+//                dir_detail.setSurname(surname);
+//                dir_detail.setId_no(id_no);
+//
+//                ArlDIR_Detail.add(dir_detail);
+            
+        } catch (Throwable err) {
+            return "0";
+        }
+       // return "0";
     }
 
     public void name_workflow(Result result) {
@@ -1317,11 +1412,18 @@ public class UserWebServicesNewReg {
                 //  name_workflow.setApplication_no(application_no);
                 Arl_name_workflow_Detail.add(name_workflow);
             }
-       } catch (Throwable err) {
-            if (err.toString() == "java.lang.NullPointerException") {
+        } catch (Throwable err) {
+//            if ("java.lang.Nul".equals(err.toString().substring(0, 13))) {
+//                Dialog.show("name_workflow", err.toString().substring(0, 13), "OK", null);
+//            } else {
+//                Dialog.show("name_workflow", err.toString().substring(0, 13), "OK", null);
+//            }
+            if ("java.lang.Nul".equals(err.toString().substring(0, 13))) {
+                // if (err.toString() == "java.lang.NullPointerException") {
+
                 Arl_name_workflow_Detail = new ArrayList();
             } else {
-                Dialog.show("Change Name", err.toString(), "OK", null);
+                Dialog.show("name_workflow", err.toString(), "OK", null);
             }
         }
 
