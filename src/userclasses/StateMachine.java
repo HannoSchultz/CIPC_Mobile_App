@@ -4105,7 +4105,7 @@ public class StateMachine extends StateMachineBase {
                     txtotp.setUIID("TextFieldNameSearcherror");
 
                     //checkRegButtonPressed();
-                    Dialog.show("Invalid OTP", "Please enter a Vlid OTP", "OK", null);
+                    Dialog.show("Invalid OTP", "Please enter a Valid OTP", "OK", null);
                     //txtotp.requestFocus();
                 }
 
@@ -4635,19 +4635,19 @@ public class StateMachine extends StateMachineBase {
         try {
             if (Display.getInstance().isSimulator()) {
                 Dialog ip = new InfiniteProgress().showInifiniteBlocking();
-                //Result result = uws.get_dha_data("7104085085085");
-                Result result = uws.get_dha_data("444564506");
+                Result result = uws.get_dha_data("7104085085085");
+                //Result result = uws.get_dha_data("444564506");
                 //Result result = uws.get_dha_data("7611160016082");
 
                 String retval = uws.DHA_Data(result);
-                Dialog.show("onFrmNewEntReg1_BtnGetIdInfoAction", retval.toString(), "OK", null);
+               // Dialog.show("onFrmNewEntReg1_BtnGetIdInfoAction", retval.toString(), "OK", null);
                 if (retval.toString().equals("Error")) {
                     ip.dispose();
-                    Dialog.show("Scan ID1", "Return val " + retval, "OK", null);
+                  // Dialog.show("Scan ID1", "Return val " + retval, "OK", null);
                     return;
                 } else {
                     ip.dispose();
-                    Dialog.show("Scan ID2", "Return val " + retval, "OK", null);
+                  //  Dialog.show("Scan ID2", "Return val " + retval, "OK", null);
                 }
                 if (uws.ArlDHA_Detail.size() == 0) {
                     Dialog.show("Scan ID", "The Document scaned does not contain a vaild ID Number. Please contact DHA or rescan the document", "OK", null);
@@ -4686,6 +4686,8 @@ public class StateMachine extends StateMachineBase {
                     physaddr2.repaint();
                 }
                 Show_Director_Fields(f);
+                Button btn = (Button) findByName("BtnverifyOtp", c);
+                btn.setEnabled(true);
                 f.repaint();
                 TextField txtcell = (TextField) findByName("TxtCell", f);
                 txtcell.repaint();
@@ -4743,6 +4745,8 @@ public class StateMachine extends StateMachineBase {
                             ;
                         }
                         Show_Director_Fields(f);
+                        Button btn = (Button) findByName("BtnverifyOtp", c);
+                        btn.setEnabled(true);
                         f.repaint();
                         TextField txtcell = (TextField) findByName("TxtCell", f);
                         txtcell.repaint();
@@ -4834,6 +4838,8 @@ public class StateMachine extends StateMachineBase {
         }
         Dialog ip = new InfiniteProgress().showInifiniteBlocking();
         uws.setOTP(uws.ValidateCelNo(AGENT_CODE, uws.getTrak_no(), txtcell.getText().trim(), lblidno.toString()));
+        Button btn = (Button) findByName("BtnverifyOtp", c);
+        btn.setEnabled(false);
         ip.dispose();
         //RSM_A(DD.getIDNUMBER()
         if ("ERR".equals(uws.getOTP().substring(0, 3))) {
@@ -4901,7 +4907,7 @@ public class StateMachine extends StateMachineBase {
         }
         TextField txtotp = (TextField) findByName("TxtOtp", f);
         if (txtotp.getText().trim().equals("")) {
-            Dialog.show("Error", "Please enter a valid otp for Director ID Number" + lblidNo.getText().trim(), "OK", null);
+             Dialog.show("Error", "Please enter a valid otp for Director ID Number" + lblidNo.getText().trim(), "OK", null);
             txtotp.repaint();
             txtotp.requestFocus();
             txtotp.startEditing();
@@ -5286,9 +5292,9 @@ public class StateMachine extends StateMachineBase {
         ip.dispose();
         String Strak_no = uws.getTrak_no();
         if (Sreservation_no == "") {
-            Dialog.show("Payment ", "Enterprise Registration reference no: " + Strak_no + " Was added to the Chart", "OK", null);
+            Dialog.show("Payment ", "Enterprise Registration reference no: " + Strak_no + " Was added to the Cart", "OK", null);
         } else {
-            Dialog.show("Payment ", "Name reservation-" + Sreservation_no + " and Enterprise Registration reference no: - " + Strak_no + " Was added to the Chart", "OK", null);
+            Dialog.show("Payment ", "Name reservation-" + Sreservation_no + " and Enterprise Registration reference no: - " + Strak_no + " Was added to the Cart", "OK", null);
         }
         // Form concart = contDashBoard.getComponentForm();
         DisplayCart = true;
