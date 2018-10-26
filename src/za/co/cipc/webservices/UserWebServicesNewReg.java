@@ -1429,7 +1429,7 @@ public class UserWebServicesNewReg {
 
     }
 
-    public void DHA_Data(Result result) {
+    public String DHA_Data(Result result) {
         try {
             XMLParser parser = new XMLParser();
             parser.setCaseSensitive(true);
@@ -1461,11 +1461,15 @@ public class UserWebServicesNewReg {
                 dha_detail.setSURNAME(SURNAME);
                 dha_detail.setDOB(DOB);
                 ArlDHA_Detail.add(dha_detail);
+                return "";
             }
         } catch (Throwable err) {
-            Dialog.show("Change Name", err.toString(), "OK", null);
+            if ("java.lang.Arr".equals(err.toString().substring(0, 13)))
+            {
+            Dialog.show("Scan ID", "The Document scaned does not contain a vaild ID Number. Please contact DHA or rescan the document", "OK", null);}
+            return "Error";
         }
-
+        return ""; 
     }
 
     private static InputStreamReader convertStringtoInputStreamReader(String data) {
