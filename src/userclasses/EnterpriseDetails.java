@@ -11,7 +11,6 @@ import com.codename1.xml.Element;
  *
  * @author Blessing
  */
-
 public class EnterpriseDetails {
 
     private String EmailAddress;
@@ -288,8 +287,7 @@ public class EnterpriseDetails {
     public void setPrincipalPlaceOfBusiness(String PrincipalPlaceOfBusiness) {
         this.PrincipalPlaceOfBusiness = PrincipalPlaceOfBusiness;
     }
-    
-    
+
     private String FYE;
 
     public String getFYE() {
@@ -299,7 +297,7 @@ public class EnterpriseDetails {
     public void setFYE(String FYE) {
         this.FYE = FYE;
     }
-   
+
     private String cust_code;
 
     public String getCust_code() {
@@ -309,7 +307,7 @@ public class EnterpriseDetails {
     public void setCust_code(String cust_code) {
         this.cust_code = cust_code;
     }
-    
+
     private String shares;
     private String physaddr1;
     private String physaddr2;
@@ -418,5 +416,5 @@ public class EnterpriseDetails {
     public void setShares(String shares) {
         this.shares = shares;
     }
-  
+
 }

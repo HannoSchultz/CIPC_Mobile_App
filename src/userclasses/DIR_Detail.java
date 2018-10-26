@@ -42,7 +42,7 @@ public class DIR_Detail {
     public void setId_no(String id_no) {
         this.id_no = id_no;
     }
-   
+
     private String dir_id;
     private String firs_names;
     private String surname;

@@ -4,13 +4,15 @@
  * and open the template in the editor.
  */
 package userclasses;
+
 import com.codename1.xml.Element;
+
 /**
  *
  * @author Administrator
  */
 public class BEEDetail {
-  
+
     private String ent_no;
     private String ent_name;
 
@@ -29,4 +31,4 @@ public class BEEDetail {
     public void setEnt_name(String ent_name) {
         this.ent_name = ent_name;
     }
-}  
+}

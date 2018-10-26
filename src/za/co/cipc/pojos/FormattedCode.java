@@ -10,7 +10,7 @@ package za.co.cipc.pojos;
  * @author Blessing.Mahlalela
  */
 public class FormattedCode {
-    
+
     private String year;
     private String body;
     private String type;
@@ -47,5 +47,5 @@ public class FormattedCode {
     public void setFull(String full) {
         this.full = full;
     }
-    
+
 }

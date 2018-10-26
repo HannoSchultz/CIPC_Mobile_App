@@ -65,7 +65,6 @@ public class CIPC {
 //            String deviceId = Push.getPushKey();
 //
 //        });
-
         new StateMachine("/theme");
     }
 

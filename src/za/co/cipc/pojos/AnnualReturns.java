@@ -80,7 +80,4 @@ public class AnnualReturns {
         return "AnnualReturns{" + "ent_tel_code=" + ent_tel_code + ", ent_tel_no=" + ent_tel_no + ", ent_cell=" + ent_cell + ", ent_email=" + ent_email + ", ent_website=" + ent_website + ", bus_desc=" + bus_desc + ", princ_bus_place=" + princ_bus_place + '}';
     }
 
-   
-    
-
 }

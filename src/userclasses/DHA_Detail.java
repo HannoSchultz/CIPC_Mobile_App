@@ -19,6 +19,7 @@ public class DHA_Detail {
     private String ADDR_LINE1;
     private String ADDR_LINE2;
 //private String deathdate;
+
     public String getIDNUMBER() {
         return IDNUMBER;
     }
@@ -30,7 +31,6 @@ public class DHA_Detail {
 //    public void setDeathdate(String deathdate) {
 //        this.deathdate = deathdate;
 //    }
-
     public void setIDNUMBER(String IDNUMBER) {
         this.IDNUMBER = IDNUMBER;
     }

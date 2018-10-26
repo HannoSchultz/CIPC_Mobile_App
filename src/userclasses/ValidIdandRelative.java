@@ -11,9 +11,10 @@ package userclasses;
  */
 public class ValidIdandRelative {
 
-     String FirstNames;
+    String FirstNames;
     String Surname;
     String valid;
+
     public String getFirstNames() {
         return FirstNames;
     }
@@ -37,7 +38,5 @@ public class ValidIdandRelative {
     public void setValid(String valid) {
         this.valid = valid;
     }
-   
-    
-    
+
 }

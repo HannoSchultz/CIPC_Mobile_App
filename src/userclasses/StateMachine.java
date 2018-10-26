@@ -380,7 +380,7 @@ public class StateMachine extends StateMachineBase {
             Log.p("issimulator", Log.DEBUG);
 
             //return "testlist";
-             return "Splash";
+            return "Splash";
 
         } else {
             Log.setLevel(Log.REPORTING_PRODUCTION);//To disable debug information
@@ -1263,7 +1263,7 @@ public class StateMachine extends StateMachineBase {
                 if (isARStep1Passed == true && isARStep2Passed == true
                         && isARStep3Passed == true) {
                     tabs.setSelectedIndex(3);
-                    enableincorporator(uws.getTrak_no(),f);
+                    enableincorporator(uws.getTrak_no(), f);
                 } else {
                     checkARButtonPressed();
                 }
@@ -1695,7 +1695,7 @@ public class StateMachine extends StateMachineBase {
                 contStep4AnnualReturns.repaint();
 
                 tabs.setSelectedIndex(3);
-                  enableincorporator(uws.getTrak_no(),f);
+                enableincorporator(uws.getTrak_no(), f);
                 btn1.setUIID("CIPC_DARK");
                 btn2.setUIID("CIPC_DARK");
                 btn3.setUIID("CIPC_DARK");
@@ -3166,7 +3166,7 @@ public class StateMachine extends StateMachineBase {
                 isRegStep3Passed = true;
                 btnStep4Register.setEnabled(true);
                 tabs.setSelectedIndex(3);
-                  enableincorporator(uws.getTrak_no(),f);
+                enableincorporator(uws.getTrak_no(), f);
                 btn1.setUIID("CIPC_DARK");
                 btn2.setUIID("CIPC_DARK");
                 btn3.setUIID("CIPC_DARK");
@@ -3366,7 +3366,7 @@ public class StateMachine extends StateMachineBase {
                 if (isRegStep1Passed == true && isRegStep2Passed == true
                         && isRegStep3Passed == true) {
                     tabs.setSelectedIndex(3);
-                      enableincorporator(uws.getTrak_no(),f);
+                    enableincorporator(uws.getTrak_no(), f);
                 } else {
                     checkRegButtonPressed();
                 }
@@ -4060,7 +4060,7 @@ public class StateMachine extends StateMachineBase {
                 if (uws.isDirectors_Allowed() == true) {
                     f.setTitle("Director Details");
                     tabs.setSelectedIndex(3);
-                      enableincorporator(uws.getTrak_no(),f);
+                    enableincorporator(uws.getTrak_no(), f);
                     btnnr1.setUIID("CIPC_DARK");
                     btnnr2.setUIID("CIPC_DARK");
                     btnnr3.setUIID("CIPC_DARK");
@@ -4618,7 +4618,7 @@ public class StateMachine extends StateMachineBase {
             String Response = rs.getAsString("//Insert_Name_Workflow_mobiResult");
             if (Response == "") {
                 tabs.setSelectedIndex(3);
-                  enableincorporator(uws.getTrak_no(),f);
+                enableincorporator(uws.getTrak_no(), f);
             } else {//        if (Response != null) {
                 Dialog.show("Error", Response, "OK", null);
             }
@@ -4632,108 +4632,142 @@ public class StateMachine extends StateMachineBase {
     protected void onFrmNewEntReg1_BtnGetIdInfoAction(Component c, ActionEvent event) {
         Form f = c.getComponentForm();
         //#########
-        if (Display.getInstance().isSimulator()) {
-            Dialog ip = new InfiniteProgress().showInifiniteBlocking();
-            //Result result = uws.get_dha_data("7104085085085");
-            // Result result = uws.get_dha_data("6811100969082");
-            Result result = uws.get_dha_data("7611160016082");
+        try {
+            if (Display.getInstance().isSimulator()) {
+                Dialog ip = new InfiniteProgress().showInifiniteBlocking();
+                //Result result = uws.get_dha_data("7104085085085");
+                Result result = uws.get_dha_data("444564506");
+                //Result result = uws.get_dha_data("7611160016082");
 
-            uws.DHA_Data(result);
-            ip.dispose();
-            for (int i = 0; i < uws.ArlDHA_Detail.size(); i++) {
-                DHA_Detail DD = uws.ArlDHA_Detail.get(i);
-
-                String death_status = RSM_A(DD.getDEATH_STATUS());
-                if (!"ALIVE".equals(death_status)) {
-                    scanCanceled_death();
+                String retval = uws.DHA_Data(result);
+                Dialog.show("onFrmNewEntReg1_BtnGetIdInfoAction", retval.toString(), "OK", null);
+                if (retval.toString().equals("Error")) {
+                    ip.dispose();
+                    Dialog.show("Scan ID1", "Return val " + retval, "OK", null);
+                    return;
+                } else {
+                    ip.dispose();
+                    Dialog.show("Scan ID2", "Return val " + retval, "OK", null);
+                }
+                if (uws.ArlDHA_Detail.size() == 0) {
+                    Dialog.show("Scan ID", "The Document scaned does not contain a vaild ID Number. Please contact DHA or rescan the document", "OK", null);
                     return;
                 }
-                Label lblIdno = (Label) findByName("LblIdNo", f);
-                lblIdno.setText(RSM_A(DD.getIDNUMBER()));
-                lblIdno.repaint();
+                ip.dispose();
+                for (int i = 0; i < uws.ArlDHA_Detail.size(); i++) {
+                    DHA_Detail DD = uws.ArlDHA_Detail.get(i);
 
-                Label lblDirbirthdate = (Label) findByName("lbldirbirthdate", f);
-                lblDirbirthdate.setText(RSM_A(DD.getDOB()));
-                lblDirbirthdate.repaint();
-                //LblNames
-                Label lblnames = (Label) findByName("LblNames", f);
-                lblnames.setText(RSM_A(DD.getNAMES()));
-                lblnames.repaint();
-                //LblSurname
-                Label lblsurname = (Label) findByName("LblSurname", f);
-                lblsurname.setText(RSM_A(DD.getSURNAME()));
-                lblsurname.repaint();
-                //PhysAddr1
-                TextField physaddr1 = (TextField) findByName("PhysAddr1", f);
-                physaddr1.setText(RSM_A(DD.getADDR_LINE1()));
-                physaddr1.repaint();
-                TextField physaddr2 = (TextField) findByName("PhysAddr2", f);
-                physaddr2.setText(RSM_A(DD.getADDR_LINE2()));
-                physaddr2.repaint();
-            }
-            Show_Director_Fields(f);
-            f.repaint();
-            TextField txtcell = (TextField) findByName("TxtCell", f);
-            txtcell.repaint();
-            txtcell.requestFocus();
-            txtcell.startEditing();
-        } else {
-            //########
-            CodeScanner.getInstance().scanBarCode(new ScanResult() {
-                public void scanCompleted(String contents, String formatName, byte[] rawBytes) {
-                    //Dialog.show("Bar code", "Bar code is: " + contents, "Ok", null);
-//#################################disable barcode scanner
-                    Result result = uws.get_dha_data(contents);
-                    uws.DHA_Data(result);
-                    for (int i = 0; i < uws.ArlDHA_Detail.size(); i++) {
-                        DHA_Detail DD = uws.ArlDHA_Detail.get(i);
-                        String death_status = RSM_A(DD.getDEATH_STATUS());
-                        if (death_status != "ALIVE") {
-
-                        }
-                        Label lblIdno = (Label) findByName("LblIdNo", f);
-                        lblIdno.setText(RSM_A(DD.getIDNUMBER()));
-                        lblIdno.repaint();
-                        //DOB
-                        Label lblDirbirthdate = (Label) findByName("lbldirbirthdate", f);
-                        lblDirbirthdate.setText(RSM_A(DD.getDOB()));
-                        lblDirbirthdate.repaint();
-                        //LblNames
-                        Label lblnames = (Label) findByName("LblNames", f);
-                        lblnames.setText(RSM_A(DD.getNAMES()));
-                        lblnames.repaint();
-                        //LblSurname
-                        Label lblsurname = (Label) findByName("LblSurname", f);
-                        lblsurname.setText(RSM_A(DD.getSURNAME()));
-                        lblsurname.repaint();
-                        //PhysAddr1
-                        TextField physaddr1 = (TextField) findByName("PhysAddr1", f);
-                        physaddr1.setText(RSM_A(DD.getADDR_LINE1()));
-                        physaddr1.repaint();
-                        TextField physaddr2 = (TextField) findByName("PhysAddr2", f);
-                        physaddr2.setText(RSM_A(DD.getADDR_LINE2()));
-                        physaddr2.repaint();
-                        ;
+                    String death_status = RSM_A(DD.getDEATH_STATUS());
+                    if (!"ALIVE".equals(death_status)) {
+                        scanCanceled_death();
+                        return;
                     }
-                    Show_Director_Fields(f);
-                    f.repaint();
-                    TextField txtcell = (TextField) findByName("TxtCell", f);
-                    txtcell.repaint();
-                    txtcell.requestFocus();
-                    txtcell.startEditing();
+                    Label lblIdno = (Label) findByName("LblIdNo", f);
+                    lblIdno.setText(RSM_A(DD.getIDNUMBER()));
+                    lblIdno.repaint();
 
-                    //#######disable barcode scanner
+                    Label lblDirbirthdate = (Label) findByName("lbldirbirthdate", f);
+                    lblDirbirthdate.setText(RSM_A(DD.getDOB()));
+                    lblDirbirthdate.repaint();
+                    //LblNames
+                    Label lblnames = (Label) findByName("LblNames", f);
+                    lblnames.setText(RSM_A(DD.getNAMES()));
+                    lblnames.repaint();
+                    //LblSurname
+                    Label lblsurname = (Label) findByName("LblSurname", f);
+                    lblsurname.setText(RSM_A(DD.getSURNAME()));
+                    lblsurname.repaint();
+                    //PhysAddr1
+                    TextField physaddr1 = (TextField) findByName("PhysAddr1", f);
+                    physaddr1.setText(RSM_A(DD.getADDR_LINE1()));
+                    physaddr1.repaint();
+                    TextField physaddr2 = (TextField) findByName("PhysAddr2", f);
+                    physaddr2.setText(RSM_A(DD.getADDR_LINE2()));
+                    physaddr2.repaint();
                 }
+                Show_Director_Fields(f);
+                f.repaint();
+                TextField txtcell = (TextField) findByName("TxtCell", f);
+                txtcell.repaint();
+                txtcell.requestFocus();
+                txtcell.startEditing();
+            } else {
+                //########
+                Dialog ip = new InfiniteProgress().showInifiniteBlocking();
+                CodeScanner.getInstance().scanBarCode(new ScanResult() {
+                    public void scanCompleted(String contents, String formatName, byte[] rawBytes) {
+                        //Dialog.show("Bar code", "Bar code is: " + contents, "Ok", null);
+//#################################disable barcode scanner
 
-                public void scanCanceled() {
-                    System.out.println("cancelled");
-                    Dialog.show("Scan Cancelled", "Please ensure that there is sufficient light when performing scan", "Ok", null);
-                }
+                        Result result = uws.get_dha_data(contents);
 
-                public void scanError(int errorCode, String message) {
-                    Dialog.show("Scan Error", "Please ensure that there is sufficient light when performing scan", "Ok", null);
-                }
-            });
+                        String retval = uws.DHA_Data(result);
+                        if (retval.toString().equals("Error")) {
+                            ip.dispose();
+                            //Dialog.show("Scan ID1", "Return val " + retval, "OK", null);
+                            return;
+                        }
+                        if (uws.ArlDHA_Detail.size() == 0) {
+                            Dialog.show("Scan ID", "The Document scaned does not contain a vaild ID Number. Please contact DHA or rescan the document", "OK", null);
+                            ip.dispose();
+                            return;
+                        }
+                        for (int i = 0; i < uws.ArlDHA_Detail.size(); i++) {
+                            DHA_Detail DD = uws.ArlDHA_Detail.get(i);
+                            String death_status = RSM_A(DD.getDEATH_STATUS());
+                            if (death_status != "ALIVE") {
+
+                            }
+                            Label lblIdno = (Label) findByName("LblIdNo", f);
+                            lblIdno.setText(RSM_A(DD.getIDNUMBER()));
+                            lblIdno.repaint();
+                            //DOB
+                            Label lblDirbirthdate = (Label) findByName("lbldirbirthdate", f);
+                            lblDirbirthdate.setText(RSM_A(DD.getDOB()));
+                            lblDirbirthdate.repaint();
+                            //LblNames
+                            Label lblnames = (Label) findByName("LblNames", f);
+                            lblnames.setText(RSM_A(DD.getNAMES()));
+                            lblnames.repaint();
+                            //LblSurname
+                            Label lblsurname = (Label) findByName("LblSurname", f);
+                            lblsurname.setText(RSM_A(DD.getSURNAME()));
+                            lblsurname.repaint();
+                            //PhysAddr1
+                            TextField physaddr1 = (TextField) findByName("PhysAddr1", f);
+                            physaddr1.setText(RSM_A(DD.getADDR_LINE1()));
+                            physaddr1.repaint();
+                            TextField physaddr2 = (TextField) findByName("PhysAddr2", f);
+                            physaddr2.setText(RSM_A(DD.getADDR_LINE2()));
+                            physaddr2.repaint();
+                            ;
+                        }
+                        Show_Director_Fields(f);
+                        f.repaint();
+                        TextField txtcell = (TextField) findByName("TxtCell", f);
+                        txtcell.repaint();
+                        txtcell.requestFocus();
+                        txtcell.startEditing();
+                        ip.dispose();
+                        //#######disable barcode scanner
+                    }
+
+                    public void scanCanceled() {
+                        System.out.println("cancelled");
+                        Dialog.show("Scan Cancelled", "Please ensure that there is sufficient light when performing scan", "Ok", null);
+                        ip.dispose();
+                    }
+
+                    public void scanError(int errorCode, String message) {
+                        Dialog.show("Scan Error", "Please ensure that there is sufficient light when performing scan", "Ok", null);
+                        ip.dispose();
+                    }
+
+                });
+            }
+        } catch (Exception ex) {
+
+            Dialog.show("Scan Error", ex.toString(), "Ok", null);
         }
     }
 
@@ -4760,7 +4794,7 @@ public class StateMachine extends StateMachineBase {
 //               Container Containermem = (Container) findByName("Containermem", f);
 //               Containermem.setHidden(true);
                 tabs.setSelectedIndex(3);
-                  enableincorporator(uws.getTrak_no(),f);
+                enableincorporator(uws.getTrak_no(), f);
             } else {//        if (Response != null) {
                 Dialog.show("Error", Response, "OK", null);
             }
@@ -5183,7 +5217,7 @@ public class StateMachine extends StateMachineBase {
             //####################
         };
         loadlist(uws.getTrak_no(), c);
-        enableincorporator(uws.getTrak_no(),f);
+        enableincorporator(uws.getTrak_no(), f);
         ip.dispose();
         f.repaint();
     }
@@ -5430,7 +5464,7 @@ public class StateMachine extends StateMachineBase {
         uws.setAgent_code(AGENT_CODE);
         uws.setName_reservation_no(Application_no);
         tabs.setSelectedIndex(3);
-          enableincorporator(uws.getTrak_no(),f);
+        enableincorporator(uws.getTrak_no(), f);
         // Form f = c.getComponentForm();
 //            Result result = uws.get_directors_stage("1-18UCACQ");
 //            uws.DIR_Data(result);
@@ -5451,19 +5485,21 @@ public class StateMachine extends StateMachineBase {
 //    }
     }
 
-    protected void enableincorporator(String reference_no,Form f) {
+    protected void enableincorporator(String reference_no, Form f) {
         UserWebServicesNewReg uws = new UserWebServicesNewReg();
         Result result = uws.incorporatorcount(reference_no, AGENT_CODE);
         String sqty = uws.qtyincorporator(result);
-          CheckBox RDB = (CheckBox) findByName("chbIncorporator", f);
-          
-        if (sqty == "0") {
+        CheckBox RDB = (CheckBox) findByName("chbIncorporator", f);
+//Dialog.show("enable incorporator",  "qty = " + sqty, "OK", null);
+        //type.equals("06")
+        if (sqty.equals("0")) {
+
             RDB.setEnabled(false);
             RDB.setFocusable(false);
-                    
+
         } else {
-              
-         RDB.setEnabled(true);
+
+            RDB.setEnabled(true);
             RDB.setFocusable(true);
         }
 

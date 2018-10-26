@@ -10,7 +10,7 @@ package za.co.cipc.pojos;
  * @author Blessing.Mahlalela
  */
 public class Dashboard {
-    
+
     String button_name;
     String b_visible;
 
@@ -34,6 +34,5 @@ public class Dashboard {
     public String toString() {
         return "Dashboard{" + "button_name=" + button_name + ", b_visible=" + b_visible + '}';
     }
-    
-    
+
 }

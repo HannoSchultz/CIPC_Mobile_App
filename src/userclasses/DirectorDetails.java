@@ -10,7 +10,8 @@ package userclasses;
  * @author HanSchultz
  */
 public class DirectorDetails {
-     private String ent_no;
+
+    private String ent_no;
 
     public String getCust_code() {
         return cust_code;
@@ -36,41 +37,41 @@ public class DirectorDetails {
 //    public void setDeathdate(String deathdate) {
 //        this.deathdate = deathdate;
 //    }
-     private String cust_code;
- private String country_code;
- private String dir_type_code;
- private String dir_status_code;
- private String surname;
- private String first_names;
- private String initials;
- private String id_no;
- private String member_size_int;
- private String mem_con;
- private String res_addr1;
- private String res_addr2;
- private String res_addr3;
- private String res_addr4;
- private String res_post_code;
- private String bus_addr1;
- private String bus_addr2;
- private String bus_addr3;
- private String bus_addr4;
- private String bus_post_code;
- private String post_addr1;
- private String post_addr2;
- private String post_addr3;
- private String post_addr4;
- private String post_post_code;
- private String rsa_resident;
- private String dir_birth_date;
- private String dir_appoint_date;
- private String profession;
- private String cell_no;
- private String tel_no;
- private String tel_code;
- private String fax_no;
- private String fax_code;
- private String email_address ;
+    private String cust_code;
+    private String country_code;
+    private String dir_type_code;
+    private String dir_status_code;
+    private String surname;
+    private String first_names;
+    private String initials;
+    private String id_no;
+    private String member_size_int;
+    private String mem_con;
+    private String res_addr1;
+    private String res_addr2;
+    private String res_addr3;
+    private String res_addr4;
+    private String res_post_code;
+    private String bus_addr1;
+    private String bus_addr2;
+    private String bus_addr3;
+    private String bus_addr4;
+    private String bus_post_code;
+    private String post_addr1;
+    private String post_addr2;
+    private String post_addr3;
+    private String post_addr4;
+    private String post_post_code;
+    private String rsa_resident;
+    private String dir_birth_date;
+    private String dir_appoint_date;
+    private String profession;
+    private String cell_no;
+    private String tel_no;
+    private String tel_code;
+    private String fax_no;
+    private String fax_code;
+    private String email_address;
 
     public boolean isIsIncorporator() {
         return IsIncorporator;
@@ -79,10 +80,7 @@ public class DirectorDetails {
     public void setIsIncorporator(boolean IsIncorporator) {
         this.IsIncorporator = IsIncorporator;
     }
- private boolean IsIncorporator;
-
-  
- 
+    private boolean IsIncorporator;
 
     public String getEnt_no() {
         return ent_no;
@@ -427,7 +425,6 @@ public class DirectorDetails {
 //    public void setDir_id(String dir_id) {
 //        this.dir_id = dir_id;
 //    }
-
     public String getPrev_dir_id() {
         return prev_dir_id;
     }
@@ -443,14 +440,14 @@ public class DirectorDetails {
     public void setTrak_no(String trak_no) {
         this.trak_no = trak_no;
     }
- private String dir_res_date;
- private String reg_addr1;
- private String reg_addr2;
- private String reg_addr3;
- private String reg_addr4;
- private String reg_post_code;
- private String resolution_date;
- private String dir_id;
- private String prev_dir_id;
- private String trak_no;
+    private String dir_res_date;
+    private String reg_addr1;
+    private String reg_addr2;
+    private String reg_addr3;
+    private String reg_addr4;
+    private String reg_post_code;
+    private String resolution_date;
+    private String dir_id;
+    private String prev_dir_id;
+    private String trak_no;
 }

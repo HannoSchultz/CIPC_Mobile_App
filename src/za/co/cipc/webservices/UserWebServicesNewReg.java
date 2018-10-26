@@ -1368,9 +1368,9 @@ public class UserWebServicesNewReg {
 //            for (int i = 0; i < element.getNumChildren(); i++) {
 //                Element child = element.getChildAt(i);
 //                Element elem_qty = ((Element) child.getTextChildren(null, true).get(0));
-                //String qty = elem_qty.getText();
-                  String qty = result.getAsString("//alowincorporator_mobiresult");
-                return qty;
+            //String qty = elem_qty.getText();
+            String qty = result.getAsString("//alowincorporator_mobiresult");
+            return qty;
 //                Element elem_first_names = ((Element) child.getTextChildren(null, true).get(1));
 //                String first_names = elem_first_names.getText();
 //                Element elem_surname = ((Element) child.getTextChildren(null, true).get(2));
@@ -1385,11 +1385,10 @@ public class UserWebServicesNewReg {
 //                dir_detail.setId_no(id_no);
 //
 //                ArlDIR_Detail.add(dir_detail);
-            
         } catch (Throwable err) {
             return "0";
         }
-       // return "0";
+        // return "0";
     }
 
     public void name_workflow(Result result) {
@@ -1464,12 +1463,14 @@ public class UserWebServicesNewReg {
                 return "";
             }
         } catch (Throwable err) {
-            if ("java.lang.Arr".equals(err.toString().substring(0, 13)))
-            {
-            Dialog.show("Scan ID", "The Document scaned does not contain a vaild ID Number. Please contact DHA or rescan the document", "OK", null);}
+            // Dialog.show("Scan ID error i", err.toString(), "OK", null);
+            if ("java.lang.Arr".equals(err.toString().substring(0, 13))) {
+                Dialog.show("Scan ID ", "The Document scaned does not contain a vaild ID Number. Please contact DHA or rescan the document", "OK", null);
+                return "Error";
+            }
             return "Error";
         }
-        return ""; 
+        return "Error";
     }
 
     private static InputStreamReader convertStringtoInputStreamReader(String data) {

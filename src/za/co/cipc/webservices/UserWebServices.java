@@ -433,16 +433,13 @@ public class UserWebServices {
 
             }
 
-            
-
             @Override
             protected void handleException(Exception err) {
                 Log.p("Exception: " + err.toString());
                 Dialog.show("No Internet", "There is no internet connection. Please switch your connection on.", "Okay", null);
 
             }
-            
-            
+
         };
 
         httpRequest.setUrl(Constants.soapServicesEndPoint + "enterprise.asmx");
@@ -949,7 +946,8 @@ public class UserWebServices {
         return arrayList;
 
     }
- public ArrayList<BEEDetail> Get_BEE_MOBI(String agentCode) {
+
+    public ArrayList<BEEDetail> Get_BEE_MOBI(String agentCode) {
 
         ArrayList<BEEDetail> arrayList = new ArrayList<BEEDetail>();
 
@@ -1063,6 +1061,7 @@ public class UserWebServices {
         return arrayList;
 
     }
+
     public ArrayList<EnterpriseDetails> CalculateARTranData(String dataset) {
 
         ArrayList<EnterpriseDetails> enterpriseDetailses = new ArrayList<>();
@@ -1330,7 +1329,8 @@ public class UserWebServices {
 
         return null;
     }
-     public String insertCartItemServiceName(String str_Ref,String str_Cust_Code,String str_Amount) {
+
+    public String insertCartItemServiceName(String str_Ref, String str_Cust_Code, String str_Amount) {
 
         String END_POINT = Constants.cartAPIEndPoint + "v1/payment/cartitem";
         long dateNow = System.currentTimeMillis();
@@ -1400,7 +1400,8 @@ public class UserWebServices {
 
         return null;
     }
- public String insertCartItemServiceCOREG(String str_Ref,String str_Cust_Code,String str_Amount) {
+
+    public String insertCartItemServiceCOREG(String str_Ref, String str_Cust_Code, String str_Amount) {
 
         String END_POINT = Constants.cartAPIEndPoint + "v1/payment/cartitem";
         long dateNow = System.currentTimeMillis();
@@ -1470,15 +1471,15 @@ public class UserWebServices {
 
         return null;
     }
+
     public String insertCartItemAR(User user, ArrayList<EnterpriseDetails> listCalculateARTran, EnterpriseDetails enterpriseDetails) {
-        
+
         String entTypeCode = enterpriseDetails.getEnt_type_code();
         String formCode = "";
-        
-        if(entTypeCode != null && entTypeCode.equals("23")){
+
+        if (entTypeCode != null && entTypeCode.equals("23")) {
             formCode = "CK2B";
-        }
-        else{
+        } else {
             formCode = "COR30.1";
         }
 
@@ -1514,7 +1515,7 @@ public class UserWebServices {
                     + "                \"CustomerCode\":\"" + user.getAgent_code() + "\",\n"
                     + "                \"ItemType\":1,\n"
                     + "                \"ItemData\":\""
-                    + "{\\\"ReferenceNumber\\\":" + ReferenceNumber + ",\\\"FormCode\\\":\\\""+formCode+"\\\",\\\"EnterpriseNumber\\\":\\\"" + ent.getEnt_no() + "\\\",\\\"EnterpriseType\\\":\\\"" + ent.getEnt_type_code() + "\\\",\\\"EnterpriseStatus\\\":\\\"28\\\",\\\"EmailAddress\\\":\\\"" + enterpriseDetails.getEmailAddress() + "\\\",\\\"TelephoneCode\\\":\\\"" + enterpriseDetails.getTelephoneCode() + "\\\",\\\"TelephoneNumber\\\":\\\"" + enterpriseDetails.getTelephoneNumber() + "\\\",\\\"CellphoneNumber\\\":\\\"" + enterpriseDetails.getCellphoneNumber() + "\\\",\\\"WebsiteAddress\\\":\\\" " + enterpriseDetails.getWebsiteAddress() + "\\\",\\\"BusinessDescription\\\":\\\" " + enterpriseDetails.getBusinessDescription() + "\\\",\\\"PrincipalPlaceOfBusiness\\\":\\\" " + enterpriseDetails.getPrincipalPlaceOfBusiness() + "\\\",\\\"EnterpriseNameChanged\\\":0,\\\"FinancialYearEndChanged\\\":0,\\\"RegisteredOfficeChanged\\\":0,\\\"LocationOfRecordsChanged\\\":0,\\\"DirectorsChanged\\\":0,\\\"BankId\\\":\\\"2222\\\",\\\"CompanySecretaryChanged\\\":0,\\\"AuditorsChanged\\\":0,\\\"TotalAmount\\\":" + total + ",\\\"YearData\\\":[";
+                    + "{\\\"ReferenceNumber\\\":" + ReferenceNumber + ",\\\"FormCode\\\":\\\"" + formCode + "\\\",\\\"EnterpriseNumber\\\":\\\"" + ent.getEnt_no() + "\\\",\\\"EnterpriseType\\\":\\\"" + ent.getEnt_type_code() + "\\\",\\\"EnterpriseStatus\\\":\\\"28\\\",\\\"EmailAddress\\\":\\\"" + enterpriseDetails.getEmailAddress() + "\\\",\\\"TelephoneCode\\\":\\\"" + enterpriseDetails.getTelephoneCode() + "\\\",\\\"TelephoneNumber\\\":\\\"" + enterpriseDetails.getTelephoneNumber() + "\\\",\\\"CellphoneNumber\\\":\\\"" + enterpriseDetails.getCellphoneNumber() + "\\\",\\\"WebsiteAddress\\\":\\\" " + enterpriseDetails.getWebsiteAddress() + "\\\",\\\"BusinessDescription\\\":\\\" " + enterpriseDetails.getBusinessDescription() + "\\\",\\\"PrincipalPlaceOfBusiness\\\":\\\" " + enterpriseDetails.getPrincipalPlaceOfBusiness() + "\\\",\\\"EnterpriseNameChanged\\\":0,\\\"FinancialYearEndChanged\\\":0,\\\"RegisteredOfficeChanged\\\":0,\\\"LocationOfRecordsChanged\\\":0,\\\"DirectorsChanged\\\":0,\\\"BankId\\\":\\\"2222\\\",\\\"CompanySecretaryChanged\\\":0,\\\"AuditorsChanged\\\":0,\\\"TotalAmount\\\":" + total + ",\\\"YearData\\\":[";
 
             AR_BODY += "{\\\"ReferenceNumber\\\":" + ReferenceNumber + ",\\\"EnterpriseNumber\\\":\\\"" + ent.getEnt_no() + "\\\",\\\"Year\\\":" + ent.getAr_year() + ",\\\"Turnover\\\":" + ent.getTurnover() + ",\\\"Amount\\\":" + ent.getAr_amount() + ",\\\"PenaltyFee\\\":" + ent.getAr_penalty() + ",\\\"TotalAmount\\\":" + ent.getAr_total() + ",\\\"Status\\\":null,\\\"StatusDate\\\":\\\"" + getAnnualReturnsDateNow() + "\\\"}";
 
@@ -1527,7 +1528,7 @@ public class UserWebServices {
                     + "                \"CustomerCode\":\"" + user.getAgent_code() + "\",\n"
                     + "                \"ItemType\":1,\n"
                     + "                \"ItemData\":\""
-                    + "{\\\"ReferenceNumber\\\":" + ReferenceNumber + ",\\\"FormCode\\\":\\\""+formCode+"\\\",\\\"EnterpriseNumber\\\":\\\"" + ent.getEnt_no() + "\\\",\\\"EnterpriseType\\\":\\\"" + ent.getEnt_type_code() + "\\\",\\\"EnterpriseStatus\\\":\\\"28\\\",\\\"EmailAddress\\\":\\\"" + enterpriseDetails.getEmailAddress() + "\\\",\\\"TelephoneCode\\\":\\\"" + enterpriseDetails.getTelephoneCode() + "\\\",\\\"TelephoneNumber\\\":\\\"" + enterpriseDetails.getTelephoneNumber() + "\\\",\\\"CellphoneNumber\\\":\\\"" + enterpriseDetails.getCellphoneNumber() + "\\\",\\\"WebsiteAddress\\\":\\\"" + enterpriseDetails.getWebsiteAddress() + "\\\",\\\"BusinessDescription\\\":\\\"" + enterpriseDetails.getBusinessDescription() + "\\\",\\\"PrincipalPlaceOfBusiness\\\":\\\"" + enterpriseDetails.getPrincipalPlaceOfBusiness() + "\\\",\\\"EnterpriseNameChanged\\\":0,\\\"FinancialYearEndChanged\\\":0,\\\"RegisteredOfficeChanged\\\":0,\\\"LocationOfRecordsChanged\\\":0,\\\"DirectorsChanged\\\":0,\\\"CompanySecretaryChanged\\\":0,\\\"BankId\\\":\\\"2222\\\",\\\"AuditorsChanged\\\":0,\\\"TotalAmount\\\":" + total + ",\\\"YearData\\\":[";
+                    + "{\\\"ReferenceNumber\\\":" + ReferenceNumber + ",\\\"FormCode\\\":\\\"" + formCode + "\\\",\\\"EnterpriseNumber\\\":\\\"" + ent.getEnt_no() + "\\\",\\\"EnterpriseType\\\":\\\"" + ent.getEnt_type_code() + "\\\",\\\"EnterpriseStatus\\\":\\\"28\\\",\\\"EmailAddress\\\":\\\"" + enterpriseDetails.getEmailAddress() + "\\\",\\\"TelephoneCode\\\":\\\"" + enterpriseDetails.getTelephoneCode() + "\\\",\\\"TelephoneNumber\\\":\\\"" + enterpriseDetails.getTelephoneNumber() + "\\\",\\\"CellphoneNumber\\\":\\\"" + enterpriseDetails.getCellphoneNumber() + "\\\",\\\"WebsiteAddress\\\":\\\"" + enterpriseDetails.getWebsiteAddress() + "\\\",\\\"BusinessDescription\\\":\\\"" + enterpriseDetails.getBusinessDescription() + "\\\",\\\"PrincipalPlaceOfBusiness\\\":\\\"" + enterpriseDetails.getPrincipalPlaceOfBusiness() + "\\\",\\\"EnterpriseNameChanged\\\":0,\\\"FinancialYearEndChanged\\\":0,\\\"RegisteredOfficeChanged\\\":0,\\\"LocationOfRecordsChanged\\\":0,\\\"DirectorsChanged\\\":0,\\\"CompanySecretaryChanged\\\":0,\\\"BankId\\\":\\\"2222\\\",\\\"AuditorsChanged\\\":0,\\\"TotalAmount\\\":" + total + ",\\\"YearData\\\":[";
 
             AR_BODY += "{\\\"ReferenceNumber\\\":" + ReferenceNumber + ",\\\"EnterpriseNumber\\\":\\\"" + ent.getEnt_no() + "\\\",\\\"Year\\\":" + ent.getAr_year() + ",\\\"Turnover\\\":" + ent.getTurnover() + ",\\\"Amount\\\":" + ent.getAr_amount() + ",\\\"PenaltyFee\\\":" + ent.getAr_penalty() + ",\\\"TotalAmount\\\": " + ent.getAr_total() + " ,\\\"Status\\\":null,\\\"StatusDate\\\":\\\" " + getAnnualReturnsDateNow() + "\\\"}";
 
@@ -1548,7 +1549,7 @@ public class UserWebServices {
         AR_BODY += "],\\\"ItemsCount\\\":" + listCalculateARTran.size() + "}\",\n"
                 + "\"Amount\":" + total + "\n"
                 + "}";
-        
+
         Log.p("AR_BODY=" + AR_BODY, Log.DEBUG);
 
         Log.p("insertCartItemAR REQUEST=" + AR_BODY, Log.DEBUG); //2012 128721 07
@@ -2011,15 +2012,14 @@ public class UserWebServices {
     }//end login
 
     public User get_cust_MOBI_2(User user) {
-        
+
         String version = Display.getInstance().getProperty("AppVersion", "Unknown");
         String os = Display.getInstance().getPlatformName();
-        String screenSize = Display.getInstance().getDisplayWidth() + " by "+  Display.getInstance().getDisplayHeight();
+        String screenSize = Display.getInstance().getDisplayWidth() + " by " + Display.getInstance().getDisplayHeight();
         String deviceType = "";
-        if(Display.getInstance().isTablet()){
+        if (Display.getInstance().isTablet()) {
             deviceType = "Tablet";
-        }
-        else{
+        } else {
             deviceType = "Phone";
         }
 
@@ -2042,28 +2042,28 @@ public class UserWebServices {
                 + "\n"
                 + "         <!--Optional:-->\n"
                 + "\n"
-                + "         <cipc:sCust_Code>"+user.getAgent_code().toUpperCase()+"</cipc:sCust_Code>\n"
+                + "         <cipc:sCust_Code>" + user.getAgent_code().toUpperCase() + "</cipc:sCust_Code>\n"
                 + "\n"
-                + "         <cipc:screenize>"+screenSize+"</cipc:screenize>\n"
-                + "\n"
-                + "         <!--Optional:-->\n"
-                + "\n"
-                + "         <cipc:os>"+os+"</cipc:os>\n"
+                + "         <cipc:screenize>" + screenSize + "</cipc:screenize>\n"
                 + "\n"
                 + "         <!--Optional:-->\n"
                 + "\n"
-                + "         <cipc:devicetype>"+deviceType+"</cipc:devicetype>\n"
+                + "         <cipc:os>" + os + "</cipc:os>\n"
                 + "\n"
                 + "         <!--Optional:-->\n"
                 + "\n"
-                + "         <cipc:cipc_app_v>"+version+"</cipc:cipc_app_v>\n"
+                + "         <cipc:devicetype>" + deviceType + "</cipc:devicetype>\n"
+                + "\n"
+                + "         <!--Optional:-->\n"
+                + "\n"
+                + "         <cipc:cipc_app_v>" + version + "</cipc:cipc_app_v>\n"
                 + "\n"
                 + "      </cipc:get_cust_MOBI_2>\n"
                 + "\n"
                 + "   </soapenv:Body>\n"
                 + "\n"
                 + "</soapenv:Envelope>";
-        
+
         Log.p("Login body=" + SOAP_BODY, Log.DEBUG);
 
         ConnectionRequest httpRequest = new ConnectionRequest() {
@@ -2153,12 +2153,12 @@ public class UserWebServices {
 
                 responseUser.setStatus_desc(result.getAsString("//status_desc"));
                 responseUser.setCell_no(result.getAsString("//cell_no"));
-                
+
                 //Then we have a different data set response
-                if(responseUser.getPassword() == null){
+                if (responseUser.getPassword() == null) {
                     responseUser.setError(result.getAsString("//error"));
                 }
-                
+
                 return responseUser;
 
             } catch (IllegalArgumentException e) {
@@ -2662,8 +2662,6 @@ public class UserWebServices {
     }//end get_countries
 
     public User Get_Cust_code_id_MOBI(String id) {
-        
-        
 
         final String SOAP_BODY
                 = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cipc=\"CIPC_WEB_SERVICES\">\n"
@@ -2687,7 +2685,7 @@ public class UserWebServices {
                 + "   </soapenv:Body>\n"
                 + "\n"
                 + "</soapenv:Envelope>";
-        
+
         Log.p("Get_Cust_code_id_MOBI -> " + SOAP_BODY, Log.DEBUG);
 
         ConnectionRequest httpRequest = new ConnectionRequest() {
@@ -2729,7 +2727,7 @@ public class UserWebServices {
 
         NetworkManager.getInstance().addToQueueAndWait(httpRequest);
         byte byteArray[] = httpRequest.getResponseData();
-        if(byteArray == null || byteArray.length == 0){
+        if (byteArray == null || byteArray.length == 0) {
             return null;
         }
         String data = new String(byteArray);
@@ -2737,16 +2735,15 @@ public class UserWebServices {
         try {
 
             Result result = Result.fromContent(data, Result.XML);
-            
-             Log.p("Get_Cust_code_id_MOBI" + result, Log.DEBUG);
-             
+
+            Log.p("Get_Cust_code_id_MOBI" + result, Log.DEBUG);
+
             User responseUser = new User();
 
             String customer_code = result.getAsString("//customer_code");
             String error = result.getAsString("//error");
             responseUser.setError(error);
             responseUser.setAgent_code(customer_code);
-           
 
             return responseUser;
 
@@ -3522,8 +3519,8 @@ public class UserWebServices {
         name2 = HTMLUtils.encodeString(name2);
         name3 = HTMLUtils.encodeString(name3);
         name4 = HTMLUtils.encodeString(name4);
-        
-         ArrayList<String> submission = new ArrayList();
+
+        ArrayList<String> submission = new ArrayList();
 
         if (name1.length() > 0) {
             submission.add(name1);
@@ -3537,7 +3534,7 @@ public class UserWebServices {
         if (name4.length() > 0) {
             submission.add(name4);
         }
-        
+
         String toSubmit1 = "";
         String toSubmit2 = "";
         String toSubmit3 = "";
@@ -3545,26 +3542,22 @@ public class UserWebServices {
 
         if (submission.size() == 1) {
             toSubmit1 = submission.get(0);
-        }
-        else if (submission.size() == 2) {
+        } else if (submission.size() == 2) {
             toSubmit1 = submission.get(0);
             toSubmit2 = submission.get(1);
 
-        }
-        else if (submission.size() == 3) {
+        } else if (submission.size() == 3) {
             toSubmit1 = submission.get(0);
             toSubmit2 = submission.get(1);
             toSubmit3 = submission.get(2);
 
-        }
-        else if (submission.size() == 4) {
+        } else if (submission.size() == 4) {
             toSubmit1 = submission.get(0);
             toSubmit2 = submission.get(1);
             toSubmit3 = submission.get(2);
             toSubmit4 = submission.get(3);
 
         }
-
 
         //customerCode = "INKE01";
         //name = "CRO"
@@ -3703,11 +3696,10 @@ public class UserWebServices {
 
             String Namereservation_MOBI_traknoresult = result.getAsString("//Namereservation_MOBI_traknoresult");
 
-            if(Namereservation_MOBI_traknoresult == null){
-               Namereservation_MOBI_traknoresult = result.getAsString("//Namereservation_MOBI_traknoResult"); 
+            if (Namereservation_MOBI_traknoresult == null) {
+                Namereservation_MOBI_traknoresult = result.getAsString("//Namereservation_MOBI_traknoResult");
             }
-            
-            
+
             response = Namereservation_MOBI_traknoresult;
 
             if (response != null) {
@@ -3904,7 +3896,6 @@ public class UserWebServices {
         name3 = HTMLUtils.encodeString(name3);
         name4 = HTMLUtils.encodeString(name4);
 
-       
         ArrayList arrayList = new ArrayList();
 
         final String SOAP_BODY
@@ -4294,7 +4285,7 @@ public class UserWebServices {
                 + "\n"
                 + "                     <phys_add3>" + requestUser.getPhys_addr3() + "</phys_add3>\n"
                 + "\n"
-                + "                     <phys_add4>"+requestUser.getPhys_addr4()+"</phys_add4>\n"
+                + "                     <phys_add4>" + requestUser.getPhys_addr4() + "</phys_add4>\n"
                 + "\n"
                 + "                     <phys_code>" + requestUser.getPhys_code() + "</phys_code>\n"
                 + "\n"
@@ -4304,7 +4295,7 @@ public class UserWebServices {
                 + "\n"
                 + "                     <postal_add3>" + requestUser.getPost_addr3() + "</postal_add3>\n"
                 + "\n"
-                + "                     <postal_add4>"+requestUser.getPost_addr4()+"</postal_add4>\n"
+                + "                     <postal_add4>" + requestUser.getPost_addr4() + "</postal_add4>\n"
                 + "\n"
                 + "                     <postal_code>" + requestUser.getPost_code() + "</postal_code>\n"
                 + "\n"
@@ -4401,7 +4392,7 @@ public class UserWebServices {
 //        String newString = responseCall.substring(startIndex, endIndex).trim();
 
         String newString = "";
-        
+
         StringTokenizer st = new StringTokenizer(responseCall, "|");
         newString = st.nextElement().toString();
 

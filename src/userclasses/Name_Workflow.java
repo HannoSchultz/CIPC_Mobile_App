@@ -34,7 +34,7 @@ public class Name_Workflow {
     public void setRef_no(String Ref_no) {
         this.Ref_no = Ref_no;
     }
-   private  String cust_code;
+    private String cust_code;
     private String application_no;
-    private String Ref_no; 
+    private String Ref_no;
 }

@@ -10,6 +10,7 @@ package userclasses;
  * @author HanSchultz
  */
 public class NameReserved {
+
     String ApprovedName;
     String Reserved_NO;
     String Error_Desc;
@@ -37,6 +38,5 @@ public class NameReserved {
     public void setError_Desc(String Error_Desc) {
         this.Error_Desc = Error_Desc;
     }
-    
-    
+
 }
