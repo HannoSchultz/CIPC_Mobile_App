@@ -5610,14 +5610,15 @@ public class StateMachine extends StateMachineBase {
                 if (answer) {
                     //   Table tbl = (Table) findByName("Tablememinfo", c);
                     //   tbl.add(cnt_Bee);
-                    load_bee_form(f);
+                    //load_bee_form(f);
                     f.repaint();
                 } else {
-                    load_bee_form(f);
+                    //load_bee_form(f);
                     f.repaint();
                 }
             });
-            tbl.add(b);
+            tbl.addComponent(b);
+          //  tbl.add(b);
         }
         f.repaint();
     }
