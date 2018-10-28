@@ -380,7 +380,8 @@ public class StateMachine extends StateMachineBase {
             Log.p("issimulator", Log.DEBUG);
 
             //return "testlist";
-            return "Splash";
+            return "BEE";
+            // return "Splash";
 
         } else {
             Log.setLevel(Log.REPORTING_PRODUCTION);//To disable debug information
@@ -4640,14 +4641,14 @@ public class StateMachine extends StateMachineBase {
                 //Result result = uws.get_dha_data("7611160016082");
 
                 String retval = uws.DHA_Data(result);
-               // Dialog.show("onFrmNewEntReg1_BtnGetIdInfoAction", retval.toString(), "OK", null);
+                // Dialog.show("onFrmNewEntReg1_BtnGetIdInfoAction", retval.toString(), "OK", null);
                 if (retval.toString().equals("Error")) {
                     ip.dispose();
-                  // Dialog.show("Scan ID1", "Return val " + retval, "OK", null);
+                    // Dialog.show("Scan ID1", "Return val " + retval, "OK", null);
                     return;
                 } else {
                     ip.dispose();
-                  //  Dialog.show("Scan ID2", "Return val " + retval, "OK", null);
+                    //  Dialog.show("Scan ID2", "Return val " + retval, "OK", null);
                 }
                 if (uws.ArlDHA_Detail.size() == 0) {
                     Dialog.show("Scan ID", "The Document scaned does not contain a vaild ID Number. Please contact DHA or rescan the document", "OK", null);
@@ -4907,7 +4908,7 @@ public class StateMachine extends StateMachineBase {
         }
         TextField txtotp = (TextField) findByName("TxtOtp", f);
         if (txtotp.getText().trim().equals("")) {
-             Dialog.show("Error", "Please enter a valid otp for Director ID Number" + lblidNo.getText().trim(), "OK", null);
+            Dialog.show("Error", "Please enter a valid otp for Director ID Number" + lblidNo.getText().trim(), "OK", null);
             txtotp.repaint();
             txtotp.requestFocus();
             txtotp.startEditing();
@@ -5247,8 +5248,9 @@ public class StateMachine extends StateMachineBase {
             String Surname = (RSM_A(DD.getSurname()));
             String Id_no = (RSM_A(DD.getId_no()));
             Button b = new Button(First_Names + " " + Surname + " - " + Id_no);
+            //  hsz
             b.setName(Dir_id);
-            b.setUIID("Button_small");
+            b.setUIID("Button_small_L");
             cnt.add(b);
             b.addActionListener(e
                     -> {
@@ -5330,41 +5332,42 @@ public class StateMachine extends StateMachineBase {
     }
 
     protected void beforeBEE(Form f) {
-        UserWebServices u = new UserWebServices();
-        //AnnualReturns annualReturns = u.get_ar_info_mobi(AGENT_CODE, ENT_NUMBER);
-        listBEEDetail = u.Get_BEE_MOBI(AGENT_CODE);
-        //listBEEDetail = u.Get_BEE_MOBI(dataset);
-
-        if (listBEEDetail.isEmpty()) {
-            Log.p("listCalculateARTran=0", Log.DEBUG);
-        } else {
-            Log.p("listCalculateARTran=" + listBEEDetail.size(), Log.DEBUG);
-        }
-
-        for (int i = 0; i < listBEEDetail.size(); i++) {
-            //rm f = c.getComponentForm();
-            BEEDetail n = listBEEDetail.get(i);
-            //Dialog.show("1.1", n.getName(), "Ok", null);
-            String ent_no = n.getEnt_no();
-            String ent_name = n.getEnt_name();
-//                    if (txt.indexOf("|") > -1) {
-//                        java.util.List<String> list = StringUtil.tokenize(n.getName(), "|");
-//                        if (list != null && list.size() > 0) {
-//                            txt = list.get(0);
-//                        }
-//                        name = txt;
-//                    } else {
-//                        name = n.getName();
-//                    }
-            List ListEnt = (List) findByName("ListEnt", f);
-            //TextField textfield = (TextField) findByName("TxtIdNo", f);
-            ListEnt.addItem(ent_no);
-            ListEnt.repaint();
-            List ListEntname = (List) findByName("ListEntname", f);
-            //TextField textfield = (TextField) findByName("TxtIdNo", f);
-            ListEntname.addItem(ent_no);
-            ListEntname.repaint();
-        }
+        load_bee_form(f);
+//        UserWebServices u = new UserWebServices();
+//        //AnnualReturns annualReturns = u.get_ar_info_mobi(AGENT_CODE, ENT_NUMBER);
+//        listBEEDetail = u.Get_BEE_MOBI(AGENT_CODE);
+//        //listBEEDetail = u.Get_BEE_MOBI(dataset);
+//
+//        if (listBEEDetail.isEmpty()) {
+//            Log.p("listCalculateARTran=0", Log.DEBUG);
+//        } else {
+//            Log.p("listCalculateARTran=" + listBEEDetail.size(), Log.DEBUG);
+//        }
+//
+//        for (int i = 0; i < listBEEDetail.size(); i++) {
+//            //rm f = c.getComponentForm();
+//            BEEDetail n = listBEEDetail.get(i);
+//            //Dialog.show("1.1", n.getName(), "Ok", null);
+//            String ent_no = n.getEnt_no();
+//            String ent_name = n.getEnt_name();
+////                    if (txt.indexOf("|") > -1) {
+////                        java.util.List<String> list = StringUtil.tokenize(n.getName(), "|");
+////                        if (list != null && list.size() > 0) {
+////                            txt = list.get(0);
+////                        }
+////                        name = txt;
+////                    } else {
+////                        name = n.getName();
+////                    }
+//            List ListEnt = (List) findByName("ListEnt", f);
+//            //TextField textfield = (TextField) findByName("TxtIdNo", f);
+//            ListEnt.addItem(ent_no);
+//            ListEnt.repaint();
+//            List ListEntname = (List) findByName("ListEntname", f);
+//            //TextField textfield = (TextField) findByName("TxtIdNo", f);
+//            ListEntname.addItem(ent_no);
+//            ListEntname.repaint();
+//        }
     }
 
     @Override
@@ -5547,5 +5550,85 @@ public class StateMachine extends StateMachineBase {
     @Override
     protected void onFrmNewEntReg1_TxtEmailAction(Component c, ActionEvent event) {
 
+    }
+
+    protected void onBEE_BtnShowBeeAction(Component c, ActionEvent event) {
+        Form f = c.getComponentForm();
+        UserWebServices u = new UserWebServices();
+        UserWebServicesNewReg uws = new UserWebServicesNewReg();
+        Result result = u.Get_BEE_MOBI(AGENT_CODE);
+        uws.BEE_Data(result);
+        Container cnt_Bee = new Container(BoxLayout.y());
+
+        Table tbl = (Table) findByName("Table_ent_Bee", c);
+        for (int i = 0; i < uws.ArlBEE_Detail.size(); i++) {
+            //rm f = c.getComponentForm();
+            BEEDetail n = uws.ArlBEE_Detail.get(i);
+            //Dialog.show("1.1", n.getName(), "Ok", null);
+            String ent_no = n.getEnt_no();
+            String ent_name = n.getEnt_name();
+            Button b = new Button(ent_no + " " + ent_name);
+            b.setName(ent_no);
+            b.setUIID("Button_small");
+            b.addActionListener(e
+                    -> {
+                boolean answer = Dialog.show("Info", "Do You Want to apply for a B-BBEE Certificate for " + b.getText(), "Yes", "No");
+                if (answer) {
+                    //   Table tbl = (Table) findByName("Tablememinfo", c);
+                    //   tbl.add(cnt_Bee);
+                    f.repaint();
+                } else {
+                    f.repaint();
+                }
+            });
+            tbl.add(b);
+        }
+        f.repaint();
+    }
+
+    protected void load_bee_form(Form f) {
+        // Form f = c.getComponentForm();
+        UserWebServices u = new UserWebServices();
+        UserWebServicesNewReg uws = new UserWebServicesNewReg();
+        Result result = u.Get_BEE_MOBI(AGENT_CODE);
+        uws.BEE_Data(result);
+        Container cnt_Bee = new Container(BoxLayout.y());
+
+        Table tbl = (Table) findByName("Table_ent_Bee", f);
+        for (int i = 0; i < uws.ArlBEE_Detail.size(); i++) {
+            //rm f = c.getComponentForm();
+            BEEDetail n = uws.ArlBEE_Detail.get(i);
+            //Dialog.show("1.1", n.getName(), "Ok", null);
+            String ent_no = n.getEnt_no();
+            String ent_name = n.getEnt_name();
+            Button b = new Button(ent_no + " " + ent_name);
+            b.setName(ent_no);
+            b.setUIID("Button_small_L");
+            b.addActionListener(e
+                    -> {
+                boolean answer = Dialog.show("Info", "Do You Want to apply for a B-BBEE Certificate for " + b.getText(), "Yes", "No");
+                if (answer) {
+                    //   Table tbl = (Table) findByName("Tablememinfo", c);
+                    //   tbl.add(cnt_Bee);
+                    load_bee_form(f);
+                    f.repaint();
+                } else {
+                    load_bee_form(f);
+                    f.repaint();
+                }
+            });
+            tbl.add(b);
+        }
+        f.repaint();
+    }
+
+    @Override
+    protected void onCreateBEE() {
+
+    }
+
+    @Override
+    protected void postBEE(Form f) {
+        load_bee_form(f);
     }
 }

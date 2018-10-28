@@ -25,6 +25,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 import java.text.DateFormat;
+import userclasses.BEEDetail;
 import userclasses.Constants;
 import userclasses.DHA_Detail;
 import userclasses.Name_Workflow;
@@ -61,6 +62,7 @@ public class UserWebServicesNewReg {
         this.ArlDIR_Detail = ArlDIR_Detail;
     }
     public ArrayList<DIR_Detail> ArlDIR_Detail;
+    public ArrayList<BEEDetail> ArlBEE_Detail;
     public ArrayList<NameReserved> ArlNameReserved;
     public ArrayList<DirectorDetails> ArlDirectorDetails;
     public ArrayList<EnterpriseDetails> ArlEnterpriseDetails;
@@ -1357,7 +1359,42 @@ public class UserWebServicesNewReg {
         }
 
     }
+  public void BEE_Data(Result result) {
+        try {
+            XMLParser parser = new XMLParser();
+            parser.setCaseSensitive(true);
+            Element element = parser.parse(convertStringtoInputStreamReader(result.getAsString("//DataSet")));
+            ArlBEE_Detail = new ArrayList();
+            
+            for (int i = 0; i < element.getNumChildren(); i++) {
+                Element child = element.getChildAt(i);
+                Element elem_ent_no = ((Element) child.getTextChildren(null, true).get(0));
+                String ent_no = elem_ent_no.getText();
+                Element elem_ent_name = ((Element) child.getTextChildren(null, true).get(1));
+                String ent_name = elem_ent_name.getText();
+//                Element elem_surname = ((Element) child.getTextChildren(null, true).get(2));
+//                String surname = elem_surname.getText();
+//                Element elem_id_no = ((Element) child.getTextChildren(null, true).get(3));
+//                String id_no = elem_id_no.getText();
 
+                BEEDetail bee_detail = new BEEDetail();
+                bee_detail.setEnt_no(ent_no);
+                bee_detail.setEnt_name(ent_name);
+               
+
+                ArlBEE_Detail.add(bee_detail);
+            }
+        } catch (Throwable err) {
+            // Dialog.show("DIR_Data", err.toString(), "OK", null);
+            if ("java.lang.Nul".equals(err.toString().substring(0, 13))) {
+                //if (err.toString() == "java.lang.NullPointerException") {
+                ArlBEE_Detail = new ArrayList();
+            } else {
+                Dialog.show("BEE_Data", err.toString(), "OK", null);
+            }
+        }
+
+    }
     public String qtyincorporator(Result result) {
         try {
             // String OTP_Response = result.getAsString("//generate_otp_mobiResult");

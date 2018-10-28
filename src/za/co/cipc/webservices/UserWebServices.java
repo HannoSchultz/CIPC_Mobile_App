@@ -5,7 +5,7 @@
  */
 package za.co.cipc.webservices;
 
-//import pojos.User; 
+//import pojos.User;
 import com.codename1.components.InfiniteProgress;
 import com.codename1.io.ConnectionRequest;
 import com.codename1.io.JSONParser;
@@ -947,10 +947,9 @@ public class UserWebServices {
 
     }
 
-    public ArrayList<BEEDetail> Get_BEE_MOBI(String agentCode) {
+    public Result Get_BEE_MOBI(String agentCode) {
 
-        ArrayList<BEEDetail> arrayList = new ArrayList<BEEDetail>();
-
+        //   ArrayList<BEEDetail> arrayList = new ArrayList<BEEDetail>();
         final String SOAP_BODY
                 = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cipc=\"CIPC_WEB_SERVICES\">\n"
                 + "   <soapenv:Header/>\n"
@@ -1004,61 +1003,9 @@ public class UserWebServices {
 
         NetworkManager.getInstance().addToQueueAndWait(httpRequest);
         String data = new String(httpRequest.getResponseData());
-        Log.p("GetAREntTranDetails" + data, Log.DEBUG);
-
-        try {
-
-            Result result = Result.fromContent(data, Result.XML);
-
-            Log.p("GetAREntTranDetails=" + result, Log.DEBUG);
-
-            XMLParser parser = new XMLParser();
-            parser.setCaseSensitive(true);
-            Element element = parser.parse(convertStringtoInputStreamReader(result.getAsString("//newdataset")));
-
-            for (int i = 0; i < element.getNumChildren(); i++) {
-                Element child = element.getChildAt(i);
-                if (child.getTextChildren(null, true).size() == 2) {
-
-                    Log.p("i=" + i + " " + child.getTextChildren(null, true).size(), Log.DEBUG);
-
-                    String ent_no = RSM(((Element) child.getTextChildren(null, true).get(0)).toString());
-                    String ent_name = RSM(((Element) child.getTextChildren(null, true).get(1)).toString());
-                    //int intAr_year = Integer.parseInt(ar_year);
-                    //String trak_no = RSM(((Element) child.getTextChildren(null, true).get(2)).toString());
-//                    String turnover = RSM(((Element) child.getTextChildren(null, true).get(2)).toString());
-//                    double dblTurnover = Double.parseDouble(turnover);
-//                    String amt_paid = RSM(((Element) child.getTextChildren(null, true).get(3)).toString());
-//                    //String date_paid = RSM(((Element) child.getTextChildren(null, true).get(5)).toString());
-//                    String reg_date = RSM(((Element) child.getTextChildren(null, true).get(4)).toString());
-//                    String ar_start_date = RSM(((Element) child.getTextChildren(null, true).get(5)).toString());
-//                    String due_date = RSM(((Element) child.getTextChildren(null, true).get(6)).toString());
-//                    String ent_type_code = RSM(((Element) child.getTextChildren(null, true).get(7)).toString());
-//                    String ar_month = RSM(((Element) child.getTextChildren(null, true).get(8)).toString());
-                    //String  cust_code_old = RSM(((Element) child.getTextChildren(null, true).get(11)).toString());
-
-                    BEEDetail BEE = new BEEDetail();
-
-                    BEE.setEnt_no(ent_no);
-                    BEE.setEnt_name(ent_name);
-//                    e.setTurnover(dblTurnover);
-//                    e.setAmt_paid(amt_paid);
-//                    e.setReg_date(reg_date);
-//                    e.setAr_start_date(ar_start_date);
-//                    e.setDue_date(due_date);
-//                    e.setEnt_type_code(ent_type_code);
-//                    e.setAr_month(ar_month);
-
-                    arrayList.add(BEE);
-
-                }
-            }
-
-        } catch (IllegalArgumentException e) {
-            Log.p(e.toString());
-        }
-
-        return arrayList;
+        //Log.p("GetAREntTranDetails" + data, Log.DEBUG);
+        Result result = Result.fromContent(data, Result.XML);
+        return result;
 
     }
 
@@ -1118,7 +1065,7 @@ public class UserWebServices {
                 //                + "                     <ar_month>11</ar_month>\n"
                 //                + "                     <turnover>100000000</turnover>\n"
                 //                + "                     <ent_type_code>07</ent_type_code>\n"
-                //                + "                  </Table1>                 \n" 
+                //                + "                  </Table1>                 \n"
                 + "               </NewDataSet>\n"
                 + "            </diffgr:diffgram>\n"
                 + "            <!--You may enter ANY elements at this point-->\n"
@@ -1499,7 +1446,7 @@ public class UserWebServices {
 //            EnterpriseDetails tempEnterprise = listCalculateARTran.get(i);
 //            total += tempEnterprise.getAr_total();
 //             Log.p("Total=" + total + " getAr_total=" + tempEnterprise.getAr_total(), Log.DEBUG);
-//        } 
+//        }
 
         if (!listCalculateARTran.isEmpty()) {
             EnterpriseDetails lastObject = listCalculateARTran.get(listCalculateARTran.size() - 1);
@@ -3275,7 +3222,7 @@ public class UserWebServices {
             //return null;//user does not exist?
         }
 
-        //Step 2: Capture customer data. 
+        //Step 2: Capture customer data.
         final String SOAP_BODY
                 = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cipc=\"CIPC_WEB_SERVICES\" xmlns:xs=\"http://www.w3.org/2001/XMLSchema\">\n"
                 + "   <soapenv:Header/>\n"
@@ -4131,7 +4078,7 @@ public class UserWebServices {
             //return null;//user does not exist?
         }
 
-        //Step 2: Capture customer data. 
+        //Step 2: Capture customer data.
         final String SOAP_BODY
                 = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cipc=\"CIPC_WEB_SERVICES\" xmlns:xs=\"http://www.w3.org/2001/XMLSchema\">\n"
                 + "\n"
