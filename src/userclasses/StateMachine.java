@@ -71,6 +71,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -84,6 +85,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TimeZone;
+//import java.util.function.Function;
 import org.bouncycastle.crypto.InvalidCipherTextException;
 import services.Utility;
 import za.co.cipc.webservices.UserWebServices;
@@ -380,8 +382,8 @@ public class StateMachine extends StateMachineBase {
             Log.p("issimulator", Log.DEBUG);
 
             //return "testlist";
-            return "BEE";
-            // return "Splash";
+            //return "BEE";
+             return "Splash";
 
         } else {
             Log.setLevel(Log.REPORTING_PRODUCTION);//To disable debug information
@@ -960,6 +962,7 @@ public class StateMachine extends StateMachineBase {
         lblIcon3.setIcon(img3);
         //lblIcon4.setIcon(img1);
 
+        
         Button mbNameReservations = (Button) findByName("mbTasks", cont);
         mbNameReservations.addActionListener(new ActionListener() {
             @Override
@@ -995,9 +998,9 @@ public class StateMachine extends StateMachineBase {
                 mbCardPayments.setEnabled(true);
             }
         });
-
+//hsz;
+        
         Button mbReg = (Button) findByName("mbRegistration", cont);
-
         mbReg.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
@@ -1006,6 +1009,26 @@ public class StateMachine extends StateMachineBase {
                 mbReg.setEnabled(true);
             }
         });
+    Button mbBEE = (Button) findByName("mbBEE", cont);
+
+        mbBEE.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                mbBEE.setEnabled(false);
+                showForm("BEE", null);
+                mbBEE.setEnabled(true);
+            }
+        });        
+          Button mbDisclosure = (Button) findByName("mbDisclosure", cont);
+
+        mbDisclosure.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                mbDisclosure.setEnabled(false);
+                showForm("Disclosure", null);
+                mbDisclosure.setEnabled(true);
+            }
+        });   
         UserWebServices u = new UserWebServices();
         Hashtable<String, Dashboard> table = u.get_mobi_permissions(AGENT_CODE);
 
@@ -1017,7 +1040,7 @@ public class StateMachine extends StateMachineBase {
             //f.reva
         } else {
             // String[] names = {"AR", "NR", "CP"};
-            String[] names = {"AR", "NR", "CP", "CR"};
+            String[] names = {"AR", "NR", "CP", "CR","BE","DC"};
 
             for (int i = 0; i < names.length; i++) {
                 String key = names[i];
@@ -5569,14 +5592,15 @@ public class StateMachine extends StateMachineBase {
             String ent_name = n.getEnt_name();
             Button b = new Button(ent_no + " " + ent_name);
             b.setName(ent_no);
+            b.setEnabled(true);
             b.setUIID("Button_small");
             b.addActionListener(e
                     -> {
                 boolean answer = Dialog.show("Info", "Do You Want to apply for a B-BBEE Certificate for " + b.getText(), "Yes", "No");
                 if (answer) {
                     //   Table tbl = (Table) findByName("Tablememinfo", c);
-                    //   tbl.add(cnt_Bee);
-                    f.repaint();
+                       tbl.add(cnt_Bee);
+                   // f.repaint();
                 } else {
                     f.repaint();
                 }
@@ -5585,6 +5609,8 @@ public class StateMachine extends StateMachineBase {
         }
         f.repaint();
     }
+ 
+
 
     protected void load_bee_form(Form f) {
         // Form f = c.getComponentForm();
@@ -5599,27 +5625,33 @@ public class StateMachine extends StateMachineBase {
             //rm f = c.getComponentForm();
             BEEDetail n = uws.ArlBEE_Detail.get(i);
             //Dialog.show("1.1", n.getName(), "Ok", null);
-            String ent_no = n.getEnt_no();
-            String ent_name = n.getEnt_name();
+            String ent_no = RSM_A(n.getEnt_no());
+            String ent_name = RSM_A(n.getEnt_name());
             Button b = new Button(ent_no + " " + ent_name);
             b.setName(ent_no);
             b.setUIID("Button_small_L");
+            b.setEnabled(true);
             b.addActionListener(e
                     -> {
                 boolean answer = Dialog.show("Info", "Do You Want to apply for a B-BBEE Certificate for " + b.getText(), "Yes", "No");
                 if (answer) {
                     //   Table tbl = (Table) findByName("Tablememinfo", c);
-                    //   tbl.add(cnt_Bee);
-                    //load_bee_form(f);
+                     // tbl.add(cnt_Bee);
+                     Label lbl_ent_no = (Label) findByName("lbl_ent_no", f);
+                     lbl_ent_no.setText(b.getName());
+                    load_bee_form(f);
                     f.repaint();
                 } else {
-                    //load_bee_form(f);
+                      Label lbl_ent_no = (Label) findByName("lbl_ent_no", f);
+                     lbl_ent_no.setText("");
+                    load_bee_form(f);
                     f.repaint();
                 }
             });
             tbl.addComponent(b);
-          //  tbl.add(b);
+                    //  tbl.add(b);
         }
+         // f.addComponent(tbl);
         f.repaint();
     }
 
@@ -5630,6 +5662,9 @@ public class StateMachine extends StateMachineBase {
 
     @Override
     protected void postBEE(Form f) {
-        load_bee_form(f);
+    //    load_bee_form(f);
     }
+
+   
+
 }
