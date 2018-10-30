@@ -1462,7 +1462,6 @@ public class UserWebServicesNewReg {
                 Dialog.show("name_workflow", err.toString(), "OK", null);
             }
         }
-
     }
 
     public String DHA_Data(Result result) {
