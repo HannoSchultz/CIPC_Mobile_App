@@ -28,7 +28,8 @@ public class Constants {
     // DEV
     public static String soapServicesEndPoint = "https://testwebservices1.cipc.co.za/";
     public static String cartAPIEndPoint = "https://apitest.cipc.co.za/";
-    public static String paymentEndPoint = "https://paymenttest.cipc.co.za:9443/";
+    //public static String paymentEndPoint = "https://paymenttest.cipc.co.za:9443/";
+    public static String paymentEndPoint = "https://paymenttests.cipc.co.za:9443/";
 
     //PRODUCTION
     /*public static String soapServicesEndPoint = "https://webservices2.cipc.co.za/";
