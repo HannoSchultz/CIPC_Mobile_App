@@ -3908,7 +3908,7 @@ public class StateMachine extends StateMachineBase {
         tabs.setSwipeActivated(false);
         tabs.hideTabs();
         Container cond = (Container) findByName("Containerd", f);
-        cond.setHidden(true);
+        cond.setHidden(false);
 //        //################
         Style labelForm = UIManager.getInstance().getComponentStyle("CIPC_DARK");
         labelForm.setMargin(0, 0, 0, 0);
@@ -4650,6 +4650,8 @@ public class StateMachine extends StateMachineBase {
     protected void onFrmNewEntReg1_BtnGetIdInfoAction(Component c, ActionEvent event) {
         Form f = c.getComponentForm();
         //#########
+        Container conregister = (Container) findByName("Conregister", f);
+            conregister.setHidden(true);
         try {
             if (Display.getInstance().isSimulator()) {
                 Dialog ip = new InfiniteProgress().showInifiniteBlocking();
@@ -4712,13 +4714,13 @@ public class StateMachine extends StateMachineBase {
                 txtcell.requestFocus();
                 txtcell.startEditing();
             } else {
-                //########
+            //########
                 Dialog ip = new InfiniteProgress().showInifiniteBlocking();
                 CodeScanner.getInstance().scanBarCode(new ScanResult() {
                     public void scanCompleted(String contents, String formatName, byte[] rawBytes) {
                         //Dialog.show("Bar code", "Bar code is: " + contents, "Ok", null);
 //#################################disable barcode scanner
-
+                Dialog.show("ID Scanned: ",contents,"OK",null);
                         Result result = uws.get_dha_data(contents);
 
                         String retval = uws.DHA_Data(result);
@@ -5253,6 +5255,9 @@ public class StateMachine extends StateMachineBase {
 
     public void loadlist(String ref_no, Component c) {
         Form f = c.getComponentForm();
+        Container cntmemlist = (Container) findByName("Conmemlist", f);
+        cntmemlist.removeAll();
+        f.repaint();
         Dialog ip = new InfiniteProgress().showInifiniteBlocking();
         Result result = uws.get_directors_stage(ref_no);
         uws.DIR_Data(result);
@@ -5287,10 +5292,26 @@ public class StateMachine extends StateMachineBase {
                 if (answer) {
                     //Dialog.show("", "delete director from table with dir_id = " + b.getName(), "OK", null);
                     uws.removedir(b.getName(), AGENT_CODE);
-                    String Strak_no = uws.getTrak_no();
+                    //String Strak_no = uws.getTrak_no();
                     //loadlist(Strak_no, c);
                     //Table tbl = (Table) findByName("Tablememinfo", c);
                     //tbl.requestFocus();
+                    
+                    
+                      //Form f = c.getComponentForm();
+            cleardirdata(c);
+            Hide_Director_Fields(f);
+            Container conregister = (Container) findByName("Conregister", f);
+            conregister.setHidden(false);
+            //####################
+            //Form f = c.getComponentForm();
+            String Strak_no = uws.getTrak_no();
+            loadlist(Strak_no, c);
+//            Table tbl = (Table) findByName("Tablememinfo", c);
+//            tbl.requestFocus();
+            f.repaint();
+                    
+                    
                     f.repaint();
                 } else {
                     String Strak_no = uws.getTrak_no();
@@ -5301,7 +5322,7 @@ public class StateMachine extends StateMachineBase {
                 }
             });
         }
-        Container cntmemlist = (Container) findByName("Conmemlist", f);
+       // Container cntmemlist = (Container) findByName("Conmemlist", f);
         cntmemlist.add(cnt);
         // cnt.setScrollableY(true);
         //f.add(cnt);
@@ -5312,10 +5333,20 @@ public class StateMachine extends StateMachineBase {
     protected void onFrmNewEntReg1_BtnRegisterenterprisAction(Component c, ActionEvent event) {
         UserWebServices u = new UserWebServices();
         Dialog ip = new InfiniteProgress().showInifiniteBlocking();
-
+        String valdir = uws.ValidateDirector(AGENT_CODE,uws.getTrak_no());
+        if (valdir == null )
+        {return;}
+       // hsz
+         if (valdir.equals( "false")) {
+            Dialog.show("Director Info Missing. ", "Please capture information of at least one director and one incorporator.", "OK", null);
+             ip.dispose();
+            return ;
+        }
+//validate information
         u.insertCartItemServiceCOREG(uws.getTrak_no(), AGENT_CODE, "125");
 
         String Sreservation_no = uws.getName_reservation_no();
+        
         if (Sreservation_no.trim() != "") {
 
 //            if (Sreservation_no.trim() != "") {
@@ -5687,4 +5718,27 @@ public class StateMachine extends StateMachineBase {
 
    
 
+
+    @Override
+    protected void onContProjects_BtnStep1RetrieveDetailsAction(Component c, ActionEvent event) {
+
+    
+    }
+
+   
+    protected void onFrmNewEntReg1_BtnexitAction(Component c, ActionEvent event) {
+          Form f = c.getComponentForm();
+            cleardirdata(c);
+            Hide_Director_Fields(f);
+            Container conregister = (Container) findByName("Conregister", f);
+            conregister.setHidden(false);
+            //####################
+            //Form f = c.getComponentForm();
+            String Strak_no = uws.getTrak_no();
+            loadlist(Strak_no, c);
+//            Table tbl = (Table) findByName("Tablememinfo", c);
+//            tbl.requestFocus();
+            f.repaint();
+    
+    }
 }
