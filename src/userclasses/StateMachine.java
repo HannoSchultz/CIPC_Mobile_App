@@ -383,7 +383,7 @@ public class StateMachine extends StateMachineBase {
 
             //return "testlist";
             //return "BEE";
-             return "Splash";
+            return "Splash";
 
         } else {
             Log.setLevel(Log.REPORTING_PRODUCTION);//To disable debug information
@@ -954,9 +954,9 @@ public class StateMachine extends StateMachineBase {
         Label lblIcon3 = (Label) findByName("lblIcon3", cont);
         Label lblIcon4 = (Label) findByName("lblIcon4", cont);
         Label lblIcon5 = (Label) findByName("lblIcon5", cont);
-        Label lblIcon6 = (Label) findByName("lblIcon6", cont);        
+        Label lblIcon6 = (Label) findByName("lblIcon6", cont);
         //Label lblIcon4 = (Label) findByName("lblIcon4", cont);
-      //  hsz;
+        //  hsz;
         Image img1 = FontImage.createMaterial(FontImage.MATERIAL_STORE, labelForm, sizeLabel);
         Image img2 = FontImage.createMaterial(FontImage.MATERIAL_CREDIT_CARD, labelForm, sizeLabel);
         Image img3 = FontImage.createMaterial(FontImage.MATERIAL_SHOPPING_CART, labelForm, sizeLabel);
@@ -969,10 +969,8 @@ public class StateMachine extends StateMachineBase {
         lblIcon4.setIcon(img4);
         lblIcon5.setIcon(img5);
         lblIcon6.setIcon(img6);
-        
-        //lblIcon4.setIcon(img1);
 
-        
+        //lblIcon4.setIcon(img1);
         Button mbNameReservations = (Button) findByName("mbTasks", cont);
         mbNameReservations.addActionListener(new ActionListener() {
             @Override
@@ -1009,7 +1007,7 @@ public class StateMachine extends StateMachineBase {
             }
         });
 //hsz;
-        
+
         Button mbReg = (Button) findByName("mbRegistration", cont);
         mbReg.addActionListener(new ActionListener() {
             @Override
@@ -1019,7 +1017,7 @@ public class StateMachine extends StateMachineBase {
                 mbReg.setEnabled(true);
             }
         });
-    Button mbBEE = (Button) findByName("mbBEE", cont);
+        Button mbBEE = (Button) findByName("mbBEE", cont);
 
         mbBEE.addActionListener(new ActionListener() {
             @Override
@@ -1028,8 +1026,8 @@ public class StateMachine extends StateMachineBase {
                 showForm("BEE", null);
                 mbBEE.setEnabled(true);
             }
-        });        
-          Button mbDisclosure = (Button) findByName("mbDisclosure", cont);
+        });
+        Button mbDisclosure = (Button) findByName("mbDisclosure", cont);
 
         mbDisclosure.addActionListener(new ActionListener() {
             @Override
@@ -1038,7 +1036,7 @@ public class StateMachine extends StateMachineBase {
                 showForm("Disclosure", null);
                 mbDisclosure.setEnabled(true);
             }
-        });   
+        });
         UserWebServices u = new UserWebServices();
         Hashtable<String, Dashboard> table = u.get_mobi_permissions(AGENT_CODE);
 
@@ -1050,7 +1048,7 @@ public class StateMachine extends StateMachineBase {
             //f.reva
         } else {
             // String[] names = {"AR", "NR", "CP"};
-            String[] names = {"AR", "NR", "CP", "CR","BE","DC"};
+            String[] names = {"AR", "NR", "CP", "CR", "BE", "DC"};
 
             for (int i = 0; i < names.length; i++) {
                 String key = names[i];
@@ -3828,11 +3826,10 @@ public class StateMachine extends StateMachineBase {
         Container conaddDirector = (Container) findByName("ConaddDirector", f);
         conaddDirector.setHidden(true);
 //        Table tbl = (Table) findByName("Tablememinfo", f);
- //       tbl.setHidden(false);
+        //       tbl.setHidden(false);
 //        Container Containermem = (Container) findByName("Containermem", f);
 //        Containermem.setHidden(false);
 
- 
         f.repaint();
     }
 
@@ -4331,7 +4328,7 @@ public class StateMachine extends StateMachineBase {
     }
 
     protected void onFrmNewEntReg1_BtnFileNameAction(Component c, ActionEvent event) {
-
+UserWebServices u = new UserWebServices();
         Form f = c.getComponentForm();
         String name1 = findTxtname1().getText();
         String name2 = findTxtname2().getText();
@@ -4361,12 +4358,14 @@ public class StateMachine extends StateMachineBase {
         if (responseCall != null && responseCall.length() > 0
                 && responseCall.indexOf("already filed") == -1) {
             Dialog.show("Success", responseCall, "Ok", null);
+               u.insertCartItemServiceName(uws.getName_reservation_no(), AGENT_CODE, "50");
             uws.setIsnamereserved(false);
             uws.setIsnamefiled(true);
             Label lblname_no = (Label) findByName("LbLNameResNo", f);
             lblname_no.setText("Name Reservation No. " + uws.getName_reservation_no());
             Tabs tabs = (Tabs) findByName("Tabs", f);
             f.setTitle("Enterprise Details");
+           
             tabs.setSelectedIndex(2);
 
         } else if (responseCall != null && responseCall.length() > 0
@@ -4651,7 +4650,7 @@ public class StateMachine extends StateMachineBase {
         Form f = c.getComponentForm();
         //#########
         Container conregister = (Container) findByName("Conregister", f);
-            conregister.setHidden(true);
+        conregister.setHidden(true);
         try {
             if (Display.getInstance().isSimulator()) {
                 Dialog ip = new InfiniteProgress().showInifiniteBlocking();
@@ -4706,7 +4705,7 @@ public class StateMachine extends StateMachineBase {
                     physaddr2.repaint();
                 }
                 Show_Director_Fields(f);
-               // Button btn = (Button) findByName("BtnverifyOtp", c);
+                // Button btn = (Button) findByName("BtnverifyOtp", c);
                 //btn.setEnabled(true);
                 f.repaint();
                 TextField txtcell = (TextField) findByName("TxtCell", f);
@@ -4714,13 +4713,13 @@ public class StateMachine extends StateMachineBase {
                 txtcell.requestFocus();
                 txtcell.startEditing();
             } else {
-            //########
+                //########
                 Dialog ip = new InfiniteProgress().showInifiniteBlocking();
                 CodeScanner.getInstance().scanBarCode(new ScanResult() {
                     public void scanCompleted(String contents, String formatName, byte[] rawBytes) {
                         //Dialog.show("Bar code", "Bar code is: " + contents, "Ok", null);
 //#################################disable barcode scanner
-                Dialog.show("ID Scanned: ",contents,"OK",null);
+                        Dialog.show("ID Scanned: ", contents, "OK", null);
                         Result result = uws.get_dha_data(contents);
 
                         String retval = uws.DHA_Data(result);
@@ -4765,7 +4764,7 @@ public class StateMachine extends StateMachineBase {
                             ;
                         }
                         Show_Director_Fields(f);
-                       // Button btn = (Button) findByName("BtnverifyOtp", c);
+                        // Button btn = (Button) findByName("BtnverifyOtp", c);
                         //btn.setEnabled(true);
                         f.repaint();
                         TextField txtcell = (TextField) findByName("TxtCell", f);
@@ -4813,8 +4812,8 @@ public class StateMachine extends StateMachineBase {
             String Response = rs.getAsString("//Insert_Name_Workflow_mobiResult");
             ip.dispose();
             if (Response == "") {
-  //              Table tbl = (Table) findByName("Tablememinfo", f);
-  //              tbl.setHidden(true);
+                //              Table tbl = (Table) findByName("Tablememinfo", f);
+                //              tbl.setHidden(true);
 //               Container Containermem = (Container) findByName("Containermem", f);
 //               Containermem.setHidden(true);
                 tabs.setSelectedIndex(3);
@@ -4874,7 +4873,7 @@ public class StateMachine extends StateMachineBase {
             return;
         }
 
-       // loadlist(uws.getTrak_no(), c);
+        // loadlist(uws.getTrak_no(), c);
         f.repaint();
 
     }
@@ -5243,10 +5242,8 @@ public class StateMachine extends StateMachineBase {
 //            tbl.requestFocus();
             f.repaint();
             //####################
-        }
-        else
-        {
-        loadlist(uws.getTrak_no(), c);
+        } else {
+            loadlist(uws.getTrak_no(), c);
         }
         enableincorporator(uws.getTrak_no(), f);
         ip.dispose();
@@ -5265,14 +5262,13 @@ public class StateMachine extends StateMachineBase {
         if (uws.ArlDIR_Detail.size() == 0) {
             return;
         }
- //       Table tbl = (Table) findByName("Tablememinfo", c);
+        //       Table tbl = (Table) findByName("Tablememinfo", c);
 //       tbl.setModel(tbl.getModel());
-       // Container cnt = (Container) findByName("Conmemlist", f);
-         Container cnt = new Container(BoxLayout.y());
-       
+        // Container cnt = (Container) findByName("Conmemlist", f);
+        Container cnt = new Container(BoxLayout.y());
+
 //     Container1.setLayout(new BoxLayout.y());
 // Container1.addComponent(BoxLayout.y(), myComponent);
-      
         //Container cnt = new Container(BoxLayout.y());
         //cnt.setLayout(BoxLayout.y());
         for (int i = 0; i < uws.ArlDIR_Detail.size(); i++) {
@@ -5296,22 +5292,20 @@ public class StateMachine extends StateMachineBase {
                     //loadlist(Strak_no, c);
                     //Table tbl = (Table) findByName("Tablememinfo", c);
                     //tbl.requestFocus();
-                    
-                    
-                      //Form f = c.getComponentForm();
-            cleardirdata(c);
-            Hide_Director_Fields(f);
-            Container conregister = (Container) findByName("Conregister", f);
-            conregister.setHidden(false);
-            //####################
-            //Form f = c.getComponentForm();
-            String Strak_no = uws.getTrak_no();
-            loadlist(Strak_no, c);
+
+                    //Form f = c.getComponentForm();
+                    cleardirdata(c);
+                    Hide_Director_Fields(f);
+                    Container conregister = (Container) findByName("Conregister", f);
+                    conregister.setHidden(false);
+                    //####################
+                    //Form f = c.getComponentForm();
+                    String Strak_no = uws.getTrak_no();
+                    loadlist(Strak_no, c);
 //            Table tbl = (Table) findByName("Tablememinfo", c);
 //            tbl.requestFocus();
-            f.repaint();
-                    
-                    
+                    f.repaint();
+
                     f.repaint();
                 } else {
                     String Strak_no = uws.getTrak_no();
@@ -5322,7 +5316,7 @@ public class StateMachine extends StateMachineBase {
                 }
             });
         }
-       // Container cntmemlist = (Container) findByName("Conmemlist", f);
+        // Container cntmemlist = (Container) findByName("Conmemlist", f);
         cntmemlist.add(cnt);
         // cnt.setScrollableY(true);
         //f.add(cnt);
@@ -5333,34 +5327,34 @@ public class StateMachine extends StateMachineBase {
     protected void onFrmNewEntReg1_BtnRegisterenterprisAction(Component c, ActionEvent event) {
         UserWebServices u = new UserWebServices();
         Dialog ip = new InfiniteProgress().showInifiniteBlocking();
-        String valdir = uws.ValidateDirector(AGENT_CODE,uws.getTrak_no());
-        if (valdir == null )
-        {return;}
-       // hsz
-         if (valdir.equals( "false")) {
+        String valdir = uws.ValidateDirector(AGENT_CODE, uws.getTrak_no());
+        if (valdir == null) {
+            return;
+        }
+        // hsz
+        if (valdir.equals("false")) {
             Dialog.show("Director Info Missing. ", "Please capture information of at least one director and one incorporator.", "OK", null);
-             ip.dispose();
-            return ;
+            ip.dispose();
+            return;
         }
 //validate information
         u.insertCartItemServiceCOREG(uws.getTrak_no(), AGENT_CODE, "125");
 
-        String Sreservation_no = uws.getName_reservation_no();
-        
-        if (Sreservation_no.trim() != "") {
-
-//            if (Sreservation_no.trim() != "") {
-            u.insertCartItemServiceName(Sreservation_no, AGENT_CODE, "50");
-
+//        String Sreservation_no = uws.getName_reservation_no();
+//
+//        if (Sreservation_no.trim() != "") {
+//            String rvalue = uws.ValidateNameForPayment(AGENT_CODE, Sreservation_no);
+//            if (rvalue.equals("false")) {
+//                u.insertCartItemServiceName(Sreservation_no, AGENT_CODE, "50");
 //            }
-        }
+//        }
         ip.dispose();
         String Strak_no = uws.getTrak_no();
-        if (Sreservation_no == "") {
-            Dialog.show("Payment ", "Enterprise Registration reference no: " + Strak_no + " Was added to the Cart", "OK", null);
-        } else {
-            Dialog.show("Payment ", "Name reservation-" + Sreservation_no + " and Enterprise Registration reference no: - " + Strak_no + " Was added to the Cart", "OK", null);
-        }
+        //if (Sreservation_no == "") {
+            Dialog.show("Payment ", "Transaction for Enterprise Registration reference no: " + Strak_no + " Was added to the Cart", "OK", null);
+       // } else {
+       //     Dialog.show("Payment ", "Name reservation-" + Sreservation_no + " and Enterprise Registration reference no: - " + Strak_no + " Was added to the Cart", "OK", null);
+       // }
         // Form concart = contDashBoard.getComponentForm();
         DisplayCart = true;
         showForm("Main", null);
@@ -5585,7 +5579,7 @@ public class StateMachine extends StateMachineBase {
     @Override
     protected void onFrmNewEntReg1_CmbdirectortypeAction(Component c, ActionEvent event) {
         Form f = c.getComponentForm();
-       // loadlist(uws.getTrak_no(), c);
+        // loadlist(uws.getTrak_no(), c);
         f.repaint();
     }
 
@@ -5639,8 +5633,8 @@ public class StateMachine extends StateMachineBase {
                 boolean answer = Dialog.show("Info", "Do You Want to apply for a B-BBEE Certificate for " + b.getText(), "Yes", "No");
                 if (answer) {
                     //   Table tbl = (Table) findByName("Tablememinfo", c);
-                       tbl.add(cnt_Bee);
-                   // f.repaint();
+                    tbl.add(cnt_Bee);
+                    // f.repaint();
                 } else {
                     f.repaint();
                 }
@@ -5649,8 +5643,6 @@ public class StateMachine extends StateMachineBase {
         }
         f.repaint();
     }
- 
-
 
     protected void load_bee_form(Form f) {
         // Form f = c.getComponentForm();
@@ -5659,7 +5651,7 @@ public class StateMachine extends StateMachineBase {
         Result result = u.Get_BEE_MOBI(AGENT_CODE);
         uws.BEE_Data(result);
         Container cnt_Bee = new Container(BoxLayout.y());
-       // Table tbl = (Table) findByName("Table_ent_Bee", f);
+        // Table tbl = (Table) findByName("Table_ent_Bee", f);
         for (int i = 0; i < uws.ArlBEE_Detail.size(); i++) {
             //rm f = c.getComponentForm();
             BEEDetail n = uws.ArlBEE_Detail.get(i);
@@ -5673,9 +5665,9 @@ public class StateMachine extends StateMachineBase {
             b.addActionListener(e
                     -> {
                 boolean answer = Dialog.show("Info", "Do You Want to apply for a B-BBEE Certificate for " + b.getText(), "Yes", "No");
-               if (answer) {
-                //   showBEEStep1(b);
-               }
+                if (answer) {
+                    //   showBEEStep1(b);
+                }
 //                    //   Table tbl = (Table) findByName("Tablememinfo", c);
 //                     // tbl.add(cnt_Bee);
 //                     Label lbl_ent_no = (Label) findByName("lbl_ent_no", f);
@@ -5690,9 +5682,9 @@ public class StateMachine extends StateMachineBase {
 //                }
             });
             cnt_Bee.addComponent(b);
-                    //  tbl.add(b);
+            //  tbl.add(b);
         }
-         f.addComponent(cnt_Bee);
+        f.addComponent(cnt_Bee);
         f.repaint();
     }
 
@@ -5703,42 +5695,36 @@ public class StateMachine extends StateMachineBase {
 
     @Override
     protected void postBEE(Form f) {
-      //  load_bee_form(f);
+        //  load_bee_form(f);
     }
-    
-    public void showBEEStep1(Button buttonClicked){
-        
-        Log.p("buttonClicked=" + buttonClicked.getText(),Log.DEBUG);
-        
-        
+
+    public void showBEEStep1(Button buttonClicked) {
+
+        Log.p("buttonClicked=" + buttonClicked.getText(), Log.DEBUG);
+
         Form form = new Form("Step 1");
         form.show();
-        
+
     }
-
-   
-
 
     @Override
     protected void onContProjects_BtnStep1RetrieveDetailsAction(Component c, ActionEvent event) {
 
-    
     }
 
-   
     protected void onFrmNewEntReg1_BtnexitAction(Component c, ActionEvent event) {
-          Form f = c.getComponentForm();
-            cleardirdata(c);
-            Hide_Director_Fields(f);
-            Container conregister = (Container) findByName("Conregister", f);
-            conregister.setHidden(false);
-            //####################
-            //Form f = c.getComponentForm();
-            String Strak_no = uws.getTrak_no();
-            loadlist(Strak_no, c);
+        Form f = c.getComponentForm();
+        cleardirdata(c);
+        Hide_Director_Fields(f);
+        Container conregister = (Container) findByName("Conregister", f);
+        conregister.setHidden(false);
+        //####################
+        //Form f = c.getComponentForm();
+        String Strak_no = uws.getTrak_no();
+        loadlist(Strak_no, c);
 //            Table tbl = (Table) findByName("Tablememinfo", c);
 //            tbl.requestFocus();
-            f.repaint();
-    
+        f.repaint();
+
     }
 }

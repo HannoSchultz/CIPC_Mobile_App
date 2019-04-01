@@ -25,7 +25,9 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 import java.text.DateFormat;
+import services.User;
 import userclasses.BEEDetail;
+import userclasses.Const;
 import userclasses.Constants;
 import userclasses.DHA_Detail;
 import userclasses.Name_Workflow;
@@ -996,9 +998,9 @@ public class UserWebServicesNewReg {
                 + "   <soapenv:Header/>\n"
                 + "   <soapenv:Body>\n"
                 + "      <cipc:Get_Approved_Name_MObi>\n"
-                + "        <cipc:sUserName>wBAA7LAkWIs=</cipc:sUserName>\n"
-                + "          <cipc:sPassword>6EGQAUzYJlhvffhZ+gUFfg==</cipc:sPassword>\n"
-                + "          <cipc:sBankID>wBAA7LAkWIs=</cipc:sBankID>\n"
+                + "        <cipc:sUserName>" + Const.sUserName + "</cipc:sUserName>\n"
+                + "          <cipc:sPassword>" + Const.sPassword + "</cipc:sPassword>\n"
+                + "          <cipc:sBankID>" + Const.sBankID + "</cipc:sBankID>\n"
                 + "         <cipc:sRefNo>" + Name_Res_no + "</cipc:sRefNo>\n"
                 + "         <cipc:sCust_Code>" + customerCode + "</cipc:sCust_Code>\n"
                 + "      </cipc:Get_Approved_Name_MObi>\n"
@@ -1085,7 +1087,6 @@ public class UserWebServicesNewReg {
 
         return response;
     }
-
     public String ValidateCelNo(String customerCode, String Track_no, String cell_no, String id_no) {
 
         String response = "";
@@ -1194,7 +1195,216 @@ public class UserWebServicesNewReg {
         }
 
         return response;
-    }//end name reservation     
+    }
+
+         public String ValidateNameForPayment(String customerCode, String Track_no) {
+
+        String response = "";
+
+        final String SOAP_BODY
+                = "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:cipc=\"CIPC_WEB_SERVICES\">\n"
+                + "   <soap:Header/>\n"
+                + "   <soap:Body>\n"
+                + "      <cipc:ValidateNameForPayment>\n"
+                + "       <cipc:sUserName>" + Constants.sUserName + "</cipc:sUserName>\n"
+                + "         <cipc:sPassword>" + Constants.sPassword + "</cipc:sPassword>\n"
+                + "         <cipc:sBankID>" + Constants.sBankID + "</cipc:sBankID>\n"
+                + "         <!--Optional:-->\n"
+                + "         <cipc:track_no>" + Track_no + "</cipc:track_no>\n"
+                + "         <!--Optional:-->\n"
+                + "         <cipc:sCust_Code>" + customerCode + "</cipc:sCust_Code>\n"
+                + "      </cipc:ValidateNameForPayment>\n"
+                + "   </soap:Body>\n"
+                + "</soap:Envelope>";
+
+        ConnectionRequest httpRequest = new ConnectionRequest() {
+            Element h;
+
+            @Override
+            protected void handleErrorResponseCode(int code, String message) {
+                super.handleErrorResponseCode(code, message); //To change body of generated methods, choose Tools | Templates.
+                if (500 == code) {
+                    Dialog.show("Error", "Error 500 Contact CIPC.", "Ok", null);
+                }
+            }
+
+            @Override
+            protected void handleIOException(IOException err) {
+                //    super.handleIOException(err); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            protected void handleRuntimeException(RuntimeException err) {
+                //super.handleRuntimeException(err); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            protected void buildRequestBody(OutputStream os) throws IOException {
+                super.buildRequestBody(os);
+                os.write(SOAP_BODY.getBytes("utf-8"));
+
+            }
+
+            protected void postResponse() {
+
+                super.postResponse();
+            }
+
+            protected void readResponse(InputStream input) throws IOException {
+                super.readResponse(input);
+
+            }
+
+            @Override
+            protected void handleException(Exception err) {
+                Log.p("Exception: " + err.toString());
+                Dialog.show("No Internet", "There is no internet connection. Please switch your connection on.", "Okay", null);
+
+            }
+        };
+
+        httpRequest.setUrl(Constants.soapServicesEndPoint + "enterprise.asmx");
+        httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
+        httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
+        httpRequest.setPost(true);
+        httpRequest.setFailSilently(true);
+
+        InfiniteProgress prog = new InfiniteProgress();
+        Dialog dlg = prog.showInifiniteBlocking();
+        httpRequest.setDisposeOnCompletion(dlg);
+
+        NetworkManager.getInstance().addToQueueAndWait(httpRequest);
+        String data = new String(httpRequest.getResponseData());
+        Log.p("Data d: " + data, Log.DEBUG);
+
+        try {
+//hsz1
+            Result result = Result.fromContent(data, Result.XML);
+            String validdir = result.getAsString("//ValidateNameForPaymentResult");
+            //         if ("|".equals(Namereservation_MOBI_traknoresult.substring(0, 1))) {
+//                response = RSM_1(Namereservation_MOBI_traknoresult);
+//
+//            } else {
+            response = validdir;
+//            }
+
+            if (response != null) {
+                response = response.trim();
+            }
+
+            //Log.p("result: " + result, Log.DEBUG);
+            //Log.p("namereservation_mobiresult: " + namereservation_mobiresult, Log.DEBUG);
+        } catch (IllegalArgumentException e) {
+            Log.p(e.toString());
+        }
+
+        return response;
+    }
+
+        
+    public String ValidateDirector(String customerCode, String Track_no) {
+
+        String response = "";
+
+        final String SOAP_BODY
+                = "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:cipc=\"CIPC_WEB_SERVICES\">\n"
+                + "   <soap:Header/>\n"
+                + "   <soap:Body>\n"
+                + "      <cipc:ValidateDirectors>\n"
+                + "       <cipc:sUserName>" + Constants.sUserName + "</cipc:sUserName>\n"
+                + "         <cipc:sPassword>" + Constants.sPassword + "</cipc:sPassword>\n"
+                + "         <cipc:sBankID>" + Constants.sBankID + "</cipc:sBankID>\n"
+                + "         <!--Optional:-->\n"
+                + "         <cipc:track_no>" + Track_no + "</cipc:track_no>\n"
+                + "         <!--Optional:-->\n"
+                + "         <cipc:sCust_Code>" + customerCode + "</cipc:sCust_Code>\n"
+                + "      </cipc:ValidateDirectors>\n"
+                + "   </soap:Body>\n"
+                + "</soap:Envelope>";
+
+        ConnectionRequest httpRequest = new ConnectionRequest() {
+            Element h;
+
+            @Override
+            protected void handleErrorResponseCode(int code, String message) {
+                super.handleErrorResponseCode(code, message); //To change body of generated methods, choose Tools | Templates.
+                if (500 == code) {
+                    Dialog.show("Error", "Error 500 Contact CIPC.", "Ok", null);
+                }
+            }
+
+            @Override
+            protected void handleIOException(IOException err) {
+                //    super.handleIOException(err); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            protected void handleRuntimeException(RuntimeException err) {
+                //super.handleRuntimeException(err); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            protected void buildRequestBody(OutputStream os) throws IOException {
+                super.buildRequestBody(os);
+                os.write(SOAP_BODY.getBytes("utf-8"));
+
+            }
+
+            protected void postResponse() {
+
+                super.postResponse();
+            }
+
+            protected void readResponse(InputStream input) throws IOException {
+                super.readResponse(input);
+
+            }
+
+            @Override
+            protected void handleException(Exception err) {
+                Log.p("Exception: " + err.toString());
+                Dialog.show("No Internet", "There is no internet connection. Please switch your connection on.", "Okay", null);
+
+            }
+        };
+
+        httpRequest.setUrl(Constants.soapServicesEndPoint + "enterprise.asmx");
+        httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
+        httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
+        httpRequest.setPost(true);
+        httpRequest.setFailSilently(true);
+
+        InfiniteProgress prog = new InfiniteProgress();
+        Dialog dlg = prog.showInifiniteBlocking();
+        httpRequest.setDisposeOnCompletion(dlg);
+
+        NetworkManager.getInstance().addToQueueAndWait(httpRequest);
+        String data = new String(httpRequest.getResponseData());
+        Log.p("Data d: " + data, Log.DEBUG);
+
+        try {
+//hsz1
+            Result result = Result.fromContent(data, Result.XML);
+            String validdir = result.getAsString("//ValidateDirectorsResult");
+            //         if ("|".equals(Namereservation_MOBI_traknoresult.substring(0, 1))) {
+//                response = RSM_1(Namereservation_MOBI_traknoresult);
+//
+//            } else {
+            response = validdir;
+//            }
+
+            if (response != null) {
+                response = response.trim();
+            }
+
+            //Log.p("result: " + result, Log.DEBUG);
+            //Log.p("namereservation_mobiresult: " + namereservation_mobiresult, Log.DEBUG);
+        } catch (IllegalArgumentException e) {
+            Log.p(e.toString());
+        }
+
+        return response;
+    }
 
     public String Namereservation_MOBI(String customerCode, String name1, String name2, String name3, String name4) {
 
@@ -1209,11 +1419,11 @@ public class UserWebServicesNewReg {
                 + "\n"
                 + "      <cipc:Namereservation_MOBI_trakno>\n"
                 + "\n"
-                + "        <cipc:sUserName>ImJbvgnMVO0=</cipc:sUserName>       \n"
+                + "        <cipc:sUserName>" + Const.sUserName + "</cipc:sUserName>       \n"
                 + "\n"
-                + "         <cipc:sPassword>WViQlFqcunA=</cipc:sPassword>\n"
+                + "         <cipc:sPassword>" + Const.sPassword + "</cipc:sPassword>\n"
                 + "\n"
-                + "         <cipc:sBankID>WViQlFqcunA=</cipc:sBankID>\n"
+                + "         <cipc:sBankID>" + Const.sBankID + "</cipc:sBankID>\n"
                 + "\n"
                 + "         <cipc:S_name1>" + name1 + "</cipc:S_name1>\n"
                 + "\n"
@@ -1531,11 +1741,11 @@ public class UserWebServicesNewReg {
                 + "\n"
                 + "      <cipc:search_name_MOBI>\n"
                 + "\n"
-                + "          <cipc:sUserName>wBAA7LAkWIs=</cipc:sUserName>\n"
+                + "          <cipc:sUserName>" + Const.sUserName + "</cipc:sUserName>\n"
                 + "\n"
-                + "          <cipc:sPassword>6EGQAUzYJlhvffhZ+gUFfg==</cipc:sPassword>\n"
+                + "          <cipc:sPassword> " + Const.sPassword + "</cipc:sPassword>\n"
                 + "\n"
-                + "          <cipc:sBankID>wBAA7LAkWIs=</cipc:sBankID>\n"
+                + "          <cipc:sBankID>" + Const.sBankID + "</cipc:sBankID>\n"
                 + "\n"
                 + "         <cipc:sCust_Code>" + customerCode + "</cipc:sCust_Code>\n"
                 + "\n"

@@ -1358,6 +1358,18 @@ public abstract class StateMachineBase extends UIBuilder {
         return cmp;
     }
 
+    public com.codename1.ui.Button findBtnexit(Component root) {
+        return (com.codename1.ui.Button)findByName("Btnexit", root);
+    }
+
+    public com.codename1.ui.Button findBtnexit() {
+        com.codename1.ui.Button cmp = (com.codename1.ui.Button)findByName("Btnexit", Display.getInstance().getCurrent());
+        if(cmp == null && aboutToShowThisContainer != null) {
+            cmp = (com.codename1.ui.Button)findByName("Btnexit", aboutToShowThisContainer);
+        }
+        return cmp;
+    }
+
     public com.codename1.ui.Button findBtnSettingsSave(Component root) {
         return (com.codename1.ui.Button)findByName("btnSettingsSave", root);
     }
@@ -5061,6 +5073,10 @@ public abstract class StateMachineBase extends UIBuilder {
                 onFrmNewEntReg1_BtnAddDirectorAction(c, event);
                 return;
             }
+            if("Btnexit".equals(c.getName())) {
+                onFrmNewEntReg1_BtnexitAction(c, event);
+                return;
+            }
             if("BtnRegisterenterpris".equals(c.getName())) {
                 onFrmNewEntReg1_BtnRegisterenterprisAction(c, event);
                 return;
@@ -5578,6 +5594,9 @@ public abstract class StateMachineBase extends UIBuilder {
       }
 
       protected void onFrmNewEntReg1_BtnAddDirectorAction(Component c, ActionEvent event) {
+      }
+
+      protected void onFrmNewEntReg1_BtnexitAction(Component c, ActionEvent event) {
       }
 
       protected void onFrmNewEntReg1_BtnRegisterenterprisAction(Component c, ActionEvent event) {
