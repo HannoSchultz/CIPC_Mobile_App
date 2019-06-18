@@ -3098,6 +3098,18 @@ public abstract class StateMachineBase extends UIBuilder {
         return cmp;
     }
 
+    public com.codename1.ui.ComboBox findCmbShares(Component root) {
+        return (com.codename1.ui.ComboBox)findByName("CmbShares", root);
+    }
+
+    public com.codename1.ui.ComboBox findCmbShares() {
+        com.codename1.ui.ComboBox cmp = (com.codename1.ui.ComboBox)findByName("CmbShares", Display.getInstance().getCurrent());
+        if(cmp == null && aboutToShowThisContainer != null) {
+            cmp = (com.codename1.ui.ComboBox)findByName("CmbShares", aboutToShowThisContainer);
+        }
+        return cmp;
+    }
+
     public com.codename1.ui.TextField findPhysAddr2(Component root) {
         return (com.codename1.ui.TextField)findByName("PhysAddr2", root);
     }
@@ -4822,6 +4834,9 @@ public abstract class StateMachineBase extends UIBuilder {
         if("Cmbenttype".equals(listName)) {
             return initListModelCmbenttype(cmp);
         }
+        if("CmbShares".equals(listName)) {
+            return initListModelCmbShares(cmp);
+        }
         return super.setListModel(cmp);
     }
 
@@ -4834,6 +4849,10 @@ public abstract class StateMachineBase extends UIBuilder {
     }
 
     protected boolean initListModelCmbenttype(List cmp) {
+        return false;
+    }
+
+    protected boolean initListModelCmbShares(List cmp) {
         return false;
     }
 
@@ -4955,6 +4974,10 @@ public abstract class StateMachineBase extends UIBuilder {
             }
             if("TxtAuthShares".equals(c.getName())) {
                 onFrmNewEntReg1_TxtAuthSharesAction(c, event);
+                return;
+            }
+            if("CmbShares".equals(c.getName())) {
+                onFrmNewEntReg1_CmbSharesAction(c, event);
                 return;
             }
             if("TxtEntEmail".equals(c.getName())) {
@@ -5507,6 +5530,9 @@ public abstract class StateMachineBase extends UIBuilder {
       }
 
       protected void onFrmNewEntReg1_TxtAuthSharesAction(Component c, ActionEvent event) {
+      }
+
+      protected void onFrmNewEntReg1_CmbSharesAction(Component c, ActionEvent event) {
       }
 
       protected void onFrmNewEntReg1_TxtEntEmailAction(Component c, ActionEvent event) {

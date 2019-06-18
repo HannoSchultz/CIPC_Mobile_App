@@ -4158,7 +4158,9 @@ public class StateMachine extends StateMachineBase {
         btnnr4.setUIID("CIPC_DARK");
         f.add(BorderLayout.NORTH, contTop);
         //f.add(border);
-
+            TextField TxtAuthShares = (TextField) findByName("TxtAuthShares", f);
+            TxtAuthShares.setVisible(false);
+            TxtAuthShares.setHidden(true);
         tabs.addSelectionListener(new SelectionListener() {
             @Override
             public void selectionChanged(int oldSelected, int newSelected) {
@@ -4424,12 +4426,18 @@ UserWebServices u = new UserWebServices();
 
             Form f = c.getComponentForm();
             TextField TxtAuthShares = (TextField) findByName("TxtAuthShares", f);
+            TxtAuthShares.setVisible(false);
+            TxtAuthShares.setHidden(true);
+                    ComboBox cmbShares = (ComboBox) findByName("CmbShares", f);
             //##########
+               TxtAuthShares.setText(cmbShares.getSelectedItem().toString());
             if (TxtAuthShares.getText().trim().equals("")) {
                 Dialog.show("Error", "Please enter a valid number of shares.", "OK", null);
-                TxtAuthShares.repaint();
-                TxtAuthShares.requestFocus();
-                TxtAuthShares.startEditing();
+                cmbShares.repaint();
+                //TxtAuthShares.repaint();
+                cmbShares.requestFocus();
+                //TxtAuthShares.requestFocus();
+                //TxtAuthShares.startEditing();
                 return false;
             }
             enterprisedetails.setShares(TxtAuthShares.getText().trim());
