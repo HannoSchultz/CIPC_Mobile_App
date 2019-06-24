@@ -5033,7 +5033,14 @@ UserWebServices u = new UserWebServices();
             mbdirectortype.repaint();
             mbdirectortype.requestFocus();
             return false;
-
+        }
+//CmdCOuntryoforigin
+  ComboBox mbCofOrigin = (ComboBox) findByName("CmbCoorigin", f);
+        if (mbCofOrigin.getSelectedItem().toString().equals("")) {
+            Dialog.show("Error", "Please enter a valid Country Of Origin.", "OK", null);
+            mbCofOrigin.repaint();
+            mbCofOrigin.requestFocus();
+            return false;
         }
 
 //CmbProvince
@@ -5134,7 +5141,7 @@ UserWebServices u = new UserWebServices();
         if (mbdirectortype.getSelectedItem().toString().equals("Alternate Director")) {
             directordetails.setDir_type_code("N");
         }
-
+directordetails.setCountryofOrigin(mbCofOrigin.getSelectedItem().toString());
         //directordetails.setDir_appoint_date(dtappdate.getText().toString());
         directordetails.setDir_appoint_date(dateStringApp);
         String dateString = lbldirbirthdate.getText().trim();

@@ -1034,6 +1034,18 @@ public abstract class StateMachineBase extends UIBuilder {
         return cmp;
     }
 
+    public com.codename1.ui.Label findLabel16(Component root) {
+        return (com.codename1.ui.Label)findByName("Label16", root);
+    }
+
+    public com.codename1.ui.Label findLabel16() {
+        com.codename1.ui.Label cmp = (com.codename1.ui.Label)findByName("Label16", Display.getInstance().getCurrent());
+        if(cmp == null && aboutToShowThisContainer != null) {
+            cmp = (com.codename1.ui.Label)findByName("Label16", aboutToShowThisContainer);
+        }
+        return cmp;
+    }
+
     public com.codename1.ui.Container findContainer5(Component root) {
         return (com.codename1.ui.Container)findByName("Container5", root);
     }
@@ -2102,6 +2114,18 @@ public abstract class StateMachineBase extends UIBuilder {
         return cmp;
     }
 
+    public com.codename1.ui.Component findCmbCoorigin(Component root) {
+        return (com.codename1.ui.Component)findByName("CmbCoorigin", root);
+    }
+
+    public com.codename1.ui.Component findCmbCoorigin() {
+        com.codename1.ui.Component cmp = (com.codename1.ui.Component)findByName("CmbCoorigin", Display.getInstance().getCurrent());
+        if(cmp == null && aboutToShowThisContainer != null) {
+            cmp = (com.codename1.ui.Component)findByName("CmbCoorigin", aboutToShowThisContainer);
+        }
+        return cmp;
+    }
+
     public com.codename1.ui.Container findContainer132(Component root) {
         return (com.codename1.ui.Container)findByName("Container132", root);
     }
@@ -2470,18 +2494,6 @@ public abstract class StateMachineBase extends UIBuilder {
         com.codename1.ui.Label cmp = (com.codename1.ui.Label)findByName("lblIcon6", Display.getInstance().getCurrent());
         if(cmp == null && aboutToShowThisContainer != null) {
             cmp = (com.codename1.ui.Label)findByName("lblIcon6", aboutToShowThisContainer);
-        }
-        return cmp;
-    }
-
-    public com.codename1.ui.Container findConDir(Component root) {
-        return (com.codename1.ui.Container)findByName("ConDir", root);
-    }
-
-    public com.codename1.ui.Container findConDir() {
-        com.codename1.ui.Container cmp = (com.codename1.ui.Container)findByName("ConDir", Display.getInstance().getCurrent());
-        if(cmp == null && aboutToShowThisContainer != null) {
-            cmp = (com.codename1.ui.Container)findByName("ConDir", aboutToShowThisContainer);
         }
         return cmp;
     }
@@ -5032,6 +5044,10 @@ public abstract class StateMachineBase extends UIBuilder {
                 onFrmNewEntReg1_ChbIncorporatorAction(c, event);
                 return;
             }
+            if("CmbCoorigin".equals(c.getName())) {
+                onFrmNewEntReg1_CmbCooriginAction(c, event);
+                return;
+            }
             if("Cmbdirectortype".equals(c.getName())) {
                 onFrmNewEntReg1_CmbdirectortypeAction(c, event);
                 return;
@@ -5572,6 +5588,9 @@ public abstract class StateMachineBase extends UIBuilder {
       }
 
       protected void onFrmNewEntReg1_ChbIncorporatorAction(Component c, ActionEvent event) {
+      }
+
+      protected void onFrmNewEntReg1_CmbCooriginAction(Component c, ActionEvent event) {
       }
 
       protected void onFrmNewEntReg1_CmbdirectortypeAction(Component c, ActionEvent event) {

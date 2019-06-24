@@ -629,7 +629,7 @@ public class UserWebServicesNewReg {
                 + "            <diffgr:diffgram xmlns:msdata=\"urn:schemas-microsoft-com:xml-msdata\" xmlns:diffgr=\"urn:schemas-microsoft-com:xml-diffgram-v1\">\n"
                 + "               <NewDataSet xmlns=\"\">\n"
                 + "                  <Table1 diffgr:id=\"Table11\" msdata:rowOrder=\"0\" diffgr:hasChanges=\"inserted\">\n"
-                + "                     <country_code>ZA</country_code>\n"
+                + "                     <country_code>" + directordetails.getCountryofOrigin() + "</country_code>\n"
                 + "                     <Dir_Type_Code>" + directordetails.getDir_type_code() + "</Dir_Type_Code>\n"
                 + "                     <Dir_Status_Code>A</Dir_Status_Code>\n"
                 + "                     <surname>" + directordetails.getSurname() + "</surname>\n"

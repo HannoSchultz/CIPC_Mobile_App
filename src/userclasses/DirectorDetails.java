@@ -12,7 +12,15 @@ package userclasses;
 public class DirectorDetails {
 
     private String ent_no;
+    private String CountryofOrigin;
 
+    public String getCountryofOrigin() {
+        return CountryofOrigin;
+    }
+
+    public void setCountryofOrigin(String CountryofOrigin) {
+        this.CountryofOrigin = CountryofOrigin;
+    }
     public String getCust_code() {
         return cust_code;
     }
