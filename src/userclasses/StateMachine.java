@@ -158,6 +158,7 @@ public class StateMachine extends StateMachineBase {
 
     private static String AGENT_CODE = "";
     private Container contStep3Turnovers;
+    private String Bee_No = "";
 
     EnterpriseDetails enterpriseDetails;
     ArrayList<NameSearchObject> arrayListNameReservation;
@@ -4158,9 +4159,9 @@ public class StateMachine extends StateMachineBase {
         btnnr4.setUIID("CIPC_DARK");
         f.add(BorderLayout.NORTH, contTop);
         //f.add(border);
-            TextField TxtAuthShares = (TextField) findByName("TxtAuthShares", f);
-            TxtAuthShares.setVisible(false);
-            TxtAuthShares.setHidden(true);
+        TextField TxtAuthShares = (TextField) findByName("TxtAuthShares", f);
+        TxtAuthShares.setVisible(false);
+        TxtAuthShares.setHidden(true);
         tabs.addSelectionListener(new SelectionListener() {
             @Override
             public void selectionChanged(int oldSelected, int newSelected) {
@@ -4330,7 +4331,7 @@ public class StateMachine extends StateMachineBase {
     }
 
     protected void onFrmNewEntReg1_BtnFileNameAction(Component c, ActionEvent event) {
-UserWebServices u = new UserWebServices();
+        UserWebServices u = new UserWebServices();
         Form f = c.getComponentForm();
         String name1 = findTxtname1().getText();
         String name2 = findTxtname2().getText();
@@ -4360,14 +4361,14 @@ UserWebServices u = new UserWebServices();
         if (responseCall != null && responseCall.length() > 0
                 && responseCall.indexOf("already filed") == -1) {
             Dialog.show("Success", responseCall, "Ok", null);
-               u.insertCartItemServiceName(uws.getName_reservation_no(), AGENT_CODE, "50");
+            u.insertCartItemServiceName(uws.getName_reservation_no(), AGENT_CODE, "50");
             uws.setIsnamereserved(false);
             uws.setIsnamefiled(true);
             Label lblname_no = (Label) findByName("LbLNameResNo", f);
             lblname_no.setText("Name Reservation No. " + uws.getName_reservation_no());
             Tabs tabs = (Tabs) findByName("Tabs", f);
             f.setTitle("Enterprise Details");
-           
+
             tabs.setSelectedIndex(2);
 
         } else if (responseCall != null && responseCall.length() > 0
@@ -4428,9 +4429,9 @@ UserWebServices u = new UserWebServices();
             TextField TxtAuthShares = (TextField) findByName("TxtAuthShares", f);
             TxtAuthShares.setVisible(false);
             TxtAuthShares.setHidden(true);
-                    ComboBox cmbShares = (ComboBox) findByName("CmbShares", f);
+            ComboBox cmbShares = (ComboBox) findByName("CmbShares", f);
             //##########
-               TxtAuthShares.setText(cmbShares.getSelectedItem().toString());
+            TxtAuthShares.setText(cmbShares.getSelectedItem().toString());
             if (TxtAuthShares.getText().trim().equals("")) {
                 Dialog.show("Error", "Please enter a valid number of shares.", "OK", null);
                 cmbShares.repaint();
@@ -5035,7 +5036,7 @@ UserWebServices u = new UserWebServices();
             return false;
         }
 //CmdCOuntryoforigin
-  ComboBox mbCofOrigin = (ComboBox) findByName("CmbCoorigin", f);
+        ComboBox mbCofOrigin = (ComboBox) findByName("CmbCoorigin", f);
         if (mbCofOrigin.getSelectedItem().toString().equals("")) {
             Dialog.show("Error", "Please enter a valid Country Of Origin.", "OK", null);
             mbCofOrigin.repaint();
@@ -5141,7 +5142,7 @@ UserWebServices u = new UserWebServices();
         if (mbdirectortype.getSelectedItem().toString().equals("Alternate Director")) {
             directordetails.setDir_type_code("N");
         }
-directordetails.setCountryofOrigin(mbCofOrigin.getSelectedItem().toString());
+        directordetails.setCountryofOrigin(mbCofOrigin.getSelectedItem().toString());
         //directordetails.setDir_appoint_date(dtappdate.getText().toString());
         directordetails.setDir_appoint_date(dateStringApp);
         String dateString = lbldirbirthdate.getText().trim();
@@ -5366,10 +5367,10 @@ directordetails.setCountryofOrigin(mbCofOrigin.getSelectedItem().toString());
         ip.dispose();
         String Strak_no = uws.getTrak_no();
         //if (Sreservation_no == "") {
-            Dialog.show("Payment ", "Transaction for Enterprise Registration reference no: " + Strak_no + " Was added to the Cart", "OK", null);
-       // } else {
-       //     Dialog.show("Payment ", "Name reservation-" + Sreservation_no + " and Enterprise Registration reference no: - " + Strak_no + " Was added to the Cart", "OK", null);
-       // }
+        Dialog.show("Payment ", "Transaction for Enterprise Registration reference no: " + Strak_no + " Was added to the Cart", "OK", null);
+        // } else {
+        //     Dialog.show("Payment ", "Name reservation-" + Sreservation_no + " and Enterprise Registration reference no: - " + Strak_no + " Was added to the Cart", "OK", null);
+        // }
         // Form concart = contDashBoard.getComponentForm();
         DisplayCart = true;
         showForm("Main", null);
@@ -5405,41 +5406,7 @@ directordetails.setCountryofOrigin(mbCofOrigin.getSelectedItem().toString());
 
     protected void beforeBEE(Form f) {
         load_bee_form(f);
-//        UserWebServices u = new UserWebServices();
-//        //AnnualReturns annualReturns = u.get_ar_info_mobi(AGENT_CODE, ENT_NUMBER);
-//        listBEEDetail = u.Get_BEE_MOBI(AGENT_CODE);
-//        //listBEEDetail = u.Get_BEE_MOBI(dataset);
-//
-//        if (listBEEDetail.isEmpty()) {
-//            Log.p("listCalculateARTran=0", Log.DEBUG);
-//        } else {
-//            Log.p("listCalculateARTran=" + listBEEDetail.size(), Log.DEBUG);
-//        }
-//
-//        for (int i = 0; i < listBEEDetail.size(); i++) {
-//            //rm f = c.getComponentForm();
-//            BEEDetail n = listBEEDetail.get(i);
-//            //Dialog.show("1.1", n.getName(), "Ok", null);
-//            String ent_no = n.getEnt_no();
-//            String ent_name = n.getEnt_name();
-////                    if (txt.indexOf("|") > -1) {
-////                        java.util.List<String> list = StringUtil.tokenize(n.getName(), "|");
-////                        if (list != null && list.size() > 0) {
-////                            txt = list.get(0);
-////                        }
-////                        name = txt;
-////                    } else {
-////                        name = n.getName();
-////                    }
-//            List ListEnt = (List) findByName("ListEnt", f);
-//            //TextField textfield = (TextField) findByName("TxtIdNo", f);
-//            ListEnt.addItem(ent_no);
-//            ListEnt.repaint();
-//            List ListEntname = (List) findByName("ListEntname", f);
-//            //TextField textfield = (TextField) findByName("TxtIdNo", f);
-//            ListEntname.addItem(ent_no);
-//            ListEntname.repaint();
-//        }
+
     }
 
     @Override
@@ -5624,41 +5591,50 @@ directordetails.setCountryofOrigin(mbCofOrigin.getSelectedItem().toString());
 
     }
 
-    protected void onBEE_BtnShowBeeAction(Component c, ActionEvent event) {
-        Form f = c.getComponentForm();
-        UserWebServices u = new UserWebServices();
-        UserWebServicesNewReg uws = new UserWebServicesNewReg();
-        Result result = u.Get_BEE_MOBI(AGENT_CODE);
-        uws.BEE_Data(result);
-        Container cnt_Bee = new Container(BoxLayout.y());
-
-        Table tbl = (Table) findByName("Table_ent_Bee", c);
-        for (int i = 0; i < uws.ArlBEE_Detail.size(); i++) {
-            //rm f = c.getComponentForm();
-            BEEDetail n = uws.ArlBEE_Detail.get(i);
-            //Dialog.show("1.1", n.getName(), "Ok", null);
-            String ent_no = n.getEnt_no();
-            String ent_name = n.getEnt_name();
-            Button b = new Button(ent_no + " " + ent_name);
-            b.setName(ent_no);
-            b.setEnabled(true);
-            b.setUIID("Button_small");
-            b.addActionListener(e
-                    -> {
-                boolean answer = Dialog.show("Info", "Do You Want to apply for a B-BBEE Certificate for " + b.getText(), "Yes", "No");
-                if (answer) {
-                    //   Table tbl = (Table) findByName("Tablememinfo", c);
-                    tbl.add(cnt_Bee);
-                    // f.repaint();
-                } else {
-                    f.repaint();
-                }
-            });
-            tbl.add(b);
-        }
-        f.repaint();
-    }
-
+//    protected void onBEE_BtnShowBeeAction(Component c, ActionEvent event) {
+//        Form f = c.getComponentForm();
+//        UserWebServices u = new UserWebServices();
+//        UserWebServicesNewReg uws = new UserWebServicesNewReg();
+//        Result result = u.Get_BEE_MOBI(AGENT_CODE);
+//        uws.BEE_Data(result);
+//        Container cnt_Bee = new Container(BoxLayout.y());
+//        Container Containera = (Container) findByName("ContainerA",c);
+//        Container Containerb = (Container) findByName("ContainerB",c);
+//        Container Containerc = (Container) findByName("ContainerC",c);
+//
+//        Table tbl = (Table) findByName("Table_ent_Bee", c);
+//        for (int i = 0; i < uws.ArlBEE_Detail.size(); i++) {
+//            //rm f = c.getComponentForm();
+//            BEEDetail n = uws.ArlBEE_Detail.get(i);
+//            //Dialog.show("1.1", n.getName(), "Ok", null);
+//            String ent_no = n.getEnt_no();
+//            String ent_name = n.getEnt_name();
+//            Button b = new Button(ent_no + " " + ent_name);
+//            b.setName(ent_no);
+//            b.setEnabled(true);
+//            b.setUIID("Button_small");
+//            b.addActionListener(e
+//                    -> {
+//                boolean answer = Dialog.show("Info", "Do You Want to apply for a B-BBEE Certificate for " + b.getText(), "Yes", "No");
+//                if (answer) {
+//                    //   Table tbl = (Table) findByName("Tablememinfo", c);
+//                    //tbl.add(cnt_Bee);
+////                     Form form_bee = new Form("BEE_detail");
+////                     Label lbl_ent_no = (Label) findByName("lbl_ent_no", form_bee);
+////                     lbl_ent_no.setText(Bee_No);
+////                     form_bee.show();
+//        
+//                    
+//                    //hsz_bee
+//                    // f.repaint();
+//                } else {
+//                    f.repaint();
+//                }
+//            });
+//            tbl.add(b);
+//        }
+//        f.repaint();
+//    }
     protected void load_bee_form(Form f) {
         // Form f = c.getComponentForm();
         UserWebServices u = new UserWebServices();
@@ -5666,51 +5642,45 @@ directordetails.setCountryofOrigin(mbCofOrigin.getSelectedItem().toString());
         Result result = u.Get_BEE_MOBI(AGENT_CODE);
         uws.BEE_Data(result);
         Container cnt_Bee = new Container(BoxLayout.y());
-        // Table tbl = (Table) findByName("Table_ent_Bee", f);
         for (int i = 0; i < uws.ArlBEE_Detail.size(); i++) {
-            //rm f = c.getComponentForm();
             BEEDetail n = uws.ArlBEE_Detail.get(i);
-            //Dialog.show("1.1", n.getName(), "Ok", null);
             String ent_no = RSM_A(n.getEnt_no());
             String ent_name = RSM_A(n.getEnt_name());
             Button b = new Button(ent_no + " " + ent_name);
             b.setName(ent_no);
             b.setUIID("Button_small_L");
-            //b.setEnabled(true);
             b.addActionListener(e
                     -> {
-                boolean answer = Dialog.show("Info", "Do You Want to apply for a B-BBEE Certificate for " + b.getText(), "Yes", "No");
+                boolean answer = Dialog.show("Info", "Do You Want to apply for a B-BBEE Certificate for " + b.getName(), "Yes", "No");
                 if (answer) {
-                    //   showBEEStep1(b);
+                    Label lbl_ent_no = (Label) findByName("lbl_ent_no", f);
+                    lbl_ent_no.setText(b.getName());
+                   // lbl_ent_no.repaint();
+                    cnt_Bee.setVisible(false);
+
+                    cnt_Bee.repaint();
+                   // f.repaint();
+                  // containerBEEA.repaint();
+
                 }
-//                    //   Table tbl = (Table) findByName("Tablememinfo", c);
-//                     // tbl.add(cnt_Bee);
-//                     Label lbl_ent_no = (Label) findByName("lbl_ent_no", f);
-//                     lbl_ent_no.setText(b.getName());
-//                    load_bee_form(f);
-//                    f.repaint();
-//                } else {
-//                      Label lbl_ent_no = (Label) findByName("lbl_ent_no", f);
-//                    lbl_ent_no.setText("");
-//                    //load_bee_form(f);
-//                    f.repaint();
-//                }
             });
             cnt_Bee.addComponent(b);
-            //  tbl.add(b);
         }
-        f.addComponent(cnt_Bee);
-        f.repaint();
+        Container containerBEEA = (Container) findByName("ContainerBEEA", f);
+        containerBEEA.addComponent(cnt_Bee);
+       
+       // f.repaint();
+        containerBEEA.repaint();
     }
 
     @Override
     protected void onCreateBEE() {
-
+ 
     }
 
     @Override
     protected void postBEE(Form f) {
-        //  load_bee_form(f);
+        f.repaint();
     }
 
     public void showBEEStep1(Button buttonClicked) {
@@ -5737,9 +5707,27 @@ directordetails.setCountryofOrigin(mbCofOrigin.getSelectedItem().toString());
         //Form f = c.getComponentForm();
         String Strak_no = uws.getTrak_no();
         loadlist(Strak_no, c);
-//            Table tbl = (Table) findByName("Tablememinfo", c);
-//            tbl.requestFocus();
         f.repaint();
+
+    }
+
+    @Override
+    protected void onContDashBoard_MbTasksAction(Component c, ActionEvent event) {
+
+    }
+
+    @Override
+    protected void onContDashBoard_MbCurrencyAction(Component c, ActionEvent event) {
+
+    }
+
+    @Override
+    protected void onTermsAndConditions_ChkTermsAction(Component c, ActionEvent event) {
+
+    }
+
+    @Override
+    protected void onContDashBoard_MbBEEAction(Component c, ActionEvent event) {
 
     }
 }

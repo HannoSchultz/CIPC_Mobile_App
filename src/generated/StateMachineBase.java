@@ -482,6 +482,18 @@ public abstract class StateMachineBase extends UIBuilder {
         return cmp;
     }
 
+    public com.codename1.ui.Label findLabel161(Component root) {
+        return (com.codename1.ui.Label)findByName("Label161", root);
+    }
+
+    public com.codename1.ui.Label findLabel161() {
+        com.codename1.ui.Label cmp = (com.codename1.ui.Label)findByName("Label161", Display.getInstance().getCurrent());
+        if(cmp == null && aboutToShowThisContainer != null) {
+            cmp = (com.codename1.ui.Label)findByName("Label161", aboutToShowThisContainer);
+        }
+        return cmp;
+    }
+
     public com.codename1.ui.Container findConPhysAddr(Component root) {
         return (com.codename1.ui.Container)findByName("ConPhysAddr", root);
     }
@@ -1382,6 +1394,18 @@ public abstract class StateMachineBase extends UIBuilder {
         return cmp;
     }
 
+    public com.codename1.ui.Container findContainerBEEA(Component root) {
+        return (com.codename1.ui.Container)findByName("ContainerBEEA", root);
+    }
+
+    public com.codename1.ui.Container findContainerBEEA() {
+        com.codename1.ui.Container cmp = (com.codename1.ui.Container)findByName("ContainerBEEA", Display.getInstance().getCurrent());
+        if(cmp == null && aboutToShowThisContainer != null) {
+            cmp = (com.codename1.ui.Container)findByName("ContainerBEEA", aboutToShowThisContainer);
+        }
+        return cmp;
+    }
+
     public com.codename1.ui.Button findBtnSettingsSave(Component root) {
         return (com.codename1.ui.Button)findByName("btnSettingsSave", root);
     }
@@ -1822,18 +1846,6 @@ public abstract class StateMachineBase extends UIBuilder {
         com.codename1.ui.Label cmp = (com.codename1.ui.Label)findByName("appVersion", Display.getInstance().getCurrent());
         if(cmp == null && aboutToShowThisContainer != null) {
             cmp = (com.codename1.ui.Label)findByName("appVersion", aboutToShowThisContainer);
-        }
-        return cmp;
-    }
-
-    public com.codename1.ui.table.Table findTableEntBee(Component root) {
-        return (com.codename1.ui.table.Table)findByName("Table_ent_Bee", root);
-    }
-
-    public com.codename1.ui.table.Table findTableEntBee() {
-        com.codename1.ui.table.Table cmp = (com.codename1.ui.table.Table)findByName("Table_ent_Bee", Display.getInstance().getCurrent());
-        if(cmp == null && aboutToShowThisContainer != null) {
-            cmp = (com.codename1.ui.table.Table)findByName("Table_ent_Bee", aboutToShowThisContainer);
         }
         return cmp;
     }
@@ -2366,6 +2378,18 @@ public abstract class StateMachineBase extends UIBuilder {
         return cmp;
     }
 
+    public com.codename1.ui.Label findLabel22(Component root) {
+        return (com.codename1.ui.Label)findByName("Label22", root);
+    }
+
+    public com.codename1.ui.Label findLabel22() {
+        com.codename1.ui.Label cmp = (com.codename1.ui.Label)findByName("Label22", Display.getInstance().getCurrent());
+        if(cmp == null && aboutToShowThisContainer != null) {
+            cmp = (com.codename1.ui.Label)findByName("Label22", aboutToShowThisContainer);
+        }
+        return cmp;
+    }
+
     public com.codename1.ui.Button findBtnForgotPassword(Component root) {
         return (com.codename1.ui.Button)findByName("btnForgotPassword", root);
     }
@@ -2410,6 +2434,18 @@ public abstract class StateMachineBase extends UIBuilder {
         com.codename1.ui.table.Table cmp = (com.codename1.ui.table.Table)findByName("Table", Display.getInstance().getCurrent());
         if(cmp == null && aboutToShowThisContainer != null) {
             cmp = (com.codename1.ui.table.Table)findByName("Table", aboutToShowThisContainer);
+        }
+        return cmp;
+    }
+
+    public com.codename1.ui.Container findContainerBEE(Component root) {
+        return (com.codename1.ui.Container)findByName("Container_BEE", root);
+    }
+
+    public com.codename1.ui.Container findContainerBEE() {
+        com.codename1.ui.Container cmp = (com.codename1.ui.Container)findByName("Container_BEE", Display.getInstance().getCurrent());
+        if(cmp == null && aboutToShowThisContainer != null) {
+            cmp = (com.codename1.ui.Container)findByName("Container_BEE", aboutToShowThisContainer);
         }
         return cmp;
     }
@@ -2846,18 +2882,6 @@ public abstract class StateMachineBase extends UIBuilder {
         return cmp;
     }
 
-    public com.codename1.components.SpanLabel findSpanLabel(Component root) {
-        return (com.codename1.components.SpanLabel)findByName("SpanLabel", root);
-    }
-
-    public com.codename1.components.SpanLabel findSpanLabel() {
-        com.codename1.components.SpanLabel cmp = (com.codename1.components.SpanLabel)findByName("SpanLabel", Display.getInstance().getCurrent());
-        if(cmp == null && aboutToShowThisContainer != null) {
-            cmp = (com.codename1.components.SpanLabel)findByName("SpanLabel", aboutToShowThisContainer);
-        }
-        return cmp;
-    }
-
     public com.codename1.ui.TextField findPhysaddrcode(Component root) {
         return (com.codename1.ui.TextField)findByName("Physaddrcode", root);
     }
@@ -2866,6 +2890,18 @@ public abstract class StateMachineBase extends UIBuilder {
         com.codename1.ui.TextField cmp = (com.codename1.ui.TextField)findByName("Physaddrcode", Display.getInstance().getCurrent());
         if(cmp == null && aboutToShowThisContainer != null) {
             cmp = (com.codename1.ui.TextField)findByName("Physaddrcode", aboutToShowThisContainer);
+        }
+        return cmp;
+    }
+
+    public com.codename1.components.SpanLabel findSpanLabel(Component root) {
+        return (com.codename1.components.SpanLabel)findByName("SpanLabel", root);
+    }
+
+    public com.codename1.components.SpanLabel findSpanLabel() {
+        com.codename1.components.SpanLabel cmp = (com.codename1.components.SpanLabel)findByName("SpanLabel", Display.getInstance().getCurrent());
+        if(cmp == null && aboutToShowThisContainer != null) {
+            cmp = (com.codename1.components.SpanLabel)findByName("SpanLabel", aboutToShowThisContainer);
         }
         return cmp;
     }
@@ -3456,6 +3492,12 @@ public abstract class StateMachineBase extends UIBuilder {
             return;
         }
 
+        if("COREG".equals(f.getName())) {
+            exitCOREG(f);
+            aboutToShowThisContainer = null;
+            return;
+        }
+
         if("Disclosure".equals(f.getName())) {
             exitDisclosure(f);
             aboutToShowThisContainer = null;
@@ -3533,6 +3575,10 @@ public abstract class StateMachineBase extends UIBuilder {
 
 
     protected void exitContDashBoard(Form f) {
+    }
+
+
+    protected void exitCOREG(Form f) {
     }
 
 
@@ -3641,6 +3687,12 @@ public abstract class StateMachineBase extends UIBuilder {
             return;
         }
 
+        if("COREG".equals(f.getName())) {
+            beforeCOREG(f);
+            aboutToShowThisContainer = null;
+            return;
+        }
+
         if("Disclosure".equals(f.getName())) {
             beforeDisclosure(f);
             aboutToShowThisContainer = null;
@@ -3718,6 +3770,10 @@ public abstract class StateMachineBase extends UIBuilder {
 
 
     protected void beforeContDashBoard(Form f) {
+    }
+
+
+    protected void beforeCOREG(Form f) {
     }
 
 
@@ -3826,6 +3882,12 @@ public abstract class StateMachineBase extends UIBuilder {
             return;
         }
 
+        if("COREG".equals(c.getName())) {
+            beforeContainerCOREG(c);
+            aboutToShowThisContainer = null;
+            return;
+        }
+
         if("Disclosure".equals(c.getName())) {
             beforeContainerDisclosure(c);
             aboutToShowThisContainer = null;
@@ -3903,6 +3965,10 @@ public abstract class StateMachineBase extends UIBuilder {
 
 
     protected void beforeContainerContDashBoard(Container c) {
+    }
+
+
+    protected void beforeContainerCOREG(Container c) {
     }
 
 
@@ -4010,6 +4076,12 @@ public abstract class StateMachineBase extends UIBuilder {
             return;
         }
 
+        if("COREG".equals(f.getName())) {
+            postCOREG(f);
+            aboutToShowThisContainer = null;
+            return;
+        }
+
         if("Disclosure".equals(f.getName())) {
             postDisclosure(f);
             aboutToShowThisContainer = null;
@@ -4087,6 +4159,10 @@ public abstract class StateMachineBase extends UIBuilder {
 
 
     protected void postContDashBoard(Form f) {
+    }
+
+
+    protected void postCOREG(Form f) {
     }
 
 
@@ -4194,6 +4270,12 @@ public abstract class StateMachineBase extends UIBuilder {
             return;
         }
 
+        if("COREG".equals(c.getName())) {
+            postContainerCOREG(c);
+            aboutToShowThisContainer = null;
+            return;
+        }
+
         if("Disclosure".equals(c.getName())) {
             postContainerDisclosure(c);
             aboutToShowThisContainer = null;
@@ -4271,6 +4353,10 @@ public abstract class StateMachineBase extends UIBuilder {
 
 
     protected void postContainerContDashBoard(Container c) {
+    }
+
+
+    protected void postContainerCOREG(Container c) {
     }
 
 
@@ -4378,6 +4464,12 @@ public abstract class StateMachineBase extends UIBuilder {
             return;
         }
 
+        if("COREG".equals(rootName)) {
+            onCreateCOREG();
+            aboutToShowThisContainer = null;
+            return;
+        }
+
         if("Disclosure".equals(rootName)) {
             onCreateDisclosure();
             aboutToShowThisContainer = null;
@@ -4455,6 +4547,10 @@ public abstract class StateMachineBase extends UIBuilder {
 
 
     protected void onCreateContDashBoard() {
+    }
+
+
+    protected void onCreateCOREG() {
     }
 
 
@@ -4563,6 +4659,12 @@ public abstract class StateMachineBase extends UIBuilder {
             return h;
         }
 
+        if("COREG".equals(f.getName())) {
+            getStateCOREG(f, h);
+            aboutToShowThisContainer = null;
+            return h;
+        }
+
         if("Disclosure".equals(f.getName())) {
             getStateDisclosure(f, h);
             aboutToShowThisContainer = null;
@@ -4640,6 +4742,10 @@ public abstract class StateMachineBase extends UIBuilder {
 
 
     protected void getStateContDashBoard(Form f, Hashtable h) {
+    }
+
+
+    protected void getStateCOREG(Form f, Hashtable h) {
     }
 
 
@@ -4748,6 +4854,12 @@ public abstract class StateMachineBase extends UIBuilder {
             return;
         }
 
+        if("COREG".equals(f.getName())) {
+            setStateCOREG(f, state);
+            aboutToShowThisContainer = null;
+            return;
+        }
+
         if("Disclosure".equals(f.getName())) {
             setStateDisclosure(f, state);
             aboutToShowThisContainer = null;
@@ -4825,6 +4937,10 @@ public abstract class StateMachineBase extends UIBuilder {
 
 
     protected void setStateContDashBoard(Form f, Hashtable state) {
+    }
+
+
+    protected void setStateCOREG(Form f, Hashtable state) {
     }
 
 
@@ -4928,20 +5044,20 @@ public abstract class StateMachineBase extends UIBuilder {
                 onFrmNewEntReg1_BtnFileNamereservationAction(c, event);
                 return;
             }
-            if("TxtApprovedNo".equals(c.getName())) {
-                onFrmNewEntReg1_TxtApprovedNoAction(c, event);
-                return;
-            }
             if("btnvalno".equals(c.getName())) {
                 onFrmNewEntReg1_BtnvalnoAction(c, event);
                 return;
             }
-            if("txtrefno".equals(c.getName())) {
-                onFrmNewEntReg1_TxtrefnoAction(c, event);
+            if("TxtApprovedNo".equals(c.getName())) {
+                onFrmNewEntReg1_TxtApprovedNoAction(c, event);
                 return;
             }
             if("btnconreg".equals(c.getName())) {
                 onFrmNewEntReg1_BtnconregAction(c, event);
+                return;
+            }
+            if("txtrefno".equals(c.getName())) {
+                onFrmNewEntReg1_TxtrefnoAction(c, event);
                 return;
             }
             if("TextArea1".equals(c.getName())) {
@@ -5459,6 +5575,24 @@ public abstract class StateMachineBase extends UIBuilder {
                 return;
             }
         }
+        if(rootContainerName.equals("COREG")) {
+            if("btnViewTerms".equals(c.getName())) {
+                onCOREG_BtnViewTermsAction(c, event);
+                return;
+            }
+            if("chkTerms".equals(c.getName())) {
+                onCOREG_ChkTermsAction(c, event);
+                return;
+            }
+            if("btnAcceptTerms".equals(c.getName())) {
+                onCOREG_BtnAcceptTermsAction(c, event);
+                return;
+            }
+            if("btnDoNotAccept".equals(c.getName())) {
+                onCOREG_BtnDoNotAcceptAction(c, event);
+                return;
+            }
+        }
         if(rootContainerName.equals("testlist")) {
             if("Button".equals(c.getName())) {
                 onTestlist_ButtonAction(c, event);
@@ -5503,16 +5637,16 @@ public abstract class StateMachineBase extends UIBuilder {
       protected void onFrmNewEntReg1_BtnFileNamereservationAction(Component c, ActionEvent event) {
       }
 
-      protected void onFrmNewEntReg1_TxtApprovedNoAction(Component c, ActionEvent event) {
-      }
-
       protected void onFrmNewEntReg1_BtnvalnoAction(Component c, ActionEvent event) {
       }
 
-      protected void onFrmNewEntReg1_TxtrefnoAction(Component c, ActionEvent event) {
+      protected void onFrmNewEntReg1_TxtApprovedNoAction(Component c, ActionEvent event) {
       }
 
       protected void onFrmNewEntReg1_BtnconregAction(Component c, ActionEvent event) {
+      }
+
+      protected void onFrmNewEntReg1_TxtrefnoAction(Component c, ActionEvent event) {
       }
 
       protected void onFrmNewEntReg1_TextArea1Action(Component c, ActionEvent event) {
@@ -5882,6 +6016,18 @@ public abstract class StateMachineBase extends UIBuilder {
       }
 
       protected void onContDashBoard_MbDisclosureAction(Component c, ActionEvent event) {
+      }
+
+      protected void onCOREG_BtnViewTermsAction(Component c, ActionEvent event) {
+      }
+
+      protected void onCOREG_ChkTermsAction(Component c, ActionEvent event) {
+      }
+
+      protected void onCOREG_BtnAcceptTermsAction(Component c, ActionEvent event) {
+      }
+
+      protected void onCOREG_BtnDoNotAcceptAction(Component c, ActionEvent event) {
       }
 
       protected void onTestlist_ButtonAction(Component c, ActionEvent event) {
