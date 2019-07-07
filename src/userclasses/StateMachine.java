@@ -159,6 +159,7 @@ public class StateMachine extends StateMachineBase {
     private static String AGENT_CODE = "";
     private Container contStep3Turnovers;
     private String Bee_No = "";
+    public String sid = "";
 
     EnterpriseDetails enterpriseDetails;
     ArrayList<NameSearchObject> arrayListNameReservation;
@@ -4803,6 +4804,47 @@ public class StateMachine extends StateMachineBase {
         }
     }
 
+    public String ScanID() {
+
+        try {
+            //String sid = new String();
+            if (Display.getInstance().isSimulator()) {
+
+                return "7104085085085";
+
+            } else {
+                //########
+                // Dialog ip = new InfiniteProgress().showInifiniteBlocking();
+                CodeScanner.getInstance().scanBarCode(new ScanResult() {
+                    public void scanCompleted(String contents, String formatName, byte[] rawBytes) {
+                        Dialog.show("ID Scanned: ", contents, "OK", null);
+
+                        sid = contents;
+
+                    }
+
+                    public void scanCanceled() {
+                        System.out.println("cancelled");
+                        Dialog.show("Scan Cancelled", "Please ensure that there is sufficient light when performing scan", "Ok", null);
+
+                    }
+
+                    public void scanError(int errorCode, String message) {
+                        Dialog.show("Scan Error", "Please ensure that there is sufficient light when performing scan", "Ok", null);
+                    }
+
+                });
+
+            }
+            return sid;
+
+        } catch (Exception ex) {
+
+            Dialog.show("Scan Error", ex.toString(), "Ok", null);
+            return "";
+        }
+    }
+
     protected void onFrmNewEntReg1_ButtoncondirAction(Component c, ActionEvent event) {
         Dialog ip = new InfiniteProgress().showInifiniteBlocking();
         if (validentdata(c)) {
@@ -5281,7 +5323,7 @@ public class StateMachine extends StateMachineBase {
         //       Table tbl = (Table) findByName("Tablememinfo", c);
 //       tbl.setModel(tbl.getModel());
         // Container cnt = (Container) findByName("Conmemlist", f);
-        Container cnt = new Container(BoxLayout.y());
+        // Container cnt = new Container(BoxLayout.y());
 
 //     Container1.setLayout(new BoxLayout.y());
 // Container1.addComponent(BoxLayout.y(), myComponent);
@@ -5297,7 +5339,7 @@ public class StateMachine extends StateMachineBase {
             //  hsz
             b.setName(Dir_id);
             b.setUIID("Button_small_L");
-            cnt.add(b);
+            cntmemlist.add(b);
             b.addActionListener(e
                     -> {
                 boolean answer = Dialog.show("Info", "Do You Want to  Change info for " + b.getText() + ". Then you must delete the info and add the director as a new director. Do you want to delete this information?", "Confirm", "Decline");
@@ -5333,14 +5375,103 @@ public class StateMachine extends StateMachineBase {
             });
         }
         // Container cntmemlist = (Container) findByName("Conmemlist", f);
-        cntmemlist.add(cnt);
+        // cntmemlist.add(cnt);
         // cnt.setScrollableY(true);
         //f.add(cnt);
+        cntmemlist.setHidden(false);
+        f.repaint();
+    }
+
+    //hsz_scan
+    public void loadlist_BEE(String ent_no) {
+        //Form f = c.getComponentForm();
+        Form f = Display.getInstance().getCurrent();
+        Container cntmemlist = (Container) findByName("Conmemlist", f);
+        cntmemlist.removeAll();
+        f.repaint();
+        Label lblheader = new Label();
+        lblheader.setText("Please Scan the following Directors ID's");
+        lblheader.setUIID("LabelBlackCenterH");
+        f.repaint();
+        Dialog ip = new InfiniteProgress().showInifiniteBlocking();
+        Result result = uws.get_directors_bee(ent_no);
+
+        uws.DIR_Data(result);
+        ip.dispose();
+        if (uws.ArlDIR_Detail.size() == 0) {
+            return;
+        }
+        //Container cnt = new Container(BoxLayout.y());
+        Container Conmemlist = (Container) findByName("Conmemlist", f);
+        Conmemlist.add(lblheader);
+        //       cnt.setName("cnt");
+        //Container cnt = new Container(new GridLayout(uws.ArlDIR_Detail.size(), 2));
+        for (int i = 0; i < uws.ArlDIR_Detail.size(); i++) {
+            DIR_Detail DD = uws.ArlDIR_Detail.get(i);
+            String Dir_id = RSM_A(DD.getDir_id());
+            String First_Names = (RSM_A(DD.getFirs_names()));
+            String Surname = (RSM_A(DD.getSurname()));
+            String Id_no = (RSM_A(DD.getId_no()));
+            //  hsz
+            Button b = new Button("Scan ID for " + First_Names + " " + Surname); //+ " - " + Id_no);
+            b.setName("A" + i);
+            b.setUIID("Button_small_L_red");
+            //  b.setUIID("Button_small_L");
+            Conmemlist.add(b);
+            b.addActionListener(e
+                    -> {
+                // String sparent = b.getParent().toString();
+                String retval = ScanID();
+                if (retval.equals(b.getName())) {
+                    b.setUIID("Button_small_L");
+                    b.setEnabled(false);
+                } else {
+                    b.setUIID("Button_small_L");
+                    b.setEnabled(false);
+                }
+
+                boolean allscaned = true;
+
+                for (Component cmp : Conmemlist.getChildrenAsList(allscaned)) {
+                    String val = null;
+                    if (cmp.getUIID().trim() == "Button_small_L_red") {
+                        allscaned = false;
+                    }
+//                    if (cmp instanceof Label) {
+//                        val = ((Label) cmp).getText();
+//                    } else {
+//                        if (cmp instanceof TextArea) {
+//                            val = ((TextArea) cmp).getText();
+//                        } else {
+//                            val = (String) cmp.getPropertyValue("text");
+//                        }
+//                    }
+                }
+                if (allscaned == true) {
+                    Conmemlist.setHidden(true);
+                    Container container_bee = (Container) findByName("Container_BEE", f);
+                    container_bee.setHidden(true);
+                    Container container_rev = (Container) findByName("Container_rev", f);
+                    container_rev.setHidden(false);
+                    Container Conshareholders = (Container) findByName("conshareholders", f);
+                    Conshareholders.setHidden(true);
+                    Container conFemale = (Container) findByName("ConFemale", f);
+                    conFemale.setHidden(true);
+                    Button Btncontinue1 = (Button) findByName("btncontinue1", f);
+                    Btncontinue1.setHidden(true);
+                    f.repaint();
+                    f.repaint();
+                }
+            });
+
+        }
+        Conmemlist.setHidden(false);
         f.repaint();
     }
 
     @Override
-    protected void onFrmNewEntReg1_BtnRegisterenterprisAction(Component c, ActionEvent event) {
+    protected void onFrmNewEntReg1_BtnRegisterenterprisAction(Component c, ActionEvent event
+    ) {
         UserWebServices u = new UserWebServices();
         Dialog ip = new InfiniteProgress().showInifiniteBlocking();
         String valdir = uws.ValidateDirector(AGENT_CODE, uws.getTrak_no());
@@ -5385,17 +5516,20 @@ public class StateMachine extends StateMachineBase {
     }
 
     @Override
-    protected void onContTasks_BtnLodgeAction(Component c, ActionEvent event) {
+    protected void onContTasks_BtnLodgeAction(Component c, ActionEvent event
+    ) {
 
     }
 
     @Override
-    protected void onContTasks_BtnVerifyAction(Component c, ActionEvent event) {
+    protected void onContTasks_BtnVerifyAction(Component c, ActionEvent event
+    ) {
 
     }
 
     @Override
-    protected void onLogin_BtnLoginAction(Component c, ActionEvent event) {
+    protected void onLogin_BtnLoginAction(Component c, ActionEvent event
+    ) {
 
     }
 
@@ -5637,11 +5771,22 @@ public class StateMachine extends StateMachineBase {
 //    }
     protected void load_bee_form(Form f) {
         // Form f = c.getComponentForm();
+
         UserWebServices u = new UserWebServices();
         UserWebServicesNewReg uws = new UserWebServicesNewReg();
         Result result = u.Get_BEE_MOBI(AGENT_CODE);
         uws.BEE_Data(result);
-        Container cnt_Bee = new Container(BoxLayout.y());
+        //Container cnt_Bee = new Container(BoxLayout.y());
+        Container containerHeader = (Container) findByName("ContainerHeader", f);
+        Container container_BEE = (Container) findByName("Container_BEE", f);
+        //  container_BEE.setHidden(true);
+        Container conmemlist = (Container) findByName("Conmemlist", f);
+        conmemlist.setHidden(true);
+        Container container_rev = (Container) findByName("Container_rev", f);
+        container_rev.setHidden(true);
+        Container containerYouth = (Container) findByName("ContainerYouth", f);
+        containerYouth.setHidden(true);
+
         for (int i = 0; i < uws.ArlBEE_Detail.size(); i++) {
             BEEDetail n = uws.ArlBEE_Detail.get(i);
             String ent_no = RSM_A(n.getEnt_no());
@@ -5654,28 +5799,35 @@ public class StateMachine extends StateMachineBase {
                 boolean answer = Dialog.show("Info", "Do You Want to apply for a B-BBEE Certificate for " + b.getName(), "Yes", "No");
                 if (answer) {
                     Label lbl_ent_no = (Label) findByName("lbl_ent_no", f);
-                    lbl_ent_no.setText(b.getName());
-                   // lbl_ent_no.repaint();
-                    cnt_Bee.setVisible(false);
-
-                    cnt_Bee.repaint();
-                   // f.repaint();
-                  // containerBEEA.repaint();
+                    lbl_ent_no.setText("B-BBEE Certifcate for ");
+                    Label lbl_ent_no1 = (Label) findByName("lbl_ent_no1", f);
+                    lbl_ent_no1.setText(b.getName());
+                    loadlist_BEE(b.getName());
+                    Label lbl_ent_no2 = (Label) findByName("lbl_ent_no2", f);
+                    lbl_ent_no2.setHidden(true);
+                    lbl_ent_no2.setVisible(false);
+                    // lbl_ent_no.repaint();
+                    // container_BEE.setVisible(false);
+                    // container_BEE.setHidden(true);
+                    // container_BEE.setHidden(true);
+                    // container_BEE.repaint();
+                    //cnt_Bee.repaint();
+                    f.repaint();
+                    // containerBEEA.repaint();
 
                 }
             });
-            cnt_Bee.addComponent(b);
+            container_BEE.addComponent(b);
+
         }
-        Container containerBEEA = (Container) findByName("ContainerBEEA", f);
-        containerBEEA.addComponent(cnt_Bee);
-       
-       // f.repaint();
-        containerBEEA.repaint();
+
+        // container_BEE.addComponent(cnt_Bee);
+        container_BEE.repaint();
     }
 
     @Override
     protected void onCreateBEE() {
- 
+
     }
 
     @Override
@@ -5708,7 +5860,6 @@ public class StateMachine extends StateMachineBase {
         String Strak_no = uws.getTrak_no();
         loadlist(Strak_no, c);
         f.repaint();
-
     }
 
     @Override
@@ -5729,5 +5880,185 @@ public class StateMachine extends StateMachineBase {
     @Override
     protected void onContDashBoard_MbBEEAction(Component c, ActionEvent event) {
 
+    }
+
+    @Override
+    protected void onContProjects_TextField3Action(Component c, ActionEvent event) {
+
+    }
+
+    @Override
+    protected void onContProjects_BtnStep3CalcOutAmountAction(Component c, ActionEvent event) {
+
+    }
+
+    // @Override
+    protected void onBEE_BtncontinueAction(Component c, ActionEvent event) {
+
+        TextField txtrevenue = (TextField) findByName("txtrevenue", c);
+        if (txtrevenue.getText().trim() == "") {
+            Dialog.show("Validation Failed", "Please enter Revenue amount.", "Ok", null);
+            txtrevenue.requestFocus();
+            txtrevenue.startEditing();
+            return;
+        }
+        int rev = Integer.parseInt(txtrevenue.getText());
+        if (rev > 10000000) {
+            Dialog.show("Validation Failed", "Revenue can't exceed R10 000 000.", "Ok", null);
+            txtrevenue.requestFocus();
+            txtrevenue.startEditing();
+            return;
+        }
+        TextField txtShareholders = (TextField) findByName("txtshareholders", c);
+        if (txtShareholders.getText().trim() == "") {
+            Dialog.show("Validation Failed", "Please enter how many Sharholders there are.", "Ok", null);
+            txtShareholders.requestFocus();
+            txtShareholders.startEditing();
+            return;
+        }
+        TextField txtBlackshare = (TextField) findByName("txtblackshare", c);
+        if (txtBlackshare.getText().trim() == "") {
+            Dialog.show("Validation Failed", "Please enter how many Black Sharholders there are.", "Ok", null);
+            txtBlackshare.requestFocus();
+            txtBlackshare.startEditing();
+            return;
+        }
+        TextField txtBlackfshare = (TextField) findByName("txtblackfshare", c);
+        if (txtBlackfshare.getText().trim() == "") {
+            Dialog.show("Validation Failed", "Please enter how many Black female Sharholders there are.", "Ok", null);
+            txtBlackshare.requestFocus();
+            txtBlackshare.startEditing();
+            return;
+        }
+
+        int totalshareholders = Integer.parseInt(txtShareholders.getText().trim());
+        int totalBshareholders = Integer.parseInt(txtBlackshare.getText());
+        int totalFshareholders = Integer.parseInt(txtBlackfshare.getText());
+        if (totalBshareholders > totalshareholders) {
+            Dialog.show("Validation Failed", "Black Share Holders can't be more than number of shareholders", "Ok", null);
+            txtBlackshare.requestFocus();
+            txtBlackshare.startEditing();
+            return;
+        }
+        if (totalFshareholders > totalBshareholders) {
+            Dialog.show("Validation Failed", "Female Black Share Holders can't be more than number of Black shareholders", "Ok", null);
+            txtBlackfshare.requestFocus();
+            txtBlackfshare.startEditing();
+            return;
+        }
+
+//int count = (int)txtrevenue.getText();
+        Container Conshareholders = (Container) findByName("conshareholders", c);
+        Container conFemale = (Container) findByName("ConFemale", c);
+        Conshareholders.removeAll();
+        conFemale.removeAll();
+
+        int foo = Integer.parseInt(txtBlackshare.getText());
+        int foos = Integer.parseInt(txtBlackfshare.getText());
+        int foom = foo - foos;
+         Form f = Display.getInstance().getCurrent();
+        for (int i = 0; i < foom; i++) {
+            //add male
+            int key = i + 1;
+            Label lbl = new Label();
+            lbl.setText("Black Male Shareholder " + key);
+            lbl.setUIID("Button");
+            Conshareholders.add(lbl);
+            TextField txt = new TextField();
+            txt.setUIID("TextFieldNameSearch");
+            Conshareholders.add(txt);
+            Conshareholders.repaint();
+            //Container Conshareholders = (Container) findByName("conshareholders", f);
+            Conshareholders.setHidden(false);
+            c.repaint();
+            f.repaint();
+            
+        }
+        //  int foos = Integer.parseInt(txtBlackfshare.getText());
+        for (int i = 0; i < foos; i++) {
+            int key = i + 1;
+            //add female
+            Label lblF = new Label();
+            lblF.setText("Black FeMale Shareholder " + key);
+            lblF.setUIID("Button");
+            conFemale.add(lblF);
+            TextField txtF = new TextField();
+            txtF.setUIID("TextFieldNameSearch");
+            conFemale.add(txtF);
+            conFemale.repaint();
+            conFemale.setHidden(false);
+            c.repaint();
+            f.repaint();
+        }
+        //Container container_rev = (Container) findByName("Container_rev", f);
+        //          container_rev.setHidden(false);
+
+        // Container conFemale = (Container) findByName("ConFemale", f);
+        //  conFemale.setHidden(true);
+        Button Btncontinue1 = (Button) findByName("btncontinue1", c);
+        Btncontinue1.setHidden(false);
+      //  Form f = Display.getInstance().getCurrent();
+        f.repaint();
+             f.repaint();
+    }
+
+    @Override
+    protected void onBEE_Btncontinue1Action(Component c, ActionEvent event) {
+        Form f = Display.getInstance().getCurrent();
+        Container conshareholders = (Container) findByName("conshareholders", f);
+        int maleshare = 0;
+        boolean scanned = true;
+        for (Component cmp : conshareholders.getChildrenAsList(scanned)) {
+            String val = null;
+            if (cmp instanceof TextField) {
+                val = ((TextField) cmp).getText().trim();
+                maleshare = maleshare + Integer.parseInt(val.trim());
+            }
+        }
+        Container conFemale = (Container) findByName("ConFemale", f);
+        int fmaleshare = 0;
+        //   scanned = true;
+        for (Component cmp : conFemale.getChildrenAsList(scanned)) {
+            String val = null;
+            if (cmp instanceof TextField) {
+                val = ((TextField) cmp).getText().trim();
+                fmaleshare = fmaleshare + Integer.parseInt(val.trim());
+            }
+        }
+        int blackshare = fmaleshare + maleshare;
+        Label LblTperBlack = (Label) findByName("lblTperBlack",f);
+        Label LblTperBlackF = (Label) findByName("lblTperBlackF",f);
+        Label LblTperW = (Label) findByName("lblTperW",f);
+        Label lblBlevel = (Label) findByName("lblBlevel",f);
+         LblTperBlack.setText("Black Shareholding = " + blackshare + "%" );
+         LblTperBlackF.setText("Black Female Shareholding = " + fmaleshare + "%" );
+         int white_share = 100 - blackshare;
+         LblTperW.setText("White Shareholding = " + white_share + "%" );
+         lblBlevel.setText("bbeee status");
+         f.repaint();
+         c.repaint();
+         //calculate BBEEE status
+    }
+
+ //   @Override
+    protected void onBEE_BtncontinueyouthAction(Component c, ActionEvent event) {
+        Form f = Display.getInstance().getCurrent();
+        Container containerYouth  = (Container) findByName("ContainerYouth",f);
+    
+    TextField txtshareholders = (TextField) findByName("txtshareholders",f);
+    SpanLabel SpanLabel1 = (SpanLabel) findByName("SpanLabel1",f);
+    SpanLabel SpanLabel2 = (SpanLabel) findByName("SpanLabel2",f);
+    SpanLabel SpanLabel3 = (SpanLabel) findByName("SpanLabel3",f);
+    SpanLabel SpanLabel4 = (SpanLabel) findByName("SpanLabel4",f);
+    String msg = "Out of the total of " + txtshareholders.getText().trim()+ " share holders, how many are unemployed black people not attending and not required by law to attend an educational institution and not awaiting admission to an educational institution?";
+    SpanLabel1.setText(msg);
+    msg = "Out of the total  of " + txtshareholders.getText().trim()+ " share holders, how many are black people who are youth as defined in the National Youth Commission ACT of 1996? [14 to 35 years old]";
+    SpanLabel2.setText(msg);
+    msg = "Out of the total  of " + txtshareholders.getText().trim()+ " share holders, how many are black people who are person with disabilities as defined in the Code of Good Proctice on employment of people with disabilities issued under the Employment Equity Act?";
+    SpanLabel3.setText(msg);
+    msg = "Out of the total of " + txtshareholders.getText().trim()+ "  share holders, how many are black military veterans who qualifies to be called a military veteran in terms of the Military Veterans Act 18 0f 2011 ?";
+    SpanLabel4.setText(msg);
+    containerYouth.setHidden(false);
+    f.repaint();
     }
 }
