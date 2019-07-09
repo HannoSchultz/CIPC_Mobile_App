@@ -4744,7 +4744,7 @@ public class StateMachine extends StateMachineBase {
                     public void scanCompleted(String contents, String formatName, byte[] rawBytes) {
                         //Dialog.show("Bar code", "Bar code is: " + contents, "Ok", null);
 //#################################disable barcode scanner
-                       // Dialog.show("ID Scanned: ", contents, "OK", null);
+                        // Dialog.show("ID Scanned: ", contents, "OK", null);
                         Result result = uws.get_dha_data(contents);
 
                         String retval = uws.DHA_Data(result);
@@ -4822,32 +4822,28 @@ public class StateMachine extends StateMachineBase {
     public String ScanID() {
 
         try {
-            //String sid = new String();
+            String rid = new String();
             if (Display.getInstance().isSimulator()) {
-
                 return "7104085085085";
-
             } else {
                 //########
                 // Dialog ip = new InfiniteProgress().showInifiniteBlocking();
                 CodeScanner.getInstance().scanBarCode(new ScanResult() {
                     public void scanCompleted(String contents, String formatName, byte[] rawBytes) {
-                        //  Dialog.show("ID Scanned: ", contents, "OK", null);
-
+                        Dialog.show("ID Scanned: ", contents, "OK", null);
                         sid = contents;
-
                     }
 
                     public void scanCanceled() {
                         System.out.println("cancelled");
                         Dialog.show("Scan Cancelled", "Please ensure that there is sufficient light when performing scan", "Ok", null);
-
+                        sid = "";
                     }
 
                     public void scanError(int errorCode, String message) {
                         Dialog.show("Scan Error", "Please ensure that there is sufficient light when performing scan", "Ok", null);
+                        sid = "";
                     }
-
                 });
 
             }
@@ -5429,25 +5425,44 @@ public class StateMachine extends StateMachineBase {
             String Id_no = (RSM_A(DD.getId_no()));
             //  hsz
             Button b = new Button("Scan ID for " + First_Names + " " + Surname); //+ " - " + Id_no);
-            b.setName("A" + i);
+            b.setName(Id_no);
             b.setUIID("Button_small_L_red");
             //  b.setUIID("Button_small_L");
             Conmemlist.add(b);
             b.addActionListener(e
                     -> {
                 // String sparent = b.getParent().toString();
-                String retval = ScanID();
-                if (retval.equals(b.getName())) {
-                    b.setUIID("Button_small_L");
-                    b.setEnabled(false);
-                } else {
-                     b.setUIID("Button_small_L");
-                   // b.setUIID("Button_small_L_red");
-                    b.setEnabled(false);
-                    //return;
-                }
-
-                boolean allscaned = true;
+                //   String retval = "";
+                //  retval = ScanID();
+                //*******************************************************
+                try {
+                    String rid = new String();
+                    if (Display.getInstance().isSimulator()) {
+                        //return "7104085085085";
+                        sid = "7104085085085";
+                    } else {
+                        //########
+                        // Dialog ip = new InfiniteProgress().showInifiniteBlocking();
+                        CodeScanner.getInstance().scanBarCode(new ScanResult() {
+                            public void scanCompleted(String contents, String formatName, byte[] rawBytes) {
+                                Dialog.show("ID Scanned: ", contents, "OK", null);
+                                sid = contents;
+                                String val1 = "";
+                                val1 = sid.trim();
+                                String val2 = "";
+                                val2 = b.getName().trim();
+                                if (val1.equals(val2)) {
+                                    //  if (retval.equals(b.getName())) {
+                                    b.setUIID("Button_small_L");
+                                    b.setEnabled(false);
+                                } else {
+                                    b.setUIID("Button_small_L_red");
+                                    // b.setUIID("Button_small_L_red");
+                                    b.setEnabled(true);
+                                    Dialog.show("Validation Failed", "Please scan the correct Identity Document. ", "OK", null);
+                                    return;
+                                }
+                                    boolean allscaned = true;
 
                 for (Component cmp : Conmemlist.getChildrenAsList(allscaned)) {
                     String val = null;
@@ -5481,6 +5496,30 @@ public class StateMachine extends StateMachineBase {
                     f.repaint();
                     f.repaint();
                 }
+                            }
+
+                            public void scanCanceled() {
+                                System.out.println("cancelled");
+                                Dialog.show("Scan Cancelled", "Please ensure that there is sufficient light when performing scan", "Ok", null);
+                                return;
+                            }
+
+                            public void scanError(int errorCode, String message) {
+                                Dialog.show("Scan Error", "Please ensure that there is sufficient light when performing scan", "Ok", null);
+                                return;
+                            }
+                        });
+                    }
+                    //  return sid;
+
+                } catch (Exception ex) {
+
+                    Dialog.show("Scan Error", ex.toString(), "Ok", null);
+                    return;
+                }
+                //********************************************************
+
+            
             });
 
         }
@@ -6069,10 +6108,9 @@ public class StateMachine extends StateMachineBase {
             }
         }
         int blackshare = fmaleshare + maleshare;
-        if (blackshare > 100)
-        {
-             Dialog.show("Validation Failed", "Total shares can't be more than 100%.", "Ok", null);
-                   return;
+        if (blackshare > 100) {
+            Dialog.show("Validation Failed", "Total shares can't be more than 100%.", "Ok", null);
+            return;
         }
         beePercetage_black = String.valueOf(blackshare);
         Label LblTperBlack = (Label) findByName("lblTperBlack", f);
@@ -6107,7 +6145,7 @@ public class StateMachine extends StateMachineBase {
             }
         }
         lblBlevel.setText(beelevel);
-            Container containerB = (Container) findByName("ContainerB", f);
+        Container containerB = (Container) findByName("ContainerB", f);
         containerB.setHidden(false);
         Button Btncontinue1 = (Button) findByName("btncontinue1", f);
         Btncontinue1.setHidden(true);
@@ -6199,9 +6237,9 @@ public class StateMachine extends StateMachineBase {
         bbee.setBank_id("2222");
         String rval = "";
         rval = uws.bee(bbee);
-      //  if (rval.equals(null) || rval.equals("") ) {
-            Dialog.show("B-BBEE", "Application Completed", "Ok", null);
-       // }
+        //  if (rval.equals(null) || rval.equals("") ) {
+        Dialog.show("B-BBEE", "Application Completed", "Ok", null);
+        // }
         showForm("Main", null);
     }
 }
