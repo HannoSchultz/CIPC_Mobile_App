@@ -93,6 +93,7 @@ import ui.FormProgress;
 import za.co.cipc.pojos.AnnualReturns;
 import za.co.cipc.pojos.Dashboard;
 import za.co.cipc.pojos.User;
+import za.co.cipc.pojos.bee;
 import za.co.cipc.webservices.UserWebServicesNewReg;
 //TESTING UPLOAD
 
@@ -160,6 +161,20 @@ public class StateMachine extends StateMachineBase {
     private Container contStep3Turnovers;
     private String Bee_No = "";
     public String sid = "";
+
+    //private static String beeAgent_code= "";
+    // private static String beetBank_id= "";
+    public String beeBlack_disability = "";
+    public String beeBlack_rural = "";
+    public String beeBlack_shareholders = "";
+    public String beeBlack_unemployed = "";
+    public String beeBlack_veteran = "";
+    public String beeBlack_youth = "";
+    public String beeEnt_no = "";
+    public String beeFemale_black = "";
+    public String beePercetage_black = "";
+    public String beeStatus_date = "";
+    public String beeTrak_no = "";
 
     EnterpriseDetails enterpriseDetails;
     ArrayList<NameSearchObject> arrayListNameReservation;
@@ -4817,7 +4832,7 @@ public class StateMachine extends StateMachineBase {
                 // Dialog ip = new InfiniteProgress().showInifiniteBlocking();
                 CodeScanner.getInstance().scanBarCode(new ScanResult() {
                     public void scanCompleted(String contents, String formatName, byte[] rawBytes) {
-                        Dialog.show("ID Scanned: ", contents, "OK", null);
+                        //  Dialog.show("ID Scanned: ", contents, "OK", null);
 
                         sid = contents;
 
@@ -5426,8 +5441,10 @@ public class StateMachine extends StateMachineBase {
                     b.setUIID("Button_small_L");
                     b.setEnabled(false);
                 } else {
-                    b.setUIID("Button_small_L");
+                     b.setUIID("Button_small_L");
+                   // b.setUIID("Button_small_L_red");
                     b.setEnabled(false);
+                    //return;
                 }
 
                 boolean allscaned = true;
@@ -5459,6 +5476,8 @@ public class StateMachine extends StateMachineBase {
                     conFemale.setHidden(true);
                     Button Btncontinue1 = (Button) findByName("btncontinue1", f);
                     Btncontinue1.setHidden(true);
+                    Container containerB = (Container) findByName("ContainerB", f);
+                    containerB.setHidden(true);
                     f.repaint();
                     f.repaint();
                 }
@@ -5791,17 +5810,18 @@ public class StateMachine extends StateMachineBase {
             BEEDetail n = uws.ArlBEE_Detail.get(i);
             String ent_no = RSM_A(n.getEnt_no());
             String ent_name = RSM_A(n.getEnt_name());
-            Button b = new Button(ent_no + " " + ent_name);
+            Button b = new Button(ent_name);
             b.setName(ent_no);
             b.setUIID("Button_small_L");
             b.addActionListener(e
                     -> {
-                boolean answer = Dialog.show("Info", "Do You Want to apply for a B-BBEE Certificate for " + b.getName(), "Yes", "No");
+                boolean answer = Dialog.show("Info", "Do You Want to apply for a B-BBEE Certificate for " + b.getText(), "Yes", "No");
                 if (answer) {
                     Label lbl_ent_no = (Label) findByName("lbl_ent_no", f);
                     lbl_ent_no.setText("B-BBEE Certifcate for ");
                     Label lbl_ent_no1 = (Label) findByName("lbl_ent_no1", f);
-                    lbl_ent_no1.setText(b.getName());
+                    lbl_ent_no1.setText(b.getText());
+                    beeEnt_no = b.getName();
                     loadlist_BEE(b.getName());
                     Label lbl_ent_no2 = (Label) findByName("lbl_ent_no2", f);
                     lbl_ent_no2.setHidden(true);
@@ -5902,18 +5922,26 @@ public class StateMachine extends StateMachineBase {
             txtrevenue.startEditing();
             return;
         }
-        int rev = Integer.parseInt(txtrevenue.getText());
+        long rev = Integer.parseInt(txtrevenue.getText());
         if (rev > 10000000) {
-            Dialog.show("Validation Failed", "Revenue can't exceed R10 000 000.", "Ok", null);
+            Dialog.show("Validation Failed", "Revenue can't efxceed R10 000 000.", "Ok", null);
             txtrevenue.requestFocus();
             txtrevenue.startEditing();
             return;
         }
         TextField txtShareholders = (TextField) findByName("txtshareholders", c);
+
         if (txtShareholders.getText().trim() == "") {
             Dialog.show("Validation Failed", "Please enter how many Sharholders there are.", "Ok", null);
             txtShareholders.requestFocus();
             txtShareholders.startEditing();
+            return;
+        }
+        long shareholder = Integer.parseInt(txtShareholders.getText());
+        if (shareholder < 1) {
+            Dialog.show("Validation Failed", "There must be one or more shareholder.", "Ok", null);
+            txtrevenue.requestFocus();
+            txtrevenue.startEditing();
             return;
         }
         TextField txtBlackshare = (TextField) findByName("txtblackshare", c);
@@ -5956,7 +5984,7 @@ public class StateMachine extends StateMachineBase {
         int foo = Integer.parseInt(txtBlackshare.getText());
         int foos = Integer.parseInt(txtBlackfshare.getText());
         int foom = foo - foos;
-         Form f = Display.getInstance().getCurrent();
+        Form f = Display.getInstance().getCurrent();
         for (int i = 0; i < foom; i++) {
             //add male
             int key = i + 1;
@@ -5966,13 +5994,14 @@ public class StateMachine extends StateMachineBase {
             Conshareholders.add(lbl);
             TextField txt = new TextField();
             txt.setUIID("TextFieldNameSearch");
+            txt.setHint("% Shares");
             Conshareholders.add(txt);
             Conshareholders.repaint();
             //Container Conshareholders = (Container) findByName("conshareholders", f);
             Conshareholders.setHidden(false);
             c.repaint();
             f.repaint();
-            
+
         }
         //  int foos = Integer.parseInt(txtBlackfshare.getText());
         for (int i = 0; i < foos; i++) {
@@ -5984,6 +6013,7 @@ public class StateMachine extends StateMachineBase {
             conFemale.add(lblF);
             TextField txtF = new TextField();
             txtF.setUIID("TextFieldNameSearch");
+            txtF.setHint("% Shares");
             conFemale.add(txtF);
             conFemale.repaint();
             conFemale.setHidden(false);
@@ -5997,9 +6027,12 @@ public class StateMachine extends StateMachineBase {
         //  conFemale.setHidden(true);
         Button Btncontinue1 = (Button) findByName("btncontinue1", c);
         Btncontinue1.setHidden(false);
-      //  Form f = Display.getInstance().getCurrent();
+        Container containerB = (Container) findByName("ContainerB", f);
+        containerB.setHidden(true);
+
+        //  Form f = Display.getInstance().getCurrent();
         f.repaint();
-             f.repaint();
+        f.repaint();
     }
 
     @Override
@@ -6009,56 +6042,160 @@ public class StateMachine extends StateMachineBase {
         int maleshare = 0;
         boolean scanned = true;
         for (Component cmp : conshareholders.getChildrenAsList(scanned)) {
-            String val = null;
+            String val = "";
             if (cmp instanceof TextField) {
                 val = ((TextField) cmp).getText().trim();
+                if (val == "") {
+                    Dialog.show("Validation Failed", "Please capture shares for all Black Male Shareholder.", "Ok", null);
+                    cmp.requestFocus();
+                }
                 maleshare = maleshare + Integer.parseInt(val.trim());
             }
         }
         Container conFemale = (Container) findByName("ConFemale", f);
         int fmaleshare = 0;
         //   scanned = true;
+
         for (Component cmp : conFemale.getChildrenAsList(scanned)) {
-            String val = null;
+            String val = "";
             if (cmp instanceof TextField) {
                 val = ((TextField) cmp).getText().trim();
+                if (val == "") {
+                    Dialog.show("Validation Failed", "Please capture shares for all Black Female Shareholder.", "Ok", null);
+                    cmp.requestFocus();
+                }
                 fmaleshare = fmaleshare + Integer.parseInt(val.trim());
+                beeFemale_black = String.valueOf(fmaleshare);
             }
         }
         int blackshare = fmaleshare + maleshare;
-        Label LblTperBlack = (Label) findByName("lblTperBlack",f);
-        Label LblTperBlackF = (Label) findByName("lblTperBlackF",f);
-        Label LblTperW = (Label) findByName("lblTperW",f);
-        Label lblBlevel = (Label) findByName("lblBlevel",f);
-         LblTperBlack.setText("Black Shareholding = " + blackshare + "%" );
-         LblTperBlackF.setText("Black Female Shareholding = " + fmaleshare + "%" );
-         int white_share = 100 - blackshare;
-         LblTperW.setText("White Shareholding = " + white_share + "%" );
-         lblBlevel.setText("bbeee status");
-         f.repaint();
-         c.repaint();
-         //calculate BBEEE status
+        beePercetage_black = String.valueOf(blackshare);
+        Label LblTperBlack = (Label) findByName("lblTperBlack", f);
+        Label LblTperBlackF = (Label) findByName("lblTperBlackF", f);
+        Label LblTperW = (Label) findByName("lblTperW", f);
+        Label lblBlevel = (Label) findByName("lblBlevel", f);
+        LblTperBlack.setText("Black Shareholding = " + blackshare + "%");
+        LblTperBlackF.setText("Black Female Shareholding = " + fmaleshare + "%");
+        int white_share = 100 - blackshare;
+        LblTperW.setText("White Shareholding = " + white_share + "%");
+        int sblack = blackshare;
+        int sfblack = fmaleshare;
+        int swhite = white_share;
+        String beelevel = "";
+
+        //calculate bee status
+        if (blackshare == 0) {
+            beelevel = "B-BBEE LEVEL 1 CONTRIBUTION 100%";
+        } else {
+            if (blackshare == 100) {
+                beelevel = "B-BBEE LEVEL  CONTRIBUTION 135%";
+            } else {
+                if (blackshare >= 51 && blackshare < 100) {
+                    beelevel = "B-BBEE LEVEL 4 CONTRIBUTION 125%";
+                } else {
+                    if (blackshare < 50) {
+                        beelevel = "B-BBEE LEVEL 4 CONTRIBUTION 100%";
+                    } else {
+                        beelevel = "NON-COMPLIANT CONTRIBUTION 0%";
+                    }
+                }
+            }
+        }
+        lblBlevel.setText(beelevel);
+            Container containerB = (Container) findByName("ContainerB", f);
+        containerB.setHidden(false);
+        Button Btncontinue1 = (Button) findByName("btncontinue1", f);
+        Btncontinue1.setHidden(true);
+
+        f.repaint();
+        c.repaint();
+        //calculate BBEEE status
     }
 
- //   @Override
+    //   @Override
     protected void onBEE_BtncontinueyouthAction(Component c, ActionEvent event) {
         Form f = Display.getInstance().getCurrent();
-        Container containerYouth  = (Container) findByName("ContainerYouth",f);
-    
-    TextField txtshareholders = (TextField) findByName("txtshareholders",f);
-    SpanLabel SpanLabel1 = (SpanLabel) findByName("SpanLabel1",f);
-    SpanLabel SpanLabel2 = (SpanLabel) findByName("SpanLabel2",f);
-    SpanLabel SpanLabel3 = (SpanLabel) findByName("SpanLabel3",f);
-    SpanLabel SpanLabel4 = (SpanLabel) findByName("SpanLabel4",f);
-    String msg = "Out of the total of " + txtshareholders.getText().trim()+ " share holders, how many are unemployed black people not attending and not required by law to attend an educational institution and not awaiting admission to an educational institution?";
-    SpanLabel1.setText(msg);
-    msg = "Out of the total  of " + txtshareholders.getText().trim()+ " share holders, how many are black people who are youth as defined in the National Youth Commission ACT of 1996? [14 to 35 years old]";
-    SpanLabel2.setText(msg);
-    msg = "Out of the total  of " + txtshareholders.getText().trim()+ " share holders, how many are black people who are person with disabilities as defined in the Code of Good Proctice on employment of people with disabilities issued under the Employment Equity Act?";
-    SpanLabel3.setText(msg);
-    msg = "Out of the total of " + txtshareholders.getText().trim()+ "  share holders, how many are black military veterans who qualifies to be called a military veteran in terms of the Military Veterans Act 18 0f 2011 ?";
-    SpanLabel4.setText(msg);
-    containerYouth.setHidden(false);
-    f.repaint();
+
+        Container container_rev = (Container) findByName("Container_rev", f);
+        container_rev.setHidden(true);
+        f.repaint();
+        Container containerYouth = (Container) findByName("ContainerYouth", f);
+
+        TextField txtshareholders = (TextField) findByName("txtshareholders", f);
+        SpanLabel SpanLabel1 = (SpanLabel) findByName("SpanLabel1", f);
+        SpanLabel SpanLabel2 = (SpanLabel) findByName("SpanLabel2", f);
+        SpanLabel SpanLabel3 = (SpanLabel) findByName("SpanLabel3", f);
+        SpanLabel SpanLabel4 = (SpanLabel) findByName("SpanLabel4", f);
+        String msg = "Out of the total of " + txtshareholders.getText().trim() + " share holders, how many are unemployed black people not attending and not required by law to attend an educational institution and not awaiting admission to an educational institution?";
+        SpanLabel1.setText(msg);
+        msg = "Out of the total  of " + txtshareholders.getText().trim() + " share holders, how many are black people who are youth as defined in the National Youth Commission ACT of 1996? [14 to 35 years old]";
+        SpanLabel2.setText(msg);
+        msg = "Out of the total  of " + txtshareholders.getText().trim() + " share holders, how many are black people who are person with disabilities as defined in the Code of Good Proctice on employment of people with disabilities issued under the Employment Equity Act?";
+        SpanLabel3.setText(msg);
+        msg = "Out of the total of " + txtshareholders.getText().trim() + "  share holders, how many are black military veterans who qualifies to be called a military veteran in terms of the Military Veterans Act 18 0f 2011 ?";
+        SpanLabel4.setText(msg);
+        containerYouth.setHidden(false);
+        f.repaint();
+    }
+
+    @Override
+    protected void onBEE_BtncompleteAction(Component c, ActionEvent event) {
+        Form f = Display.getInstance().getCurrent();
+        //validate data
+        za.co.cipc.pojos.bee bbee = new za.co.cipc.pojos.bee();
+        TextField textFieldunemployed = (TextField) findByName("TextFieldunemployed", f);
+        if (textFieldunemployed.getText().trim() == "") {
+            Dialog.show("Validation Failed", "Value for unemployed can't be blank.", "Ok", null);
+            textFieldunemployed.requestFocus();
+            return;
+        }
+        bbee.setBlack_unemployed(textFieldunemployed.getText()); //1
+        TextField textFieldyouth = (TextField) findByName("TextFieldyouth", f);
+        if (textFieldyouth.getText().trim() == "") {
+            Dialog.show("Validation Failed", "Value for Youth can't be blank.", "Ok", null);
+            textFieldyouth.requestFocus();
+            return;
+        }
+        bbee.setBlack_youth(textFieldyouth.getText()); //2
+        TextField textFielddisability = (TextField) findByName("TextFielddisability", f);
+        if (textFielddisability.getText().trim() == "") {
+            Dialog.show("Validation Failed", "Value for Disabily can't be blank.", "Ok", null);
+            textFielddisability.requestFocus();
+            return;
+        }
+        bbee.setBlack_disability(textFielddisability.getText());
+        TextField textFieldrural = (TextField) findByName("TextFieldrural", f);
+        if (textFieldrural.getText().trim() == "") {
+            Dialog.show("Validation Failed", "Value for Rural can't be blank.", "Ok", null);
+            textFieldrural.requestFocus();
+            return;
+        }
+        bbee.setBlack_rural(textFieldrural.getText());//4
+        TextField textFieldveteran = (TextField) findByName("TextFieldveteran", f);
+        if (textFieldveteran.getText().trim() == "") {
+            Dialog.show("Validation Failed", "Value for Veteran can't be blank.", "Ok", null);
+            textFieldveteran.requestFocus();
+            return;
+        }
+        bbee.setBlack_veteran(textFieldveteran.getText()); //5
+
+        za.co.cipc.webservices.UserWebServicesNewReg uws = new za.co.cipc.webservices.UserWebServicesNewReg();
+        beeTrak_no = uws.getnexttrakno();
+        bbee.setTrak_no(beeTrak_no);
+        bbee.setEnt_no(beeEnt_no);
+        TextField txtshareholders = (TextField) findByName("txtshareholders", f);
+        bbee.setShareholders(txtshareholders.getText());
+        TextField Txtblackshare = (TextField) findByName("txtblackshare", f);
+        bbee.setBlack_shareholders(Txtblackshare.getText());
+        bbee.setPercetage_black(beePercetage_black);
+        TextField Txtblackfshare = (TextField) findByName("txtblackfshare", f);
+        bbee.setFemale_black(Txtblackfshare.getText());
+        bbee.setAgent_code(AGENT_CODE);
+        bbee.setBank_id("2222");
+        String rval = "";
+        rval = uws.bee(bbee);
+        if (rval.equals(null) || rval.equals("") ) {
+            Dialog.show("Validation Failed", "An error occured " + rval.toString(), "Ok", null);
+        }
     }
 }

@@ -284,7 +284,7 @@ public class UserWebServicesNewReg {
                 + "         <sUserName>" + Constants.sUserName + "=</sUserName>\n"
                 + "         <sPassword>" + Constants.sPassword + "</sPassword>\n"
                 + "         <sBankID>" + Constants.sBankID + "</sBankID>\n"
-                + "         <ds>\n"
+                + "         <DS>\n"
                 + "            <xs:schema id=\"NewDataSet\" xmlns=\"\" xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" xmlns:msdata=\"urn:schemas-microsoft-com:xml-msdata\">\n"
                 + "               <xs:element name=\"NewDataSet\" msdata:IsDataSet=\"true\" msdata:UseCurrentLocale=\"true\">\n"
                 + "                  <xs:complexType>\n"
@@ -349,7 +349,7 @@ public class UserWebServicesNewReg {
                 + "                  </Table1>\n"
                 + "               </NewDataSet>\n"
                 + "            </diffgr:diffgram>\n"
-                + "         </ds>\n"
+                + "         </DS>\n"
                 + "         <sCust_Code>" + enterprise.getCust_code() + "</sCust_Code>\n"
                 + "      </ReceiveNewEntData>\n"
                 + "   </s:Body>\n"
@@ -857,6 +857,48 @@ public class UserWebServicesNewReg {
         Result result = Result.fromContent(data, Result.XML);
         return result;
     }
+     public Result get_directors_bee(String ent_no) {
+
+        final String SOAP_BODY
+                = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cipc=\"CIPC_WEB_SERVICES\">\n"
+                + "   <soapenv:Header/>\n"
+                + "   <soapenv:Body>\n"
+                + "      <cipc:get_dir_register_bee>\n"
+                + "       <cipc:sUserName>" + Constants.sUserName + "</cipc:sUserName>\n"
+                + "         <cipc:sPassword>" + Constants.sPassword + "</cipc:sPassword>\n"
+                + "         <cipc:sBankID>" + Constants.sBankID + "</cipc:sBankID>\n"
+                + "         <cipc:ent_no>" + ent_no + "</cipc:ent_no>\n"
+                + "      </cipc:get_dir_register_bee>\n"
+                + "   </soapenv:Body>\n"
+                + "</soapenv:Envelope>";
+        ConnectionRequest httpRequest = new ConnectionRequest() {
+            Element h;
+
+            @Override
+            protected void buildRequestBody(OutputStream os) throws IOException {
+                super.buildRequestBody(os);
+                os.write(SOAP_BODY.getBytes("utf-8"));
+            }
+
+            protected void postResponse() {
+                super.postResponse();
+            }
+
+            protected void readResponse(InputStream input) throws IOException {
+                super.readResponse(input);
+            }
+        };
+
+        httpRequest.setUrl(Constants.soapServicesEndPoint + "director.asmx?wsdl");
+        httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
+        httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
+        httpRequest.setPost(true);
+        NetworkManager.getInstance().setTimeout(60000);
+        NetworkManager.getInstance().addToQueueAndWait(httpRequest);
+        String data = new String(httpRequest.getResponseData());
+        Result result = Result.fromContent(data, Result.XML);
+        return result;
+    }
 
     public Result get_dha_data(String id_no) {
 
@@ -945,7 +987,50 @@ public class UserWebServicesNewReg {
         return result;
     }
 
-    public Result ReservedName_Name_Mobi(String customerCode, String Name_Res_no) {
+//    public Result ReservedName_Name_Mobi(String customerCode, String Name_Res_no) {
+//
+//        final String SOAP_BODY
+//                = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cipc=\"CIPC_WEB_SERVICES\">\n"
+//                + "   <soapenv:Header/>\n"
+//                + "   <soapenv:Body>\n"
+//                + "      <cipc:Get_Approved_Name_MObi>\n"
+//                + "        <cipc:sUserName>" + Constants.sUserName + " </cipc:sUserName>\n"
+//                + "          <cipc:sPassword>" + Constants.sPassword + "</cipc:sPassword>\n"
+//                + "          <cipc:sBankID>" + Constants.sBankID + "</cipc:sBankID>\n"
+//                + "         <cipc:sRefNo>" + Name_Res_no + "</cipc:sRefNo>\n"
+//                + "         <cipc:sCust_Code>" + customerCode + "</cipc:sCust_Code>\n"
+//                + "      </cipc:Get_Approved_Name_MObi>\n"
+//                + "   </soapenv:Body>\n"
+//                + "</soapenv:Envelope>";
+//        ConnectionRequest httpRequest = new ConnectionRequest() {
+//            Element h;
+//
+//            @Override
+//            protected void buildRequestBody(OutputStream os) throws IOException {
+//                super.buildRequestBody(os);
+//                os.write(SOAP_BODY.getBytes("utf-8"));
+//            }
+//
+//            protected void postResponse() {
+//                super.postResponse();
+//            }
+//
+//            protected void readResponse(InputStream input) throws IOException {
+//                super.readResponse(input);
+//            }
+//        };
+//
+//        httpRequest.setUrl(Constants.soapServicesEndPoint + "enterprise.asmx?wsdl");
+//        httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
+//        httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
+//        httpRequest.setPost(true);
+//        NetworkManager.getInstance().setTimeout(60000);
+//        NetworkManager.getInstance().addToQueueAndWait(httpRequest);
+//        String data = new String(httpRequest.getResponseData());
+//        Result result = Result.fromContent(data, Result.XML);
+//        return result;
+//    }
+ public Result ReservedName_Name_Mobi(String customerCode, String Name_Res_no) {
 
         final String SOAP_BODY
                 = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cipc=\"CIPC_WEB_SERVICES\">\n"
@@ -988,45 +1073,85 @@ public class UserWebServicesNewReg {
         Result result = Result.fromContent(data, Result.XML);
         return result;
     }
+ 
+    public String bee(za.co.cipc.pojos.bee bbee)
+    {
 
-    public String ReservedName_Name_Mobi_old(String customerCode, String Name_Res_no) {
+        //Step 1: Check if customer exists
+        //TODO more validations needed
+        //User responseUser = GetCustLoginDetails_ID_NO(requestUser);
 
-        String response = "";
-        Log.p("Reservename_Mobi", Log.DEBUG);
+//        Log.p(responseUser.toString(), Log.DEBUG);
+//
+//        if (null == responseUser) {
+//            return null;
+//            //return null;//user does not exist?
+//        }
+
+        //Step 2: Capture customer data. 
         final String SOAP_BODY
-                = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cipc=\"CIPC_WEB_SERVICES\">\n"
+                = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cipc=\"CIPC_WEB_SERVICES\" xmlns:xs=\"http://www.w3.org/2001/XMLSchema\">\n"
                 + "   <soapenv:Header/>\n"
                 + "   <soapenv:Body>\n"
-                + "      <cipc:Get_Approved_Name_MObi>\n"
-                + "        <cipc:sUserName>" + Const.sUserName + "</cipc:sUserName>\n"
-                + "          <cipc:sPassword>" + Const.sPassword + "</cipc:sPassword>\n"
-                + "          <cipc:sBankID>" + Const.sBankID + "</cipc:sBankID>\n"
-                + "         <cipc:sRefNo>" + Name_Res_no + "</cipc:sRefNo>\n"
-                + "         <cipc:sCust_Code>" + customerCode + "</cipc:sCust_Code>\n"
-                + "      </cipc:Get_Approved_Name_MObi>\n"
+                + "      <cipc:I_BEE_STATUS>\n"
+                + "         <cipc:sUserName>"  + Constants.sUserName + "</cipc:sUserName>\n"
+                + "         <cipc:sPassword>" + Constants.sPassword + "</cipc:sPassword>\n"
+                + "         <cipc:sBankID>" + Constants.sBankID + "</cipc:sBankID>\n"
+                + "         <cipc:DS>\n"
+                + "            <xs:schema id=\"NewDataSet\" xmlns:msdata=\"urn:schemas?microsoft?com:xml?msdata\">\n"
+                + "               <xs:element name=\"NewDataSet\" msdata:IsDataSet=\"true\" msdata:UseCurrentLocale=\"true\">\n"
+                + "                  <xs:complexType>\n"
+                + "                     <xs:choice minOccurs=\"0\" maxOccurs=\"unbounded\">\n"
+                + "                        <xs:element name=\"Table1\">\n"
+                + "                           <xs:complexType>\n"
+                + "                              <xs:sequence>\n"
+                + "                                 <xs:element name=\"trak_no\" type=\"xs:string\" minOccurs=\"0\"/>\n"
+                + "                                 <xs:element name=\"ent_no\" type=\"xs:string\" minOccurs=\"0\"/>\n"
+                + "                                 <xs:element name=\"shareholders\" type=\"xs:string\" minOccurs=\"0\"/>\n"
+                + "                                 <xs:element name=\"black_shareholders\" type=\"xs:string\" minOccurs=\"0\"/>\n"
+                + "                                 <xs:element name=\"percentage_black\" type=\"xs:string\" minOccurs=\"0\"/>\n"
+                + "                                 <xs:element name=\"female_black\" type=\"xs:string\" minOccurs=\"0\"/>\n"
+                + "                                 <xs:element name=\"agent_code\" type=\"xs:string\" minOccurs=\"0\"/>\n"
+                + "                                 <xs:element name=\"bank_id\" type=\"xs:string\" minOccurs=\"0\"/>\n"
+                + "                                 <xs:element name=\"black_unemployed\" type=\"xs:string\" minOccurs=\"0\"/>\n"
+                + "                                 <xs:element name=\"black_youth\" type=\"xs:string\" minOccurs=\"0\"/>\n"
+                + "                                 <xs:element name=\"black_disability\" type=\"xs:string\" minOccurs=\"0\"/>\n"
+                + "                                 <xs:element name=\"black_rural\" type=\"xs:string\" minOccurs=\"0\"/>\n"
+                + "                                 <xs:element name=\"black_veteran\" type=\"xs:string\" minOccurs=\"0\"/>\n"
+                + "                              </xs:sequence>\n"
+                + "                           </xs:complexType>\n"
+                + "                        </xs:element>\n"
+                + "                     </xs:choice>\n"
+                + "                  </xs:complexType>\n"
+                + "               </xs:element>\n"
+                + "            </xs:schema>\n"
+                + "            <diffgr:diffgram xmlns:msdata=\"urn:schemas-microsoft-com:xml-msdata\" xmlns:diffgr=\"urn:schemas-microsoft-com:xml-diffgram-v1\">\n"
+                + "               <NewDataSet>\n"
+                + "                  <Table1 diffgr:id=\"Table11\" msdata:rowOrder=\"0\" diffgr:hasChanges=\"inserted\">\n"
+                + "                     <trak_no>" + bbee.getTrak_no().trim() + "</trak_no>>\n"
+                + "                     <ent_no>" + bbee.getEnt_no().trim() + "</ent_no>\n"
+                + "                     <shareholders>" + bbee.getShareholders().trim() + " </shareholders>\n"
+                + "                     <black_shareholders>" + bbee.getBlack_shareholders().trim() + "</black_shareholders>\n"
+                + "                     <percentage_black>" + bbee.getPercetage_black().trim() + "</percentage_black>\n"
+                + "                     <female_black>" + bbee.getFemale_black().trim() + "</female_black>\n"
+                + "                     <agent_code>" + bbee.getAgent_code().trim() + "</agent_code>\n"
+                + "                     <bank_id>" + Constants.sBankID + "</bank_id>\n"
+                + "                     <black_unemployed>" + bbee.getBlack_unemployed().trim() + "</black_unemployed>\n"
+                + "                     <black_youth>" + bbee.getBlack_youth().trim() + "</black_youth>\n"
+                + "                     <black_disability>" + bbee.getBlack_disability().trim() + "</black_disability>\n"
+                + "                     <black_rural>" + bbee.getBlack_rural().trim() + "</black_rural>\n"
+                + "                     <black_veteran>" + bbee.getBlack_veteran().trim() + "</black_veteran>\n"
+                + "                  </Table1>\n"
+                + "               </NewDataSet>\n"
+                + "            </diffgr:diffgram>\n"
+                + "         </cipc:DS>\n"
+                + "         <cipc:sCust_Code>" + bbee.getAgent_code() + "</cipc:sCust_Code>\n"                
+                + "      </cipc:I_BEE_STATUS>\n"
                 + "   </soapenv:Body>\n"
                 + "</soapenv:Envelope>";
-        Log.p("Reservename_Mobi1", Log.DEBUG);
+
         ConnectionRequest httpRequest = new ConnectionRequest() {
             Element h;
-
-            @Override
-            protected void handleErrorResponseCode(int code, String message) {
-                super.handleErrorResponseCode(code, message); //To change body of generated methods, choose Tools | Templates.
-                if (500 == code) {
-                    Dialog.show("Error", "An Error occured", "Ok", null);
-                }
-            }
-
-            @Override
-            protected void handleIOException(IOException err) {
-                //    super.handleIOException(err); //To change body of generated methods, choose Tools | Templates.
-            }
-
-            @Override
-            protected void handleRuntimeException(RuntimeException err) {
-                //super.handleRuntimeException(err); //To change body of generated methods, choose Tools | Templates.
-            }
 
             @Override
             protected void buildRequestBody(OutputStream os) throws IOException {
@@ -1052,41 +1177,37 @@ public class UserWebServicesNewReg {
 
             }
         };
-        Log.p("Reservename_Mobi2", Log.DEBUG);
-        httpRequest.setUrl(Constants.soapServicesEndPoint + "enterprise.asmx");
+
+        httpRequest.setUrl("https://testwebservices1.cipc.co.za/enterprise.asmx?wsdl");
         httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
         httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
         httpRequest.setPost(true);
-        httpRequest.setFailSilently(true);
-        Log.p("Reservename_Mobi3", Log.DEBUG);
+
         InfiniteProgress prog = new InfiniteProgress();
         Dialog dlg = prog.showInifiniteBlocking();
         httpRequest.setDisposeOnCompletion(dlg);
-        Log.p("Reservename_Mobi4", Log.DEBUG);
+
         NetworkManager.getInstance().addToQueueAndWait(httpRequest);
-        Log.p("Reservename_Mobi5", Log.DEBUG);
         String data = new String(httpRequest.getResponseData());
-        Log.p("Reservename_Mobi6", Log.DEBUG);
-        Log.p("Data d: " + data, Log.DEBUG);
 
         try {
 
             Result result = Result.fromContent(data, Result.XML);
-            String Namereservation_MOBI_traknoresult = result.getAsString("//Get_Approved_Name_MObiResult");
 
-            response = Namereservation_MOBI_traknoresult;
-            if (response != null) {
-                response = response.trim();
-            }
+            String I_BEE_STATUS_regresult = result.getAsString("//I_BEE_STATUS_regresult");
 
-            //Log.p("result: " + result, Log.DEBUG);
-            //Log.p("namereservation_mobiresult: " + namereservation_mobiresult, Log.DEBUG);
+            Log.p("result: " + result, Log.DEBUG);
+            Log.p("I_BEE_STATUS_regresult: " + I_BEE_STATUS_regresult, Log.DEBUG);
+
+            return I_BEE_STATUS_regresult;
+
         } catch (IllegalArgumentException e) {
             Log.p(e.toString());
         }
 
-        return response;
-    }
+        return null;
+
+    }//end register
     public String ValidateCelNo(String customerCode, String Track_no, String cell_no, String id_no) {
 
         String response = "";
