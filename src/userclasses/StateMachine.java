@@ -4744,7 +4744,7 @@ public class StateMachine extends StateMachineBase {
                     public void scanCompleted(String contents, String formatName, byte[] rawBytes) {
                         //Dialog.show("Bar code", "Bar code is: " + contents, "Ok", null);
 //#################################disable barcode scanner
-                        Dialog.show("ID Scanned: ", contents, "OK", null);
+                       // Dialog.show("ID Scanned: ", contents, "OK", null);
                         Result result = uws.get_dha_data(contents);
 
                         String retval = uws.DHA_Data(result);
@@ -6069,6 +6069,11 @@ public class StateMachine extends StateMachineBase {
             }
         }
         int blackshare = fmaleshare + maleshare;
+        if (blackshare > 100)
+        {
+             Dialog.show("Validation Failed", "Total shares can't be more than 100%.", "Ok", null);
+                   return;
+        }
         beePercetage_black = String.valueOf(blackshare);
         Label LblTperBlack = (Label) findByName("lblTperBlack", f);
         Label LblTperBlackF = (Label) findByName("lblTperBlackF", f);
@@ -6194,8 +6199,9 @@ public class StateMachine extends StateMachineBase {
         bbee.setBank_id("2222");
         String rval = "";
         rval = uws.bee(bbee);
-        if (rval.equals(null) || rval.equals("") ) {
-            Dialog.show("Validation Failed", "An error occured " + rval.toString(), "Ok", null);
-        }
+      //  if (rval.equals(null) || rval.equals("") ) {
+            Dialog.show("B-BBEE", "Application Completed", "Ok", null);
+       // }
+        showForm("Main", null);
     }
 }
