@@ -586,7 +586,7 @@ public class StateMachine extends StateMachineBase {
             if (msg.length() > 0) {
                 btnVerify.setEnabled(true);
                 btnVerify.setText(PREVTEXT);
-                Dialog.show("Error", msg, "Ok", null);
+                Dialog.show("Validation Failed", msg, "Ok", null);
             } else {
 
                 UserWebServices u = new UserWebServices();
@@ -596,7 +596,7 @@ public class StateMachine extends StateMachineBase {
                 if (arrayListNameReservation.size() == 0) {
                     btnVerify.setEnabled(true);
                     btnVerify.setText(PREVTEXT);
-                    Dialog.show("Error", "Error occurred while processing your request. Please contact CIPC.", "Ok", null);
+                    Dialog.show("Validation Failed", "Error occurred while processing your request. Please contact CIPC.", "Ok", null);
                 }
 
                 String currentName = "";
@@ -804,7 +804,7 @@ public class StateMachine extends StateMachineBase {
                 }
                 btnLodge.setText(PREVTEXT);
                 btnLodge.setVisible(true);
-                Dialog.show("Error", msg, "Ok", null);
+                Dialog.show("Validation Failed", msg, "Ok", null);
             } else {
                 UserWebServices u = new UserWebServices();
 
@@ -820,7 +820,7 @@ public class StateMachine extends StateMachineBase {
                     }
                     btnLodge.setText(PREVTEXT);
                     btnLodge.setVisible(true);
-                    Dialog.show("Error", responseCall.getResponseMessage(), "Ok", null);//TODO scroll to top
+                    Dialog.show("Validation Failed", responseCall.getResponseMessage(), "Ok", null);//TODO scroll to top
                 } else if (responseCall != null && responseCall.getResponseMessage() != null
                         && responseCall.getResponseMessage().indexOf("already filed") == -1) {
 
@@ -852,11 +852,11 @@ public class StateMachine extends StateMachineBase {
                         && responseCall.getResponseMessage().indexOf("already filed") != -1) {
                     btnLodge.setText(PREVTEXT);
                     btnLodge.setVisible(true);
-                    Dialog.show("Error", responseCall.getResponseMessage(), "Ok", null);//TODO scroll to top
+                    Dialog.show("Validation Failed", responseCall.getResponseMessage(), "Ok", null);//TODO scroll to top
                 } else {
                     btnLodge.setText(PREVTEXT);
                     btnLodge.setVisible(true);
-                    Dialog.show("Error", "Error occurred while processing your request. Please try again later or contact CIPC.", "Ok", null);
+                    Dialog.show("Validation Failed", "Error occurred while processing your request. Please try again later or contact CIPC.", "Ok", null);
                 }
             }
 
@@ -1060,7 +1060,7 @@ public class StateMachine extends StateMachineBase {
         if (table == null || table.size() == 0) {
             cont.setUIID("Container");
             cont.repaint();
-            Dialog.show("Error", "An Error Occured while fetching CIPC Dashboard information.", "Ok", null);
+            Dialog.show("Validation Failed", "An Error Occured while fetching CIPC Dashboard information.", "Ok", null);
             //cont.remove();
             //f.reva
         } else {
@@ -1396,7 +1396,7 @@ public class StateMachine extends StateMachineBase {
                 if (msg.length() > 0) {
                     btnStep1RetrieveDetails.setText(PREVTEXT);
                     btnStep1RetrieveDetails.setEnabled(true);
-                    Dialog.show("Error", msg, "Ok", null);
+                    Dialog.show("Validation Failed", msg, "Ok", null);
                 } else {
 
                     ENT_NUMBER = txtStep1a.getText() + "/" + txtStep1b.getText()
@@ -1420,7 +1420,7 @@ public class StateMachine extends StateMachineBase {
                         }
                         btnStep1RetrieveDetails.setText(PREVTEXT);
                         btnStep1RetrieveDetails.setEnabled(true);
-                        Dialog.show("Error", "There is already an Annual Return in the Cart for Enterprise.\n\n"
+                        Dialog.show("Validation Failed", "There is already an Annual Return in the Cart for Enterprise.\n\n"
                                 + "If this is incorrect please remove from the Cart and try again. ", "Ok", null);
                         return; //TODO better way to exit
                     }
@@ -1496,7 +1496,7 @@ public class StateMachine extends StateMachineBase {
                         }
                         btnStep1RetrieveDetails.setText(PREVTEXT);
                         btnStep1RetrieveDetails.setEnabled(true);
-                        Dialog.show("Error", "Could not obtain enterprise details. Please ensure that your Enterprise number is valid. ", "Ok", null);
+                        Dialog.show("Validation Failed", "Could not obtain enterprise details. Please ensure that your Enterprise number is valid. ", "Ok", null);
                     }
 
                 }
@@ -1576,7 +1576,7 @@ public class StateMachine extends StateMachineBase {
             if (message.length() > 0) {
                 btnStep2Confirm.setText(PREVTEXT);
                 btnStep2Confirm.setEnabled(true);
-                Dialog.show("Error", message, "Ok", null);
+                Dialog.show("Validation Failed", message, "Ok", null);
                 return;
             }
 
@@ -1692,7 +1692,7 @@ public class StateMachine extends StateMachineBase {
             if (flag == true) {
                 btnStep3CalcOutAmount.setText(PREVTEXT);
                 btnStep3CalcOutAmount.setEnabled(true);
-                Dialog.show("Error", "Please complete all fields. ", "Ok", null);
+                Dialog.show("Validation Failed", "Please complete all fields. ", "Ok", null);
             } else {
 
                 Log.p("dataset=" + dataset, Log.DEBUG);
@@ -2338,7 +2338,7 @@ public class StateMachine extends StateMachineBase {
                                         isCartStep3 = false;
                                         isCartStep4 = false;
                                         showCart2(f);
-                                        Dialog.show("Error", "Payment error. Please contact CIPC.", "Ok", null);
+                                        Dialog.show("Validation Failed", "Payment error. Please contact CIPC.", "Ok", null);
 
                                     }
                                 });
@@ -2586,7 +2586,7 @@ public class StateMachine extends StateMachineBase {
                 if (formProgress != null) {
                     formProgress.removeProgress();
                 }
-                Dialog.show("Error", responseUser.getError(), "Ok", null);
+                Dialog.show("Validation Failed", responseUser.getError(), "Ok", null);
                 return true;
             }
 
@@ -2627,7 +2627,7 @@ public class StateMachine extends StateMachineBase {
             //error
             btnLogin.setEnabled(true);
             btnLogin.setText(PREVTEXT);
-            Dialog.show("Error", msg, "Ok", null);
+            Dialog.show("Validation Failed", msg, "Ok", null);
             return true;
         }
 
@@ -2730,7 +2730,7 @@ public class StateMachine extends StateMachineBase {
             msg = "Please complete step 3 first. ";
         }
 
-        Dialog.show("Error", msg, "Ok", null);
+        Dialog.show("Validation Failed", msg, "Ok", null);
 
     }
 
@@ -2746,7 +2746,7 @@ public class StateMachine extends StateMachineBase {
             msg = "Please complete step 3 first. ";
         }
 
-        Dialog.show("Error", msg, "Ok", null);
+        Dialog.show("Validation Failed", msg, "Ok", null);
 
     }
 
@@ -3038,7 +3038,7 @@ public class StateMachine extends StateMachineBase {
                 msg += "Please enter 13 character ID Number. ";
                 btnStep1Continue.setEnabled(true);
                 btnStep1Continue.setText(PREVTEXT);
-                Dialog.show("Error", msg, "Ok", null);
+                Dialog.show("Validation Failed", msg, "Ok", null);
 
                 return;
             }
@@ -3067,7 +3067,7 @@ public class StateMachine extends StateMachineBase {
             } else {
                 btnStep1Continue.setEnabled(true);
                 btnStep1Continue.setText(PREVTEXT);
-                Dialog.show("Error", msg, "Ok", null);
+                Dialog.show("Validation Failed", msg, "Ok", null);
             }
 
             btnStep1Continue.setEnabled(true);
@@ -3152,7 +3152,7 @@ public class StateMachine extends StateMachineBase {
             } else {
                 btnStep2Continue.setEnabled(true);
                 btnStep2Continue.setText(PREVTEXT);
-                Dialog.show("Error", msg, "Ok", null);
+                Dialog.show("Validation Failed", msg, "Ok", null);
             }
 
             btnStep2Continue.setEnabled(true);
@@ -3224,7 +3224,7 @@ public class StateMachine extends StateMachineBase {
             } else {
                 btnStep3Next.setEnabled(true);
                 btnStep3Next.setText(PREVTEXT);
-                Dialog.show("Error", msg, "Ok", null);
+                Dialog.show("Validation Failed", msg, "Ok", null);
             }
 
             btnStep3Next.setEnabled(true);
@@ -3316,7 +3316,7 @@ public class StateMachine extends StateMachineBase {
                         || result.indexOf("existing") > -1) {//error
                     btnStep4Register.setEnabled(true);
                     btnStep4Register.setText(PREVTEXT);
-                    Dialog.show("Error", result, "Ok", null);
+                    Dialog.show("Validation Failed", result, "Ok", null);
                 } else {
                     Dialog.show("Success", result, "Ok", null);
                     showForm("Login", null);
@@ -3328,7 +3328,7 @@ public class StateMachine extends StateMachineBase {
             } else {
                 btnStep4Register.setEnabled(true);
                 btnStep4Register.setText(PREVTEXT);
-                Dialog.show("Error", msg, "Ok", null);
+                Dialog.show("Validation Failed", msg, "Ok", null);
             }
 
             btnStep4Register.setEnabled(true);
@@ -3599,10 +3599,10 @@ public class StateMachine extends StateMachineBase {
                                 Storage.getInstance().writeObject(KEY_FOR_T_AND_CS, "Viewed on_" + getDateNowString());
 
                             } else {
-                                Dialog.show("Error", "File is currently not available. Please contact CIPC.", "Ok", null);
+                                Dialog.show("Validation Failed", "File is currently not available. Please contact CIPC.", "Ok", null);
                             }
                         } catch (Exception e) {
-                            Dialog.show("Error", "File is currently not available. Please contact CIPC.", "Ok", null);
+                            Dialog.show("Validation Failed", "File is currently not available. Please contact CIPC.", "Ok", null);
                             //Log.e(e);
 
                         }
@@ -3704,13 +3704,13 @@ public class StateMachine extends StateMachineBase {
                 return false;
 
             } else {
-                Dialog.show("Error", res1, "Ok", null);
+                Dialog.show("Validation Failed", res1, "Ok", null);
                 return true;
 
             }
 
         } else {
-            Dialog.show("Error", msg, "Ok", null);
+            Dialog.show("Validation Failed", msg, "Ok", null);
             return true;
         }
     }
@@ -3888,7 +3888,7 @@ public class StateMachine extends StateMachineBase {
 
     protected void onFrmtest_ButtonAction(Component c, ActionEvent event) {
 
-        Dialog.show("Error", "Error occurred while processing your request. Please contact CIPC.", "Ok", null);
+        Dialog.show("Validation Failed", "Error occurred while processing your request. Please contact CIPC.", "Ok", null);
     }
 
     protected void onFrmNewEntReg1_BtnStartNewRegAction(Component c, ActionEvent event) {
@@ -3997,15 +3997,15 @@ public class StateMachine extends StateMachineBase {
                 } else {
                     if (uws.isDirectors_Allowed() == true) {
                         String msg = "Please complete capturing of all directors and submit current transactions first before you can start a new transaction.";
-                        Dialog.show("Error", msg, "Ok", null);
+                        Dialog.show("Validation Failed", msg, "Ok", null);
                     }
                     if (uws.isEnterprise_Allowed() == true) {
                         String msg = "Please complete capturing of all enterprise details and submit current transactions first before you can start a new transaction.";
-                        Dialog.show("Error", msg, "Ok", null);
+                        Dialog.show("Validation Failed", msg, "Ok", null);
                     }
                     //checkRegButtonPressed();
                     //String msg = "Please complete current transaction with name that was submitted for approval. You can't go back now.";
-                    //Dialog.show("Error", msg, "Ok", null);
+                    //Dialog.show("Validation Failed", msg, "Ok", null);
                 }
             }
         });
@@ -4025,20 +4025,20 @@ public class StateMachine extends StateMachineBase {
                 } else {
                     if (uws.isEnterprise_Allowed() == true) {
                         String msg = "Please complete capturing of all Enterprise details and Director details and submit current transactions first before you can start a new transaction.";
-                        Dialog.show("Error", msg, "Ok", null);
+                        Dialog.show("Validation Failed", msg, "Ok", null);
                     }
                     if (uws.isDirectors_Allowed() == true) {
                         String msg = "Please complete capturing of all directors details and submit current transactions first before you can start a new transaction.";
-                        Dialog.show("Error", msg, "Ok", null);
+                        Dialog.show("Validation Failed", msg, "Ok", null);
                     }
                     //checkRegButtonPressed();
                     //String msg = "You are not allowed to file a name reservation at this time of th eprocess. Please complete current transaction first.";
-                    //Dialog.show("Error", msg, "Ok", null);
+                    //Dialog.show("Validation Failed", msg, "Ok", null);
                     //return;
                 };
 //                if (uws.isInfo_Allowed() == false) {
 //                    String msg = "Please complete current transaction with name that was submitted for approval. You can't go back now.";
-//                    Dialog.show("Error", msg, "Ok", null);
+//                    Dialog.show("Validation Failed", msg, "Ok", null);
 //                    return;
 //                }
 //                if (uws.isIsRegStep1Passed() == true) {
@@ -4070,11 +4070,11 @@ public class StateMachine extends StateMachineBase {
                 } else {
                     if (uws.isDirectors_Allowed() == true) {
                         String msg = "Please complete capturing of all directors details and submit current transactions. You can't change the enterprise detail now it was already submitted.";
-                        Dialog.show("Error", msg, "Ok", null);
+                        Dialog.show("Validation Failed", msg, "Ok", null);
                     }
                     if (uws.isNames_Allowed() == true) {
                         String msg = "You selected to reserve a name with the application. Please complete the name reservation or select to continue with no name from Info.";
-                        Dialog.show("Error", msg, "Ok", null);
+                        Dialog.show("Validation Failed", msg, "Ok", null);
                     }
                     //   checkRegButtonPressed();
                 }
@@ -4099,16 +4099,16 @@ public class StateMachine extends StateMachineBase {
                 } else {
                     if (uws.isEnterprise_Allowed() == true) {
                         String msg = "Please complete capturing of all enterprise details before you can continue to capture directors details.";
-                        Dialog.show("Error", msg, "Ok", null);
+                        Dialog.show("Validation Failed", msg, "Ok", null);
                         return;
                     }
                     if (uws.isNames_Allowed() == true) {
                         String msg = "You selected to reserve a name with the application. Please complete the name reservation or select to continue with no name from Info.";
-                        Dialog.show("Error", msg, "Ok", null);
+                        Dialog.show("Validation Failed", msg, "Ok", null);
                         return;
                     } else {
                         String msg = "Please select an option from the Info tab to continue.";
-                        Dialog.show("Error", msg, "Ok", null);
+                        Dialog.show("Validation Failed", msg, "Ok", null);
                     }
 //                    checkRegButtonPressed();
                 }
@@ -4267,7 +4267,7 @@ public class StateMachine extends StateMachineBase {
             //Log.p (approvedname, Log.DEBUG);
 
             if ("Err".equals(errdesc.substring(2, 5))) {
-                Dialog.show("Error", errdesc, "OK", null);
+                Dialog.show("Validation Failed", errdesc, "OK", null);
                 return;
             } else {
 
@@ -4294,7 +4294,7 @@ public class StateMachine extends StateMachineBase {
 //            Button cmd = (Button) findByName("BtnStartNewReg", f);
 //            cmd.setVisible(false);
 //            cmd.repaint();
-            Dialog.show("Error", "Invalid Name reservation Number.", "OK", null);
+            Dialog.show("Validation Failed", "Invalid Name reservation Number.", "OK", null);
 
         }
 
@@ -4311,7 +4311,7 @@ public class StateMachine extends StateMachineBase {
         String name4 = findTxtname4().getText();
         TextField txtname1 = (TextField) findByName("Txtname1", f);
         if (txtname1.getText().trim().equals("")) {
-            Dialog.show("Error", "Please enter a valid Name in line 1", "OK", null);
+            Dialog.show("Validation Failed", "Please enter a valid Name in line 1", "OK", null);
             //TextField txtname1 = (TextField) findByName("Txtname1", f);
             txtname1.requestFocus();
             txtname1.startEditing();
@@ -4355,7 +4355,7 @@ public class StateMachine extends StateMachineBase {
         String name4 = findTxtname4().getText();
         TextField txtname1 = (TextField) findByName("Txtname1", f);
         if (txtname1.getText().trim().equals("")) {
-            Dialog.show("Error", "Please enter a valid Name in line 1", "OK", null);
+            Dialog.show("Validation Failed", "Please enter a valid Name in line 1", "OK", null);
             //TextField txtname1 = (TextField) findByName("Txtname1", f);
             txtname1.requestFocus();
             txtname1.startEditing();
@@ -4389,9 +4389,9 @@ public class StateMachine extends StateMachineBase {
 
         } else if (responseCall != null && responseCall.length() > 0
                 && responseCall.indexOf("already filed") != -1) {
-            Dialog.show("Error", responseCall, "Ok", null);//TODO scroll to top
+            Dialog.show("Validation Failed", responseCall, "Ok", null);//TODO scroll to top
         } else {
-            Dialog.show("Error", "Error occurred while processing your request. Please try again later or contact CIPC.", "Ok", null);
+            Dialog.show("Validation Failed", "Error occurred while processing your request. Please try again later or contact CIPC.", "Ok", null);
         }
     }
 
@@ -4449,7 +4449,7 @@ public class StateMachine extends StateMachineBase {
             //##########
             TxtAuthShares.setText(cmbShares.getSelectedItem().toString());
             if (TxtAuthShares.getText().trim().equals("")) {
-                Dialog.show("Error", "Please enter a valid number of shares.", "OK", null);
+                Dialog.show("Validation Failed", "Please enter a valid number of shares.", "OK", null);
                 cmbShares.repaint();
                 //TxtAuthShares.repaint();
                 cmbShares.requestFocus();
@@ -4461,14 +4461,14 @@ public class StateMachine extends StateMachineBase {
             TextField TxtEntEmail = (TextField) findByName("TxtEntEmail", f);
             //##########
             if (TxtEntEmail.getText().trim().equals("")) {
-                Dialog.show("Error", "Please enter a valid E-Mail.", "OK", null);
+                Dialog.show("Validation Failed", "Please enter a valid E-Mail.", "OK", null);
                 TxtEntEmail.repaint();
                 TxtEntEmail.requestFocus();
                 TxtEntEmail.startEditing();
                 return false;
             }
             if (isEmailValid(TxtEntEmail.getText().trim()) == false) {
-                Dialog.show("Error", "Please enter a valid E-Mail format.", "OK", null);
+                Dialog.show("Validation Failed", "Please enter a valid E-Mail format.", "OK", null);
                 TxtEntEmail.repaint();
                 TxtEntEmail.requestFocus();
                 TxtEntEmail.startEditing();
@@ -4478,7 +4478,7 @@ public class StateMachine extends StateMachineBase {
             TextField txtphysaddr1 = (TextField) findByName("txtEntPhysAddr1", f);
             //##########
             if (txtphysaddr1.getText().trim().equals("")) {
-                Dialog.show("Error", "Please enter a valid physical address line 1.", "OK", null);
+                Dialog.show("Validation Failed", "Please enter a valid physical address line 1.", "OK", null);
                 txtphysaddr1.repaint();
                 txtphysaddr1.requestFocus();
                 txtphysaddr1.startEditing();
@@ -4488,7 +4488,7 @@ public class StateMachine extends StateMachineBase {
             TextField txtphysaddr2 = (TextField) findByName("txtEntPhysAddr2", f);
             //##########
             if (txtphysaddr2.getText().trim().equals("")) {
-                Dialog.show("Error", "Please enter a valid physical address line 2.", "OK", null);
+                Dialog.show("Validation Failed", "Please enter a valid physical address line 2.", "OK", null);
                 txtphysaddr2.repaint();
                 txtphysaddr2.requestFocus();
                 txtphysaddr2.startEditing();
@@ -4498,7 +4498,7 @@ public class StateMachine extends StateMachineBase {
             TextField txtphysaddr3 = (TextField) findByName("txtEntPhysAddr3", f);
             //##########
             if (txtphysaddr3.getText().trim().equals("")) {
-                Dialog.show("Error", "Please enter a valid physical address line 3.", "OK", null);
+                Dialog.show("Validation Failed", "Please enter a valid physical address line 3.", "OK", null);
                 txtphysaddr3.repaint();
                 txtphysaddr3.requestFocus();
                 txtphysaddr3.startEditing();
@@ -4516,7 +4516,7 @@ public class StateMachine extends StateMachineBase {
 
 //            ComboBox CmbPhysProvince = (ComboBox) findByName("CmbEntPhysProvince", f);
 //            if (CmbPhysProvince.getSelectedItem().toString().equals("Select Province")) {
-//                Dialog.show("Error", "Please enter a valid province for physical address.", "OK", null);
+//                Dialog.show("Validation Failed", "Please enter a valid province for physical address.", "OK", null);
 //                CmbPhysProvince.repaint();
 //                CmbPhysProvince.requestFocus();
 //                
@@ -4526,7 +4526,7 @@ public class StateMachine extends StateMachineBase {
             TextField txtphyscode = (TextField) findByName("txtEntPhysCode", f);
             //##########
             if (txtphyscode.getText().trim().equals("")) {
-                Dialog.show("Error", "Please enter a valid physical address code.", "OK", null);
+                Dialog.show("Validation Failed", "Please enter a valid physical address code.", "OK", null);
                 txtphyscode.repaint();
                 txtphyscode.requestFocus();
                 txtphyscode.startEditing();
@@ -4536,7 +4536,7 @@ public class StateMachine extends StateMachineBase {
             TextField txtpostaladdr1 = (TextField) findByName("TxtPostaladdr1", f);
             //##########
             if (txtpostaladdr1.getText().trim().equals("")) {
-                Dialog.show("Error", "Please enter a valid postal address line 1.", "OK", null);
+                Dialog.show("Validation Failed", "Please enter a valid postal address line 1.", "OK", null);
                 txtpostaladdr1.repaint();
                 txtpostaladdr1.requestFocus();
                 txtpostaladdr1.startEditing();
@@ -4546,7 +4546,7 @@ public class StateMachine extends StateMachineBase {
             TextField txtpostaladdr2 = (TextField) findByName("TxtPostaladdr2", f);
             //##########
             if (txtpostaladdr2.getText().trim().equals("")) {
-                Dialog.show("Error", "Please enter a valid postal address line 2.", "OK", null);
+                Dialog.show("Validation Failed", "Please enter a valid postal address line 2.", "OK", null);
                 txtpostaladdr2.repaint();
                 txtpostaladdr2.requestFocus();
                 txtpostaladdr2.startEditing();
@@ -4556,7 +4556,7 @@ public class StateMachine extends StateMachineBase {
             TextField txtpostaladdr3 = (TextField) findByName("TxtPostaladdr3", f);
             //##########
             if (txtpostaladdr3.getText().trim().equals("")) {
-                Dialog.show("Error", "Please enter a valid postal address line 3.", "OK", null);
+                Dialog.show("Validation Failed", "Please enter a valid postal address line 3.", "OK", null);
                 txtpostaladdr3.repaint();
                 txtpostaladdr3.requestFocus();
                 txtpostaladdr3.startEditing();
@@ -4565,7 +4565,7 @@ public class StateMachine extends StateMachineBase {
             enterprisedetails.setPostaladdr3(txtpostaladdr3.getText().trim());
 //            ComboBox cmbentpostalpr = (ComboBox) findByName("CmbEntPostalPr", f);
 //            if (cmbentpostalpr.getSelectedItem().toString().equals("Select Province")) {
-//                Dialog.show("Error", "Please enter a valid province for postal address.", "OK", null);
+//                Dialog.show("Validation Failed", "Please enter a valid province for postal address.", "OK", null);
 //                cmbentpostalpr.repaint();
 //                cmbentpostalpr.requestFocus();
 //                return false;
@@ -4575,7 +4575,7 @@ public class StateMachine extends StateMachineBase {
             TextField txtentpostalcode = (TextField) findByName("TxtentPostalcode", f);
             //##########
             if (txtentpostalcode.getText().trim().equals("")) {
-                Dialog.show("Error", "Please enter a valid postal address code.", "OK", null);
+                Dialog.show("Validation Failed", "Please enter a valid postal address code.", "OK", null);
                 txtentpostalcode.repaint();
                 txtentpostalcode.requestFocus();
                 txtentpostalcode.startEditing();
@@ -4629,7 +4629,7 @@ public class StateMachine extends StateMachineBase {
             if (Response == "") {
                 return true;
             } else {//        if (Response != null) {
-                Dialog.show("Error", Response, "OK", null);
+                Dialog.show("Validation Failed", Response, "OK", null);
                 return false;
             }
 
@@ -4662,7 +4662,7 @@ public class StateMachine extends StateMachineBase {
                 tabs.setSelectedIndex(3);
                 enableincorporator(uws.getTrak_no(), f);
             } else {//        if (Response != null) {
-                Dialog.show("Error", Response, "OK", null);
+                Dialog.show("Validation Failed", Response, "OK", null);
             }
 
 // get traking no for new registration
@@ -4881,7 +4881,7 @@ public class StateMachine extends StateMachineBase {
                 tabs.setSelectedIndex(3);
                 enableincorporator(uws.getTrak_no(), f);
             } else {//        if (Response != null) {
-                Dialog.show("Error", Response, "OK", null);
+                Dialog.show("Validation Failed", Response, "OK", null);
             }
 // get traking no for new registration
         }
@@ -4894,13 +4894,13 @@ public class StateMachine extends StateMachineBase {
 //TxtCell
         TextField txtcell = (TextField) findByName("TxtCell", f);
         if (txtcell.getText().trim().equals("")) {
-            Dialog.show("Error", "Please enter a valid cell number", "OK", null);
+            Dialog.show("Validation Failed", "Please enter a valid cell number", "OK", null);
             //loadlist(uws.getTrak_no(), c);
             f.repaint();
             return;
         } else {
             if (isCellPhoneValid(txtcell.getText()) == false) {
-                Dialog.show("Error", "Please enter a valid cell number. Incorrect Cell number format", "OK", null);
+                Dialog.show("Validation Failed", "Please enter a valid cell number. Incorrect Cell number format", "OK", null);
                 //loadlist(uws.getTrak_no(), c);
                 f.repaint();
                 return;
@@ -4908,7 +4908,7 @@ public class StateMachine extends StateMachineBase {
         }
         Label lblidno = (Label) findByName("LblIdNo", f);
         if (lblidno.getText().trim().equals("")) {
-            Dialog.show("Error", "Please Scan a valid ID Document", "OK", null);
+            Dialog.show("Validation Failed", "Please Scan a valid ID Document", "OK", null);
             lblidno.repaint();
             lblidno.requestFocus();
 
@@ -4924,7 +4924,7 @@ public class StateMachine extends StateMachineBase {
         ip.dispose();
         //RSM_A(DD.getIDNUMBER()
         if ("ERR".equals(uws.getOTP().substring(0, 3))) {
-            Dialog.show("Error", uws.getOTP(), "OK", null);
+            Dialog.show("Validation Failed", uws.getOTP(), "OK", null);
             txtcell.repaint();
             txtcell.requestFocus();
             txtcell.startEditing();
@@ -4981,7 +4981,7 @@ public class StateMachine extends StateMachineBase {
         Label lbldirbirthdate = (Label) findByName("lbldirbirthdate", f);
         Label lblidNo = (Label) findByName("LblIdNo", f);
         if (lblidNo.getText().trim().equals("")) {
-            Dialog.show("Error", "Please enter a valid Director ID Number", "OK", null);
+            Dialog.show("Validation Failed", "Please enter a valid Director ID Number", "OK", null);
             lblidNo.repaint();
             lblidNo.requestFocus();
             //lblidNo.startEditing();
@@ -4990,7 +4990,7 @@ public class StateMachine extends StateMachineBase {
         }
         TextField txtotp = (TextField) findByName("TxtOtp", f);
         if (txtotp.getText().trim().equals("")) {
-            Dialog.show("Error", "Please enter a valid otp for Director ID Number" + lblidNo.getText().trim(), "OK", null);
+            Dialog.show("Validation Failed", "Please enter a valid otp for Director ID Number" + lblidNo.getText().trim(), "OK", null);
             txtotp.repaint();
             txtotp.requestFocus();
             txtotp.startEditing();
@@ -4999,7 +4999,7 @@ public class StateMachine extends StateMachineBase {
         } else {
             if (txtotp.getText().trim().equals(uws.getOTP())) {
             } else {
-                Dialog.show("Error", "Please enter a valid otp for Director ID Number" + lblidNo.getText().trim(), "OK", null);
+                Dialog.show("Validation Failed", "Please enter a valid otp for Director ID Number" + lblidNo.getText().trim(), "OK", null);
                 txtotp.repaint();
                 txtotp.requestFocus();
                 txtotp.startEditing();
@@ -5009,7 +5009,7 @@ public class StateMachine extends StateMachineBase {
 //LblNames
         Label lblnames = (Label) findByName("LblNames", f);
         if (lblnames.getText().trim().equals("")) {
-            Dialog.show("Error", "Invalid first names", "OK", null);
+            Dialog.show("Validation Failed", "Invalid first names", "OK", null);
             lblnames.repaint();
             lblnames.requestFocus();
             return false;
@@ -5018,7 +5018,7 @@ public class StateMachine extends StateMachineBase {
 
         Label lblsurname = (Label) findByName("LblSurname", f);
         if (lblsurname.getText().trim().equals("")) {
-            Dialog.show("Error", "Invalid surnames names", "OK", null);
+            Dialog.show("Validation Failed", "Invalid surnames names", "OK", null);
             lblsurname.repaint();
             lblsurname.requestFocus();
             return false;
@@ -5028,7 +5028,7 @@ public class StateMachine extends StateMachineBase {
 //TxtCell
         TextField txtcell = (TextField) findByName("TxtCell", f);
         if (txtcell.getText().trim().equals("")) {
-            Dialog.show("Error", "Please enter a valid cell number", "OK", null);
+            Dialog.show("Validation Failed", "Please enter a valid cell number", "OK", null);
             txtcell.repaint();
             txtcell.requestFocus();
             txtcell.startEditing();
@@ -5038,14 +5038,14 @@ public class StateMachine extends StateMachineBase {
 //TxtEmail
         TextField txtemail = (TextField) findByName("TxtEmail", f);
         if (txtemail.getText().trim().equals("")) {
-            Dialog.show("Error", "Please enter a valid email", "OK", null);
+            Dialog.show("Validation Failed", "Please enter a valid email", "OK", null);
             txtemail.repaint();
             txtemail.requestFocus();
             txtemail.startEditing();
             return false;
         }
         if (isEmailValid(txtemail.getText().trim()) == false) {
-            Dialog.show("Error", "Please enter a valid E-Mail format.", "OK", null);
+            Dialog.show("Validation Failed", "Please enter a valid E-Mail format.", "OK", null);
             txtemail.repaint();
             txtemail.requestFocus();
             txtemail.startEditing();
@@ -5054,7 +5054,7 @@ public class StateMachine extends StateMachineBase {
 //PhysAddr1
         TextField physaddr1 = (TextField) findByName("PhysAddr1", f);
         if (physaddr1.getText().trim().equals("")) {
-            Dialog.show("Error", "Please enter a valid Physical Address line 1", "OK", null);
+            Dialog.show("Validation Failed", "Please enter a valid Physical Address line 1", "OK", null);
             physaddr1.repaint();
             physaddr1.requestFocus();
             physaddr1.startEditing();
@@ -5064,7 +5064,7 @@ public class StateMachine extends StateMachineBase {
 //PhysAddr2
         TextField physaddr2 = (TextField) findByName("PhysAddr2", f);
         if (physaddr2.getText().trim().equals("")) {
-            Dialog.show("Error", "Please enter a valid Physical Address line 2", "OK", null);
+            Dialog.show("Validation Failed", "Please enter a valid Physical Address line 2", "OK", null);
             physaddr2.repaint();
             physaddr2.requestFocus();
             physaddr2.startEditing();
@@ -5074,7 +5074,7 @@ public class StateMachine extends StateMachineBase {
 //PhysAddr3
         TextField physaddr3 = (TextField) findByName("PhysAddr3", f);
         if (physaddr3.getText().trim().equals("")) {
-            Dialog.show("Error", "Please enter a valid Physical Address line 3", "OK", null);
+            Dialog.show("Validation Failed", "Please enter a valid Physical Address line 3", "OK", null);
             physaddr3.repaint();
             physaddr3.requestFocus();
             physaddr3.startEditing();
@@ -5083,7 +5083,7 @@ public class StateMachine extends StateMachineBase {
 //Cmbdirectortype
         ComboBox mbdirectortype = (ComboBox) findByName("Cmbdirectortype", f);
         if (mbdirectortype.getSelectedItem().toString().equals("")) {
-            Dialog.show("Error", "Please enter a valid Director type.", "OK", null);
+            Dialog.show("Validation Failed", "Please enter a valid Director type.", "OK", null);
             mbdirectortype.repaint();
             mbdirectortype.requestFocus();
             return false;
@@ -5091,7 +5091,7 @@ public class StateMachine extends StateMachineBase {
 //CmdCOuntryoforigin
         ComboBox mbCofOrigin = (ComboBox) findByName("CmbCoorigin", f);
         if (mbCofOrigin.getSelectedItem().toString().equals("")) {
-            Dialog.show("Error", "Please enter a valid Country Of Origin.", "OK", null);
+            Dialog.show("Validation Failed", "Please enter a valid Country Of Origin.", "OK", null);
             mbCofOrigin.repaint();
             mbCofOrigin.requestFocus();
             return false;
@@ -5100,7 +5100,7 @@ public class StateMachine extends StateMachineBase {
 //CmbProvince
 //        ComboBox cmbprovince = (ComboBox) findByName("CmbProvince", f);
 //        if (cmbprovince.getSelectedItem().toString().equals("Select Province")) {
-//            Dialog.show("Error", "Please enter a valid province for physical address.", "OK", null);
+//            Dialog.show("Validation Failed", "Please enter a valid province for physical address.", "OK", null);
 //            cmbprovince.repaint();
 //            cmbprovince.requestFocus();
 //            return false;
@@ -5108,7 +5108,7 @@ public class StateMachine extends StateMachineBase {
 //Physaddrcode
         TextField physaddrcode = (TextField) findByName("Physaddrcode", f);
         if (physaddrcode.getText().trim().equals("")) {
-            Dialog.show("Error", "Please enter a valid Physical Address Code", "OK", null);
+            Dialog.show("Validation Failed", "Please enter a valid Physical Address Code", "OK", null);
             physaddrcode.repaint();
             physaddrcode.requestFocus();
             physaddrcode.startEditing();
@@ -5118,7 +5118,7 @@ public class StateMachine extends StateMachineBase {
 //TxtPostalAddr1
         TextField txtpostaladdr1 = (TextField) findByName("TxtPostalAddr1", f);
         if (txtpostaladdr1.getText().trim().equals("")) {
-            Dialog.show("Error", "Please enter a valid Postal Address line 1", "OK", null);
+            Dialog.show("Validation Failed", "Please enter a valid Postal Address line 1", "OK", null);
             txtpostaladdr1.repaint();
             txtpostaladdr1.requestFocus();
             txtpostaladdr1.startEditing();
@@ -5128,7 +5128,7 @@ public class StateMachine extends StateMachineBase {
 //TxtPostalAddr2}
         TextField txtpostaladdr2 = (TextField) findByName("TxtPostalAddr2", f);
         if (txtpostaladdr2.getText().trim().equals("")) {
-            Dialog.show("Error", "Please enter a valid Postal Address line 2", "OK", null);
+            Dialog.show("Validation Failed", "Please enter a valid Postal Address line 2", "OK", null);
             txtpostaladdr2.repaint();
             txtpostaladdr2.requestFocus();
             txtpostaladdr2.startEditing();
@@ -5138,7 +5138,7 @@ public class StateMachine extends StateMachineBase {
 //TxtPostalAddr3
         TextField txtpostaladdr3 = (TextField) findByName("TxtPostalAddr3", f);
         if (txtpostaladdr3.getText().trim().equals("")) {
-            Dialog.show("Error", "Please enter a valid Postal Address line 3", "OK", null);
+            Dialog.show("Validation Failed", "Please enter a valid Postal Address line 3", "OK", null);
             txtpostaladdr3.repaint();
             txtpostaladdr3.requestFocus();
             txtpostaladdr3.startEditing();
@@ -5148,7 +5148,7 @@ public class StateMachine extends StateMachineBase {
 //CmbPostalProvince
 //        ComboBox cmbpostalprovince = (ComboBox) findByName("CmbPostalProvince", f);
 //        if (cmbpostalprovince.getSelectedItem().toString().equals("Select Province")) {
-//            Dialog.show("Error", "Please enter a valid province for physical address.", "OK", null);
+//            Dialog.show("Validation Failed", "Please enter a valid province for physical address.", "OK", null);
 //            cmbpostalprovince.repaint();
 //            cmbpostalprovince.requestFocus();
 //            return false;
@@ -5156,7 +5156,7 @@ public class StateMachine extends StateMachineBase {
 //TxtPostalCode
         TextField txtpostalcode = (TextField) findByName("TxtdirPostalCode", f);
         if (txtpostalcode.getText().trim().equals("")) {
-            Dialog.show("Error", "Please enter a valid Postal Address Code", "OK", null);
+            Dialog.show("Validation Failed", "Please enter a valid Postal Address Code", "OK", null);
             txtpostalcode.repaint();
             txtpostalcode.requestFocus();
             txtpostalcode.startEditing();
@@ -5232,7 +5232,7 @@ public class StateMachine extends StateMachineBase {
             RDB.setSelected(true);
             return true;
         } else {//        if (Response != null) {
-            Dialog.show("Error", Response, "OK", null);
+            Dialog.show("Validation Failed", Response, "OK", null);
             return false;
         }
         //return true;
@@ -5437,19 +5437,73 @@ public class StateMachine extends StateMachineBase {
                 //*******************************************************
                 try {
                     String rid = new String();
+
+                    //########
+                    // Dialog ip = new InfiniteProgress().showInifiniteBlocking();
                     if (Display.getInstance().isSimulator()) {
-                        //return "7104085085085";
+                        // return "7104085085085";
                         sid = "7104085085085";
+                        String val1 = "";
+                        String val2 = "";
+
+                        val1 = sid.trim();
+                        val2 = b.getName().trim();
+                        if (val1.equals(val2)) {
+                            //  if (retval.equals(b.getName())) {
+                            b.setUIID("Button_small_L");
+                            b.setEnabled(false);
+                        } else {
+                            b.setUIID("Button_small_L_red");
+                            // b.setUIID("Button_small_L_red");
+                            b.setEnabled(true);
+                            Dialog.show("Validation Failed", "Please scan the correct Identity Document. ", "OK", null);
+                            return;
+                        }
+                        boolean allscaned = true;
+
+                        for (Component cmp : Conmemlist.getChildrenAsList(allscaned)) {
+                            String val = null;
+                            if (cmp.getUIID().trim() == "Button_small_L_red") {
+                                allscaned = false;
+                            }
+//                    if (cmp instanceof Label) {
+//                        val = ((Label) cmp).getText();
+//                    } else {
+//                        if (cmp instanceof TextArea) {
+//                            val = ((TextArea) cmp).getText();
+//                        } else {
+//                            val = (String) cmp.getPropertyValue("text");
+//                        }
+//                    }
+                        }
+                        if (allscaned == true) {
+                            Conmemlist.setHidden(true);
+                            Container container_bee = (Container) findByName("Container_BEE", f);
+                            container_bee.setHidden(true);
+                            Container container_rev = (Container) findByName("Container_rev", f);
+                            container_rev.setHidden(false);
+                            Container Conshareholders = (Container) findByName("conshareholders", f);
+                            Conshareholders.setHidden(true);
+                            Container conFemale = (Container) findByName("ConFemale", f);
+                            conFemale.setHidden(true);
+                            Button Btncontinue1 = (Button) findByName("btncontinue1", f);
+                            Btncontinue1.setHidden(true);
+                            Container containerB = (Container) findByName("ContainerB", f);
+                            containerB.setHidden(true);
+                            f.repaint();
+                            f.repaint();
+                        }
+
                     } else {
-                        //########
-                        // Dialog ip = new InfiniteProgress().showInifiniteBlocking();
+
                         CodeScanner.getInstance().scanBarCode(new ScanResult() {
                             public void scanCompleted(String contents, String formatName, byte[] rawBytes) {
-                                Dialog.show("ID Scanned: ", contents, "OK", null);
+                                // Dialog.show("ID Scanned: ", contents, "OK", null);
                                 sid = contents;
                                 String val1 = "";
-                                val1 = sid.trim();
                                 String val2 = "";
+
+                                val1 = sid.trim();
                                 val2 = b.getName().trim();
                                 if (val1.equals(val2)) {
                                     //  if (retval.equals(b.getName())) {
@@ -5462,13 +5516,13 @@ public class StateMachine extends StateMachineBase {
                                     Dialog.show("Validation Failed", "Please scan the correct Identity Document. ", "OK", null);
                                     return;
                                 }
-                                    boolean allscaned = true;
+                                boolean allscaned = true;
 
-                for (Component cmp : Conmemlist.getChildrenAsList(allscaned)) {
-                    String val = null;
-                    if (cmp.getUIID().trim() == "Button_small_L_red") {
-                        allscaned = false;
-                    }
+                                for (Component cmp : Conmemlist.getChildrenAsList(allscaned)) {
+                                    String val = null;
+                                    if (cmp.getUIID().trim() == "Button_small_L_red") {
+                                        allscaned = false;
+                                    }
 //                    if (cmp instanceof Label) {
 //                        val = ((Label) cmp).getText();
 //                    } else {
@@ -5478,24 +5532,24 @@ public class StateMachine extends StateMachineBase {
 //                            val = (String) cmp.getPropertyValue("text");
 //                        }
 //                    }
-                }
-                if (allscaned == true) {
-                    Conmemlist.setHidden(true);
-                    Container container_bee = (Container) findByName("Container_BEE", f);
-                    container_bee.setHidden(true);
-                    Container container_rev = (Container) findByName("Container_rev", f);
-                    container_rev.setHidden(false);
-                    Container Conshareholders = (Container) findByName("conshareholders", f);
-                    Conshareholders.setHidden(true);
-                    Container conFemale = (Container) findByName("ConFemale", f);
-                    conFemale.setHidden(true);
-                    Button Btncontinue1 = (Button) findByName("btncontinue1", f);
-                    Btncontinue1.setHidden(true);
-                    Container containerB = (Container) findByName("ContainerB", f);
-                    containerB.setHidden(true);
-                    f.repaint();
-                    f.repaint();
-                }
+                                }
+                                if (allscaned == true) {
+                                    Conmemlist.setHidden(true);
+                                    Container container_bee = (Container) findByName("Container_BEE", f);
+                                    container_bee.setHidden(true);
+                                    Container container_rev = (Container) findByName("Container_rev", f);
+                                    container_rev.setHidden(false);
+                                    Container Conshareholders = (Container) findByName("conshareholders", f);
+                                    Conshareholders.setHidden(true);
+                                    Container conFemale = (Container) findByName("ConFemale", f);
+                                    conFemale.setHidden(true);
+                                    Button Btncontinue1 = (Button) findByName("btncontinue1", f);
+                                    Btncontinue1.setHidden(true);
+                                    Container containerB = (Container) findByName("ContainerB", f);
+                                    containerB.setHidden(true);
+                                    f.repaint();
+                                    f.repaint();
+                                }
                             }
 
                             public void scanCanceled() {
@@ -5519,7 +5573,6 @@ public class StateMachine extends StateMachineBase {
                 }
                 //********************************************************
 
-            
             });
 
         }
@@ -5719,7 +5772,7 @@ public class StateMachine extends StateMachineBase {
 //            if (Response == "") {
 //                tabs.setSelectedIndex(3);
 //            } else {//        if (Response != null) {
-//                Dialog.show("Error", Response, "OK", null);
+//                Dialog.show("Validation Failed", Response, "OK", null);
 //            }
 //    
 //    }
@@ -5849,39 +5902,57 @@ public class StateMachine extends StateMachineBase {
             BEEDetail n = uws.ArlBEE_Detail.get(i);
             String ent_no = RSM_A(n.getEnt_no());
             String ent_name = RSM_A(n.getEnt_name());
-            Button b = new Button(ent_name);
-            b.setName(ent_no);
-            b.setUIID("Button_small_L");
-            b.addActionListener(e
-                    -> {
-                boolean answer = Dialog.show("Info", "Do You Want to apply for a B-BBEE Certificate for " + b.getText(), "Yes", "No");
-                if (answer) {
-                    Label lbl_ent_no = (Label) findByName("lbl_ent_no", f);
-                    lbl_ent_no.setText("B-BBEE Certifcate for ");
-                    Label lbl_ent_no1 = (Label) findByName("lbl_ent_no1", f);
-                    lbl_ent_no1.setText(b.getText());
-                    beeEnt_no = b.getName();
-                    loadlist_BEE(b.getName());
-                    Label lbl_ent_no2 = (Label) findByName("lbl_ent_no2", f);
-                    lbl_ent_no2.setHidden(true);
-                    lbl_ent_no2.setVisible(false);
-                    // lbl_ent_no.repaint();
-                    // container_BEE.setVisible(false);
-                    // container_BEE.setHidden(true);
-                    // container_BEE.setHidden(true);
-                    // container_BEE.repaint();
-                    //cnt_Bee.repaint();
-                    f.repaint();
-                    // containerBEEA.repaint();
+            SpanLabel slbl = new SpanLabel();
+            String msg = "Last B-BEE Certificate requested on " + RSM_A(n.getBee_date()) + " for " + ent_name + ". You Can Only Request a B-BBEE Certificate once in 12 Months";
+            slbl.setText(msg);
+            slbl.setHidden(true);
 
-                }
-            });
+            slbl.setUIID("LabelHeaderRed");
+
+            Button b = new Button(ent_name);
+            b.setUIID("Button_small_L");
+            if (RSM_A(n.getBee_can_file()).equals("no")) {
+                slbl.setHidden(false);
+                container_BEE.addComponent(slbl);
+                // b.setEnabled(false);
+            } else {
+                b.setName(ent_no);
+                b.addActionListener(e
+                        -> {
+                    boolean answer = Dialog.show("Info", "Do You Want to apply for a B-BBEE Certificate for " + b.getText(), "Yes", "No");
+                    if (answer) {
+                        Label lbl_ent_no = (Label) findByName("lbl_ent_no", f);
+                        lbl_ent_no.setText("B-BBEE Certifcate for ");
+                        Label lbl_ent_no1 = (Label) findByName("lbl_ent_no1", f);
+                        lbl_ent_no1.setText(b.getText());
+                        beeEnt_no = b.getName();
+                        loadlist_BEE(b.getName());
+                        Label lbl_ent_no2 = (Label) findByName("lbl_ent_no2", f);
+                        lbl_ent_no2.setHidden(true);
+                        lbl_ent_no2.setVisible(false);
+                        // lbl_ent_no.repaint();
+                        // container_BEE.setVisible(false);
+                        // container_BEE.setHidden(true);
+                        // container_BEE.setHidden(true);
+                        // container_BEE.repaint();
+                        //cnt_Bee.repaint();
+                        f.repaint();
+                        // containerBEEA.repaint();
+
+                    }
+                });
+            }
+//            if (RSM_A(n.getBee_can_file()).equals("no")) {
+//                
+//               // slbl.setHidden(false);
+//            }
             container_BEE.addComponent(b);
 
         }
 
         // container_BEE.addComponent(cnt_Bee);
         container_BEE.repaint();
+        f.repaint();
     }
 
     @Override
@@ -5963,7 +6034,8 @@ public class StateMachine extends StateMachineBase {
         }
         long rev = Integer.parseInt(txtrevenue.getText());
         if (rev > 10000000) {
-            Dialog.show("Validation Failed", "Revenue can't efxceed R10 000 000.", "Ok", null);
+            Dialog.show("Validation Failed", "Revenue can't e"
+                    + "xceed R10 000 000.", "Ok", null);
             txtrevenue.requestFocus();
             txtrevenue.startEditing();
             return;
@@ -6034,6 +6106,8 @@ public class StateMachine extends StateMachineBase {
             TextField txt = new TextField();
             txt.setUIID("TextFieldNameSearch");
             txt.setHint("% Shares");
+            txt.setText("");
+            txt.setConstraint(TextArea.NUMERIC);
             Conshareholders.add(txt);
             Conshareholders.repaint();
             //Container Conshareholders = (Container) findByName("conshareholders", f);
@@ -6047,12 +6121,14 @@ public class StateMachine extends StateMachineBase {
             int key = i + 1;
             //add female
             Label lblF = new Label();
-            lblF.setText("Black FeMale Shareholder " + key);
+            lblF.setText("Black Female Shareholder " + key);
             lblF.setUIID("Button");
             conFemale.add(lblF);
             TextField txtF = new TextField();
             txtF.setUIID("TextFieldNameSearch");
             txtF.setHint("% Shares");
+            txtF.setText("");
+            txtF.setConstraint(TextArea.NUMERIC);
             conFemale.add(txtF);
             conFemale.repaint();
             conFemale.setHidden(false);
@@ -6128,13 +6204,13 @@ public class StateMachine extends StateMachineBase {
 
         //calculate bee status
         if (blackshare == 0) {
-            beelevel = "B-BBEE LEVEL 1 CONTRIBUTION 100%";
+            beelevel = "B-BBEE LEVEL 4 CONTRIBUTION 100%";
         } else {
             if (blackshare == 100) {
-                beelevel = "B-BBEE LEVEL  CONTRIBUTION 135%";
+                beelevel = "B-BBEE LEVEL 1 CONTRIBUTION 135%";
             } else {
                 if (blackshare >= 51 && blackshare < 100) {
-                    beelevel = "B-BBEE LEVEL 4 CONTRIBUTION 125%";
+                    beelevel = "B-BBEE LEVEL 2 CONTRIBUTION 125%";
                 } else {
                     if (blackshare < 50) {
                         beelevel = "B-BBEE LEVEL 4 CONTRIBUTION 100%";
@@ -6169,64 +6245,128 @@ public class StateMachine extends StateMachineBase {
         SpanLabel SpanLabel2 = (SpanLabel) findByName("SpanLabel2", f);
         SpanLabel SpanLabel3 = (SpanLabel) findByName("SpanLabel3", f);
         SpanLabel SpanLabel4 = (SpanLabel) findByName("SpanLabel4", f);
+        SpanLabel SpanLabel5 = (SpanLabel) findByName("SpanLabel5", f);
         String msg = "Out of the total of " + txtshareholders.getText().trim() + " share holders, how many are unemployed black people not attending and not required by law to attend an educational institution and not awaiting admission to an educational institution?";
         SpanLabel1.setText(msg);
-        msg = "Out of the total  of " + txtshareholders.getText().trim() + " share holders, how many are black people who are youth as defined in the National Youth Commission ACT of 1996? [14 to 35 years old]";
+        msg = "Out of the total  of " + txtshareholders.getText().trim() + " share holders, how many are black people who are youth as defined in the National Youth Commission Act of 1996? [14 to 35 years old]";
         SpanLabel2.setText(msg);
-        msg = "Out of the total  of " + txtshareholders.getText().trim() + " share holders, how many are black people who are person with disabilities as defined in the Code of Good Proctice on employment of people with disabilities issued under the Employment Equity Act?";
+        msg = "Out of the total  of " + txtshareholders.getText().trim() + " share holders, how many are black people who are person with disabilities as defined in the Code of Good Practice on employment of people with disabilities issued under the Employment Equity Act?";
         SpanLabel3.setText(msg);
-        msg = "Out of the total of " + txtshareholders.getText().trim() + "  share holders, how many are black military veterans who qualifies to be called a military veteran in terms of the Military Veterans Act 18 0f 2011 ?";
+        msg = "Out of the total  of " + txtshareholders.getText().trim() + " shareholders, how many are black people living in rural and under developed areas";
         SpanLabel4.setText(msg);
+        msg = "Out of the total of " + txtshareholders.getText().trim() + "  share holders, how many are black military veterans who qualifies to be called a military veteran in terms of the Military Veterans Act 18 0f 2011 ?";
+        SpanLabel5.setText(msg);
+        TextField textFieldunemployed = (TextField) findByName("TextFieldunemployed", f);
+
         containerYouth.setHidden(false);
         f.repaint();
     }
 
-    @Override
+   // @Override
     protected void onBEE_BtncompleteAction(Component c, ActionEvent event) {
         Form f = Display.getInstance().getCurrent();
         //validate data
         za.co.cipc.pojos.bee bbee = new za.co.cipc.pojos.bee();
         TextField textFieldunemployed = (TextField) findByName("TextFieldunemployed", f);
+        TextField textFieldyouth = (TextField) findByName("TextFieldyouth", f);
+        TextField textFielddisability = (TextField) findByName("TextFielddisability", f);
+        TextField textFieldrural = (TextField) findByName("TextFieldrural", f);
+        TextField textFieldveteran = (TextField) findByName("TextFieldveteran", f);
+        
+
         if (textFieldunemployed.getText().trim() == "") {
             Dialog.show("Validation Failed", "Value for unemployed can't be blank.", "Ok", null);
             textFieldunemployed.requestFocus();
             return;
         }
         bbee.setBlack_unemployed(textFieldunemployed.getText()); //1
-        TextField textFieldyouth = (TextField) findByName("TextFieldyouth", f);
+
         if (textFieldyouth.getText().trim() == "") {
             Dialog.show("Validation Failed", "Value for Youth can't be blank.", "Ok", null);
             textFieldyouth.requestFocus();
             return;
         }
         bbee.setBlack_youth(textFieldyouth.getText()); //2
-        TextField textFielddisability = (TextField) findByName("TextFielddisability", f);
+
         if (textFielddisability.getText().trim() == "") {
             Dialog.show("Validation Failed", "Value for Disabily can't be blank.", "Ok", null);
             textFielddisability.requestFocus();
             return;
         }
         bbee.setBlack_disability(textFielddisability.getText());
-        TextField textFieldrural = (TextField) findByName("TextFieldrural", f);
+
         if (textFieldrural.getText().trim() == "") {
             Dialog.show("Validation Failed", "Value for Rural can't be blank.", "Ok", null);
             textFieldrural.requestFocus();
             return;
         }
         bbee.setBlack_rural(textFieldrural.getText());//4
-        TextField textFieldveteran = (TextField) findByName("TextFieldveteran", f);
+
         if (textFieldveteran.getText().trim() == "") {
             Dialog.show("Validation Failed", "Value for Veteran can't be blank.", "Ok", null);
             textFieldveteran.requestFocus();
             return;
         }
+        
+//        TextField textFieldyouth = (TextField) findByName("TextFieldyouth", f);
+//        TextField textFielddisability = (TextField) findByName("TextFielddisability", f);
+//        TextField textFieldrural = (TextField) findByName("TextFieldrural", f);
+//        TextField textFieldveteran = (TextField) findByName("TextFieldveteran", f);
+TextField txtshareholders = (TextField) findByName("txtshareholders", f);
+    if (textFieldunemployed.getText().equals("")) {textFieldunemployed.setText("0");}
+    else
+    {
+            if (Integer.parseInt(textFieldunemployed.getText()) > Integer.parseInt(txtshareholders.getText().trim())) {
+                Dialog.show("Validation Failed", "Number of unemployed black people not attending and not required by law to attend an educational institution, can't be more than " + txtshareholders.getText().trim(), "Ok", null);
+                textFieldunemployed.requestFocus();
+                return;
+            }
+        }
+        if (textFieldyouth.getText().equals("")) {textFieldyouth.setText("0");}
+    else
+    {
+            if (Integer.parseInt(textFieldyouth.getText()) > Integer.parseInt(txtshareholders.getText().trim())) {
+                Dialog.show("Validation Failed", "Number of black people who are youth as defined in the National Youth Commission Act of 1996? [14 to 35 years old], can't be more than " + txtshareholders.getText().trim(), "Ok", null);
+                textFieldyouth.requestFocus();
+                return;
+            }
+        }
+        if (textFielddisability.getText().equals("")) {textFielddisability.setText("0");}
+    else
+    {
+            if (Integer.parseInt(textFielddisability.getText()) > Integer.parseInt(txtshareholders.getText().trim())) {
+                Dialog.show("Validation Failed", "black people who are person with disabilities as defined in the Code of Good Practice on employment of people with disabilities issued under the Employment Equity Act, can't be more than " + txtshareholders.getText().trim(), "Ok", null);
+                textFielddisability.requestFocus();
+                return;
+            }
+        }
+        if (textFieldrural.getText().equals("")) {textFieldrural.setText("0");}
+    else
+    {
+            if (Integer.parseInt(textFieldrural.getText()) > Integer.parseInt(txtshareholders.getText().trim())) {
+                Dialog.show("Validation Failed", "Number of black people living in rural and under developed areas, can't be more than " + txtshareholders.getText().trim(), "Ok", null);
+                textFieldrural.requestFocus();
+                return;
+            }
+        }
+        if (textFieldveteran.getText().equals("")) 
+        {textFieldveteran.setText("0");
+        }
+    else
+    {
+            if (Integer.parseInt(textFieldveteran.getText()) > Integer.parseInt(txtshareholders.getText().trim())) {
+                Dialog.show("Validation Failed", "Number of black military veterans who qualifies to be called a military veteran in terms of the Military Veterans Act 18 0f 2011, can't be more than " + txtshareholders.getText().trim(), "Ok", null);
+                textFieldveteran.requestFocus();
+                return;
+            }
+        }        
         bbee.setBlack_veteran(textFieldveteran.getText()); //5
 
         za.co.cipc.webservices.UserWebServicesNewReg uws = new za.co.cipc.webservices.UserWebServicesNewReg();
         beeTrak_no = uws.getnexttrakno();
         bbee.setTrak_no(beeTrak_no);
         bbee.setEnt_no(beeEnt_no);
-        TextField txtshareholders = (TextField) findByName("txtshareholders", f);
+        //TextField txtshareholders = (TextField) findByName("txtshareholders", f);
         bbee.setShareholders(txtshareholders.getText());
         TextField Txtblackshare = (TextField) findByName("txtblackshare", f);
         bbee.setBlack_shareholders(Txtblackshare.getText());

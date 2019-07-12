@@ -1694,24 +1694,29 @@ public class UserWebServicesNewReg {
         try {
             XMLParser parser = new XMLParser();
             parser.setCaseSensitive(true);
-            Element element = parser.parse(convertStringtoInputStreamReader(result.getAsString("//DataSet")));
+            Element element1 = parser.parse(convertStringtoInputStreamReader(result.getAsString("//NewDataSet")));
+            //Element element = parser.parse(convertStringtoInputStreamReader(result.getAsString("//Table1")));
             ArlBEE_Detail = new ArrayList();
             
-            for (int i = 0; i < element.getNumChildren(); i++) {
-                Element child = element.getChildAt(i);
+            for (int i = 0; i < element1.getNumChildren(); i++) {
+                Element child = element1.getChildAt(i);
                 Element elem_ent_no = ((Element) child.getTextChildren(null, true).get(0));
                 String ent_no = elem_ent_no.getText();
                 Element elem_ent_name = ((Element) child.getTextChildren(null, true).get(1));
                 String ent_name = elem_ent_name.getText();
+                Element elem_bee_can_file = ((Element) child.getTextChildren(null, true).get(8));
+                String bee_can_file = elem_bee_can_file.getText();
+                Element elem_bee_date = ((Element) child.getTextChildren(null, true).get(9));
+                String bee_date = elem_bee_date.getText();
 //                Element elem_surname = ((Element) child.getTextChildren(null, true).get(2));
 //                String surname = elem_surname.getText();
 //                Element elem_id_no = ((Element) child.getTextChildren(null, true).get(3));
 //                String id_no = elem_id_no.getText();
-
                 BEEDetail bee_detail = new BEEDetail();
                 bee_detail.setEnt_no(ent_no);
                 bee_detail.setEnt_name(ent_name);
-               
+                bee_detail.setBee_can_file(bee_can_file);
+                bee_detail.setBee_date(bee_date);
 
                 ArlBEE_Detail.add(bee_detail);
             }

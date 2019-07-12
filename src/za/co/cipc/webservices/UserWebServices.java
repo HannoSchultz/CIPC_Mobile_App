@@ -955,7 +955,7 @@ public class UserWebServices {
                 + "   <soapenv:Header/>\n"
                 + "   <soapenv:Body>\n"
                 + "      <cipc:GetBEE>\n"
-                + "<cipc:sUserName>" + Constants.sUserName + "</cipc:sUserName>\n"
+                + "         <cipc:sUserName>" + Constants.sUserName + "</cipc:sUserName>\n"
                 + "         <cipc:sPassword>" + Constants.sPassword + "</cipc:sPassword>\n"
                 + "         <cipc:sBankID>" + Constants.sBankID + "</cipc:sBankID>\n"
                 + "         <cipc:sCust_Code>" + agentCode + "</cipc:sCust_Code>\n"
@@ -3561,7 +3561,7 @@ public class UserWebServices {
 
                 if (500 == code) {
 
-                    Dialog.show("Error", "Error 500 Contact CIPC.", "Ok", null);
+                    Dialog.show("Validation Failed", "Error 500 Contact CIPC.", "Ok", null);
 
                 }
 
