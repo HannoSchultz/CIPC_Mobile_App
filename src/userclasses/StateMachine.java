@@ -5649,10 +5649,7 @@ public class StateMachine extends StateMachineBase {
 
     }
 
-    protected void beforeBEE(Form f) {
-        load_bee_form(f);
-
-    }
+   
 
     @Override
     protected void onContTasks_TxtName4Action(Component c, ActionEvent event) {
@@ -5954,7 +5951,68 @@ public class StateMachine extends StateMachineBase {
         container_BEE.repaint();
         f.repaint();
     }
+ protected void load_disclosure_form(Form f) {
+        // Form f = c.getComponentForm();
 
+        UserWebServices u = new UserWebServices();
+        UserWebServicesNewReg uws = new UserWebServicesNewReg();
+        Result result = u.Get_BEE_MOBI(AGENT_CODE);
+        uws.BEE_Data(result);
+        //Container cnt_Bee = new Container(BoxLayout.y());
+        Container containerHeader = (Container) findByName("ContainerHeader", f);
+        Container container_DISC = (Container) findByName("Container_DISC", f);
+        //  container_BEE.setHidden(true);
+//        Container conmemlist = (Container) findByName("Conmemlist", f);
+//        conmemlist.setHidden(true);
+       
+        for (int i = 0; i < uws.ArlBEE_Detail.size(); i++) {
+            BEEDetail n = uws.ArlBEE_Detail.get(i);
+            String ent_no = RSM_A(n.getEnt_no());
+            String ent_name = RSM_A(n.getEnt_name());
+
+            Button b = new Button(ent_name);
+            b.setUIID("Button_small_L");
+          
+                b.setName(ent_no);
+                b.addActionListener(e
+                        -> {
+                    boolean answer = Dialog.show("Info", "Do You Want to print the MOI Certificate for " + b.getText(), "Yes", "No");
+                    if (answer) {
+                        Label lbl_ent_no = (Label) findByName("lbl_ent_no", f);
+                        lbl_ent_no.setText("E-Mailed MOI Certifcate for ");
+                        Label lbl_ent_no1 = (Label) findByName("lbl_ent_no1", f);
+                        lbl_ent_no1.setText(b.getText());
+                        u.insert_web_dispatch(ent_no, AGENT_CODE);
+                        Dialog.show("Info", "MOI Certificate for " + b.getText() + " was email to customer.", "OK",null);
+                       // loadlist_BEE(b.getName());
+                        //Label lbl_ent_no2 = (Label) findByName("lbl_ent_no2", f);
+                        //lbl_ent_no2.setHidden(true);
+                       // lbl_ent_no2.setVisible(false);
+                        // lbl_ent_no.repaint();
+                        // container_BEE.setVisible(false);
+                        // container_BEE.setHidden(true);
+                        // container_BEE.setHidden(true);
+                        // container_BEE.repaint();
+                        //cnt_Bee.repaint();
+                        f.repaint();
+                        // containerBEEA.repaint();
+
+                    }
+                });
+          //  }
+//            if (RSM_A(n.getBee_can_file()).equals("no")) {
+//                
+//               // slbl.setHidden(false);
+//            }
+            container_DISC.addComponent(b);
+        }
+
+        
+
+        // container_BEE.addComponent(cnt_Bee);
+        container_DISC.repaint();
+        f.repaint();
+    }
     @Override
     protected void onCreateBEE() {
 
@@ -6381,5 +6439,14 @@ TextField txtshareholders = (TextField) findByName("txtshareholders", f);
         Dialog.show("B-BBEE", "Application Completed", "Ok", null);
         // }
         showForm("Main", null);
+    }
+
+   protected void beforeBEE(Form f) {
+        load_bee_form(f);
+
+    }
+   
+    protected void beforeDisclosure(Form f) {
+    load_disclosure_form(f);
     }
 }
