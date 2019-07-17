@@ -3562,9 +3562,9 @@ public class StateMachine extends StateMachineBase {
         height = Display.getInstance().getDisplayHeight();
         width = Display.getInstance().getDisplayWidth();
 
-        Object hasViewedTaCs_Accepted = Storage.getInstance().readObject(KEY_FOR_T_AND_CS_Accepted);
+//        Object hasViewedTaCs_Accepted = Storage.getInstance().readObject(KEY_FOR_T_AND_CS_Accepted);
 
-        if (hasViewedTaCs_Accepted == null) {
+ //       if (hasViewedTaCs_Accepted == null) {
             Dialog d = (Dialog) createContainer("/theme", "TermsAndConditions");
             Button btnViewTerms = (Button) findByName("btnViewTerms", d);
             btnViewTerms.addActionListener(new ActionListener() {
@@ -3621,9 +3621,7 @@ public class StateMachine extends StateMachineBase {
                     new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent evt) {
-
                     Object hasViewedTaCs = Storage.getInstance().readObject(KEY_FOR_T_AND_CS);
-
                     if (chkTerms.isSelected()) {
                         Storage.getInstance().writeObject(KEY_FOR_T_AND_CS_Accepted, "Accepted_on_" + getDateNowString());
                         d.dispose();
@@ -3652,7 +3650,7 @@ public class StateMachine extends StateMachineBase {
             d.show();
 //                                
 
-        }
+ //term        }
 
         UserWebServices u = new UserWebServices();
         User user = new User();
@@ -3685,14 +3683,10 @@ public class StateMachine extends StateMachineBase {
     @Override
     protected boolean onForgotPasswordRequest() {
         String customerCode = findTxtCustomerCode().getText();
-
         String msg = "";
-
         if (customerCode.length() == 0) {
             msg += "Enter Customer Code. ";
-
         }
-
         customerCode = customerCode.toUpperCase();
 
         if (msg.length() == 0) {
@@ -3702,13 +3696,10 @@ public class StateMachine extends StateMachineBase {
             if (res1.indexOf("Password was sent via") > -1) {
                 Dialog.show("Success", res1, "Ok", null);
                 return false;
-
             } else {
                 Dialog.show("Validation Failed", res1, "Ok", null);
                 return true;
-
             }
-
         } else {
             Dialog.show("Validation Failed", msg, "Ok", null);
             return true;
@@ -3718,12 +3709,10 @@ public class StateMachine extends StateMachineBase {
     public String getPaymentTransNoFromURL(String url) {
         String paymentTransNo = "";
         String trans = "trans=";
-
         if (url != null && url.indexOf(trans) > -1) {
             int transIndex = url.indexOf(trans) + 6;
             paymentTransNo = url.substring(transIndex);
         }
-
         return paymentTransNo;
     }
 
@@ -4694,7 +4683,7 @@ public class StateMachine extends StateMachineBase {
                     //  Dialog.show("Scan ID2", "Return val " + retval, "OK", null);
                 }
                 if (uws.ArlDHA_Detail.size() == 0) {
-                    Dialog.show("Scan ID", "The Document scaned does not contain a vaild ID Number. Please contact DHA or rescan the document", "OK", null);
+                    Dialog.show("Scan ID", "Scanned information does not contain a valid ID number. Rescan or contact Department of Home Affairs.", "OK", null);
                     return;
                 }
                 ip.dispose();
@@ -4754,7 +4743,7 @@ public class StateMachine extends StateMachineBase {
                             return;
                         }
                         if (uws.ArlDHA_Detail.size() == 0) {
-                            Dialog.show("Scan ID", "The Document scaned does not contain a vaild ID Number. Please contact DHA or rescan the document", "OK", null);
+                            Dialog.show("Scan ID", "Scanned information does not contain a valid ID number. Rescan or contact Department of Home Affairs.", "OK", null);
                             ip.dispose();
                             return;
                         }
@@ -4781,10 +4770,10 @@ public class StateMachine extends StateMachineBase {
                             lblsurname.repaint();
                             //PhysAddr1
                             TextField physaddr1 = (TextField) findByName("PhysAddr1", f);
-                            physaddr1.setText(RSM_A(DD.getADDR_LINE1()));
+                           // physaddr1.setText(RSM_A(DD.getADDR_LINE1()));
                             physaddr1.repaint();
                             TextField physaddr2 = (TextField) findByName("PhysAddr2", f);
-                            physaddr2.setText(RSM_A(DD.getADDR_LINE2()));
+                           // physaddr2.setText(RSM_A(DD.getADDR_LINE2()));
                             physaddr2.repaint();
                             ;
                         }
@@ -4924,7 +4913,7 @@ public class StateMachine extends StateMachineBase {
         ip.dispose();
         //RSM_A(DD.getIDNUMBER()
         if ("ERR".equals(uws.getOTP().substring(0, 3))) {
-            Dialog.show("Validation Failed", uws.getOTP(), "OK", null);
+            Dialog.show("Validation Failed", uws.getOTP().replace("ERROR- ", ""), "OK", null);
             txtcell.repaint();
             txtcell.requestFocus();
             txtcell.startEditing();
@@ -4990,7 +4979,7 @@ public class StateMachine extends StateMachineBase {
         }
         TextField txtotp = (TextField) findByName("TxtOtp", f);
         if (txtotp.getText().trim().equals("")) {
-            Dialog.show("Validation Failed", "Please enter a valid otp for Director ID Number" + lblidNo.getText().trim(), "OK", null);
+            Dialog.show("Validation Failed", "Enter unique OTP for director with ID number " + lblidNo.getText().trim(), "OK", null);
             txtotp.repaint();
             txtotp.requestFocus();
             txtotp.startEditing();
@@ -5353,7 +5342,7 @@ public class StateMachine extends StateMachineBase {
             cntmemlist.add(b);
             b.addActionListener(e
                     -> {
-                boolean answer = Dialog.show("Info", "Do You Want to  Change info for " + b.getText() + ". Then you must delete the info and add the director as a new director. Do you want to delete this information?", "Confirm", "Decline");
+                boolean answer = Dialog.show("Information", "Do you want to Change info for " + b.getText() + "? Then you must delete the info and add the director as a new director. Do you want to delete this information?", "Confirm", "Decline");
                 if (answer) {
                     //Dialog.show("", "delete director from table with dir_id = " + b.getName(), "OK", null);
                     uws.removedir(b.getName(), AGENT_CODE);
@@ -5401,7 +5390,7 @@ public class StateMachine extends StateMachineBase {
         cntmemlist.removeAll();
         f.repaint();
         Label lblheader = new Label();
-        lblheader.setText("Please Scan the following Directors ID's");
+        lblheader.setText("Scan All Active Directors ID's");
         lblheader.setUIID("LabelBlackCenterH");
         f.repaint();
         Dialog ip = new InfiniteProgress().showInifiniteBlocking();
@@ -5456,7 +5445,7 @@ public class StateMachine extends StateMachineBase {
                             b.setUIID("Button_small_L_red");
                             // b.setUIID("Button_small_L_red");
                             b.setEnabled(true);
-                            Dialog.show("Validation Failed", "Please scan the correct Identity Document. ", "OK", null);
+                            Dialog.show("Validation Failed", "Scanned ID information do not match director information as per CIPC records. Only scan ID of indicated director.", "OK", null);
                             return;
                         }
                         boolean allscaned = true;
@@ -5696,7 +5685,7 @@ public class StateMachine extends StateMachineBase {
 //            cnt.add(b);
 //            b.addActionListener(e
 //                    -> {
-//                boolean answer = Dialog.show("Info", "Do You Want to  Change info for " + b.getText() + ". Then you must delete the info and add the director as a new director. Do you want to delete this information?", "Confirm", "Decline");
+//                boolean answer = Dialog.show("Info", "Do you Want to  Change info for " + b.getText() + ". Then you must delete the info and add the director as a new director. Do you want to delete this information?", "Confirm", "Decline");
 //                if (answer) {
 //                    Dialog.show("", "delete director from table with dir_id = " + b.getName(), "OK", null);
 //                    Table tbl = (Table) findByName("Tablememinfo", c);
@@ -5723,7 +5712,7 @@ public class StateMachine extends StateMachineBase {
         ip.dispose();
         // Dialog.show("BtnconregAction hsz1","Arl_name_workflow_Detail size " + uws.Arl_name_workflow_Detail.size() + " - " + txtrefno.getText() + ". Transaction might be completed for reference number.", "OK", null);
         if (uws.Arl_name_workflow_Detail.size() == 0) {
-            Dialog.show("Notice", "No Information found for reference no - " + txtrefno.getText() + ". Transaction might be completed for reference number.", "OK", null);
+            Dialog.show("Validation Failed", "No information found for reference no - " + txtrefno.getText() + ". Name reservation may already been used, expired or does not belong to customer.", "OK", null);
             return;
         }
         String Application_no = "";
@@ -5857,7 +5846,7 @@ public class StateMachine extends StateMachineBase {
 //            b.setUIID("Button_small");
 //            b.addActionListener(e
 //                    -> {
-//                boolean answer = Dialog.show("Info", "Do You Want to apply for a B-BBEE Certificate for " + b.getText(), "Yes", "No");
+//                boolean answer = Dialog.show("Info", "Do you Want to apply for a B-BBEE Certificate for " + b.getText(), "Yes", "No");
 //                if (answer) {
 //                    //   Table tbl = (Table) findByName("Tablememinfo", c);
 //                    //tbl.add(cnt_Bee);
@@ -5900,7 +5889,7 @@ public class StateMachine extends StateMachineBase {
             String ent_no = RSM_A(n.getEnt_no());
             String ent_name = RSM_A(n.getEnt_name());
             SpanLabel slbl = new SpanLabel();
-            String msg = "Last B-BEE Certificate requested on " + RSM_A(n.getBee_date()) + " for " + ent_name + ". You Can Only Request a B-BBEE Certificate once in 12 Months";
+            String msg = "Last B-BBEE Certificate requested on " + RSM_A(n.getBee_date()) + " for " + ent_name + ". The B-BBEE Cerificate is valid for 12 months and connot be re-issued during such period.";
             slbl.setText(msg);
             slbl.setHidden(true);
 
@@ -5916,10 +5905,10 @@ public class StateMachine extends StateMachineBase {
                 b.setName(ent_no);
                 b.addActionListener(e
                         -> {
-                    boolean answer = Dialog.show("Info", "Do You Want to apply for a B-BBEE Certificate for " + b.getText(), "Yes", "No");
+                    boolean answer = Dialog.show("Information", "Do you want to apply for a B-BBEE Certificate for " + b.getText() + "?", "Yes", "No");
                     if (answer) {
                         Label lbl_ent_no = (Label) findByName("lbl_ent_no", f);
-                        lbl_ent_no.setText("B-BBEE Certifcate for ");
+                        lbl_ent_no.setText("B-BBEE Certificate for ");
                         Label lbl_ent_no1 = (Label) findByName("lbl_ent_no1", f);
                         lbl_ent_no1.setText(b.getText());
                         beeEnt_no = b.getName();
@@ -5976,14 +5965,14 @@ public class StateMachine extends StateMachineBase {
                 b.setName(ent_no);
                 b.addActionListener(e
                         -> {
-                    boolean answer = Dialog.show("Info", "Do You Want to print the MOI Certificate for " + b.getText(), "Yes", "No");
+                    boolean answer = Dialog.show("Information", "Do you want to print the MOI Certificate for " + b.getText() + "?", "Yes", "No");
                     if (answer) {
                         Label lbl_ent_no = (Label) findByName("lbl_ent_no", f);
-                        lbl_ent_no.setText("E-Mailed MOI Certifcate for ");
+                        lbl_ent_no.setText("E-Mailed MOI Certificate for ");
                         Label lbl_ent_no1 = (Label) findByName("lbl_ent_no1", f);
                         lbl_ent_no1.setText(b.getText());
                         u.insert_web_dispatch(ent_no, AGENT_CODE);
-                        Dialog.show("Info", "MOI Certificate for " + b.getText() + " was email to customer.", "OK",null);
+                        Dialog.show("Information", "Registration Certificte and Memorandum of Incorporation for " + b.getText() + " was resend.", "OK",null);
                        // loadlist_BEE(b.getName());
                         //Label lbl_ent_no2 = (Label) findByName("lbl_ent_no2", f);
                         //lbl_ent_no2.setHidden(true);
@@ -6092,8 +6081,7 @@ public class StateMachine extends StateMachineBase {
         }
         long rev = Integer.parseInt(txtrevenue.getText());
         if (rev > 10000000) {
-            Dialog.show("Validation Failed", "Revenue can't e"
-                    + "xceed R10 000 000.", "Ok", null);
+            Dialog.show("Validation Failed", "Revenue cannot exceed R10 000 000.", "Ok", null);
             txtrevenue.requestFocus();
             txtrevenue.startEditing();
             return;
@@ -6132,13 +6120,13 @@ public class StateMachine extends StateMachineBase {
         int totalBshareholders = Integer.parseInt(txtBlackshare.getText());
         int totalFshareholders = Integer.parseInt(txtBlackfshare.getText());
         if (totalBshareholders > totalshareholders) {
-            Dialog.show("Validation Failed", "Black Share Holders can't be more than number of shareholders", "Ok", null);
+            Dialog.show("Validation Failed", "Black Shareholders can't be more than number of shareholders", "Ok", null);
             txtBlackshare.requestFocus();
             txtBlackshare.startEditing();
             return;
         }
         if (totalFshareholders > totalBshareholders) {
-            Dialog.show("Validation Failed", "Female Black Share Holders can't be more than number of Black shareholders", "Ok", null);
+            Dialog.show("Validation Failed", "Female Black Shareholders can't be more than number of Black shareholders", "Ok", null);
             txtBlackfshare.requestFocus();
             txtBlackfshare.startEditing();
             return;
@@ -6163,7 +6151,7 @@ public class StateMachine extends StateMachineBase {
             Conshareholders.add(lbl);
             TextField txt = new TextField();
             txt.setUIID("TextFieldNameSearch");
-            txt.setHint("% Shares");
+            txt.setHint("% Shares/Members interest");
             txt.setText("");
             txt.setConstraint(TextArea.NUMERIC);
             Conshareholders.add(txt);
@@ -6304,18 +6292,18 @@ public class StateMachine extends StateMachineBase {
         SpanLabel SpanLabel3 = (SpanLabel) findByName("SpanLabel3", f);
         SpanLabel SpanLabel4 = (SpanLabel) findByName("SpanLabel4", f);
         SpanLabel SpanLabel5 = (SpanLabel) findByName("SpanLabel5", f);
-        String msg = "Out of the total of " + txtshareholders.getText().trim() + " share holders, how many are unemployed black people not attending and not required by law to attend an educational institution and not awaiting admission to an educational institution?";
+        String msg = "Out of the total of " + txtshareholders.getText().trim() + " shareholders/members, how many are unemployed black people not attending and not required by law to attend an educational institution and not awaiting admission to an educational institution?";
         SpanLabel1.setText(msg);
-        msg = "Out of the total  of " + txtshareholders.getText().trim() + " share holders, how many are black people who are youth as defined in the National Youth Commission Act of 1996? [14 to 35 years old]";
+        msg = "Out of the total  of " + txtshareholders.getText().trim() + " shareholders/members, how many are black people who are youth as defined in the National Youth Commission Act of 1996? [14 to 35 years old]";
         SpanLabel2.setText(msg);
-        msg = "Out of the total  of " + txtshareholders.getText().trim() + " share holders, how many are black people who are person with disabilities as defined in the Code of Good Practice on employment of people with disabilities issued under the Employment Equity Act?";
+        msg = "Out of the total  of " + txtshareholders.getText().trim() + " shareholders/members, how many are black people who are person with disabilities as defined in the Code of Good Practice on employment of people with disabilities issued under the Employment Equity Act?";
         SpanLabel3.setText(msg);
-        msg = "Out of the total  of " + txtshareholders.getText().trim() + " shareholders, how many are black people living in rural and under developed areas";
+        msg = "Out of the total  of " + txtshareholders.getText().trim() + " shareholders/members, how many are black people living in rural and under developed areas";
         SpanLabel4.setText(msg);
-        msg = "Out of the total of " + txtshareholders.getText().trim() + "  share holders, how many are black military veterans who qualifies to be called a military veteran in terms of the Military Veterans Act 18 0f 2011 ?";
+        msg = "Out of the total of " + txtshareholders.getText().trim() + "  shareholders/members, how many are black military veterans who qualifies to be called a military veteran in terms of the Military Veterans Act 18 0f 2011 ?";
         SpanLabel5.setText(msg);
         TextField textFieldunemployed = (TextField) findByName("TextFieldunemployed", f);
-
+        textFieldunemployed.requestFocus();
         containerYouth.setHidden(false);
         f.repaint();
     }
@@ -6436,7 +6424,7 @@ TextField txtshareholders = (TextField) findByName("txtshareholders", f);
         String rval = "";
         rval = uws.bee(bbee);
         //  if (rval.equals(null) || rval.equals("") ) {
-        Dialog.show("B-BBEE", "Application Completed", "Ok", null);
+        Dialog.show("B-BBEE", "Application completed and certificate e-mailed to customer.", "Ok", null);
         // }
         showForm("Main", null);
     }
@@ -6448,5 +6436,11 @@ TextField txtshareholders = (TextField) findByName("txtshareholders", f);
    
     protected void beforeDisclosure(Form f) {
     load_disclosure_form(f);
+    }
+
+    @Override
+    protected void onCOREG_BtnAcceptTermsAction(Component c, ActionEvent event) {
+
+    
     }
 }
