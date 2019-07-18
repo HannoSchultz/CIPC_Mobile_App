@@ -77,7 +77,7 @@ public abstract class StateMachineBase extends UIBuilder {
     }
 
     protected String getFirstFormName() {
-        return "Registration";
+        return "BEE";
     }
 
     public Container createWidget(Resources res, String resPath, boolean loadTheme) {
@@ -105,7 +105,7 @@ public abstract class StateMachineBase extends UIBuilder {
             }
             initTheme(res);
         }
-        return createContainer(resPath, "Registration");
+        return createContainer(resPath, "BEE");
     }
 
     protected void initTheme(Resources res) {
@@ -2930,6 +2930,18 @@ public abstract class StateMachineBase extends UIBuilder {
         return cmp;
     }
 
+    public com.codename1.ui.Container findContainerDISC(Component root) {
+        return (com.codename1.ui.Container)findByName("Container_DISC", root);
+    }
+
+    public com.codename1.ui.Container findContainerDISC() {
+        com.codename1.ui.Container cmp = (com.codename1.ui.Container)findByName("Container_DISC", Display.getInstance().getCurrent());
+        if(cmp == null && aboutToShowThisContainer != null) {
+            cmp = (com.codename1.ui.Container)findByName("Container_DISC", aboutToShowThisContainer);
+        }
+        return cmp;
+    }
+
     public com.codename1.ui.Container findContainer11(Component root) {
         return (com.codename1.ui.Container)findByName("Container11", root);
     }
@@ -4390,6 +4402,7 @@ public abstract class StateMachineBase extends UIBuilder {
 
         if("Login".equals(f.getName())) {
             postLogin(f);
+            
             aboutToShowThisContainer = null;
             return;
         }

@@ -107,9 +107,8 @@ public class StateMachine extends StateMachineBase {
     final String PROCESSING = "Processing...";
     String PREVTEXT = "";
 
-    final String KEY_FOR_T_AND_CS = "CIPC_T_AND_Cs";
-    final String KEY_FOR_T_AND_CS_Accepted = "CIPC_T_AND_Cs_Accepted";
-
+    // final String KEY_FOR_T_AND_CS = "CIPC_T_AND_Cs";
+    // final String KEY_FOR_T_AND_CS_Accepted = "CIPC_T_AND_Cs_Accepted";
     static za.co.cipc.pojos.User responseUser;
 
     Container contSideMenu;
@@ -175,6 +174,7 @@ public class StateMachine extends StateMachineBase {
     public String beePercetage_black = "";
     public String beeStatus_date = "";
     public String beeTrak_no = "";
+    public String run_postback = "";
 
     EnterpriseDetails enterpriseDetails;
     ArrayList<NameSearchObject> arrayListNameReservation;
@@ -2664,60 +2664,6 @@ public class StateMachine extends StateMachineBase {
     public void isTableInputForm(Form f) {
     }
 
-    @Override
-    protected void beforeLogin(final Form f) {
-
-        f.setUIID("Background", "BackgroundLandscape");
-
-        if (Display.getInstance().isTablet()) {
-            f.setLayout(new GridLayout(1, 3));
-            f.addComponent(0, new Label(" "));
-            f.repaint();
-        }
-
-        Toolbar toolbar = analytics(f, " ");
-
-        Command loginBack = new Command("") {
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                super.actionPerformed(evt); //To change body of generated methods, choose Tools | Templates.
-                Log.p("Login back clicked", Log.DEBUG);
-                boolean flag = Dialog.show("Exit", "Are you sure you want to Exit App?", "Yes", "No");
-                if (flag) {
-                    Display.getInstance().minimizeApplication();//Android
-                }
-
-            }
-
-        };
-        //toolbar.setBackCommand(loginBack);
-        toolbar.addCommandToLeftBar(loginBack);
-        toolbar.setBackCommand(loginBack);
-
-        current = f;
-        f.setScrollVisible(false);
-        Container containerParent = (Container) findByName("containerParent", f);
-        Container contentPane = f.getContentPane();
-        contentPane.setScrollVisible(false);
-        containerParent.setScrollVisible(false);
-        Button btnForgotPassword = (Button) findByName("btnForgotPassword", f);
-        //btnForgotPassword.remove();
-
-        f.revalidate();
-
-        if (Display.getInstance().isSimulator()) {
-            TextField txtCustomerCode = (TextField) findByName("txtCustomerCode", f);
-            //txtCustomerCode.setText("BLE076");
-            TextField txtPassword = (TextField) findByName("txtPassword", f);
-            //txtPassword.setText("Password12");
-
-            txtCustomerCode.setText(defaultEmail);
-            txtPassword.setText(defaultPassword);
-
-        }
-
-    }
-
     public void checkRegButtonPressed() {
 
         String msg = "";
@@ -3558,13 +3504,78 @@ public class StateMachine extends StateMachineBase {
     }
 
     @Override
+    protected void beforeLogin(final Form f) {
+
+        f.setUIID("Background", "BackgroundLandscape");
+
+        if (Display.getInstance().isTablet()) {
+            f.setLayout(new GridLayout(1, 3));
+            f.addComponent(0, new Label(" "));
+            f.repaint();
+        }
+
+        Toolbar toolbar = analytics(f, " ");
+
+        Command loginBack = new Command("") {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                super.actionPerformed(evt); //To change body of generated methods, choose Tools | Templates.
+                Log.p("Login back clicked", Log.DEBUG);
+                boolean flag = Dialog.show("Exit", "Are you sure you want to Exit App?", "Yes", "No");
+                if (flag) {
+                    
+                    //Display.getInstance().minimizeApplication();//Android
+                    Display.getInstance().exitApplication();
+                }
+
+            }
+
+        };
+        //toolbar.setBackCommand(loginBack);
+        toolbar.addCommandToLeftBar(loginBack);
+        toolbar.setBackCommand(loginBack);
+
+        current = f;
+        f.setScrollVisible(false);
+        Container containerParent = (Container) findByName("containerParent", f);
+        Container contentPane = f.getContentPane();
+        contentPane.setScrollVisible(false);
+        containerParent.setScrollVisible(false);
+        Button btnForgotPassword = (Button) findByName("btnForgotPassword", f);
+        //btnForgotPassword.remove();
+
+        f.revalidate();
+
+        if (Display.getInstance().isSimulator()) {
+            TextField txtCustomerCode = (TextField) findByName("txtCustomerCode", f);
+            //txtCustomerCode.setText("BLE076");
+            TextField txtPassword = (TextField) findByName("txtPassword", f);
+            //txtPassword.setText("Password12");
+
+            txtCustomerCode.setText(defaultEmail);
+            txtPassword.setText(defaultPassword);
+
+        }
+//if(run_postback.equals(""))
+//{
+//run_postback = "run";
+//}
+//else
+//{
+//postLogin(f);
+//}
+    }
+
+  //  @Override;
     protected void postLogin(Form f) {
         height = Display.getInstance().getDisplayHeight();
         width = Display.getInstance().getDisplayWidth();
 
 //        Object hasViewedTaCs_Accepted = Storage.getInstance().readObject(KEY_FOR_T_AND_CS_Accepted);
-
- //       if (hasViewedTaCs_Accepted == null) {
+      //  Dialog.show("Notice", "HSZ1 ", "Ok", null);
+        Object hasViewedTaCs_Accepted = null;
+        if (hasViewedTaCs_Accepted == null) {
+           // Dialog.show("Notice", "HSZ2 ", "Ok", null);
             Dialog d = (Dialog) createContainer("/theme", "TermsAndConditions");
             Button btnViewTerms = (Button) findByName("btnViewTerms", d);
             btnViewTerms.addActionListener(new ActionListener() {
@@ -3596,7 +3607,7 @@ public class StateMachine extends StateMachineBase {
 
                             if (fs.exists(fileName)) {
                                 Display.getInstance().execute(fileName);
-                                Storage.getInstance().writeObject(KEY_FOR_T_AND_CS, "Viewed on_" + getDateNowString());
+                                //Storage.getInstance().writeObject(KEY_FOR_T_AND_CS, "Viewed on_" + getDateNowString());
 
                             } else {
                                 Dialog.show("Validation Failed", "File is currently not available. Please contact CIPC.", "Ok", null);
@@ -3613,18 +3624,22 @@ public class StateMachine extends StateMachineBase {
                 }
 
             });
-
+            //Dialog.show("Notice", "HSZ3 ", "Ok", null);
             CheckBox chkTerms = (CheckBox) findByName("chkTerms", d);
+            chkTerms.setSelected(false);
             Button btnAcceptTerms = (Button) findByName("btnAcceptTerms", d);
 
             btnAcceptTerms.addActionListener(
                     new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent evt) {
-                    Object hasViewedTaCs = Storage.getInstance().readObject(KEY_FOR_T_AND_CS);
+                    // Object hasViewedTaCs = Storage.getInstance().readObject(KEY_FOR_T_AND_CS);
+                    Object hasViewedTaCs = null;
+
                     if (chkTerms.isSelected()) {
-                        Storage.getInstance().writeObject(KEY_FOR_T_AND_CS_Accepted, "Accepted_on_" + getDateNowString());
+                        // hsz terms Storage.getInstance().writeObject(KEY_FOR_T_AND_CS_Accepted, "Accepted_on_" + getDateNowString());
                         d.dispose();
+                        chkTerms.setSelected(false);
                     } else if (hasViewedTaCs == null) {
                         Dialog.show("Notice", "Please view CIPC\'s Terms and Conditions. ", "Ok", null);
 
@@ -3634,7 +3649,7 @@ public class StateMachine extends StateMachineBase {
                 }
             }
             );
-
+           // Dialog.show("Notice", "HSZ4 ", "Ok", null);
             Button btnDoNotAccept = (Button) findByName("btnDoNotAccept", d);
 
             btnDoNotAccept.addActionListener(
@@ -3646,11 +3661,11 @@ public class StateMachine extends StateMachineBase {
                 }
             }
             );
-
+         //   Dialog.show("Notice", "HSZ5 ", "Ok", null);
             d.show();
 //                                
 
- //term        }
+        }
 
         UserWebServices u = new UserWebServices();
         User user = new User();
@@ -4770,10 +4785,10 @@ public class StateMachine extends StateMachineBase {
                             lblsurname.repaint();
                             //PhysAddr1
                             TextField physaddr1 = (TextField) findByName("PhysAddr1", f);
-                           // physaddr1.setText(RSM_A(DD.getADDR_LINE1()));
+                            // physaddr1.setText(RSM_A(DD.getADDR_LINE1()));
                             physaddr1.repaint();
                             TextField physaddr2 = (TextField) findByName("PhysAddr2", f);
-                           // physaddr2.setText(RSM_A(DD.getADDR_LINE2()));
+                            // physaddr2.setText(RSM_A(DD.getADDR_LINE2()));
                             physaddr2.repaint();
                             ;
                         }
@@ -4912,8 +4927,8 @@ public class StateMachine extends StateMachineBase {
 //        btn.setEnabled(false);
         ip.dispose();
         //RSM_A(DD.getIDNUMBER()
-        if ("ERR".equals(uws.getOTP().substring(0, 3))) {
-            Dialog.show("Validation Failed", uws.getOTP().replace("ERROR- ", ""), "OK", null);
+        if ("VAL".equals(uws.getOTP().substring(0, 3))) {
+            Dialog.show("Validation Failed", uws.getOTP(), "OK", null);
             txtcell.repaint();
             txtcell.requestFocus();
             txtcell.startEditing();
@@ -5638,8 +5653,6 @@ public class StateMachine extends StateMachineBase {
 
     }
 
-   
-
     @Override
     protected void onContTasks_TxtName4Action(Component c, ActionEvent event) {
 
@@ -5940,7 +5953,8 @@ public class StateMachine extends StateMachineBase {
         container_BEE.repaint();
         f.repaint();
     }
- protected void load_disclosure_form(Form f) {
+
+    protected void load_disclosure_form(Form f) {
         // Form f = c.getComponentForm();
 
         UserWebServices u = new UserWebServices();
@@ -5953,7 +5967,7 @@ public class StateMachine extends StateMachineBase {
         //  container_BEE.setHidden(true);
 //        Container conmemlist = (Container) findByName("Conmemlist", f);
 //        conmemlist.setHidden(true);
-       
+
         for (int i = 0; i < uws.ArlBEE_Detail.size(); i++) {
             BEEDetail n = uws.ArlBEE_Detail.get(i);
             String ent_no = RSM_A(n.getEnt_no());
@@ -5961,34 +5975,34 @@ public class StateMachine extends StateMachineBase {
 
             Button b = new Button(ent_name);
             b.setUIID("Button_small_L");
-          
-                b.setName(ent_no);
-                b.addActionListener(e
-                        -> {
-                    boolean answer = Dialog.show("Information", "Do you want to print the MOI Certificate for " + b.getText() + "?", "Yes", "No");
-                    if (answer) {
-                        Label lbl_ent_no = (Label) findByName("lbl_ent_no", f);
-                        lbl_ent_no.setText("E-Mailed MOI Certificate for ");
-                        Label lbl_ent_no1 = (Label) findByName("lbl_ent_no1", f);
-                        lbl_ent_no1.setText(b.getText());
-                        u.insert_web_dispatch(ent_no, AGENT_CODE);
-                        Dialog.show("Information", "Registration Certificte and Memorandum of Incorporation for " + b.getText() + " was resend.", "OK",null);
-                       // loadlist_BEE(b.getName());
-                        //Label lbl_ent_no2 = (Label) findByName("lbl_ent_no2", f);
-                        //lbl_ent_no2.setHidden(true);
-                       // lbl_ent_no2.setVisible(false);
-                        // lbl_ent_no.repaint();
-                        // container_BEE.setVisible(false);
-                        // container_BEE.setHidden(true);
-                        // container_BEE.setHidden(true);
-                        // container_BEE.repaint();
-                        //cnt_Bee.repaint();
-                        f.repaint();
-                        // containerBEEA.repaint();
 
-                    }
-                });
-          //  }
+            b.setName(ent_no);
+            b.addActionListener(e
+                    -> {
+                boolean answer = Dialog.show("Information", "Do you want to print the MOI Certificate for " + b.getText() + "?", "Yes", "No");
+                if (answer) {
+                    Label lbl_ent_no = (Label) findByName("lbl_ent_no", f);
+                    lbl_ent_no.setText("E-Mailed MOI Certificate for ");
+                    Label lbl_ent_no1 = (Label) findByName("lbl_ent_no1", f);
+                    lbl_ent_no1.setText(b.getText());
+                    u.insert_web_dispatch(ent_no, AGENT_CODE);
+                    Dialog.show("Information", "Registration Certificte and Memorandum of Incorporation for " + b.getText() + " was resend.", "OK", null);
+                    // loadlist_BEE(b.getName());
+                    //Label lbl_ent_no2 = (Label) findByName("lbl_ent_no2", f);
+                    //lbl_ent_no2.setHidden(true);
+                    // lbl_ent_no2.setVisible(false);
+                    // lbl_ent_no.repaint();
+                    // container_BEE.setVisible(false);
+                    // container_BEE.setHidden(true);
+                    // container_BEE.setHidden(true);
+                    // container_BEE.repaint();
+                    //cnt_Bee.repaint();
+                    f.repaint();
+                    // containerBEEA.repaint();
+
+                }
+            });
+            //  }
 //            if (RSM_A(n.getBee_can_file()).equals("no")) {
 //                
 //               // slbl.setHidden(false);
@@ -5996,12 +6010,11 @@ public class StateMachine extends StateMachineBase {
             container_DISC.addComponent(b);
         }
 
-        
-
         // container_BEE.addComponent(cnt_Bee);
         container_DISC.repaint();
         f.repaint();
     }
+
     @Override
     protected void onCreateBEE() {
 
@@ -6172,7 +6185,7 @@ public class StateMachine extends StateMachineBase {
             conFemale.add(lblF);
             TextField txtF = new TextField();
             txtF.setUIID("TextFieldNameSearch");
-            txtF.setHint("% Shares");
+            txtF.setHint("% Shares/Members interest");
             txtF.setText("");
             txtF.setConstraint(TextArea.NUMERIC);
             conFemale.add(txtF);
@@ -6308,7 +6321,7 @@ public class StateMachine extends StateMachineBase {
         f.repaint();
     }
 
-   // @Override
+    // @Override
     protected void onBEE_BtncompleteAction(Component c, ActionEvent event) {
         Form f = Display.getInstance().getCurrent();
         //validate data
@@ -6318,7 +6331,6 @@ public class StateMachine extends StateMachineBase {
         TextField textFielddisability = (TextField) findByName("TextFielddisability", f);
         TextField textFieldrural = (TextField) findByName("TextFieldrural", f);
         TextField textFieldveteran = (TextField) findByName("TextFieldveteran", f);
-        
 
         if (textFieldunemployed.getText().trim() == "") {
             Dialog.show("Validation Failed", "Value for unemployed can't be blank.", "Ok", null);
@@ -6353,59 +6365,57 @@ public class StateMachine extends StateMachineBase {
             textFieldveteran.requestFocus();
             return;
         }
-        
+
 //        TextField textFieldyouth = (TextField) findByName("TextFieldyouth", f);
 //        TextField textFielddisability = (TextField) findByName("TextFielddisability", f);
 //        TextField textFieldrural = (TextField) findByName("TextFieldrural", f);
 //        TextField textFieldveteran = (TextField) findByName("TextFieldveteran", f);
-TextField txtshareholders = (TextField) findByName("txtshareholders", f);
-    if (textFieldunemployed.getText().equals("")) {textFieldunemployed.setText("0");}
-    else
-    {
+        TextField txtshareholders = (TextField) findByName("txtshareholders", f);
+        if (textFieldunemployed.getText().equals("")) {
+            textFieldunemployed.setText("0");
+        } else {
             if (Integer.parseInt(textFieldunemployed.getText()) > Integer.parseInt(txtshareholders.getText().trim())) {
                 Dialog.show("Validation Failed", "Number of unemployed black people not attending and not required by law to attend an educational institution, can't be more than " + txtshareholders.getText().trim(), "Ok", null);
                 textFieldunemployed.requestFocus();
                 return;
             }
         }
-        if (textFieldyouth.getText().equals("")) {textFieldyouth.setText("0");}
-    else
-    {
+        if (textFieldyouth.getText().equals("")) {
+            textFieldyouth.setText("0");
+        } else {
             if (Integer.parseInt(textFieldyouth.getText()) > Integer.parseInt(txtshareholders.getText().trim())) {
                 Dialog.show("Validation Failed", "Number of black people who are youth as defined in the National Youth Commission Act of 1996? [14 to 35 years old], can't be more than " + txtshareholders.getText().trim(), "Ok", null);
                 textFieldyouth.requestFocus();
                 return;
             }
         }
-        if (textFielddisability.getText().equals("")) {textFielddisability.setText("0");}
-    else
-    {
+        if (textFielddisability.getText().equals("")) {
+            textFielddisability.setText("0");
+        } else {
             if (Integer.parseInt(textFielddisability.getText()) > Integer.parseInt(txtshareholders.getText().trim())) {
                 Dialog.show("Validation Failed", "black people who are person with disabilities as defined in the Code of Good Practice on employment of people with disabilities issued under the Employment Equity Act, can't be more than " + txtshareholders.getText().trim(), "Ok", null);
                 textFielddisability.requestFocus();
                 return;
             }
         }
-        if (textFieldrural.getText().equals("")) {textFieldrural.setText("0");}
-    else
-    {
+        if (textFieldrural.getText().equals("")) {
+            textFieldrural.setText("0");
+        } else {
             if (Integer.parseInt(textFieldrural.getText()) > Integer.parseInt(txtshareholders.getText().trim())) {
                 Dialog.show("Validation Failed", "Number of black people living in rural and under developed areas, can't be more than " + txtshareholders.getText().trim(), "Ok", null);
                 textFieldrural.requestFocus();
                 return;
             }
         }
-        if (textFieldveteran.getText().equals("")) 
-        {textFieldveteran.setText("0");
-        }
-    else
-    {
+        if (textFieldveteran.getText().equals("")) {
+            textFieldveteran.setText("0");
+        } else {
             if (Integer.parseInt(textFieldveteran.getText()) > Integer.parseInt(txtshareholders.getText().trim())) {
                 Dialog.show("Validation Failed", "Number of black military veterans who qualifies to be called a military veteran in terms of the Military Veterans Act 18 0f 2011, can't be more than " + txtshareholders.getText().trim(), "Ok", null);
                 textFieldveteran.requestFocus();
                 return;
             }
-        }        
+        }
         bbee.setBlack_veteran(textFieldveteran.getText()); //5
 
         za.co.cipc.webservices.UserWebServicesNewReg uws = new za.co.cipc.webservices.UserWebServicesNewReg();
@@ -6429,18 +6439,32 @@ TextField txtshareholders = (TextField) findByName("txtshareholders", f);
         showForm("Main", null);
     }
 
-   protected void beforeBEE(Form f) {
+    protected void beforeBEE(Form f) {
         load_bee_form(f);
 
     }
-   
+
     protected void beforeDisclosure(Form f) {
-    load_disclosure_form(f);
+        load_disclosure_form(f);
     }
 
     @Override
     protected void onCOREG_BtnAcceptTermsAction(Component c, ActionEvent event) {
 
-    
+    }
+
+    @Override
+    protected void onCreateLogin() {
+//        Form f = Display.getInstance().getCurrent();
+//        if (run_postback.equals("")) {
+//            run_postback = "run";
+//        } else {
+//            postLogin(f);
+//        }
+    }
+
+    @Override
+    protected void exitLogin(Form f) {
+   // Dialog.show("Notice", "HSZ1-exitform ", "Ok", null);
     }
 }

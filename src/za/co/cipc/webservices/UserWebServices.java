@@ -323,8 +323,7 @@ public class UserWebServices {
         return annualReturns;
 
     }//end login
-
-    public void insert_terms(String link) {
+ public void insert_terms(String link) {
 
         final String SOAP_BODY = "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:cipc=\"CIPC_WEB_SERVICES\">\n"
                 + "\n"
@@ -384,6 +383,71 @@ public class UserWebServices {
         NetworkManager.getInstance().addToQueueAndWait(httpRequest);
         String data = new String(httpRequest.getResponseData());
         Log.p("insert_terms=" + data, Log.DEBUG);
+
+    }//end format_ent_no_mobi
+    public void insert_web_dispatch(String ent_no, String agent_code) {
+    
+
+        final String SOAP_BODY = "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:cipc=\"CIPC_WEB_SERVICES\">\n"
+                + "\n"
+                + "   <soap:Header/>\n"
+                + "\n"
+                + "   <soap:Body>\n"
+                + "\n"
+                + "      <cipc:insert_web_dispatch>\n"
+                + "\n"
+                + "        <cipc:sUserName>" + Constants.sUserName + "</cipc:sUserName>\n"
+                + "\n"
+                + "         <cipc:sPassword>" + Constants.sPassword + "</cipc:sPassword>\n"
+                + "\n"
+                + "         <cipc:sBankID>" + Constants.sBankID + "</cipc:sBankID>\n"
+                + "\n"
+                + "         <cipc:ent_no>" + ent_no + "</cipc:ent_no>\n"
+                + "\n"
+                + "         <cipc:agent_code>" + agent_code + "</cipc:agent_code>\n"
+                + "\n"
+                + "      </cipc:insert_web_dispatch>\n"
+                + "\n"
+                + "   </soap:Body>\n"
+                + "\n"
+                + "</soap:Envelope>";
+
+        ConnectionRequest httpRequest = new ConnectionRequest() {
+            Element h;
+
+            @Override
+            protected void buildRequestBody(OutputStream os) throws IOException {
+                super.buildRequestBody(os);
+                os.write(SOAP_BODY.getBytes("utf-8"));
+
+            }
+
+            protected void postResponse() {
+
+                super.postResponse();
+            }
+
+            protected void readResponse(InputStream input) throws IOException {
+                super.readResponse(input);
+
+            }
+
+            @Override
+            protected void handleException(Exception err) {
+                Log.p("Exception: " + err.toString());
+                Dialog.show("No Internet", "There is no internet connection. Please switch your connection on.", "Okay", null);
+
+            }
+        };
+
+        httpRequest.setUrl(Constants.soapServicesEndPoint + "enterprise.asmx");
+        httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
+        httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
+        httpRequest.setPost(true);
+
+        NetworkManager.getInstance().addToQueueAndWait(httpRequest);
+        String data = new String(httpRequest.getResponseData());
+        Log.p("insert_web_dispatch = " + data, Log.DEBUG);
 
     }//end format_ent_no_mobi
 
