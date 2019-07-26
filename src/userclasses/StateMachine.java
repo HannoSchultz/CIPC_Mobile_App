@@ -2306,7 +2306,7 @@ public class StateMachine extends StateMachineBase {
                             Log.p("onError", Log.DEBUG);
                         }
                     });
-
+//hsz card payment
                     browser.addBrowserNavigationCallback(new BrowserNavigationCallback() {
                         @Override
                         public boolean shouldNavigate(String url) {
@@ -3523,7 +3523,7 @@ public class StateMachine extends StateMachineBase {
                 Log.p("Login back clicked", Log.DEBUG);
                 boolean flag = Dialog.show("Exit", "Are you sure you want to Exit App?", "Yes", "No");
                 if (flag) {
-                    
+
                     //Display.getInstance().minimizeApplication();//Android
                     Display.getInstance().exitApplication();
                 }
@@ -3566,16 +3566,16 @@ public class StateMachine extends StateMachineBase {
 //}
     }
 
-  //  @Override;
+    //  @Override;
     protected void postLogin(Form f) {
         height = Display.getInstance().getDisplayHeight();
         width = Display.getInstance().getDisplayWidth();
 
 //        Object hasViewedTaCs_Accepted = Storage.getInstance().readObject(KEY_FOR_T_AND_CS_Accepted);
-      //  Dialog.show("Notice", "HSZ1 ", "Ok", null);
+        //  Dialog.show("Notice", "HSZ1 ", "Ok", null);
         Object hasViewedTaCs_Accepted = null;
         if (hasViewedTaCs_Accepted == null) {
-           // Dialog.show("Notice", "HSZ2 ", "Ok", null);
+            // Dialog.show("Notice", "HSZ2 ", "Ok", null);
             Dialog d = (Dialog) createContainer("/theme", "TermsAndConditions");
             Button btnViewTerms = (Button) findByName("btnViewTerms", d);
             btnViewTerms.addActionListener(new ActionListener() {
@@ -3649,7 +3649,7 @@ public class StateMachine extends StateMachineBase {
                 }
             }
             );
-           // Dialog.show("Notice", "HSZ4 ", "Ok", null);
+            // Dialog.show("Notice", "HSZ4 ", "Ok", null);
             Button btnDoNotAccept = (Button) findByName("btnDoNotAccept", d);
 
             btnDoNotAccept.addActionListener(
@@ -3661,7 +3661,7 @@ public class StateMachine extends StateMachineBase {
                 }
             }
             );
-         //   Dialog.show("Notice", "HSZ5 ", "Ok", null);
+            //   Dialog.show("Notice", "HSZ5 ", "Ok", null);
             d.show();
 //                                
 
@@ -4127,17 +4127,28 @@ public class StateMachine extends StateMachineBase {
 //                if (isnamereserved == true && isRegStep2Passed == true
 //                        && isRegStep3Passed == true) {
                 if (txtotp.getText().trim().equals(uws.getOTP().toString())) {
+                    if (txtotp.getText().trim().equals("")) {
+                        
+                    }
+                    else
+                    {
                     f.setTitle("Director Details");
                     //tabs.setSelectedIndex(3);
                     //txtotp.setUIID("TextFieldcorrect");
                     txtotp.setUIID("TextFieldNameSearchcorrect");
                     txtotp.repaint();
-
+                    Container conCell = (Container) findByName("ConCell", f);
+                    conCell.repaint();
+                    f.repaint();
                     // btn4.setUIID("btnselected");
+                    }
                 } else {
                     //txtotp.setUIID("TextFieldwrong");
                     txtotp.setUIID("TextFieldNameSearcherror");
-
+                    txtotp.repaint();
+                    Container conCell = (Container) findByName("ConCell", f);
+                    conCell.repaint();
+                    f.repaint();
                     //checkRegButtonPressed();
                     Dialog.show("Invalid OTP", "Please enter a Valid OTP", "OK", null);
                     //txtotp.requestFocus();
@@ -4390,6 +4401,8 @@ public class StateMachine extends StateMachineBase {
             f.setTitle("Enterprise Details");
 
             tabs.setSelectedIndex(2);
+            tabs.repaint();
+            f.repaint();
 
         } else if (responseCall != null && responseCall.length() > 0
                 && responseCall.indexOf("already filed") != -1) {
@@ -5613,7 +5626,7 @@ public class StateMachine extends StateMachineBase {
         ip.dispose();
         String Strak_no = uws.getTrak_no();
         //if (Sreservation_no == "") {
-        Dialog.show("Payment ", "Transaction for Enterprise Registration reference no: " + Strak_no + " Was added to the Cart", "OK", null);
+        Dialog.show("Payment ", "Transaction for Enterprise Registration reference no: " + Strak_no + " was added to the Cart", "OK", null);
         // } else {
         //     Dialog.show("Payment ", "Name reservation-" + Sreservation_no + " and Enterprise Registration reference no: - " + Strak_no + " Was added to the Cart", "OK", null);
         // }
@@ -5979,14 +5992,17 @@ public class StateMachine extends StateMachineBase {
             b.setName(ent_no);
             b.addActionListener(e
                     -> {
-                boolean answer = Dialog.show("Information", "Do you want to print the MOI Certificate for " + b.getText() + "?", "Yes", "No");
+                boolean answer = Dialog.show("Information", "Do you want to resend the Registration Certificate and MOI for " + b.getText() + "?", "Yes", "No");
                 if (answer) {
                     Label lbl_ent_no = (Label) findByName("lbl_ent_no", f);
-                    lbl_ent_no.setText("E-Mailed MOI Certificate for ");
+                    lbl_ent_no.setText("Registration Certificate for ");
                     Label lbl_ent_no1 = (Label) findByName("lbl_ent_no1", f);
+                    
                     lbl_ent_no1.setText(b.getText());
+                    Label lbl_ent_no2 = (Label) findByName("lbl_ent_no2", f);
+                    lbl_ent_no2.setText("was resend");
                     u.insert_web_dispatch(ent_no, AGENT_CODE);
-                    Dialog.show("Information", "Registration Certificte and Memorandum of Incorporation for " + b.getText() + " was resend.", "OK", null);
+                    Dialog.show("Information", "Registration Certificate and Memorandum of Incorporation for " + b.getText() + " was resend.", "OK", null);
                     // loadlist_BEE(b.getName());
                     //Label lbl_ent_no2 = (Label) findByName("lbl_ent_no2", f);
                     //lbl_ent_no2.setHidden(true);
@@ -6316,9 +6332,11 @@ public class StateMachine extends StateMachineBase {
         msg = "Out of the total of " + txtshareholders.getText().trim() + "  shareholders/members, how many are black military veterans who qualifies to be called a military veteran in terms of the Military Veterans Act 18 0f 2011 ?";
         SpanLabel5.setText(msg);
         TextField textFieldunemployed = (TextField) findByName("TextFieldunemployed", f);
-        textFieldunemployed.requestFocus();
+
         containerYouth.setHidden(false);
+        containerYouth.repaint();
         f.repaint();
+        textFieldunemployed.requestFocus();
     }
 
     // @Override
@@ -6465,6 +6483,6 @@ public class StateMachine extends StateMachineBase {
 
     @Override
     protected void exitLogin(Form f) {
-   // Dialog.show("Notice", "HSZ1-exitform ", "Ok", null);
+        // Dialog.show("Notice", "HSZ1-exitform ", "Ok", null);
     }
 }
