@@ -4392,14 +4392,16 @@ public class StateMachine extends StateMachineBase {
         if (responseCall != null && responseCall.length() > 0
                 && responseCall.indexOf("already filed") == -1) {
             Dialog.show("Success", responseCall, "Ok", null);
+               Dialog ip = new InfiniteProgress().showInifiniteBlocking();
             u.insertCartItemServiceName(uws.getName_reservation_no(), AGENT_CODE, "50");
+            
             uws.setIsnamereserved(false);
             uws.setIsnamefiled(true);
             Label lblname_no = (Label) findByName("LbLNameResNo", f);
             lblname_no.setText("Name Reservation No. " + uws.getName_reservation_no());
             Tabs tabs = (Tabs) findByName("Tabs", f);
             f.setTitle("Enterprise Details");
-
+ip.dispose();
             tabs.setSelectedIndex(2);
             tabs.repaint();
             f.repaint();
