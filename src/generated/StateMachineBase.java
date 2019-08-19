@@ -77,7 +77,7 @@ public abstract class StateMachineBase extends UIBuilder {
     }
 
     protected String getFirstFormName() {
-        return "BEE";
+        return "frmNewEntReg1";
     }
 
     public Container createWidget(Resources res, String resPath, boolean loadTheme) {
@@ -105,7 +105,7 @@ public abstract class StateMachineBase extends UIBuilder {
             }
             initTheme(res);
         }
-        return createContainer(resPath, "BEE");
+        return createContainer(resPath, "frmNewEntReg1");
     }
 
     protected void initTheme(Resources res) {
@@ -4402,7 +4402,6 @@ public abstract class StateMachineBase extends UIBuilder {
 
         if("Login".equals(f.getName())) {
             postLogin(f);
-            
             aboutToShowThisContainer = null;
             return;
         }
