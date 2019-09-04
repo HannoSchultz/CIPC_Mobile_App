@@ -1177,8 +1177,8 @@ public class UserWebServicesNewReg {
 
             }
         };
-
-        httpRequest.setUrl("https://testwebservices1.cipc.co.za/enterprise.asmx?wsdl");
+        httpRequest.setUrl(Constants.soapServicesEndPoint + "enterprise.asmx");
+        //httpRequest.setUrl("https://testwebservices1.cipc.co.za/enterprise.asmx?wsdl");
         httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
         httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
         httpRequest.setPost(true);
