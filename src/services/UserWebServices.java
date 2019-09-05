@@ -20,6 +20,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import userclasses.Const;
+import userclasses.Constants;
 
 /**
  *
@@ -81,7 +82,8 @@ public class UserWebServices {
             }
         };
 
-        httpRequest.setUrl("https://testwebservices4.cipc.co.za/customer.asmx?wsdl");
+        //httpRequest.setUrl(Constants.soapServicesEndPoint + "enterprise.asmx?wsdl");
+        httpRequest.setUrl(Constants.soapServicesEndPoint + "customer.asmx?wsdl");
         httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
         httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
         httpRequest.setPost(true);
@@ -170,7 +172,7 @@ public class UserWebServices {
             }
         };
 
-        httpRequest.setUrl("https://testwebservices4.cipc.co.za/customer.asmx?wsdl");
+        httpRequest.setUrl(Constants.soapServicesEndPoint + "customer.asmx?wsdl");
         httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
         httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
         httpRequest.setPost(true);
@@ -295,7 +297,7 @@ public class UserWebServices {
             }
         };
 
-        httpRequest.setUrl("https://testwebservices4.cipc.co.za/customer.asmx?wsdl");
+        httpRequest.setUrl(Constants.soapServicesEndPoint + "customer.asmx?wsdl");
         httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
         httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
         httpRequest.setPost(true);
@@ -412,7 +414,7 @@ public class UserWebServices {
             }
         };
 
-        httpRequest.setUrl("https://testwebservices4.cipc.co.za/customer.asmx?wsdl");
+        httpRequest.setUrl(Constants.soapServicesEndPoint + "customer.asmx?wsdl");
         httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
         httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
         httpRequest.setPost(true);
@@ -699,7 +701,7 @@ public class UserWebServices {
             }
         };
 
-        httpRequest.setUrl("https://testwebservices4.cipc.co.za/customer.asmx?wsdl");
+        httpRequest.setUrl(Constants.soapServicesEndPoint + "customer.asmx?wsdl");
         httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
         httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
         httpRequest.setPost(true);
@@ -810,7 +812,7 @@ public class UserWebServices {
             }
         };
 
-        httpRequest.setUrl("https://testwebservices4.cipc.co.za/customer.asmx?wsdl");
+        httpRequest.setUrl(Constants.soapServicesEndPoint + "customer.asmx?wsdl");
         httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
         httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
         httpRequest.setPost(true);
@@ -1014,7 +1016,7 @@ public class UserWebServices {
             }
         };
 
-        httpRequest.setUrl("https://testwebservices4.cipc.co.za/customer.asmx?wsdl");
+        httpRequest.setUrl(Constants.soapServicesEndPoint + "customer.asmx?wsdl");
         httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
         httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
         httpRequest.setPost(true);
@@ -1114,7 +1116,7 @@ public class UserWebServices {
             }
         };
 
-        httpRequest.setUrl("https://testwebservices4.cipc.co.za/enterprise.asmx");
+        httpRequest.setUrl(Constants.soapServicesEndPoint + "enterprise.asmx");
         httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
         httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
         httpRequest.setPost(true);
@@ -1217,7 +1219,7 @@ public class UserWebServices {
             }
         };
 
-        httpRequest.setUrl("https://testwebservices4.cipc.co.za/enterprise.asmx");
+        httpRequest.setUrl(Constants.soapServicesEndPoint + "enterprise.asmx");
         httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
         httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
         httpRequest.setPost(true);
@@ -1295,7 +1297,7 @@ public class UserWebServices {
             }
         };
 
-        httpRequest.setUrl("https://testwebservices4.cipc.co.za/customer.asmx?wsdl");
+        httpRequest.setUrl(Constants.soapServicesEndPoint + "customer.asmx?wsdl");
         httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
         httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
         httpRequest.setPost(true);
@@ -1561,7 +1563,7 @@ public class UserWebServices {
             }
         };
 
-        httpRequest.setUrl("https://testwebservices4.cipc.co.za/customer.asmx");
+        httpRequest.setUrl(Constants.soapServicesEndPoint + "customer.asmx");
         httpRequest.addRequestHeader("Content-Type", "text/xml; charset=utf-8");
         httpRequest.addRequestHeader("Content-Length", SOAP_BODY.length() + "");
         httpRequest.setPost(true);

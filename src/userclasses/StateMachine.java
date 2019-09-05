@@ -6437,6 +6437,11 @@ ip.dispose();
             }
         }
         bbee.setBlack_veteran(textFieldveteran.getText()); //5
+        bbee.setBlack_rural(textFieldrural.getText());
+        bbee.setBlack_disability(textFielddisability.getText());
+        bbee.setBlack_youth(textFieldyouth.getText());
+        bbee.setBlack_unemployed(textFieldunemployed.getText());
+        
 
         za.co.cipc.webservices.UserWebServicesNewReg uws = new za.co.cipc.webservices.UserWebServicesNewReg();
         beeTrak_no = uws.getnexttrakno();
